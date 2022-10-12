@@ -1,0 +1,17 @@
+{
+  "extends": "@hookooekoo/eslint-config/tsconfig-next.json",
+  "compilerOptions": {
+    "outDir": "./out",
+    "baseUrl": "src",
+  },
+  "include": [
+    "./next-env.d.ts",
+    "./src/**/*.ts",
+    "./src/**/*.tsx",
+  ],
+  "exclude": [
+    "./out/**/*",
+    "./node_modules/**/*",
+    "./src/content.d.ts"
+  ]
+}

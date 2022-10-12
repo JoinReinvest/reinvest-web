@@ -1,0 +1,112 @@
+@use "fonts";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @apply text-base leading-normal font-normal;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+
+  @apply m-0 p-0 overflow-x-hidden;
+}
+
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+  @apply tracking-wider;
+}
+
+.h1 {
+  @apply text-7xl font-extended-regular leading-90;
+}
+
+.h2 {
+  @apply text-5xl font-normal leading-110;
+}
+
+.h3 {
+  @apply text-4xl font-extended-regular leading-110;
+}
+
+.h4 {
+  @apply text-2xl leading-110 font-normal;
+
+  @screen lg {
+    @apply text-3xl;
+  }
+}
+
+.h5 {
+  @apply text-xl font-extended-regular leading-110;
+
+  @screen lg {
+    @apply text-3xl font-normal leading-125;
+  }
+}
+
+.h6 {
+  @apply text-md font-medium leading-normal;
+
+  @screen lg {
+    @apply text-lg font-extended-regular leading-150;
+  }
+}
+
+.bonus-heading,
+.input {
+  @apply text-14 font-normal;
+}
+
+.button {
+  @apply text-14 font-medium;
+}
+
+.paragraph {
+  @apply text-12;
+
+  @screen lg {
+    @apply text-14;
+  }
+}
+
+.paragraph-large {
+  @apply text-14 leading-150;
+
+  @screen lg {
+    @apply text-md;
+  }
+}
+
+.paragraph-emphasized {
+  @apply text-14 font-medium;
+
+  @screen lg {
+    @apply text-md leading-150;
+  }
+}
+
+.paragraph-small {
+  @apply text-11;
+}
+
+.page-heading {
+  @apply text-4xl leading-110;
+
+  @screen lg {
+    @apply text-3xl leading-125;
+  }
+}
+
+.link {
+  @apply text-12 font-extended-regular underline;
+
+  @screen lg {
+    @apply text-14;
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "name": "reinvest-app",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=16.0.0",
+    "yarn": ">=1.22.0",
+    "npm": "please-use-yarn"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "analyze": "cross-env ANALYZE=true yarn build",
+    "export": "next export",
+    "build-prod": "yarn clean && yarn build && yarn export",
+    "clean": "rimraf .next out",
+    "stylelint": "stylelint --fix \"src/**/*.scss\"",
+    "lint": "next lint",
+    "lint:fix": "yarn lint --fix",
+    "check-types": "tsc --pretty",
+    "prepare": "husky install"
+  },
+  "dependencies": {
+    "@hookooekoo/eslint-config": "1.3.1",
+    "@next/bundle-analyzer": "12.3.1",
+    "@types/node": "18.8.4",
+    "@types/react": "18.0.21",
+    "autoprefixer": "10.4.12",
+    "classnames": "^2.3.2",
+    "cssnano": "^5.1.13",
+    "next": "12.3.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "typescript": "4.8.4",
+    "zod": "3.19.1"
+  },
+  "devDependencies": {
+    "cross-env": "7.0.3",
+    "husky": "8.0.1",
+    "rimraf": "3.0.2",
+    "sass": "1.55.0",
+    "postcss-scss": "^4.0.5",
+    "tailwindcss": "3.1.8"
+  },
+  "eslintConfig": {
+    "extends": "@hookooekoo/eslint-config/next"
+  },
+  "stylelint": {
+    "extends": "@hookooekoo/eslint-config/stylelint.js"
+  },
+  "prettier": "@hookooekoo/eslint-config/prettier.json"
+}
