@@ -1,4 +1,4 @@
-import { Switch as HeadlessSwitch } from '@headlessui/react';
+import { Indicator, Root as CheckboxRoot } from '@radix-ui/react-checkbox';
 import { IconCheckmark } from 'assets/icons/IconCheckmark';
 import cx from 'classnames';
 import { Dispatch, SetStateAction } from 'react';
@@ -10,25 +10,22 @@ export interface CheckboxProps {
 }
 
 export const Checkbox = ({ isChecked = false, onChange, isDisabled = false }: CheckboxProps) => {
-  const containerStyles = cx({
-    'h-24 w-24 p-2 flex items-center rounded-full': true,
-    'bg-secondary-5': isChecked,
-    'border border-secondary-5': !isChecked,
-  });
-
-  const iconStyles = cx({
-    'max-w-full max-h-full': true,
-    hidden: !isChecked,
-  });
+  const containerStyles = cx(
+    'h-24 w-24 p-2 flex items-center rounded-full',
+    'radix-state-checked:bg-secondary-5',
+    'radix-state-unchecked:border radix-state-unchecked:border-secondary-5',
+  );
 
   return (
-    <HeadlessSwitch
+    <CheckboxRoot
       disabled={isDisabled}
       checked={isChecked}
-      onChange={onChange}
+      onCheckedChange={value => onChange(!!value)}
       className={containerStyles}
     >
-      <IconCheckmark className={iconStyles} />
-    </HeadlessSwitch>
+      <Indicator>
+        <IconCheckmark className="max-w-full max-h-full" />
+      </Indicator>
+    </CheckboxRoot>
   );
 };
