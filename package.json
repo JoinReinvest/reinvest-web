@@ -47,12 +47,14 @@
     "class-variance-authority": "^0.3.0",
     "@headlessui/react": "^1.7.3",
     "@radix-ui/react-checkbox": "^1.0.1",
+    "@radix-ui/react-collapsible": "^1.0.1",
     "cross-env": "7.0.3",
     "husky": "8.0.1",
     "postcss-scss": "^4.0.5",
     "rimraf": "3.0.2",
     "sass": "1.55.0",
-    "tailwindcss": "3.1.8"
+    "tailwindcss": "3.1.8",
+    "tailwindcss-radix": "^2.6.1"
   },
   "eslintConfig": {
     "extends": "@hookooekoo/eslint-config/next"
