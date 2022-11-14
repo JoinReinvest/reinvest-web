@@ -36,6 +36,7 @@
     "zod": "3.19.1"
   },
   "devDependencies": {
+    "@tailwindcss/line-clamp": "^0.4.2",
     "cross-env": "7.0.3",
     "husky": "8.0.1",
     "rimraf": "3.0.2",
