@@ -1,8 +1,7 @@
-import { IconProps } from './props';
+import { Icon } from '@hookooekoo/ui-icon';
 
-export const IconArrowDown = ({ className }: IconProps) => (
+export const IconArrowDown = Icon(
   <svg
-    className={className}
     width="32"
     height="32"
     viewBox="0 0 32 32"
@@ -15,5 +14,5 @@ export const IconArrowDown = ({ className }: IconProps) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-  </svg>
+  </svg>,
 );

@@ -1,8 +1,7 @@
-import { IconProps } from './props';
+import { Icon } from '@hookooekoo/ui-icon';
 
-export const IconSearch = ({ className }: IconProps) => (
+export const IconSearch = Icon(
   <svg
-    className={className}
     width="32"
     height="32"
     viewBox="0 0 32 32"
@@ -22,5 +21,5 @@ export const IconSearch = ({ className }: IconProps) => (
       y2="21.4696"
       strokeWidth={1.5}
     />
-  </svg>
+  </svg>,
 );

@@ -1,8 +1,7 @@
-import { IconProps } from './props';
+import { Icon } from '@hookooekoo/ui-icon';
 
-export const IconDisabled = ({ className }: IconProps) => (
+export const IconDisabled = Icon(
   <svg
-    className={className}
     width="32"
     height="32"
     viewBox="0 0 32 32"
@@ -23,5 +22,5 @@ export const IconDisabled = ({ className }: IconProps) => (
       y2="20.5658"
       strokeWidth="1.5"
     />
-  </svg>
+  </svg>,
 );
