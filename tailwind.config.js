@@ -94,6 +94,7 @@ module.exports = {
     },
   },
   plugins: [
+    require('@tailwindcss/line-clamp'),
     function ({ addVariant }) {
       addVariant('child', '& > *');
     },
