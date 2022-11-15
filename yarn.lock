@@ -262,6 +262,23 @@
     stylelint-order "5.0.0"
     stylelint-scss "4.3.0"
 
+"@hookooekoo/ui-icon@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-icon/-/ui-icon-0.0.3.tgz#c2d4994999e59388cd77b5ab4a2f09581b7ac809"
+  integrity sha512-42S150ItkiEOTc1bNs1yYtyHjUnn3CbqgwRN6tfYj7zdF9qT7BxWseh+VFUuv4+fH6OTTMLpcU9aXKaUZaRpIQ==
+
+"@hookooekoo/ui-input-control@*":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-control/-/ui-input-control-0.0.3.tgz#a7a461d379f0c74367bc33d35fe0f7dd124e1f80"
+  integrity sha512-q0tMo3kwCdX/1wsEPJlaKvF3sNIcyMAMiQDICvnZ+mKYlJgHAAAwqg3DkaGWv8Bmgr4ndHWlbJYMnvieTD2KiQ==
+
+"@hookooekoo/ui-input-text@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-text/-/ui-input-text-0.0.3.tgz#6921eff22025a9f0a1eead67162d63c06abd9ced"
+  integrity sha512-r/17fiwpPnu3CCOIugm9c5WgKFvN/PvQ1IexQKDrd3dYUoW30HNHQqGU3Uf7VuJKq1HobpK3nd2dInELyUlhIg==
+  dependencies:
+    "@hookooekoo/ui-input-control" "*"
+
 "@humanwhocodes/config-array@^0.10.5":
   version "0.10.7"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.10.7.tgz#6d53769fd0c222767e6452e8ebda825c22e9f0dc"
