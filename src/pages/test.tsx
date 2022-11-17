@@ -34,16 +34,16 @@ const TestPage: NextPage = () => {
           size="lg"
         />
       </div>
+
       <Switch
         isChecked={checked}
         onChange={state => setChecked(state)}
       />
 
-        <Checkbox
-          isChecked={checked}
-          onChange={state => setChecked(state)}
-        />
-      </div>
+      <Checkbox
+        isChecked={checked}
+        onChange={state => setChecked(state)}
+      />
     </div>
   );
 };
