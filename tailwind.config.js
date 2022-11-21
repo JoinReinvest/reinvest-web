@@ -95,9 +95,6 @@ module.exports = {
   },
   plugins: [
     require('@tailwindcss/line-clamp'),
-    require('tailwindcss-radix')({
-      variantPrefix: 'radix',
-    }),
     function ({ addVariant }) {
       addVariant('child', '& > *');
     },
