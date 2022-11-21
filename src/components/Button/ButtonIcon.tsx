@@ -2,7 +2,7 @@ import { IconArrowLeft } from 'assets/icons/IconArrowLeft';
 import { IconArrowRight } from 'assets/icons/IconArrowRight';
 import cx from 'classnames';
 
-import { ButtonProps } from './index';
+import { ButtonProps } from './interfaces';
 
 type ButtonIconProps = Pick<ButtonProps, 'showIcon' | 'disabled'>;
 
