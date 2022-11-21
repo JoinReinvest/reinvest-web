@@ -1,8 +1,7 @@
-import { IconProps } from './props';
+import { Icon } from '@hookooekoo/ui-icon';
 
-export const IconCheckmark = ({ className }: IconProps) => (
+export const IconCheckmark = Icon(
   <svg
-    className={className}
     width="32"
     height="32"
     viewBox="0 0 32 32"
@@ -27,5 +26,5 @@ export const IconCheckmark = ({ className }: IconProps) => (
         />
       </clipPath>
     </defs>
-  </svg>
+  </svg>,
 );
