@@ -1,3 +1,4 @@
+import { Button } from 'components/Button';
 import { TextInput } from 'components/TextInput/index';
 import { NextPage } from 'next';
 import { useState } from 'react';
@@ -13,6 +14,21 @@ const TestPage: NextPage = () => {
           placeholder="placeholder"
           value={inputValue}
           onChange={event => setInputValue(event.target.value)}
+        />
+      </div>
+
+      <div className="max-w-md">
+        <Button
+          label="Submit me"
+          variant="default"
+          size="sm"
+          className="mr-2"
+        />
+
+        <Button
+          label="Button"
+          variant="outlined"
+          size="lg"
         />
       </div>
     </div>
