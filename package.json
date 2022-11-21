@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@hookooekoo/ui-button": "^0.0.8",
+    "@hookooekoo/ui-checkbox": "^0.0.8",
     "@hookooekoo/ui-icon": "^0.0.3",
     "@hookooekoo/ui-input-text": "^0.0.3",
     "@hookooekoo/ui-switch": "^0.0.8",
@@ -50,8 +51,7 @@
     "postcss-scss": "^4.0.5",
     "rimraf": "3.0.2",
     "sass": "1.55.0",
-    "tailwindcss": "3.1.8",
-    "tailwindcss-radix": "^2.6.1"
+    "tailwindcss": "3.1.8"
   },
   "eslintConfig": {
     "extends": "@hookooekoo/eslint-config/next"
