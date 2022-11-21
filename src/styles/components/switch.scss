@@ -1,0 +1,26 @@
+.hkek-switch {
+  @apply relative h-26 w-[4.8rem] inline-flex flex-shrink-0;
+  @apply rounded-full border-2 border-transparent;
+  @apply cursor-pointer transition-colors duration-200 ease-in-out;
+
+  &[data-state="unchecked"] {
+    @apply bg-secondary-5;
+  }
+
+  &[data-state="checked"] {
+    @apply bg-black;
+  }
+
+  &-thumb {
+    @apply inline-block h-22 w-22 transform rounded-full bg-white ring-0;
+    @apply pointer-events-none transition duration-200 ease-in-out;
+
+    &[data-state="unchecked"] {
+      @apply translate-x-0;
+    }
+
+    &[data-state="checked"] {
+      @apply translate-x-full;
+    }
+  }
+}
