@@ -394,6 +394,13 @@
   dependencies:
     "@radix-ui/react-checkbox" "^1.0.1"
 
+"@hookooekoo/ui-collapsible@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-collapsible/-/ui-collapsible-0.0.8.tgz#34b0ae398828ceeda6b39d728f0f83ea8c80bcc8"
+  integrity sha512-lLcZ7TYzBzZGqdrIEcJLJE738n2JHnlAGQIFVnimBk5HEli/QtDoaVwza1tyTCtmnhxO9ihi/6EA080lUsaVIw==
+  dependencies:
+    "@radix-ui/react-collapsible" "^1.0.1"
+
 "@hookooekoo/ui-icon@^0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-icon/-/ui-icon-0.0.3.tgz#c2d4994999e59388cd77b5ab4a2f09581b7ac809"
@@ -3957,11 +3964,6 @@ table@^6.8.0:
     slice-ansi "^4.0.0"
     string-width "^4.2.3"
     strip-ansi "^6.0.1"
-
-tailwindcss-radix@^2.6.1:
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/tailwindcss-radix/-/tailwindcss-radix-2.6.1.tgz#793d72e7185fc4f5c9e2b1d1cfc9470ade41b897"
-  integrity sha512-ejh4BHkn/3g349l+JiEW6I4//uclU4nllEqnOK3/8zpORscIk9WbjLyYR2UzqwVRjjzgd72I/hMDJZm3+XO48w==
 
 tailwindcss@3.1.8:
   version "3.1.8"
