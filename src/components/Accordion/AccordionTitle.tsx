@@ -1,16 +1,10 @@
-import cx from 'classnames';
+import { AccordionProps } from './interfaces';
+import { variant } from './variants/accordion-title';
 
-import { AccordionHeaderProps } from './AccordionHeader';
+type Props = Pick<AccordionProps, 'title' | 'titleSize'>;
 
-type AccordionTitleProps = Pick<AccordionHeaderProps, 'title' | 'titleSize'>;
+export const AccordionTitle = ({ title, titleSize }: Props) => {
+  const styles = variant({ titleSize });
 
-export const AccordionTitle = ({ title, titleSize }: AccordionTitleProps) => (
-  <h4
-    className={cx({
-      'text-md font-medium': titleSize === 'sm',
-      'text-xl font-[450] tracking-tighter': titleSize === 'lg',
-    })}
-  >
-    {title}
-  </h4>
-);
+  return <h4 className={styles}>{title}</h4>;
+};

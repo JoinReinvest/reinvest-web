@@ -1,25 +1,13 @@
 import { IconArrowDown } from 'assets/icons/IconArrowDown';
 import { IconArrowUp } from 'assets/icons/IconArrowUp';
-import cx from 'classnames';
 
-import { AccordionProps } from './index';
+import { AccordionProps } from './interfaces';
+import { variant } from './variants/accordion-icon';
 
-type AccordionIconProps = Pick<AccordionProps, 'isIconRounded'>;
+type Props = Pick<AccordionProps, 'isIconRounded' | 'isOpen'>;
 
-export const AccordionIcon = ({ isIconRounded }: AccordionIconProps) => {
-  const styles = cx({
-    'stroke-[1.5px]': true,
-    'p-4 rounded-full bg-green-frost-solid': isIconRounded,
-  });
+export const AccordionIcon = ({ isOpen, isIconRounded }: Props) => {
+  const styles = variant({ isIconRounded });
 
-  const iconArrowDownStyles = cx(styles, 'group-radix-state-open:hidden', 'group-radix-state-closed:block');
-
-  const iconArrowUpStyles = cx(styles, 'group-radix-state-open:block', 'group-radix-state-closed:hidden');
-
-  return (
-    <>
-      <IconArrowDown className={iconArrowDownStyles} />
-      <IconArrowUp className={iconArrowUpStyles} />
-    </>
-  );
+  return <>{isOpen ? <IconArrowUp className={styles} /> : <IconArrowDown className={styles} />}</>;
 };

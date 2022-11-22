@@ -1,5 +1,5 @@
-import { AccordionHeaderProps } from './AccordionHeader';
+import { AccordionProps } from './interfaces';
 
-type AccordionSubtitleProps = Pick<AccordionHeaderProps, 'subtitle'>;
+type Props = Pick<AccordionProps, 'subtitle'>;
 
-export const AccordionSubtitle = ({ subtitle }: AccordionSubtitleProps) => <p className="text-12 text-secondary-3">{subtitle}</p>;
+export const AccordionSubtitle = ({ subtitle }: Props) => <p className="text-12 text-secondary-3">{subtitle}</p>;
