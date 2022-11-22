@@ -262,6 +262,11 @@
     stylelint-order "5.0.0"
     stylelint-scss "4.3.0"
 
+"@hookooekoo/ui-button@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-button/-/ui-button-0.0.8.tgz#d98368a4565fdba461c4f1eced13d81e83d61da8"
+  integrity sha512-VRKJReI5k0Eq7AtVfEAtmOQKmnm4YGB/qXq0fx/0IgJigH571TiRQocBJcI+Pgv2kH3Sm/e84poDPe2pcMufuw==
+
 "@hookooekoo/ui-icon@^0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-icon/-/ui-icon-0.0.3.tgz#c2d4994999e59388cd77b5ab4a2f09581b7ac809"
@@ -933,6 +938,11 @@ chalk@^4.0.0, chalk@^4.1.0:
     readdirp "~3.6.0"
   optionalDependencies:
     fsevents "~2.3.2"
+
+class-variance-authority@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/class-variance-authority/-/class-variance-authority-0.3.0.tgz#40c824bfbe5c604ecb3e337a2353b4b86278888e"
+  integrity sha512-TFO+pzY9Gedqv8crPhprd647wxhvfpKevPPjiMcteEWsnkHX9yZrD1xMY3ZhRZnLwHUHCCP0LYO6KZIVag/5wQ==
 
 classnames@^2.3.2:
   version "2.3.2"
