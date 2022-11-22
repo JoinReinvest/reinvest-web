@@ -39,6 +39,7 @@
     "@hookooekoo/ui-button": "^0.0.8",
     "@hookooekoo/ui-icon": "^0.0.3",
     "@hookooekoo/ui-input-text": "^0.0.3",
+    "@hookooekoo/ui-switch": "^0.0.8",
     "@tailwindcss/line-clamp": "^0.4.2",
     "class-variance-authority": "^0.3.0",
     "cross-env": "7.0.3",

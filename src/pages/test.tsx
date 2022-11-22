@@ -1,10 +1,12 @@
 import { Button } from 'components/Button';
+import { Switch } from 'components/Switch';
 import { TextInput } from 'components/TextInput/index';
 import { NextPage } from 'next';
 import { useState } from 'react';
 
 const TestPage: NextPage = () => {
   const [inputValue, setInputValue] = useState('');
+  const [checked, setIsChecked] = useState(false);
 
   return (
     <div className="p-4">
@@ -31,6 +33,10 @@ const TestPage: NextPage = () => {
           size="lg"
         />
       </div>
+      <Switch
+        isChecked={checked}
+        onChange={state => setIsChecked(state)}
+      />
     </div>
   );
 };
