@@ -394,6 +394,13 @@
   dependencies:
     "@radix-ui/react-checkbox" "^1.0.1"
 
+"@hookooekoo/ui-collapsible@^0.0.8":
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-collapsible/-/ui-collapsible-0.0.8.tgz#34b0ae398828ceeda6b39d728f0f83ea8c80bcc8"
+  integrity sha512-lLcZ7TYzBzZGqdrIEcJLJE738n2JHnlAGQIFVnimBk5HEli/QtDoaVwza1tyTCtmnhxO9ihi/6EA080lUsaVIw==
+  dependencies:
+    "@radix-ui/react-collapsible" "^1.0.1"
+
 "@hookooekoo/ui-icon@^0.0.3":
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-icon/-/ui-icon-0.0.3.tgz#c2d4994999e59388cd77b5ab4a2f09581b7ac809"
@@ -631,6 +638,21 @@
     "@radix-ui/react-use-previous" "1.0.0"
     "@radix-ui/react-use-size" "1.0.0"
 
+"@radix-ui/react-collapsible@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-collapsible/-/react-collapsible-1.0.1.tgz#7184312ce18e703628b9ef75cdc44b896d6f06b1"
+  integrity sha512-0maX4q91iYa4gjt3PsNf7dq/yqSR+HGAE8I5p54dQ6gnveS+ETWlMoijxrhmgV1k8svxpm34mQAtqIrJt4XZmA==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/primitive" "1.0.0"
+    "@radix-ui/react-compose-refs" "1.0.0"
+    "@radix-ui/react-context" "1.0.0"
+    "@radix-ui/react-id" "1.0.0"
+    "@radix-ui/react-presence" "1.0.0"
+    "@radix-ui/react-primitive" "1.0.1"
+    "@radix-ui/react-use-controllable-state" "1.0.0"
+    "@radix-ui/react-use-layout-effect" "1.0.0"
+
 "@radix-ui/react-compose-refs@1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@radix-ui/react-compose-refs/-/react-compose-refs-1.0.0.tgz#37595b1f16ec7f228d698590e78eeed18ff218ae"
@@ -644,6 +666,14 @@
   integrity sha512-1pVM9RfOQ+n/N5PJK33kRSKsr1glNxomxONs5c49MliinBY6Yw2Q995qfBUUo0/Mbg05B/sGA0gkgPI7kmSHBg==
   dependencies:
     "@babel/runtime" "^7.13.10"
+
+"@radix-ui/react-id@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@radix-ui/react-id/-/react-id-1.0.0.tgz#8d43224910741870a45a8c9d092f25887bb6d11e"
+  integrity sha512-Q6iAB/U7Tq3NTolBBQbHTgclPmGWE3OlktGGqrClPozSw4vkQ1DfQAOtzgRPecKsMdJINE05iaoDUG8tRzCBjw==
+  dependencies:
+    "@babel/runtime" "^7.13.10"
+    "@radix-ui/react-use-layout-effect" "1.0.0"
 
 "@radix-ui/react-presence@1.0.0":
   version "1.0.0"
