@@ -10,6 +10,7 @@ export const IconArrowDown = Icon(
   >
     <path
       d="M11 14L16 19L21 14"
+      stroke="black"
       strokeWidth={1.5}
       strokeLinecap="round"
       strokeLinejoin="round"
