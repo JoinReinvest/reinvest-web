@@ -1,7 +1,7 @@
 import { Button } from 'components/Button';
-import { Switch } from 'components/Switch';
 import { Checkbox } from 'components/Checkbox';
 import { Select } from 'components/Select';
+import { Switch } from 'components/Switch';
 import { TextInput } from 'components/TextInput/index';
 import { NextPage } from 'next';
 import { useState } from 'react';
