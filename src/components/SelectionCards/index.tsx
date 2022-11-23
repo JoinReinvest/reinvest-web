@@ -1,33 +1,35 @@
-import { Root as RadioGroupRoot } from '@radix-ui/react-radio-group';
-import { Dispatch, SetStateAction } from 'react';
+import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
+import cx from 'classnames';
 
-import { SelectionCardOption } from './SelectionCardOption';
+import { SelectionCardsProps } from './interfaces';
 
-export interface SelectionCardsProps {
-  name: string;
-  onChange: Dispatch<SetStateAction<string>>;
-  options: SelectionOption[];
-  selected: string;
-}
-
-export interface SelectionOption {
-  description: string;
-  title: string;
-  value: string;
-}
-
-export const SelectionCards = ({ selected, onChange, options, name }: SelectionCardsProps) => (
-  <RadioGroupRoot
-    defaultValue={selected}
-    aria-label={name}
+export const SelectionCards = ({ value, onChange, options, name, required, disabled, orientation }: SelectionCardsProps) => (
+  <RadioGroup
+    name={name}
+    value={value}
     className="flex gap-[36px]"
-    onValueChange={value => onChange(value)}
+    onChange={onChange}
+    required={required}
+    disabled={disabled}
+    orientation={orientation}
+    readingDirection="ltr"
+    loopNavigation
   >
     {options.map(option => (
-      <SelectionCardOption
+      <RadioGroupItem
         key={option.value}
-        option={option}
-      />
+        value={option.value}
+        className={cx(
+          'px-[36px] py-24',
+          "data-[state='checked']:bg-green-frost-solid data-[state='checked']:text-black",
+          "data-[state='unchecked']:text-gray-light data-[state='unchecked']:border data-[state='unchecked']:border-gray-light",
+        )}
+      >
+        <>
+          <h4 className="text-15">{option.title}</h4>
+          <p>{option.description}</p>
+        </>
+      </RadioGroupItem>
     ))}
-  </RadioGroupRoot>
+  </RadioGroup>
 );
