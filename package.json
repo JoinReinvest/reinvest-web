@@ -50,6 +50,7 @@
     "@hookooekoo/ui-stepper": "^0.1.1",
     "@hookooekoo/ui-switch": "^0.1.1",
     "@hookooekoo/ui-table": "^0.0.9",
+    "@radix-ui/react-radio-group": "^1.1.0",
     "@tailwindcss/line-clamp": "^0.4.2",
     "class-variance-authority": "^0.4.0",
     "cross-env": "7.0.3",
