@@ -1,8 +1,8 @@
 import { IconArrowDown } from 'assets/icons/IconArrowDown';
 import { IconArrowUp } from 'assets/icons/IconArrowUp';
 
-interface NotificationIconProps {
-  isExpanded: boolean;
+interface Props {
+  isOpen: boolean;
 }
 
-export const NotificationIcon = ({ isExpanded }: NotificationIconProps) => <>{isExpanded ? <IconArrowUp /> : <IconArrowDown />}</>;
+export const NotificationIcon = ({ isOpen }: Props) => <>{isOpen ? <IconArrowUp /> : <IconArrowDown />}</>;

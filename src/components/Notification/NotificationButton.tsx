@@ -1,10 +1,10 @@
 import { Button } from '@hookooekoo/ui-button';
 
-import { NotificationAction } from './index';
+import { NotificationAction } from './interfaces';
 
-type NotificationButtonProps = NotificationAction;
+type Props = NotificationAction;
 
-export const NotificationButton = ({ label, onClick, disabled = false }: NotificationButtonProps) => (
+export const NotificationButton = ({ label, onClick, disabled = false }: Props) => (
   <Button
     className="w-full h-full p-[15px] flex justify-center items-center bg-white"
     onClick={onClick}
