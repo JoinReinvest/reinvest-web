@@ -2,6 +2,8 @@ import { Accordion } from 'components/Accordion';
 import { Button } from 'components/Button';
 import { ButtonAdd } from 'components/ButtonAdd';
 import { Checkbox } from 'components/Checkbox';
+import { IconInfo } from 'assets/icons/IconInfo';
+import { Notification } from 'components/Notification';
 import { Select } from 'components/Select';
 import { Stepper } from 'components/Stepper';
 import { Switch } from 'components/Switch';
@@ -109,6 +111,21 @@ const Index: NextPage = () => {
       <div className="max-w-md">
         <Stepper steps={['Deposited', 'Received', 'Invested']} />
       </div>
+
+      <section className="p-14">
+        <Notification
+          title="Dividend Update"
+          actions={[
+            { label: 'Reinvest', onClick: event => event.preventDefault() },
+            { label: 'Withdraw', onClick: event => event.preventDefault() },
+          ]}
+        >
+          <div className="flex gap-x-4 items-center">
+            <p className="text-14 text-green-deep">You have earned dividends: $10.75</p>
+            <IconInfo />
+          </div>
+        </Notification>
+      </section>
     </MainLayout>
   );
 };
