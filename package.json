@@ -40,6 +40,7 @@
     "@hookooekoo/configs-stylelint": "^0.1.0",
     "@hookooekoo/configs-tsconfig": "^0.0.11",
     "@hookooekoo/ui-button": "^0.0.9",
+    "@hookooekoo/ui-avatar": "^0.0.8",
     "@hookooekoo/ui-checkbox": "^1.1.0",
     "@hookooekoo/ui-collapsible": "^0.1.1",
     "@hookooekoo/ui-icon": "^0.0.9",
