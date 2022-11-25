@@ -1,13 +1,13 @@
-import { Button as BaseButton, ButtonProps as BaseButtonProps } from '@hookooekoo/ui-button';
+import { Button as PrimitiveButton, ButtonProps as PrimitiveProps } from '@hookooekoo/ui-button';
 import { IconAdd } from 'assets/icons/IconAdd';
 
-interface ButtonAddProps extends Pick<BaseButtonProps, 'onClick' | 'disabled'> {
+interface Props extends Pick<PrimitiveProps, 'onClick' | 'disabled'> {
   subtitle: string;
   title: string;
 }
 
-export const ButtonAdd = ({ title, subtitle, onClick, disabled = false }: ButtonAddProps) => (
-  <BaseButton
+export const ButtonAdd = ({ title, subtitle, onClick, disabled = false }: Props) => (
+  <PrimitiveButton
     className="p-22 flex items-center gap-x-22 text-left border border-secondary-5"
     onClick={onClick}
     disabled={disabled}
@@ -15,8 +15,8 @@ export const ButtonAdd = ({ title, subtitle, onClick, disabled = false }: Button
     <IconAdd className="stroke-black" />
 
     <div>
-      <h3 className="text-[15px]">{title}</h3>
+      <h3 className="text-[15px] font-extended-regular">{title}</h3>
       <p className="text-14 text-secondary-2 opacity-[0.6]">{subtitle}</p>
     </div>
-  </BaseButton>
+  </PrimitiveButton>
 );
