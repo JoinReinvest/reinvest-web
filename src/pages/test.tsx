@@ -1,5 +1,6 @@
 import { Accordion } from 'components/Accordion';
 import { Button } from 'components/Button';
+import { ButtonAdd } from 'components/ButtonAdd';
 import { Checkbox } from 'components/Checkbox';
 import { Select } from 'components/Select';
 import { Switch } from 'components/Switch';
@@ -50,6 +51,14 @@ const TestPage: NextPage = () => {
             label="Button"
             variant="outlined"
             size="lg"
+            className="mr-2"
+          />
+        </div>
+
+        <div className="mt-4 mb-4">
+          <ButtonAdd
+            title="Heading"
+            subtitle="Subtitle goes here"
           />
         </div>
 
