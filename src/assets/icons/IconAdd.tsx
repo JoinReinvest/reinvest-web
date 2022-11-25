@@ -1,9 +1,7 @@
-import { IconProps } from '@hookooekoo/interfaces-icon';
+import { Icon } from '@hookooekoo/ui-icon';
 
-export const IconAdd = ({ className, onClick }: IconProps) => (
+export const IconAdd = Icon(
   <svg
-    className={className}
-    onClick={onClick}
     width="32"
     height="32"
     viewBox="0 0 32 32"
@@ -22,5 +20,5 @@ export const IconAdd = ({ className, onClick }: IconProps) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-  </svg>
+  </svg>,
 );
