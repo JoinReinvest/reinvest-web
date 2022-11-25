@@ -1,0 +1,39 @@
+@import "@hookooekoo/ui-stepper/dist/index.css";
+
+.hkek-stepper {
+  &-dot {
+    @apply py-[0.3rem] rounded-full transition-[width,height] duration-500 ease-in;
+
+    &[data-active="false"] {
+      @apply w-[9px] h-[9px];
+    }
+
+    &[data-active="true"] {
+      @apply w-14 h-14;
+    }
+
+    &[data-filled="false"] {
+      @apply bg-secondary-4;
+    }
+
+    &[data-filled="true"] {
+      @apply bg-black;
+    }
+  }
+
+  &-line {
+    @apply border-t-2 transition duration-500 ease-in-out;
+
+    &[data-filled="false"] {
+      @apply border-gray-light;
+    }
+
+    &[data-filled="true"] {
+      @apply border-black;
+    }
+  }
+
+  &-label {
+    @apply mt-16 text-12;
+  }
+}
