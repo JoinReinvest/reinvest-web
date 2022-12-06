@@ -426,6 +426,11 @@
     "@hookooekoo/ui-input-control" "*"
     react-select "^5.6.1"
 
+"@hookooekoo/ui-stepper@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-stepper/-/ui-stepper-0.1.0.tgz#0ba7cc89701a439129fd5a98a63129da19ba8e67"
+  integrity sha512-D4P6NtqE7DYwQWUvpUvcjkmKF1pkMUI8VTvZmXzm886oZwakLNYIyUYTdnlI1caWTnXCYriYgpzF8ZO+erAQ6A==
+
 "@hookooekoo/ui-switch@^0.0.8":
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-switch/-/ui-switch-0.0.8.tgz#44006c3ab4c059cf7799c552120498de49fa37e3"

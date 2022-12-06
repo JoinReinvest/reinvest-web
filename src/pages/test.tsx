@@ -3,6 +3,7 @@ import { Button } from 'components/Button';
 import { ButtonAdd } from 'components/ButtonAdd';
 import { Checkbox } from 'components/Checkbox';
 import { Select } from 'components/Select';
+import { Stepper } from 'components/Stepper';
 import { Switch } from 'components/Switch';
 import { TextInput } from 'components/TextInput/index';
 import { NextPage } from 'next';
@@ -101,6 +102,10 @@ const TestPage: NextPage = () => {
             </Accordion>
           </Accordion>
         </div>
+      </div>
+
+      <div className="max-w-md">
+        <Stepper steps={['Deposited', 'Received', 'Invested']} />
       </div>
     </>
   );

@@ -43,6 +43,7 @@
     "@hookooekoo/ui-input-text": "^0.0.3",
     "@hookooekoo/ui-radio-group": "^0.3.0",
     "@hookooekoo/ui-select": "^0.1.0",
+    "@hookooekoo/ui-stepper": "^0.1.0",
     "@hookooekoo/ui-switch": "^0.0.8",
     "@hookooekoo/ui-table": "^0.0.8",
     "@tailwindcss/line-clamp": "^0.4.2",
