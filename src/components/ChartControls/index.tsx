@@ -1,6 +1,6 @@
-import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group'
+import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
 
-import { ChartControlProps } from './interfaces'
+import { ChartControlProps } from './interfaces';
 
 export const ChartControls = ({ options, value, onChange, name, required = false, disabled = false }: ChartControlProps) => {
   return (
@@ -19,11 +19,11 @@ export const ChartControls = ({ options, value, onChange, name, required = false
         <RadioGroupItem
           key={value}
           value={value}
-          className="mb-8 px-4 text-11 text-medium uppercase border-b-[2px] border-b-transparent data-[state='checked']:text-black data-[state='checked']:border-b-black data-[state='unchecked']:text-gray-light"
+          className="text-medium mb-8 border-b-[2px] border-b-transparent px-4 text-11 uppercase data-[state='checked']:border-b-black data-[state='checked']:text-black data-[state='unchecked']:text-gray-light"
         >
           <p>{label}</p>
         </RadioGroupItem>
       ))}
     </RadioGroup>
-  )
-}
+  );
+};
