@@ -3,12 +3,12 @@ import { IconCheckmark } from 'assets/icons/IconCheckmark';
 
 type Props = Omit<PrimitiveCheckboxProps, 'children'>;
 
-export const Checkbox = ({ isChecked = false, onChange, isDisabled = false }: Props) => (
+export const Checkbox = ({ checked = false, onChange, disabled = false }: Props) => (
   <PrimitiveCheckbox
-    isDisabled={isDisabled}
-    isChecked={isChecked}
+    disabled={disabled}
+    checked={checked}
     onChange={onChange}
   >
-    <IconCheckmark className="max-w-full max-h-full" />
+    <IconCheckmark className="max-h-full max-w-full" />
   </PrimitiveCheckbox>
 );

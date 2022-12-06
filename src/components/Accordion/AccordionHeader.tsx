@@ -6,7 +6,7 @@ import { AccordionProps } from './interfaces';
 type Props = Omit<AccordionProps, 'children'>;
 
 export const AccordionHeader = ({ isOpen, title, titleSize, subtitle, isIconRounded }: Props) => (
-  <header className="group flex w-full justify-between items-start gap-x-12 text-left">
+  <header className="group flex w-full items-start justify-between gap-x-12 text-left">
     <div>
       <AccordionTitle
         title={title}

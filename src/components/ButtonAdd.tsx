@@ -8,7 +8,7 @@ interface Props extends Pick<PrimitiveProps, 'onClick' | 'disabled'> {
 
 export const ButtonAdd = ({ title, subtitle, onClick, disabled = false }: Props) => (
   <PrimitiveButton
-    className="p-22 flex items-center gap-x-22 text-left border border-secondary-5"
+    className="flex items-center gap-x-22 border border-secondary-5 p-22 text-left"
     onClick={onClick}
     disabled={disabled}
   >

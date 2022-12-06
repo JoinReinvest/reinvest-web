@@ -1,0 +1,12 @@
+post-merge:
+  commands:
+    update:
+      run: yarn
+pre-commit:
+  commands:
+    linter:
+      run: yarn lint
+    check_types:
+      run: yarn check-types
+    stylelint:
+      run: yarn stylelint

@@ -1,3 +1,3 @@
-const postcssConfig = require('@hookooekoo/eslint-config/postcss');
+const postcssConfig = require('@hookooekoo/configs-postcss/postcss');
 
 module.exports = postcssConfig;
