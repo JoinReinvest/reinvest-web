@@ -41,6 +41,7 @@
     "@hookooekoo/ui-collapsible": "^0.0.8",
     "@hookooekoo/ui-icon": "^0.0.3",
     "@hookooekoo/ui-input-text": "^0.0.3",
+    "@hookooekoo/ui-radio-group": "^0.3.0",
     "@hookooekoo/ui-select": "^0.1.0",
     "@hookooekoo/ui-stepper": "^0.1.0",
     "@hookooekoo/ui-switch": "^0.0.8",
@@ -53,7 +54,7 @@
     "recharts": "^2.1.15",
     "rimraf": "3.0.2",
     "sass": "1.55.0",
-    "tailwindcss": "3.1.8"
+    "tailwindcss": "3.2.4"
   },
   "eslintConfig": {
     "extends": "@hookooekoo/eslint-config/next"
