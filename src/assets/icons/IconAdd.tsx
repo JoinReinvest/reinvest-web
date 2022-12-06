@@ -1,6 +1,6 @@
 import { Icon } from '@hookooekoo/ui-icon';
 
-export const IconArrowUp = Icon(
+export const IconAdd = Icon(
   <svg
     width="32"
     height="32"
@@ -9,8 +9,13 @@ export const IconArrowUp = Icon(
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M11 19L16 14L21 19"
-      stroke="black"
+      d="M9 16H23"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <path
+      d="M16 9V23"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
