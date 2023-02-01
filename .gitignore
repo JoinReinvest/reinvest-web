@@ -1,20 +1,5 @@
-node_modules/
 .DS_Store
 Thumbs.db
-.next/
-dist/
-*.tsbuildinfo
 
 .idea
 
-yarn-error.log
-
-public/robots.txt
-public/sitemap*.xml
-
-.env
-.env.production
-.env.development
-.env.local
-
-./out
