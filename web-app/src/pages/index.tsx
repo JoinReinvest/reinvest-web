@@ -10,7 +10,7 @@ import { Switch } from 'components/Switch';
 import { TextInput } from 'components/TextInput';
 import { NextPage } from 'next';
 import { createRef, useState } from 'react';
-
+import { Typography } from 'components/Typography';
 import { MainLayout } from '../layouts/MainLayout';
 
 const Index: NextPage = () => {
@@ -130,6 +130,22 @@ const Index: NextPage = () => {
             <IconInfo />
           </div>
         </Notification>
+      </section>
+
+      <section className='p-14 flex flex-col gap-8'>
+        <Typography variant='heading-1'>Heading 1</Typography>
+        <Typography variant='heading-2'>Heading 2</Typography>
+        <Typography variant='heading-3'>Heading 3</Typography>
+        <Typography variant='heading-4'>Heading 4</Typography>
+        <Typography variant='heading-5'>Heading 5</Typography>
+        <Typography variant='heading-6'>Heading 6</Typography>
+        <Typography variant='bonus-heading'>Bonus Heading</Typography>
+        <Typography variant='button'>Button text</Typography>
+        <Typography variant='link'>Link text</Typography>
+        <Typography variant='paragraph-large'>Paragraph Large</Typography>
+        <Typography variant='paragraph-emphasized'>Paragraph Emphasized</Typography>
+        <Typography variant='paragraph'>Paragraph</Typography>
+        <Typography variant='paragraph-small'>Paragraph Small</Typography>
       </section>
     </MainLayout>
   );
