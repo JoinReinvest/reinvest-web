@@ -18,6 +18,7 @@ module.exports = {
       10: '1rem',
       12: '1.2rem',
       14: '1.4rem',
+      15: '1.5rem',
       16: '1.6rem',
       18: '1.8rem',
       20: '2rem',
@@ -26,6 +27,11 @@ module.exports = {
       26: '2.6rem',
       28: '2.8rem',
       30: '3.0rem',
+      32: '3.2rem',
+      36: '3.6rem',
+      40: '4.0rem',
+      48: '4.8rem',
+      60: '6.0rem'
     },
     fontSize: {
       base: '10px',
@@ -95,6 +101,9 @@ module.exports = {
       'focused-input': '0 0px 0px 2px #C1EBD9',
     },
     extend: {
+      maxWidth: {
+        332: '33.2rem'
+      },
       fontWeight: {
         'extended-regular': 450,
       },
