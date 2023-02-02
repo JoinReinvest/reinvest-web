@@ -16,7 +16,7 @@ export const Avatar = ({ src, size = 'lg', altText }: AvatarProps) => {
         <Image
           className="rounded-full"
           src={src}
-          alt={altText}
+          alt={altText || ''}
           layout="fill"
         />
       }

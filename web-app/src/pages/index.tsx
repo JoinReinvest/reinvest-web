@@ -9,7 +9,7 @@ import { Stepper } from 'components/Stepper';
 import { Switch } from 'components/Switch';
 import { TextInput } from 'components/TextInput';
 import { NextPage } from 'next';
-import { useState } from 'react';
+import { createRef, useState } from 'react';
 
 import { MainLayout } from '../layouts/MainLayout';
 
@@ -17,6 +17,7 @@ const Index: NextPage = () => {
   const [inputValue, setInputValue] = useState('');
   const [checked, setChecked] = useState(false);
   const [selectValue, setSelectValue] = useState<string | undefined>(undefined);
+  const switchRef = createRef<HTMLInputElement>();
 
   return (
     <MainLayout>
@@ -68,8 +69,12 @@ const Index: NextPage = () => {
         </div>
 
         <Switch
-          isChecked={checked}
           onChange={state => setChecked(state)}
+          className="switch"
+          value="swith"
+          inputRef={switchRef}
+          checked
+          disabled={false}
         />
 
         <Checkbox

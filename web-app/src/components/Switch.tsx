@@ -1,9 +1,12 @@
 import { Switch as PrimitiveSwitch, SwitchProps as PrimitiveSwitchProps } from '@hookooekoo/ui-switch';
 
-export const Switch = ({ isChecked, onChange, isDisabled = false }: PrimitiveSwitchProps) => (
+export const Switch = ({ onChange, className, value, inputRef, disabled, checked }: PrimitiveSwitchProps) => (
   <PrimitiveSwitch
-    isChecked={isChecked}
+    className={className}
     onChange={onChange}
-    isDisabled={isDisabled}
+    value={value}
+    inputRef={inputRef}
+    disabled={disabled}
+    checked={checked}
   />
 );
