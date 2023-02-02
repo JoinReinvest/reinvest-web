@@ -260,9 +260,6 @@ module.exports = {
       'focused-input': '0 0px 0px 2px #C1EBD9',
     },
     extend: {
-      fontWeight: {
-        'extended-regular': 450,
-      },
       zIndex: {
         1: '1',
       },
