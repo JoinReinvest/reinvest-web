@@ -35,7 +35,7 @@
 }
 
 .hkek-select-control {
-  @apply input w-full relative flex items-center gap-x-10 mb-10 p-14 transition-[transform,color];
+  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-[transform,color];
   @apply text-secondary-3 border border-secondary-4 hover:border-green-frost-solid;
 
   &-content {
@@ -51,7 +51,7 @@
   }
 
   &-error-message {
-    @apply paragraph-small absolute left-0 mt-8 top-full text-secondary-error;
+    @apply typo-paragraph-small absolute left-0 mt-8 top-full text-secondary-error;
   }
 
   &[data-is-dirty-and-enabled="true"] {
