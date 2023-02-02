@@ -54,32 +54,42 @@ module.exports = {
       normal: 'normal',
     },
     colors: {
-      transparent: 'rgba(0,0,0,0)',
-      black: '#000000',
+      // PRIMARY
       white: '#ffffff',
+      black: {
+        '01': '#000000',
+        '02': '#1B1B1B'
+      },
       green: {
         deep: '#11270B',
         frost: {
-          solid: '#C1EBD9',
-          60: '#C1EBD999',
-          30: '#C1EBD94D',
+          '01': '#C1EBD9',
+          '02': '#C1EBD999',
+          '03': '#C1EBD94D',
         },
       },
+
+      // SECONDARY
+      dark: '#081224',
       gray: {
-        dark: '#1B1B1B',
-        light: '#D4D6DA',
+        '01': '#575E6C',
+        '02': '#939AA2',
+        '03': '#D4D6DA',
+        '04': '#E9E9E9',
+        '05': '#FCFCFC'
       },
-      secondary: {
-        1: '#081224',
-        2: '#575E6C',
-        3: '#939AA2',
-        4: '#D4D6DA',
-        5: '#E9E9E9',
-        6: '#FCFCFC',
+
+      // TERTIARY
+      tertiary: {
         success: '#44CB7A',
         error: '#FA375A',
-        warning: '#FAC337',
+        warning: '#FAC337'
       },
+
+      // AUXILIARY
+      transparent: 'transparent',
+      current: 'currentColor',
+      inherit: 'inherit'
     },
     boxShadow: {
       'focused-input': '0 0px 0px 2px #C1EBD9',
