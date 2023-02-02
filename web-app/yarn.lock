@@ -337,10 +337,10 @@
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-stepper/-/ui-stepper-0.1.3.tgz#050f55690629d0fcfa720820a5d787b3b610652c"
   integrity sha512-F4+sXmCoGuH0XC2Iupj9qgvYTIdEof6i9dLyrymd7g1wGhJA8N7US/IUAZwcoIgdaUHz4ubpiFFuMEUUJHsvgg==
 
-"@hookooekoo/ui-switch@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-switch/-/ui-switch-0.1.3.tgz#7fe42878a3004fe2e5aa8ff984fed39c8673df81"
-  integrity sha512-OstORgmS76Fe4VeaLX1pJ0Sfv/6xNcY0EwxM4uaNyEluPraha4YyQbaBMsNQy/55lpkFg1Hu6atc1iBs5eIsyA==
+"@hookooekoo/ui-switch@^0.1.6":
+  version "0.1.6"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-switch/-/ui-switch-0.1.6.tgz#d3dc807f8fdeaca2478b12c8823df660d534a01f"
+  integrity sha512-xrNJmABh4bHdAa4YloF2miYgLed9zHTm5ohbs595k/bszrIC+fFoXPQ6vkPWorq7jFo0SyShgB2XeBkOCE5Dsw==
   dependencies:
     "@hookooekoo/configs-stylelint" "^0.1.0"
     "@hookooekoo/ui-input-control" "*"
