@@ -15,15 +15,8 @@ module.exports = withBundleAnalyzer({
   poweredByHeader: false,
   trailingSlash: true,
   reactStrictMode: true,
-  images: {
-    domains: ['images.ctfassets.net'],
-  },
+  images: {},
   env: {
     SITE_NAME: process.env.SITE_NAME,
-    SITE_URL: process.env.SITE_URL,
-    CONTENTFUL_SPACE_ID: process.env.CONTENTFUL_SPACE_ID,
-    CONTENTFUL_ACCESS_TOKEN: process.env.CONTENTFUL_ACCESS_TOKEN,
-    CONTENTFUL_PREVIEW_ACCESS_TOKEN: process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN,
-    CONTENTFUL_PREVIEW_SECRET: process.env.CONTENTFUL_PREVIEW_SECRET,
   },
 });

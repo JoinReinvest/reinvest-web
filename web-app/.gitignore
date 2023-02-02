@@ -9,9 +9,6 @@ dist/
 
 yarn-error.log
 
-public/robots.txt
-public/sitemap*.xml
-
 .env
 .env.production
 .env.development

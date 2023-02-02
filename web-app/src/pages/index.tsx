@@ -1,8 +1,8 @@
+import { IconInfo } from 'assets/icons/IconInfo';
 import { Accordion } from 'components/Accordion';
 import { Button } from 'components/Button';
 import { ButtonAdd } from 'components/ButtonAdd';
 import { Checkbox } from 'components/Checkbox';
-import { IconInfo } from 'assets/icons/IconInfo';
 import { Notification } from 'components/Notification';
 import { Select } from 'components/Select';
 import { Stepper } from 'components/Stepper';
@@ -120,7 +120,7 @@ const Index: NextPage = () => {
             { label: 'Withdraw', onClick: event => event.preventDefault() },
           ]}
         >
-          <div className="flex gap-x-4 items-center">
+          <div className="flex items-center gap-x-4">
             <p className="text-14 text-green-deep">You have earned dividends: $10.75</p>
             <IconInfo />
           </div>

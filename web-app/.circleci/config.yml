@@ -3,7 +3,7 @@ version: 2.1
 defaults: &defaults
   working_directory: ~/repo
   docker:
-    - image: cimg/node:16.15
+    - image: cimg/node:18.13
 
 jobs:
   build:
@@ -29,6 +29,10 @@ jobs:
       - run:
           name: Lint
           command: yarn lint
+
+      - run:
+          name: Style lint
+          command: yarn stylelint
 
       - run:
           name: Check Types

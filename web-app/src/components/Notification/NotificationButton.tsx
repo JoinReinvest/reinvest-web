@@ -6,7 +6,7 @@ type Props = NotificationAction;
 
 export const NotificationButton = ({ label, onClick, disabled = false }: Props) => (
   <Button
-    className="w-full h-full p-[15px] flex justify-center items-center bg-white"
+    className="flex h-full w-full items-center justify-center bg-white p-[15px]"
     onClick={onClick}
     disabled={disabled}
   >

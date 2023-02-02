@@ -13,9 +13,9 @@ export const Notification = ({ isOpen, title, children, actions }: NotificationP
         title={title}
       />
     )}
-    className='max-w-[375px] cursor-pointer select-none"'
+    className='select-none" max-w-[375px] cursor-pointer'
   >
-    <div className="py-16 px-24 flex flex-col gap-y-8 bg-green-frost-solid/[0.4]">
+    <div className="flex flex-col gap-y-8 bg-green-frost-solid/[0.4] py-16 px-24">
       <div>{children}</div>
 
       <footer className="flex justify-between gap-x-12">
