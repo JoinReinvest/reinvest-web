@@ -21,8 +21,8 @@ export const SelectionCards = ({ value, onChange, options, name, required, disab
         value={option.value}
         className={cx(
           'px-[36px] py-24',
-          "data-[state='checked']:bg-green-frost-solid data-[state='checked']:text-black",
-          "data-[state='unchecked']:text-gray-light data-[state='unchecked']:border data-[state='unchecked']:border-gray-light",
+          "data-[state='checked']:bg-green-frost-01 data-[state='checked']:text-black-01",
+          "data-[state='unchecked']:text-gray-03 data-[state='unchecked']:border data-[state='unchecked']:border-gray-03",
         )}
       >
         <>

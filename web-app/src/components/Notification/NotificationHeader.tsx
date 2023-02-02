@@ -8,7 +8,7 @@ interface Props extends Pick<NotificationProps, 'title'> {
 }
 
 export const NotificationHeader = ({ isOpen, title }: Props) => (
-  <div className="flex items-center justify-between gap-x-16 bg-green-frost-solid py-16 px-24">
+  <div className="flex items-center justify-between gap-x-16 bg-green-frost-01 py-16 px-24">
     <div className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-white">
       <IconAlert />
     </div>

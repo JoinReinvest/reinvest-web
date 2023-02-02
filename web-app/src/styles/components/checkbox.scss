@@ -2,10 +2,10 @@
   @apply h-24 w-24 p-2 flex items-center rounded-full;
 
   &[data-state="checked"] {
-    @apply bg-secondary-5;
+    @apply bg-gray-04;
   }
 
   &[data-state="unchecked"] {
-    @apply border border-secondary-5;
+    @apply border border-gray-04;
   }
 }

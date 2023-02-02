@@ -20,8 +20,8 @@ export const TextInput = ({
   showSearchIcon = false,
 }: TextInputProps) => {
   const iconLeftClass = cx({
-    'absolute w-32 h-32 stroke-black': true,
-    'stroke-gray-light': !!disabled,
+    'absolute w-32 h-32 stroke-01': true,
+    'stroke-gray-03': !!disabled,
   });
 
   const iconRightClass = cx({

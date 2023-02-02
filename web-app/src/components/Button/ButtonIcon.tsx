@@ -9,7 +9,7 @@ type ButtonIconProps = Pick<ButtonProps, 'showIcon' | 'disabled'>;
 export const ButtonIcon = ({ showIcon, disabled }: ButtonIconProps) => {
   const styles = cx({
     'stroke-1 stroke-green-deep': true,
-    'stroke-secondary-3': !!disabled,
+    'stroke-gray-02': !!disabled,
   });
 
   return showIcon === 'left' ? <IconArrowLeft className={styles} /> : <IconArrowRight className={styles} />;

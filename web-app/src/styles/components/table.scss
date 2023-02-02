@@ -1,8 +1,8 @@
 .hkek-table {
-  @apply table-auto text-12 border border-secondary-5 select-none;
+  @apply table-auto text-12 border border-gray-04 select-none;
 
   tr {
-    @apply border-b border-b-secondary-5;
+    @apply border-b border-b-gray-04;
   }
 
   thead th {
