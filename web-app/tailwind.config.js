@@ -29,29 +29,204 @@ module.exports = {
     },
     fontSize: {
       base: '10px',
-      11: '1.1rem',
-      12: '1.2rem',
-      13: '1.3rem',
-      14: '1.4rem',
-      15: '1.5rem',
-      md: '1.6rem',
-      lg: '1.8rem',
-      xl: '2rem',
-      '2xl': '2.4rem',
-      '3xl': '2.8rem',
-      '4xl': '3rem',
-      '5xl': '3.6rem',
-      '6xl': '4.8rem',
-      '7xl': '5.4rem',
-      '8xl': '6.4rem',
-    },
-    lineHeight: {
-      90: '90%',
-      100: '100%',
-      110: '110%',
-      125: '125%',
-      150: '150%',
-      normal: 'normal',
+
+      'heading-1': [
+        '5.4rem',
+        {
+          lineHeight: '0.90em',
+          letterSpacing: '-0.05em',
+          fontWeight: 450,
+        },
+      ],
+
+      'heading-1-mobile': [
+        '6.4rem',
+        {
+          lineHeight: '0.90em',
+          letterSpacing: '-0.05em',
+          fontWeight: '500',
+        },
+      ],
+
+      'heading-2': [
+        '3.6rem',
+        {
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
+          fontWeight: '400',
+        },
+      ],
+
+      'heading-2-mobile': [
+        '5.4rem',
+        {
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
+          fontWeight: '500',
+        },
+      ],
+
+      'heading-3': [
+        '3.0rem',
+        {
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
+          fontWeight: '500',
+        },
+      ],
+
+      'heading-3-mobile': [
+        '4.8rem',
+        {
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
+          fontWeight: '500',
+        },
+      ],
+
+      'heading-4': [
+        '2.4rem',
+        {
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
+          fontWeight: '400',
+        },
+      ],
+
+      'heading-4-mobile': [
+        '1.8rem',
+        {
+          lineHeight: '1.50em',
+          letterSpacing: '0',
+          fontWeight: '400',
+        },
+      ],
+
+      'heading-5': [
+        '2.0rem',
+        {
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
+          fontWeight: '500',
+        },
+      ],
+
+      'heading-6': [
+        '1.6rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      'bonus-heading': [
+        '1.4rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      'bonus-heading-mobile': [
+        '2.8rem',
+        {
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
+          fontWeight: '500',
+        },
+      ],
+
+      button: [
+        '1.4rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      link: [
+        '1.4rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      'link-mobile': [
+        '1.2rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      'paragraph-large': [
+        '1.4rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '400',
+        },
+      ],
+
+      'paragraph-large-mobile': [
+        '1.6rem',
+        {
+          lineHeight: '1.5em',
+          letterSpacing: '0',
+          fontWeight: '400',
+        },
+      ],
+
+      'paragraph-emphasized': [
+        '1.4rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      'paragraph-emphasized-mobile': [
+        '1.6rem',
+        {
+          lineHeight: '1.5em',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      paragraph: [
+        '1.2rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '400',
+        },
+      ],
+
+      'paragraph-mobile': [
+        '1.4rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '400',
+        },
+      ],
+
+      'paragraph-small': [
+        '1.1rem',
+        {
+          lineHeight: 'auto',
+          letterSpacing: '0',
+          fontWeight: '400',
+        },
+      ],
     },
     colors: {
       transparent: 'rgba(0,0,0,0)',
@@ -96,8 +271,14 @@ module.exports = {
   plugins: [
     require('tailwindcss-text-fill'),
     require('@tailwindcss/line-clamp'),
-    function ({ addVariant }) {
+    function ({ addVariant, addUtilities }) {
       addVariant('child', '& > *');
+
+      addUtilities({
+        '.font-stretch-expanded': {
+          'font-stretch': 'expanded'
+        }
+      })
     },
   ],
 };
