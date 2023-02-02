@@ -73,6 +73,8 @@ const Index: NextPage = () => {
           className="switch"
           value="swith"
           inputRef={switchRef}
+          checked
+          disabled={false}
         />
 
         <Checkbox

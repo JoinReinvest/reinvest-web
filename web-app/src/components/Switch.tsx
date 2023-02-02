@@ -8,5 +8,5 @@ export const Switch = ({ onChange, className, value, inputRef, disabled, checked
     inputRef={inputRef}
     disabled={disabled}
     checked={checked}
-  ></PrimitiveSwitch>
+  />
 );
