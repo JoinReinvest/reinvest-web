@@ -9,7 +9,7 @@ export const variants = cva('text-15 font-medium', {
     },
     size: {
       sm: 'py-12 px-16',
-      lg: 'py-[15px] px-30',
+      lg: 'py-15 px-30',
     },
     disabled: {
       true: ['cursor-not-allowed'],

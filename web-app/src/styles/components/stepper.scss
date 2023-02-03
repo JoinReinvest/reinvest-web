@@ -2,10 +2,10 @@
 
 .hkek-stepper {
   &-dot {
-    @apply py-[0.3rem] rounded-full transition-[width,height] duration-500 ease-in;
+    @apply py-3 rounded-full transition-height-width duration-500 ease-in;
 
     &[data-active="false"] {
-      @apply w-[9px] h-[9px];
+      @apply w-9 h-9;
     }
 
     &[data-active="true"] {

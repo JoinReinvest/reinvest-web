@@ -4,9 +4,9 @@ export const variants = cva('relative', {
   variants: {
     size: {
       sm: 'w-28 h-28',
-      md: 'w-[44px] h-[44px]',
-      lg: 'w-[72px] h-[72px]',
-      xl: 'w-[100px] h-[100px]',
+      md: 'w-44 h-44',
+      lg: 'w-72 h-72',
+      xl: 'w-100 h-100',
     },
   },
 });

@@ -13,7 +13,7 @@ export const Notification = ({ isOpen, title, children, actions }: NotificationP
         title={title}
       />
     )}
-    className='select-none" max-w-[375px] cursor-pointer'
+    className='select-none" max-w-375 cursor-pointer'
   >
     <div className="flex flex-col gap-y-8 bg-green-frost-01/[0.4] py-16 px-24">
       <div>{children}</div>
