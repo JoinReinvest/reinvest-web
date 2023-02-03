@@ -37,15 +37,6 @@ module.exports = {
       base: '10px',
 
       'heading-1': [
-        '5.4rem',
-        {
-          lineHeight: '0.90em',
-          letterSpacing: '-0.05em',
-          fontWeight: 450,
-        },
-      ],
-
-      'heading-1-mobile': [
         '6.4rem',
         {
           lineHeight: '0.90em',
@@ -54,16 +45,16 @@ module.exports = {
         },
       ],
 
-      'heading-2': [
-        '3.6rem',
+      'heading-1-mobile': [
+        '5.4rem',
         {
-          lineHeight: '1.10em',
+          lineHeight: '0.90em',
           letterSpacing: '-0.05em',
-          fontWeight: '400',
+          fontWeight: 450,
         },
       ],
 
-      'heading-2-mobile': [
+      'heading-2': [
         '5.4rem',
         {
           lineHeight: '1.10em',
@@ -72,16 +63,16 @@ module.exports = {
         },
       ],
 
-      'heading-3': [
-        '3.0rem',
+      'heading-2-mobile': [
+        '3.6rem',
         {
           lineHeight: '1.10em',
           letterSpacing: '-0.05em',
-          fontWeight: '500',
+          fontWeight: '400',
         },
       ],
 
-      'heading-3-mobile': [
+      'heading-3': [
         '4.8rem',
         {
           lineHeight: '1.10em',
@@ -90,20 +81,29 @@ module.exports = {
         },
       ],
 
-      'heading-4': [
-        '2.4rem',
+      'heading-3-mobile': [
+        '3.0rem',
         {
           lineHeight: '1.10em',
           letterSpacing: '-0.05em',
+          fontWeight: '500',
+        },
+      ],
+
+      'heading-4': [
+        '1.8rem',
+        {
+          lineHeight: '1.50em',
+          letterSpacing: '0',
           fontWeight: '400',
         },
       ],
 
       'heading-4-mobile': [
-        '1.8rem',
+        '2.4rem',
         {
-          lineHeight: '1.50em',
-          letterSpacing: '0',
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
@@ -127,19 +127,19 @@ module.exports = {
       ],
 
       'bonus-heading': [
-        '1.4rem',
+        '2.8rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0',
+          lineHeight: '1.10em',
+          letterSpacing: '-0.05em',
           fontWeight: '500',
         },
       ],
 
       'bonus-heading-mobile': [
-        '2.8rem',
+        '1.4rem',
         {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
+          lineHeight: 'auto',
+          letterSpacing: '0',
           fontWeight: '500',
         },
       ],
@@ -154,7 +154,7 @@ module.exports = {
       ],
 
       link: [
-        '1.4rem',
+        '1.2rem',
         {
           lineHeight: 'auto',
           letterSpacing: '0',
@@ -163,7 +163,7 @@ module.exports = {
       ],
 
       'link-mobile': [
-        '1.2rem',
+        '1.4rem',
         {
           lineHeight: 'auto',
           letterSpacing: '0',
@@ -172,24 +172,33 @@ module.exports = {
       ],
 
       'paragraph-large': [
-        '1.4rem',
+        '1.6rem',
         {
-          lineHeight: 'auto',
+          lineHeight: '1.5em',
           letterSpacing: '0',
           fontWeight: '400',
         },
       ],
 
       'paragraph-large-mobile': [
-        '1.6rem',
+        '1.4rem',
         {
-          lineHeight: '1.5em',
+          lineHeight: 'auto',
           letterSpacing: '0',
           fontWeight: '400',
         },
       ],
 
       'paragraph-emphasized': [
+        '1.6rem',
+        {
+          lineHeight: '1.5em',
+          letterSpacing: '0',
+          fontWeight: '500',
+        },
+      ],
+
+      'paragraph-emphasized-mobile': [
         '1.4rem',
         {
           lineHeight: 'auto',
@@ -198,17 +207,8 @@ module.exports = {
         },
       ],
 
-      'paragraph-emphasized-mobile': [
-        '1.6rem',
-        {
-          lineHeight: '1.5em',
-          letterSpacing: '0',
-          fontWeight: '500',
-        },
-      ],
-
       paragraph: [
-        '1.2rem',
+        '1.4rem',
         {
           lineHeight: 'auto',
           letterSpacing: '0',
@@ -217,7 +217,7 @@ module.exports = {
       ],
 
       'paragraph-mobile': [
-        '1.4rem',
+        '1.2rem',
         {
           lineHeight: 'auto',
           letterSpacing: '0',
