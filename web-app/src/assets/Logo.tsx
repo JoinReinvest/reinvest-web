@@ -6,7 +6,7 @@ interface LogoProps {
   width?: number;
 }
 
-export const Logo = ({ color = tailwindConfig.theme.colors.green.frost.solid }: LogoProps) => (
+export const Logo = ({ color = tailwindConfig.theme.colors.green.frost['01'] }: LogoProps) => (
   <svg
     width="144"
     height="144"
