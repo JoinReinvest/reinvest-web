@@ -19,7 +19,7 @@ export const ChartControls = ({ options, value, onChange, name, required = false
         <RadioGroupItem
           key={value}
           value={value}
-          className="text-medium mb-8 border-b-[2px] border-b-transparent px-4 text-11 uppercase data-[state='checked']:border-b-black data-[state='checked']:text-black data-[state='unchecked']:text-gray-light"
+          className="text-medium mb-8 border-b-[2px] border-b-transparent px-4 text-11 uppercase data-[state='checked']:border-b-black-01 data-[state='checked']:text-black-01 data-[state='unchecked']:text-gray-03"
         >
           <p>{label}</p>
         </RadioGroupItem>

@@ -21,7 +21,7 @@ export const Accordion = ({ isOpen = false, title, titleSize = 'sm', subtitle, i
         />
       )}
     >
-      <div className="text-14 text-secondary-2">{children}</div>
+      <div className="text-14 text-gray-01">{children}</div>
     </Collapsible>
   );
 };

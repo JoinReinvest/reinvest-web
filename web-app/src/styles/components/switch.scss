@@ -4,11 +4,11 @@
   @apply cursor-pointer transition-colors duration-200 ease-in-out;
 
   &[data-state="unchecked"] {
-    @apply bg-secondary-5;
+    @apply bg-gray-04;
   }
 
   &[data-state="checked"] {
-    @apply bg-black;
+    @apply bg-black-01;
   }
 
   &-thumb {
