@@ -18,6 +18,7 @@ export const TextInput = ({
   disabled = false,
   showArrowIcon = false,
   showSearchIcon = false,
+  type = 'text',
 }: TextInputProps) => {
   const iconLeftClass = cx({
     'absolute w-32 h-32 stroke-01': true,
@@ -42,6 +43,7 @@ export const TextInput = ({
       error={error}
       iconLeft={showSearchIcon && <IconSearch className={iconLeftClass} />}
       iconRight={showArrowIcon && !disabled ? <IconArrowDown className={iconRightClass} /> : disabled && <IconDisabled className={iconRightClass} />}
+      type={type}
     />
   );
 };
