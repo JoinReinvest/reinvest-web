@@ -12,14 +12,17 @@ module.exports = {
     spacing: {
       0: 0,
       2: '.2rem',
+      3: '.3rem',
       4: '.4rem',
       6: '.6rem',
       8: '.8rem',
+      9: '.9rem',
       10: '1rem',
       12: '1.2rem',
       14: '1.4rem',
       15: '1.5rem',
       16: '1.6rem',
+      17.5: '1.75rem',
       18: '1.8rem',
       20: '2rem',
       22: '2.2rem',
@@ -27,11 +30,16 @@ module.exports = {
       26: '2.6rem',
       28: '2.8rem',
       30: '3.0rem',
+      31.75: '3.175rem',
       32: '3.2rem',
       36: '3.6rem',
       40: '4.0rem',
+      42: '4.2rem',
+      44: '4.4rem',
       48: '4.8rem',
       60: '6.0rem',
+      72: '7.2rem',
+      100: '10.0rem'
     },
     fontSize: {
       base: '10px',
@@ -278,6 +286,11 @@ module.exports = {
     extend: {
       maxWidth: {
         332: '33.2rem',
+        375: '37.5rem'
+      },
+      transitionProperty: {
+        'height-width': 'height, width',
+        'transform-color': 'transform, color'
       },
       zIndex: {
         1: '1',
@@ -289,6 +302,9 @@ module.exports = {
     require('@tailwindcss/line-clamp'),
     function ({ addVariant, addUtilities }) {
       addVariant('child', '& > *');
+
+      addVariant('state-checked', '&[data-state="checked"]');
+      addVariant('state-unchecked', '&[data-state="unchecked"]')
 
       addUtilities({
         '.font-stretch-expanded': {
