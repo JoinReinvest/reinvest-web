@@ -3,9 +3,9 @@ import { cva } from 'class-variance-authority';
 export const variants = cva('text-15 font-medium', {
   variants: {
     variant: {
-      default: ['bg-green-frost-solid'],
-      outlined: ['border-2 border-green-frost-solid'],
-      dashed: ['border border-dashed border-green-frost-solid'],
+      default: ['bg-green-frost-01'],
+      outlined: ['border-2 border-green-frost-01'],
+      dashed: ['border border-dashed border-green-frost-01'],
     },
     size: {
       sm: 'py-12 px-16',
@@ -29,17 +29,17 @@ export const variants = cva('text-15 font-medium', {
     {
       disabled: true,
       variant: 'default',
-      className: 'bg-secondary-5 text-secondary-3',
+      className: 'bg-gray-04 text-gray-02',
     },
     {
       disabled: true,
       variant: 'outlined',
-      className: 'text-secondary-4 border-secondary-5',
+      className: 'text-gray-03 border-gray-04',
     },
     {
       disabled: true,
       variant: 'dashed',
-      className: 'text-secondary-4 border-secondary-5',
+      className: 'text-gray-03 border-gray-04',
     },
   ],
 });

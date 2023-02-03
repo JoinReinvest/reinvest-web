@@ -1,8 +1,8 @@
 .hkek-select {
-  @apply placeholder:text-secondary-3 text-black focus-visible:outline-none;
+  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none;
 
   &__menu {
-    @apply -left-14 w-[31.75rem] bg-green-frost-solid text-black;
+    @apply -left-14 w-[31.75rem] bg-green-frost-01 text-black-01;
   }
 
   &__control--menu-is-open {
@@ -22,7 +22,7 @@
   }
 
   &[disabled] {
-    @apply text-secondary-3 #{!important};
+    @apply text-gray-02 #{!important};
   }
 
   &[data-is-dirty="false"] {
@@ -30,13 +30,13 @@
   }
 
   &[data-has-error="true"] {
-    @apply border-secondary-error #{!important};
+    @apply border-tertiary-error #{!important};
   }
 }
 
 .hkek-select-control {
   @apply input w-full relative flex items-center gap-x-10 mb-10 p-14 transition-[transform,color];
-  @apply text-secondary-3 border border-secondary-4 hover:border-green-frost-solid;
+  @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {
     @apply flex-1 h-[1.75rem];
@@ -47,20 +47,20 @@
   }
 
   &-placeholder {
-    @apply transition-[transform,color] absolute text-secondary-3 line-clamp-1;
+    @apply transition-[transform,color] absolute text-gray-02 line-clamp-1;
   }
 
   &-error-message {
-    @apply paragraph-small absolute left-0 mt-8 top-full text-secondary-error;
+    @apply paragraph-small absolute left-0 mt-8 top-full text-tertiary-error;
   }
 
   &[data-is-dirty-and-enabled="true"] {
-    @apply border-green-frost-solid text-black;
+    @apply border-green-frost-01 text-black-01;
   }
 
   &[data-has-error="true"] {
-    @apply bg-secondary-error/5 shadow-transparent mb-26;
-    @apply border-secondary-error #{!important};
+    @apply bg-tertiary-error/5 shadow-transparent mb-26;
+    @apply border-tertiary-error #{!important};
   }
 
   &[data-is-dirty="true"] {
@@ -70,11 +70,11 @@
   }
 
   &[data-is-disabled="true"] {
-    @apply bg-secondary-6 border-secondary-4 pointer-events-none;
+    @apply bg-gray-05 border-gray-03 pointer-events-none;
 
     .hkek-select-control-placeholder {
       @apply z-1;
-      @apply text-secondary-3 #{!important};
+      @apply text-gray-02 #{!important};
     }
   }
 }

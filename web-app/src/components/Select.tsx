@@ -19,6 +19,6 @@ export const Select = ({ name, value, options, disabled = false, error, onChange
     required={required}
     onChange={onChange}
     getSelectedOption={(options, value) => options.filter(option => option.value === value)}
-    dropdownIcon={<IconArrowDown className="w-32 h-auto stroke-black" />}
+    dropdownIcon={<IconArrowDown className="w-32 h-auto stroke-black-01" />}
   />
 );

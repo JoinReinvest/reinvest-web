@@ -13,11 +13,11 @@
     }
 
     &[data-filled="false"] {
-      @apply bg-secondary-4;
+      @apply bg-gray-03;
     }
 
     &[data-filled="true"] {
-      @apply bg-black;
+      @apply bg-black-01;
     }
   }
 
@@ -25,11 +25,11 @@
     @apply border-t-2 transition duration-500 ease-in-out;
 
     &[data-filled="false"] {
-      @apply border-gray-light;
+      @apply border-gray-03;
     }
 
     &[data-filled="true"] {
-      @apply border-black;
+      @apply border-black-01;
     }
   }
 

@@ -8,15 +8,15 @@ interface Props extends Pick<PrimitiveProps, 'onClick' | 'disabled'> {
 
 export const ButtonAdd = ({ title, subtitle, onClick, disabled = false }: Props) => (
   <PrimitiveButton
-    className="flex items-center gap-x-22 border border-secondary-5 p-22 text-left"
+    className="flex items-center gap-x-22 border border-gray-04 p-22 text-left"
     onClick={onClick}
     disabled={disabled}
   >
-    <IconAdd className="stroke-black" />
+    <IconAdd className="stroke-black-01" />
 
     <div>
       <h3 className="text-[15px] font-extended-regular">{title}</h3>
-      <p className="text-14 text-secondary-2 opacity-[0.6]">{subtitle}</p>
+      <p className="text-14 text-gray-01 opacity-[0.6]">{subtitle}</p>
     </div>
   </PrimitiveButton>
 );
