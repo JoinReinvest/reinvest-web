@@ -2,35 +2,8 @@
   font-display: fallback;
   font-family: GT-America;
   font-style: normal;
-  font-weight: 100;
-  src:
-    local("GTAmerica-Thin"),
-    local("GTAmerica Thin"),
-    url("../assets/fonts/GTAmerica-Thin.woff2") format("woff2"),
-    url("../assets/fonts/GTAmerica-Thin.woff") format("woff"),
-    url("../assets/fonts/GTAmerica-Thin.ttf") format("truetype"),
-    url("../assets/fonts/GTAmerica-Thin.otf") format("opentype");
-}
-
-@font-face {
-  font-display: fallback;
-  font-family: GT-America;
-  font-style: normal;
-  font-weight: 300;
-  src:
-    local("GTAmerica-Light"),
-    local("GTAmerica Light"),
-    url("../assets/fonts/GTAmerica-Light.woff2") format("woff2"),
-    url("../assets/fonts/GTAmerica-Light.woff") format("woff"),
-    url("../assets/fonts/GTAmerica-Light.ttf") format("truetype"),
-    url("../assets/fonts/GTAmerica-Light.otf") format("opentype");
-}
-
-@font-face {
-  font-display: fallback;
-  font-family: GT-America;
-  font-style: normal;
   font-weight: 400;
+  font-stretch: normal;
   src:
     local("GTAmerica-Regular"),
     local("GTAmerica Regular"),
@@ -45,6 +18,7 @@
   font-family: GT-America;
   font-style: normal;
   font-weight: 500;
+  font-stretch: normal;
   src:
     local("GTAmerica-Medium"),
     local("GTAmerica Medium"),
@@ -56,14 +30,14 @@
 
 @font-face {
   font-display: fallback;
-  font-family: GT-AmericaExtended;
+  font-family: GT-America;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 400;
+  font-stretch: expanded;
   src:
-    local("GTAmerica-Extended-Medium"),
-    local("GTAmerica Extended Medium"),
-    url("../assets/fonts/GTAmerica-Extended-Medium.woff2") format("woff2"),
-    url("../assets/fonts/GTAmerica-Extended-Medium.woff") format("woff"),
-    url("../assets/fonts/GTAmerica-Extended-Medium.ttf") format("truetype"),
-    url("../assets/fonts/GTAmerica-Extended-Medium.otf") format("opentype");
+    local("GTAmerica-Extended-Regular"),
+    local("GTAmerica Extended Regular"),
+    url("../assets/fonts/GTAmerica-Extended-Regular.woff2") format("woff2"),
+    url("../assets/fonts/GTAmerica-Extended-Regular.woff") format("woff"),
+    url("../assets/fonts/GTAmerica-Extended-Regular.otf") format("opentype");
 }

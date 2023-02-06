@@ -1,30 +1,59 @@
 import { Typography as PrimitiveTypography, TypographyProps as PrimitiveProps } from '@hookooekoo/ui-typography';
 import { cva } from 'class-variance-authority';
 
-type PrimitiveVariants = Exclude<PrimitiveProps['variant'], 'p' | 'span' | 'div' | undefined>;
-export type Variants = 'p-large' | 'link' | PrimitiveVariants;
+type Variants =
+  | 'heading-1'
+  | 'heading-2'
+  | 'heading-3'
+  | 'heading-4'
+  | 'heading-5'
+  | 'heading-6'
+  | 'bonus-heading'
+  | 'bonus-heading-mobile'
+  | 'button'
+  | 'link'
+  | 'paragraph-large'
+  | 'paragraph-emphasized'
+  | 'paragraph'
+  | 'paragraph-small';
 
 interface Props extends Omit<PrimitiveProps, 'variant'> {
   variant: Variants;
 }
 
 const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
-  ['h1', 'h1'],
-  ['p-large', 'p'],
-  ['link', 'p'],
+  ['heading-1', 'h1'],
+  ['heading-2', 'h2'],
+  ['heading-3', 'h3'],
+  ['heading-4', 'h4'],
+  ['heading-5', 'h5'],
+  ['heading-6', 'h6'],
+  ['bonus-heading', 'h5'],
+  ['bonus-heading-mobile', 'h5'],
+  ['link', 'span'],
+  ['paragraph-large', 'p'],
+  ['paragraph-emphasized', 'p'],
+  ['paragraph', 'p'],
+  ['paragraph-small', 'p'],
 ]);
 
 const variants = cva(undefined, {
   variants: {
     variant: {
-      h1: 'text-7xl font-normal leading-90 tracking-tighter',
-      h2: 'text-5xl font-normal leading-125 tracking-tighter',
-      h3: 'text-4.5xl font-light leading-40 tracking-tight-0.03 lg:leading-60',
-      h4: ['text-2xl leading-29 font-normal tracking-wider'],
-      h5: ['text-xl font-normal leading-125 tracking-tighter'],
-      h6: ['text-lg font-normal leading-normal', 'lg:leading-22'],
-      'p-large': ['font-normal text-md leading-150'],
-      link: ['font-normal text-14 leading-18'],
+      'heading-1': 'typo-heading-1',
+      'heading-2': 'typo-heading-2',
+      'heading-3': 'typo-heading-3',
+      'heading-4': 'typo-heading-4',
+      'heading-5': 'typo-heading-5',
+      'heading-6': 'typo-heading-6',
+      'bonus-heading': 'typo-bonus-heading',
+      'bonus-heading-mobile': 'text-bonus-heading-mobile font-stretch-expanded',
+      button: 'typo-button',
+      link: 'typo-link',
+      'paragraph-large': 'typo-paragraph-large',
+      'paragraph-emphasized': 'typo-paragraph-emphasized',
+      paragraph: 'typo-paragraph',
+      'paragraph-small': 'typo-paragraph-small',
     },
   },
 });

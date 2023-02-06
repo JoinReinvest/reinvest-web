@@ -1,10 +1,11 @@
+import { Typography } from 'components/Typography';
 import { AccordionProps } from './interfaces';
-import { variant } from './variants/accordion-title';
 
 type Props = Pick<AccordionProps, 'title' | 'titleSize'>;
 
 export const AccordionTitle = ({ title, titleSize }: Props) => {
-  const styles = variant({ titleSize });
+  const sizeIsSm = titleSize === 'sm';
+  const variant = sizeIsSm ? 'heading-6' : 'bonus-heading';
 
-  return <h4 className={styles}>{title}</h4>;
+  return <Typography variant={variant}>{title}</Typography>;
 };
