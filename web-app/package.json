@@ -22,6 +22,7 @@
   },
   "devDependencies": {
     "@hookooekoo/ui-typography": "^0.1.3",
+    "@hookooekoo/ui-dialog": "^0.1.3",
     "@next/bundle-analyzer": "13.1.6",
     "autoprefixer": "10.4.13",
     "classnames": "^2.3.2",
