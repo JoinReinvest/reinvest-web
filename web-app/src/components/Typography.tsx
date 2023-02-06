@@ -2,7 +2,7 @@ import { Typography as PrimitiveTypography, TypographyProps as PrimitiveProps } 
 import { cva } from 'class-variance-authority';
 
 type PrimitiveVariants = Exclude<PrimitiveProps['variant'], 'p' | 'span' | 'div' | undefined>;
-export type Variants = 'p-large' | PrimitiveVariants;
+export type Variants = 'p-large' | 'link' | PrimitiveVariants;
 
 interface Props extends Omit<PrimitiveProps, 'variant'> {
   variant: Variants;
@@ -11,6 +11,7 @@ interface Props extends Omit<PrimitiveProps, 'variant'> {
 const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
   ['h1', 'h1'],
   ['p-large', 'p'],
+  ['link', 'p'],
 ]);
 
 const variants = cva(undefined, {
@@ -23,6 +24,7 @@ const variants = cva(undefined, {
       h5: ['text-xl font-normal leading-125 tracking-tighter'],
       h6: ['text-lg font-normal leading-normal', 'lg:leading-22'],
       'p-large': ['font-normal text-md leading-150'],
+      link: ['font-normal text-14 leading-18'],
     },
   },
 });

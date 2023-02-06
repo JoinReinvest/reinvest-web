@@ -31,7 +31,8 @@ module.exports = {
       36: '3.6rem',
       40: '4.0rem',
       48: '4.8rem',
-      60: '6.0rem'
+      60: '6.0rem',
+      83: '8.3rem',
     },
     fontSize: {
       base: '10px',
@@ -52,6 +53,8 @@ module.exports = {
       '8xl': '6.4rem',
     },
     lineHeight: {
+      18: '1.8rem',
+      19: '1.9rem',
       90: '90%',
       100: '100%',
       110: '110%',
@@ -64,7 +67,7 @@ module.exports = {
       white: '#ffffff',
       black: {
         '01': '#000000',
-        '02': '#1B1B1B'
+        '02': '#1B1B1B',
       },
       green: {
         deep: '#11270B',
@@ -82,27 +85,27 @@ module.exports = {
         '02': '#939AA2',
         '03': '#D4D6DA',
         '04': '#E9E9E9',
-        '05': '#FCFCFC'
+        '05': '#FCFCFC',
       },
 
       // TERTIARY
       tertiary: {
         success: '#44CB7A',
         error: '#FA375A',
-        warning: '#FAC337'
+        warning: '#FAC337',
       },
 
       // AUXILIARY
       transparent: 'transparent',
       current: 'currentColor',
-      inherit: 'inherit'
+      inherit: 'inherit',
     },
     boxShadow: {
       'focused-input': '0 0px 0px 2px #C1EBD9',
     },
     extend: {
       maxWidth: {
-        332: '33.2rem'
+        332: '33.2rem',
       },
       fontWeight: {
         'extended-regular': 450,

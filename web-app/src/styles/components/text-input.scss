@@ -15,7 +15,7 @@
 }
 
 .hkek-input-text-control {
-  @apply input w-full relative flex items-center gap-x-10 mb-10 p-14 transition-[transform,color];
+  @apply input w-full relative flex items-center gap-x-10 mb-10 p-14 transition-[transform,color] bg-white;
   @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {
@@ -45,7 +45,7 @@
 
   &[data-is-dirty="true"] {
     .hkek-input-text-control-placeholder {
-      @apply -z-10 text-base -translate-y-6 top-10;
+      @apply text-base -translate-y-6 top-10;
     }
   }
 

@@ -1,18 +1,20 @@
 import { tailwindConfig } from '../tailwind';
 
 interface LogoProps {
+  className?: string;
   color?: string;
   height?: number;
   width?: number;
 }
 
-export const Logo = ({ color = tailwindConfig.theme.colors.green.frost['01'] }: LogoProps) => (
+export const Logo = ({ color = tailwindConfig.theme.colors.green.frost['01'], className, width = 144, height = 144 }: LogoProps) => (
   <svg
-    width="144"
-    height="144"
+    width={width}
+    height={height}
     viewBox="0 0 144 144"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
+    className={className}
   >
     <path
       d="M0 4.60156L93.9264 143.999H140.386L46.4601 4.60156H0Z"
