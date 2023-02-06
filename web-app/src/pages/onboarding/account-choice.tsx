@@ -24,7 +24,9 @@ const accountTypes = [
 const AccountChoicesPage: NextPage = () => {
   return (
     <div className="bg-black-01 flex h-screen w-screen flex-col items-center justify-center gap-60 p-24">
-      <Header title="Which type of account would you like to open?" />
+      <div className="text-white lg:w-1/4 lg:text-center">
+        <Header title="Which type of account would you like to open?" />
+      </div>
       <div className="flex w-full flex-col items-center gap-24">
         <SelectionCards options={accountTypes} />
         <Link
