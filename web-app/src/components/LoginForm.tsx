@@ -40,7 +40,7 @@ export const LoginForm = () => {
       <Button
         type="submit"
         label="Sign In"
-        className="w-full bg-white"
+        className="text-button w-full bg-white"
       />
     </>
   );

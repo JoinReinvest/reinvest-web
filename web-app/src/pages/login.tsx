@@ -27,7 +27,7 @@ const Login: NextPage = () => {
   };
 
   return (
-    <div className="gap-83 relative flex h-screen flex-col items-center justify-center text-white">
+    <div className="gap-84 relative flex h-screen flex-col items-center justify-center text-white">
       <video
         autoPlay
         loop
@@ -43,8 +43,8 @@ const Login: NextPage = () => {
       <Logo className="z-30" />
       <div className="max-w-332 z-30 flex flex-col gap-24">
         <div className="flex flex-col items-center justify-center gap-16 text-center">
-          <Typography variant="h1">Sign in</Typography>
-          <Typography variant="p-large">Building your wealth while rebuilding our communities.</Typography>
+          <Typography variant="heading-2">Sign in</Typography>
+          <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
         </div>
         <FormProvider {...form}>
           <form
