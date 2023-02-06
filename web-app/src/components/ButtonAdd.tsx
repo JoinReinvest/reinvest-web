@@ -1,5 +1,6 @@
 import { Button as PrimitiveButton, ButtonProps as PrimitiveProps } from '@hookooekoo/ui-button';
 import { IconAdd } from 'assets/icons/IconAdd';
+import { Typography } from 'components/Typography';
 
 interface Props extends Pick<PrimitiveProps, 'onClick' | 'disabled'> {
   subtitle: string;
@@ -15,8 +16,13 @@ export const ButtonAdd = ({ title, subtitle, onClick, disabled = false }: Props)
     <IconAdd className="stroke-black-01" />
 
     <div>
-      <h3 className="text-[15px] font-extended-regular">{title}</h3>
-      <p className="text-14 text-gray-01 opacity-[0.6]">{subtitle}</p>
+      <Typography variant="bonus-heading-mobile">{title}</Typography>
+      <Typography
+        variant="paragraph"
+        className="text-gray-01 opacity-60"
+      >
+        {subtitle}
+      </Typography>
     </div>
   </PrimitiveButton>
 );

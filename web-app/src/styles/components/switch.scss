@@ -1,26 +1,12 @@
 .hkek-switch {
-  @apply relative h-26 w-[4.8rem] inline-flex flex-shrink-0;
+  @apply relative h-26 w-48 inline-flex flex-shrink-0;
   @apply rounded-full border-2 border-transparent;
   @apply cursor-pointer transition-colors duration-200 ease-in-out;
-
-  &[data-state="unchecked"] {
-    @apply bg-gray-04;
-  }
-
-  &[data-state="checked"] {
-    @apply bg-black-01;
-  }
+  @apply state-checked:bg-black-01 state-unchecked:bg-gray-04;
 
   &-thumb {
     @apply inline-block h-22 w-22 transform rounded-full bg-white ring-0;
     @apply pointer-events-none transition duration-200 ease-in-out;
-
-    &[data-state="unchecked"] {
-      @apply translate-x-0;
-    }
-
-    &[data-state="checked"] {
-      @apply translate-x-full;
-    }
+    @apply state-checked:translate-x-full state-unchecked:translate-x-0;
   }
 }
