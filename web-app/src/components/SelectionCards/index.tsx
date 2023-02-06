@@ -26,18 +26,15 @@ export const SelectionCards = ({ value, onChange, options, name, required, disab
           'state-unchecked:text-gray-03 state-unchecked:border state-unchecked:border-gray-03',
         )}
       >
-        <Typography
-          variant="paragraph-emphasized"
-          className="state-checked:"
-        >
-          {option.title}
-        </Typography>
-        <Typography
-          className="text-gray-03 w-2/3"
-          variant="paragraph-small"
-        >
-          {option.description}
-        </Typography>
+        <Typography variant="paragraph-emphasized">{option.title}</Typography>
+        <div className="w-2/3">
+          <Typography
+            className="text-gray-03"
+            variant="paragraph-small"
+          >
+            {option.description}
+          </Typography>
+        </div>
       </RadioGroupItem>
     ))}
   </RadioGroup>
