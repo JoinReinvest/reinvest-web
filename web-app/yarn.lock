@@ -354,6 +354,14 @@
     "@hookooekoo/configs-stylelint" "^0.1.2"
     "@tanstack/react-table" "^8.7.6"
 
+"@hookooekoo/ui-typography@^0.1.3":
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-typography/-/ui-typography-0.1.3.tgz#3c281d67b4fa42fda62979ff5601520daceb7545"
+  integrity sha512-dzdEVLNgCQx5kPkgioIjzBVCBE3EVgo7xBcg5YS2LNDW7WuO3YlkvkNeh+rJS4MWOO50cy+R0ZlUM+iOKi8Amw==
+  dependencies:
+    "@hookooekoo/configs-stylelint" "^0.1.0"
+    classnames "^2.3.2"
+
 "@humanwhocodes/config-array@^0.11.8":
   version "0.11.8"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.11.8.tgz#03595ac2075a4dc0f191cc2131de14fbd7d410b9"

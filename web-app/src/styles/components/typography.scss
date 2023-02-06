@@ -1,0 +1,55 @@
+@tailwind components;
+
+@layer components {
+  .typo-heading-1 {
+    @apply text-heading-1-mobile lg:text-heading-1 font-stretch-expanded;
+  }
+
+  .typo-heading-2 {
+    @apply text-heading-2-mobile lg:text-heading-2 max-lg:font-stretch-expanded;
+  }
+
+  .typo-heading-3 {
+    @apply text-heading-3-mobile lg:text-heading-3 font-stretch-expanded;
+  }
+
+  .typo-heading-4 {
+    @apply text-heading-4-mobile lg:text-heading-4;
+  }
+
+  .typo-heading-5 {
+    @apply text-heading-5 font-stretch-expanded;
+  }
+
+  .typo-heading-6 {
+    @apply text-heading-6;
+  }
+
+  .typo-bonus-heading {
+    @apply text-bonus-heading-mobile lg:text-bonus-heading font-stretch-expanded;
+  }
+
+  .typo-button {
+    @apply text-button;
+  }
+
+  .typo-link {
+    @apply text-link-mobile lg:text-link underline font-stretch-expanded;
+  }
+
+  .typo-paragraph {
+    @apply text-paragraph;
+  }
+
+  .typo-paragraph-large {
+    @apply text-paragraph-large-mobile lg:text-paragraph-large;
+  }
+
+  .typo-paragraph-emphasized {
+    @apply text-paragraph-emphasized-mobile lg:text-paragraph-emphasized;
+  }
+
+  .typo-paragraph-small {
+    @apply text-paragraph-small;
+  }
+}
