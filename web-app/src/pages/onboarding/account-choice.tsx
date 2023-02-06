@@ -11,7 +11,6 @@ const accountTypes = [
   },
   {
     title: 'For Corporations',
-
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     key: 'corporation',
   },
