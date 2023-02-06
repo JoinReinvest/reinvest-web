@@ -9,6 +9,11 @@ interface LinkProps {
 
 export const Link = ({ href, title }: LinkProps) => (
   <PrimitiveLink href={href}>
-    <Typography variant="link">{title}</Typography>
+    <Typography
+      variant="link"
+      className="text-green-frost-01"
+    >
+      {title}
+    </Typography>
   </PrimitiveLink>
 );
