@@ -1,9 +1,8 @@
-import PrimitiveLink from 'next/link';
+import PrimitiveLink, { LinkProps as PrimitiveLinkProps } from 'next/link';
 
 import { Typography } from './Typography';
 
-interface LinkProps {
-  href: string;
+interface LinkProps extends PrimitiveLinkProps {
   title: string;
 }
 
