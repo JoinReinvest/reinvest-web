@@ -324,6 +324,11 @@
     "@hookooekoo/configs-stylelint" "^0.1.0"
     "@hookooekoo/ui-input-control" "*"
 
+"@hookooekoo/ui-link@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-link/-/ui-link-0.0.5.tgz#526b9cfd6f8e3ad8d62a2dc25c3e8bfee17d7398"
+  integrity sha512-4gZdANFcFvJceJ5Md152aDybaH0dAAX2CmAq7RMra8ZYHY6FcblMfm6DGVWgb1sf/VrnxTbx/b9RHx7lBf6Q4Q==
+
 "@hookooekoo/ui-radio-group@^0.4.2":
   version "0.4.2"
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-radio-group/-/ui-radio-group-0.4.2.tgz#f0b38b0071c9259651f1633f2106ea1ea667db7c"
