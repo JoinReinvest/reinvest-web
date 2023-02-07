@@ -1,8 +1,8 @@
 import { Link as PrimitiveLink, LinkType } from '@hookooekoo/ui-link';
-import { ReactNode } from 'react'
+import { ReactNode } from 'react';
 
 interface LinkProps extends LinkType {
-  children: ReactNode
+  children: ReactNode;
 }
 export const Link = (props: LinkProps) => (
   <PrimitiveLink

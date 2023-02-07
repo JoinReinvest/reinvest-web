@@ -1,13 +1,13 @@
-import { Dialog } from '@hookooekoo/ui-dialog'
+import { Dialog } from '@hookooekoo/ui-dialog';
+import { ReactNode } from 'react';
 
-import { ReactNode } from 'react'
-import { Footer } from './Footer'
-import { Header } from './Header'
+import { Footer } from './Footer';
+import { Header } from './Header';
 
 export interface Props {
+  children: ReactNode;
   isOpen: boolean;
   onOpenChange: (state: boolean) => void;
-  children: ReactNode;
 }
 
 export const BlackModal = ({ isOpen = false, onOpenChange, children }: Props) => (
@@ -16,10 +16,10 @@ export const BlackModal = ({ isOpen = false, onOpenChange, children }: Props) =>
     onOpenChange={onOpenChange}
     className="modal-fullscreen"
   >
-    <div className="h-full w-full flex flex-col justify-between items-center overflow-y-hidden py-40 px-20 gap-40 text-white">
+    <div className="flex h-full w-full flex-col items-center justify-between gap-40 overflow-y-hidden py-40 px-20 text-white">
       <Header />
-      <div className="max-w-330 mx-auto overflow-x-auto">{children}</div>
+      <div className="mx-auto max-w-330 overflow-x-auto">{children}</div>
       <Footer />
     </div>
   </Dialog>
-)
+);
