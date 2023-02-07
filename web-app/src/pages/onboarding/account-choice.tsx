@@ -30,7 +30,7 @@ const AccountChoicesPage: NextPage = () => {
       <div className="flex w-full flex-col items-center gap-24">
         <SelectionCards options={accountTypes} />
         <Link
-          href="/onboarding/descriptions"
+          href="/onboarding/accounts-descriptions"
           title="Not sure which is best for you?"
         />
       </div>
