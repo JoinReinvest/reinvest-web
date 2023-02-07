@@ -1,15 +1,8 @@
-import { Button } from 'components/Button';
 import { Typography } from 'components/Typography';
 import { Link } from 'components/Link';
-import { Props } from '../interfaces';
 
-export const ModalFullScreenFooter = ({ buttonProps }: Pick<Props, 'buttonProps'>) => (
-  <footer className="md:max-w-332 md:mx-auto px-24 pb-36 md:pb-80 flex flex-col items-center gap-16">
-    <Button
-      {...buttonProps}
-      className="self-center max-md:self-stretch"
-    />
-
+export const ModalFullScreenFooter = () => (
+  <footer className="md:max-w-332 md:mx-auto pt-16 px-24 pb-36 md:pb-80">
     <Typography
       variant="paragraph-small"
       className="text-center text-white"
