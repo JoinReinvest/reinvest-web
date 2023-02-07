@@ -15,7 +15,7 @@
 }
 
 .hkek-input-text-control {
-  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color;
+  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color bg-white;
   @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {
@@ -27,7 +27,7 @@
   }
 
   &-placeholder {
-    @apply transition-transform-color absolute text-gray-02 line-clamp-1;
+    @apply transition-transform-color absolute text-gray-02 line-clamp-1 text-paragraph-large-mobile;
   }
 
   &-error-message {
@@ -39,13 +39,13 @@
   }
 
   &[data-has-error="true"] {
-    @apply bg-tertiary-error/5 shadow-transparent mb-26;
+    @apply bg-tertiary-error/5 shadow-transparent mb-26 bg-white;
     @apply border-tertiary-error;
   }
 
   &[data-is-dirty="true"] {
     .hkek-input-text-control-placeholder {
-      @apply -z-10 text-base -translate-y-6 top-10;
+      @apply text-base -translate-y-6 top-10;
     }
   }
 

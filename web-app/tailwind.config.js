@@ -39,7 +39,8 @@ module.exports = {
       48: '4.8rem',
       60: '6.0rem',
       72: '7.2rem',
-      100: '10.0rem'
+      84: '8.4rem',
+      100: '10.0rem',
     },
     fontSize: {
       base: '10px',
@@ -286,11 +287,11 @@ module.exports = {
     extend: {
       maxWidth: {
         332: '33.2rem',
-        375: '37.5rem'
+        375: '37.5rem',
       },
       transitionProperty: {
         'height-width': 'height, width',
-        'transform-color': 'transform, color'
+        'transform-color': 'transform, color',
       },
       zIndex: {
         1: '1',
@@ -304,7 +305,7 @@ module.exports = {
       addVariant('child', '& > *');
 
       addVariant('state-checked', '&[data-state="checked"]');
-      addVariant('state-unchecked', '&[data-state="unchecked"]')
+      addVariant('state-unchecked', '&[data-state="unchecked"]');
 
       addUtilities({
         '.font-stretch-expanded': {
