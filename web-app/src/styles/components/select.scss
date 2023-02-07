@@ -2,7 +2,7 @@
   @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none;
 
   &__menu {
-    @apply -left-14 w-31.75 bg-green-frost-01 text-black-01;
+    @apply -left-14 w-32 bg-green-frost-01 text-black-01;
   }
 
   &__control--menu-is-open {
@@ -39,7 +39,7 @@
   @apply text-gray-02  border border-gray-03 hover:border-green-frost-01;
 
   &-content {
-    @apply flex-1 h-17.5;
+    @apply flex-1 h-17;
   }
 
   &-content-input {
@@ -73,7 +73,7 @@
     @apply bg-gray-05 border-gray-03 pointer-events-none;
 
     .hkek-select-control-placeholder {
-      @apply z-1;
+      @apply z-10;
       @apply text-gray-02;
     }
   }
