@@ -1,5 +1,5 @@
 .hkek-input-text {
-  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none bg-inherit;
+  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none bg-inherit text-paragraph;
 
   &[disabled] {
     @apply text-gray-02;
@@ -27,7 +27,7 @@
   }
 
   &-placeholder {
-    @apply transition-transform-color absolute text-gray-02 line-clamp-1 text-paragraph-large-mobile;
+    @apply transition-transform-color absolute text-gray-02 line-clamp-1 text-paragraph;
   }
 
   &-error-message {
@@ -45,7 +45,7 @@
 
   &[data-is-dirty="true"] {
     .hkek-input-text-control-placeholder {
-      @apply text-base -translate-y-6 top-10;
+      @apply text-base -translate-y-6 top-10 text-gray-02;
     }
   }
 
