@@ -16,19 +16,3 @@
 .hkek-dialog-overlay:has(+ .hkek-dialog-content.modal-fullscreen) {
   @apply bg-transparent;
 }
-
-@keyframes fade-in {
-  from {
-    @apply opacity-0;
-  } to {
-    @apply opacity-100;
-  }
-}
-
-@keyframes fade-out {
-  from {
-    @apply opacity-100;
-  } to {
-    @apply opacity-0;
-  }
-}
