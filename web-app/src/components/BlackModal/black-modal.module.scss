@@ -1,6 +1,6 @@
 @import url("@hookooekoo/ui-dialog/dist/index.css");
 
-.hkek-dialog-content.modal-fullscreen {
+.hkek-dialog-content.black-modal {
   @apply w-screen h-screen max-h-screen bg-black-02 text-white;
 
   &[data-state="open"] {
@@ -12,6 +12,6 @@
   }
 }
 
-.hkek-dialog-overlay:has(+ .hkek-dialog-content.modal-fullscreen) {
+.hkek-dialog-overlay:has(+ .hkek-dialog-content.black-modal) {
   @apply bg-black-02;
 }

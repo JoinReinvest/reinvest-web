@@ -1,7 +1,9 @@
-import { Header } from 'components/Header';
-import { Link } from 'components/Link';
-import { SelectionCards } from 'components/SelectionCards';
-import { NextPage } from 'next';
+import { Link } from 'components/Link'
+import { SelectionCards } from 'components/SelectionCards'
+import { Title } from 'components/Title'
+import { NextPage } from 'next'
+import { BlackModal } from '../../components/BlackModal'
+import { MainLayout } from '../../layouts/MainLayout'
 
 const accountTypes = [
   {
@@ -19,15 +21,18 @@ const accountTypes = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     value: 'trust',
   },
-];
+]
 
 const AccountChoicesPage: NextPage = () => {
   return (
-    <div className="flex h-screen w-screen flex-col items-center justify-center gap-60 bg-black-01 p-24">
-      <div className="text-white lg:w-1/4 lg:text-center">
-        <Header title="Which type of account would you like to open?" />
-      </div>
-      <div className="flex w-full flex-col items-center gap-24">
+    <MainLayout>
+      <BlackModal
+        isOpen={true}
+        onOpenChange={() => {
+          console.log(1) // eslint-disable-line
+        }}
+      >
+        <Title title="Which type of account would you like to open?" />
         <SelectionCards options={accountTypes} />
         <Link
           href="/onboarding/descriptions"
@@ -35,9 +40,9 @@ const AccountChoicesPage: NextPage = () => {
         >
           Not sure which is best for you?
         </Link>
-      </div>
-    </div>
-  );
-};
+      </BlackModal>
+    </MainLayout>
+  )
+}
 
-export default AccountChoicesPage;
+export default AccountChoicesPage
