@@ -9,9 +9,11 @@ const Index: NextPage = () => {
       Content
       <BlackModal
         isOpen={true}
-        onOpenChange={() => console.log(1)}
+        onOpenChange={() => {
+          console.log(1) // eslint-disable-line
+        }}
       >
-       modal content
+        modal content
       </BlackModal>
     </MainLayout>
   );
