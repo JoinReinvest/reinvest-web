@@ -19,7 +19,7 @@ export const ModalFullscreen = ({ isOpen = false, onOpenChange, children }: Prop
     <div className="h-full w-full grid grid-rows-[auto_1fr_auto] overflow-y-hidden">
       <ModalFullScreenHeader />
 
-      <div className="md:max-w-332 md:mx-auto md:pt-180 pt-24 px-24 overflow-auto">{children}</div>
+      <div className="md:max-w-332 md:mx-auto pt-24 px-24 overflow-auto self-center">{children}</div>
 
       <ModalFullScreenFooter />
     </div>
