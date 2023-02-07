@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { TextInput } from 'components/TextInput';
+import { FirstLastNameForm } from 'components/FirstLastNameForm';
+import { Header } from 'components/Header';
 import { NextPage } from 'next';
-import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import zod from 'zod';
 
@@ -12,51 +12,33 @@ const schema = zod
   })
   .required();
 
-const FirstLastNamePage: NextPage = () => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const form = useForm({ resolver: zodResolver(schema) });
+export interface FirstLastNameFormFields {
+  firstName: string;
+  lastName: string;
+}
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    control,
-  } = form;
+const FirstLastNamePage: NextPage = () => {
+  const form = useForm<FirstLastNameFormFields>({ resolver: zodResolver(schema) });
+
+  const { handleSubmit } = form;
 
   const onSubmit = (data: any) => console.log(data);
 
   return (
-    <div className="bg-black-01 flex h-screen w-screen flex-col gap-60 p-24">
-      <h2 className="text-white">First last name</h2>
-      <FormProvider {...form}>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
-            control={control}
-            value={firstName}
-            {...register('firstName')}
-            placeholder="First name"
-            error={errors.firstName?.message?.toString()}
-            onChange={event => {
-              console.log(event.target.value);
-              setFirstName(event.target.value);
-            }}
-          />
-          <TextInput
-            value={lastName}
-            {...register('lastName')}
-            placeholder="Last name"
-            error={errors.lastName?.message?.toString()}
-            onChange={event => setLastName(event.target.value)}
-          />
-          <button
-            type="submit"
-            className="text-white"
+    <div className="bg-black-01 flex h-screen w-screen flex-col gap-60 p-24 md:items-center md:justify-center">
+      <div className="max-w-332 flex flex-col gap-60 md:items-center md:justify-center">
+        <div className="text-white md:text-center">
+          <Header title="Enter your first and last name as it appears on your ID" />
+        </div>
+        <FormProvider {...form}>
+          <form
+            onSubmit={handleSubmit(onSubmit)}
+            className="w-full"
           >
-            Submit
-          </button>
-        </form>
-      </FormProvider>
+            <FirstLastNameForm />
+          </form>
+        </FormProvider>
+      </div>
     </div>
   );
 };
