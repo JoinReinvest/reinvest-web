@@ -1,7 +1,7 @@
 @import '@hookooekoo/ui-input-masked/dist/index.css';
 
 .hkek-input-masked {
-  @apply placeholder:text-gray-02 text-white;
+  @apply placeholder:text-gray-02 text-white text-paragraph-large;
 
   &[disabled] {
     @apply text-gray-02;
@@ -56,7 +56,7 @@
   }
 
   &-placeholder {
-    @apply transition-transform-color absolute text-gray-02 line-clamp-1;
+    @apply transition-transform-color absolute text-gray-02 line-clamp-1 text-paragraph-large;
   }
 
   &-error-message {
