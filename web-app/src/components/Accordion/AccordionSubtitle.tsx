@@ -1,5 +1,6 @@
-import { AccordionProps } from './interfaces';
 import { Typography } from 'components/Typography';
+
+import { AccordionProps } from './interfaces';
 
 type Props = Pick<AccordionProps, 'subtitle'>;
 

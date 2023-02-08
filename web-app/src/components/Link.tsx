@@ -1,14 +1,12 @@
-import PrimitiveLink, { LinkProps as PrimitiveLinkProps } from 'next/link';
+import { Link as PrimitiveLink, LinkType } from '@hookooekoo/ui-link';
+import { ReactNode } from 'react';
 
-interface LinkProps extends PrimitiveLinkProps {
-  title: string;
+interface LinkProps extends LinkType {
+  children: ReactNode;
 }
-
-export const Link = ({ href, title }: LinkProps) => (
+export const Link = (props: LinkProps) => (
   <PrimitiveLink
-    href={href}
+    {...props}
     className="typo-link text-green-frost-01"
-  >
-    {title}
-  </PrimitiveLink>
+  />
 );

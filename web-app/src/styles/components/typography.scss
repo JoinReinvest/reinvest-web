@@ -1,32 +1,32 @@
 @tailwind components;
 
 @layer components {
-  .typo-heading-1 {
-    @apply text-heading-1-mobile lg:text-heading-1 font-stretch-expanded;
+  .typo-h1 {
+    @apply text-h1 font-stretch-expanded;
   }
 
-  .typo-heading-2 {
-    @apply text-heading-2-mobile lg:text-heading-2 max-lg:font-stretch-expanded;
+  .typo-h2 {
+    @apply text-h2;
   }
 
-  .typo-heading-3 {
-    @apply text-heading-3-mobile lg:text-heading-3 font-stretch-expanded;
+  .typo-h3 {
+    @apply text-h3 font-stretch-expanded;
   }
 
-  .typo-heading-4 {
-    @apply text-heading-4-mobile lg:text-heading-4;
+  .typo-h4 {
+    @apply text-h4;
   }
 
-  .typo-heading-5 {
-    @apply text-heading-5 font-stretch-expanded;
+  .typo-h5 {
+    @apply text-h5 font-stretch-expanded;
   }
 
-  .typo-heading-6 {
-    @apply text-heading-6;
+  .typo-h6 {
+    @apply text-h6;
   }
 
   .typo-bonus-heading {
-    @apply text-bonus-heading-mobile lg:text-bonus-heading font-stretch-expanded;
+    @apply text-bonus-heading font-stretch-expanded;
   }
 
   .typo-button {
@@ -34,7 +34,7 @@
   }
 
   .typo-link {
-    @apply text-link-mobile lg:text-link underline font-stretch-expanded;
+    @apply text-link underline font-stretch-expanded;
   }
 
   .typo-paragraph {
@@ -42,11 +42,11 @@
   }
 
   .typo-paragraph-large {
-    @apply text-paragraph-large-mobile lg:text-paragraph-large;
+    @apply text-paragraph-large;
   }
 
   .typo-paragraph-emphasized {
-    @apply text-paragraph-emphasized-mobile lg:text-paragraph-emphasized;
+    @apply text-paragraph-emphasized;
   }
 
   .typo-paragraph-small {

@@ -22,7 +22,7 @@ module.exports = {
       14: '1.4rem',
       15: '1.5rem',
       16: '1.6rem',
-      17.5: '1.75rem',
+      17: '1.7rem',
       18: '1.8rem',
       20: '2rem',
       22: '2.2rem',
@@ -30,7 +30,6 @@ module.exports = {
       26: '2.6rem',
       28: '2.8rem',
       30: '3.0rem',
-      31.75: '3.175rem',
       32: '3.2rem',
       36: '3.6rem',
       40: '4.0rem',
@@ -41,115 +40,71 @@ module.exports = {
       72: '7.2rem',
       84: '8.4rem',
       100: '10.0rem',
+      180: '18.0rem',
     },
     fontSize: {
       base: '10px',
 
-      'heading-1': [
-        '6.4rem',
-        {
-          lineHeight: '0.90em',
-          letterSpacing: '-0.05em',
-          fontWeight: '500',
-        },
-      ],
-
-      'heading-1-mobile': [
+      h1: [
         '5.4rem',
         {
-          lineHeight: '0.90em',
-          letterSpacing: '-0.05em',
-          fontWeight: 450,
+          lineHeight: '90%',
+          letterSpacing: '-5%',
+          fontWeight: '400',
         },
       ],
 
-      'heading-2': [
-        '5.4rem',
-        {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
-          fontWeight: '500',
-        },
-      ],
-
-      'heading-2-mobile': [
+      h2: [
         '3.6rem',
         {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
+          lineHeight: '110%',
+          letterSpacing: '-5%',
           fontWeight: '400',
         },
       ],
 
-      'heading-3': [
-        '4.8rem',
+      h3: [
+        '3rem',
         {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
-          fontWeight: '500',
-        },
-      ],
-
-      'heading-3-mobile': [
-        '3.0rem',
-        {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
-          fontWeight: '500',
-        },
-      ],
-
-      'heading-4': [
-        '1.8rem',
-        {
-          lineHeight: '1.50em',
-          letterSpacing: '0',
+          lineHeight: '110%',
+          letterSpacing: '-5%',
           fontWeight: '400',
         },
       ],
 
-      'heading-4-mobile': [
+      h4: [
         '2.4rem',
         {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
+          lineHeight: '110%',
+          letterSpacing: '-5%',
           fontWeight: '400',
         },
       ],
 
-      'heading-5': [
+      h5: [
         '2.0rem',
         {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
+          lineHeight: '110%',
+          letterSpacing: '-5%',
           fontWeight: '500',
         },
       ],
 
-      'heading-6': [
+      h6: [
         '1.6rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
+          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
 
       'bonus-heading': [
-        '2.8rem',
-        {
-          lineHeight: '1.10em',
-          letterSpacing: '-0.05em',
-          fontWeight: '500',
-        },
-      ],
-
-      'bonus-heading-mobile': [
         '1.4rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
-          fontWeight: '500',
+          letterSpacing: '0%',
+          fontWeight: '400',
         },
       ],
 
@@ -157,7 +112,7 @@ module.exports = {
         '1.4rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
+          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -166,70 +121,34 @@ module.exports = {
         '1.2rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
-          fontWeight: '500',
-        },
-      ],
-
-      'link-mobile': [
-        '1.4rem',
-        {
-          lineHeight: 'auto',
-          letterSpacing: '0',
+          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
 
       'paragraph-large': [
-        '1.6rem',
-        {
-          lineHeight: '1.5em',
-          letterSpacing: '0',
-          fontWeight: '400',
-        },
-      ],
-
-      'paragraph-large-mobile': [
         '1.4rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
+          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
 
       'paragraph-emphasized': [
-        '1.6rem',
-        {
-          lineHeight: '1.5em',
-          letterSpacing: '0',
-          fontWeight: '500',
-        },
-      ],
-
-      'paragraph-emphasized-mobile': [
         '1.4rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
+          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
 
       paragraph: [
-        '1.4rem',
-        {
-          lineHeight: 'auto',
-          letterSpacing: '0',
-          fontWeight: '400',
-        },
-      ],
-
-      'paragraph-mobile': [
         '1.2rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
+          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -238,13 +157,12 @@ module.exports = {
         '1.1rem',
         {
           lineHeight: 'auto',
-          letterSpacing: '0',
+          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
     },
     colors: {
-      // PRIMARY
       white: '#ffffff',
       black: {
         '01': '#000000',
@@ -254,13 +172,8 @@ module.exports = {
         deep: '#11270B',
         frost: {
           '01': '#C1EBD9',
-          '02': '#C1EBD999',
-          '03': '#C1EBD94D',
         },
       },
-
-      // SECONDARY
-      dark: '#081224',
       gray: {
         '01': '#575E6C',
         '02': '#939AA2',
@@ -269,32 +182,44 @@ module.exports = {
         '05': '#FCFCFC',
       },
 
-      // TERTIARY
       tertiary: {
         success: '#44CB7A',
         error: '#FA375A',
         warning: '#FAC337',
       },
 
-      // AUXILIARY
       transparent: 'transparent',
       current: 'currentColor',
       inherit: 'inherit',
     },
-    boxShadow: {
-      'focused-input': '0 0px 0px 2px #C1EBD9',
-    },
     extend: {
       maxWidth: {
         332: '33.2rem',
+        330: '33rem',
         375: '37.5rem',
       },
       transitionProperty: {
         'height-width': 'height, width',
         'transform-color': 'transform, color',
       },
-      zIndex: {
-        1: '1',
+      keyframes: {
+        'fade-in': {
+          '0%': {
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 1,
+          },
+        },
+
+        'fade-out': {
+          '0%': {
+            opacity: 1,
+          },
+          '100%': {
+            opacity: 0,
+          },
+        },
       },
     },
   },
@@ -306,6 +231,8 @@ module.exports = {
 
       addVariant('state-checked', '&[data-state="checked"]');
       addVariant('state-unchecked', '&[data-state="unchecked"]');
+      addVariant('state-open', '&[data-state="open"]');
+      addVariant('state-closed', '&[data-state="closed"]');
 
       addUtilities({
         '.font-stretch-expanded': {

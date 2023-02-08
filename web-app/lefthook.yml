@@ -9,4 +9,4 @@ pre-commit:
     check_types:
       run: yarn check-types
     stylelint:
-      run: yarn stylelint
+      run: yarn style-lint

@@ -10,11 +10,16 @@ interface Props extends Pick<NotificationProps, 'title'> {
 
 export const NotificationHeader = ({ isOpen, title }: Props) => (
   <div className="flex items-center justify-between gap-x-16 bg-green-frost-01 py-16 px-24">
-    <div className="flex h42 w42 items-center justify-center rounded-full bg-white">
+    <div className="h42 w42 flex items-center justify-center rounded-full bg-white">
       <IconAlert />
     </div>
-    
-    <Typography variant='heading-5' className='grow'>{title}</Typography>
+
+    <Typography
+      variant="h5"
+      className="grow"
+    >
+      {title}
+    </Typography>
     <NotificationIcon isOpen={isOpen} />
   </div>
 );
