@@ -1,9 +1,10 @@
-import { Link } from 'components/Link'
-import { SelectionCards } from 'components/SelectionCards'
-import { Title } from 'components/Title'
-import { NextPage } from 'next'
-import { BlackModal } from '../../components/BlackModal'
-import { MainLayout } from '../../layouts/MainLayout'
+import { Link } from 'components/Link';
+import { SelectionCards } from 'components/SelectionCards';
+import { Title } from 'components/Title';
+import { NextPage } from 'next';
+
+import { BlackModal } from '../../components/BlackModal';
+import { MainLayout } from '../../layouts/MainLayout';
 
 const accountTypes = [
   {
@@ -21,7 +22,7 @@ const accountTypes = [
     description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     value: 'trust',
   },
-]
+];
 
 const AccountChoicesPage: NextPage = () => {
   return (
@@ -29,7 +30,7 @@ const AccountChoicesPage: NextPage = () => {
       <BlackModal
         isOpen={true}
         onOpenChange={() => {
-          console.log(1) // eslint-disable-line
+          console.log(1); // eslint-disable-line
         }}
       >
         <Title title="Which type of account would you like to open?" />
@@ -42,7 +43,7 @@ const AccountChoicesPage: NextPage = () => {
         </Link>
       </BlackModal>
     </MainLayout>
-  )
-}
+  );
+};
 
-export default AccountChoicesPage
+export default AccountChoicesPage;

@@ -7,6 +7,7 @@ import { TextInput } from './TextInput';
 
 export const FirstLastNameForm = () => {
   const [firstName, setFirstName] = useState<string>('');
+  const [middleName, setMiddleName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
   const { control } = useFormContext<FirstLastNameFormFields>();
 
@@ -20,15 +21,18 @@ export const FirstLastNameForm = () => {
         control={control}
       />
       <TextInput
+        value={middleName}
+        name="middleName"
+        placeholder="Middle Name (Optional)"
+        onChange={event => setMiddleName(event.target.value)}
+        control={control}
+      />
+      <TextInput
         value={lastName}
         name="lastName"
         placeholder="Last name"
         control={control}
         onChange={event => setLastName(event.target.value)}
-      />
-      <Link
-        href="/"
-        title="Additional name (e.g. middle)?"
       />
     </>
   );
