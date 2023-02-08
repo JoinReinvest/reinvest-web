@@ -7,7 +7,7 @@ export const IconCheck = Icon(
     viewBox="0 0 25 24"
     xmlns="http://www.w3.org/2000/svg"
   >
-    <g clip-path="url(#clip0_19_17599)">
+    <g clipPath="url(#clip0_19_17599)">
       <path
         d="M7.64453 11.75L11.1659 15.25L18.2088 8.25"
         strokeWidth="1.5"
