@@ -1,6 +1,6 @@
 import { Link as PrimitiveLink } from '@hookooekoo/ui-link';
-import { ComponentProps } from 'react';
 import cx from 'classnames';
+import { ComponentProps } from 'react';
 
 type Props = ComponentProps<typeof PrimitiveLink>;
 
