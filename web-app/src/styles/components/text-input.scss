@@ -1,5 +1,5 @@
 .hkek-input-text {
-  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none bg-inherit;
+  @apply placeholder:text-gray-02 text-white focus-visible:outline-none bg-inherit;
 
   &[disabled] {
     @apply text-gray-02;
@@ -35,7 +35,7 @@
   }
 
   &[data-is-dirty-and-enabled="true"] {
-    @apply border-green-frost-01 text-black-01;
+    @apply border-green-frost-01 text-white;
   }
 
   &[data-has-error="true"] {
