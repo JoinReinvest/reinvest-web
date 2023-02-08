@@ -2,13 +2,12 @@ import { Typography } from './Typography';
 
 interface Props {
   title: string;
+  subtitle?: string;
 }
 
-export const Title = ({ title }: Props) => (
-  <Typography
-    variant="h5"
-    className="mb-30 text-center"
-  >
-    {title}
-  </Typography>
+export const Title = ({ title, subtitle }: Props) => (
+  <div className="mb-30 text-center">
+    <Typography variant="h5">{title}</Typography>
+    {subtitle && <Typography variant="paragraph-large">{subtitle}</Typography>}
+  </div>
 );

@@ -36,7 +36,7 @@ const AccountChoicesPage: NextPage = () => {
         <Title title="Which type of account would you like to open?" />
         <SelectionCards options={accountTypes} />
         <Link
-          href="/onboarding/descriptions"
+          href="/onboarding/accounts-descriptions"
           title="Not sure which is best for you?"
         >
           Not sure which is best for you?
