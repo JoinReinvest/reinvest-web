@@ -3,7 +3,6 @@ import { ReactNode } from 'react';
 
 import { Footer } from './Footer';
 import { Header } from './Header';
-import './black-modal.module.scss';
 
 export interface Props {
   children: ReactNode;
