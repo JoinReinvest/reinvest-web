@@ -17,11 +17,11 @@
 }
 
 .hkek-input-masked-control {
-  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 text-gray-02 border border-gray-03;
-  @apply transition-transform-color hover:border-green-frost-01 rounded-md;
+  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color;
+  @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {
-    @apply flex-1 h-17;
+    @apply flex-1;
   }
 
   &-content-input {
