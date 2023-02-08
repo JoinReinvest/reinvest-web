@@ -1,12 +1,14 @@
 @use "fonts";
 @use "./components/typography.scss";
-@use "./components/modal-fullscreen.scss";
 @use "./components/checkbox.scss";
 @use "./components/form.scss";
 @use "./components/table.scss";
 @use "./components/stepper.scss";
 @use "./components/select.scss";
 @use "./components/switch.scss";
+@use "./components/input-masked.scss";
+@use "./components/black-modal.scss";
+@use "./components/selection-cards.scss";
 
 @tailwind base;
 @tailwind components;

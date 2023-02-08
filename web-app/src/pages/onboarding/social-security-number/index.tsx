@@ -11,10 +11,15 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
 
   return (
     <MainLayout>
-      <BlackModal isOpen={true}>
+      <BlackModal
+        isOpen={true}
+        onOpenChange={() => {
+          console.log(1) // eslint-disable-line
+        }}
+      >
         <div className="flex flex-col gap-60 lg:gap-36">
           <Typography
-            variant="heading-5"
+            variant="h5"
             className="md:text-center"
           >
             What&apos;s your social security number?

@@ -7,10 +7,15 @@ import { NextPage } from 'next';
 
 const OnboardingSocialSecurityNumberFailurePage: NextPage = () => (
   <MainLayout>
-    <BlackModal isOpen={true}>
+    <BlackModal
+      isOpen={true}
+      onOpenChange={() => {
+        console.log(1) // eslint-disable-line
+      }}
+    >
       <div className="flex flex-col gap-60">
         <Typography
-          variant="heading-5"
+          variant="h5"
           className="lg:text-center"
         >
           We cannot verify your Social Secuirty at this time
