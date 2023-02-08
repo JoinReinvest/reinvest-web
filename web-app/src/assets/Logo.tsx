@@ -1,6 +1,6 @@
 import { Icon } from '@hookooekoo/ui-icon';
 
-export const IconLogo = Icon(
+export const Logo = Icon(
   <svg
     width="90"
     height="12"
