@@ -15,7 +15,7 @@ export const NotificationHeader = ({ isOpen, title }: Props) => (
     </div>
 
     <Typography
-      variant="heading-5"
+      variant="h5"
       className="grow"
     >
       {title}

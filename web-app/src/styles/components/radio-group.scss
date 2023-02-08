@@ -1,9 +1,0 @@
-.hkek-radio-group-item {
-  &.hkek-radio-group-item[data-state="checked"] {
-    @apply bg-green-frost-01;
-
-    p {
-      @apply text-black-01 border-none;
-    }
-  }
-}

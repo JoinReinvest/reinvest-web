@@ -1,7 +1,10 @@
 import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
-import { Header } from 'components/Header';
 import { Typography } from 'components/Typography';
 import { NextPage } from 'next';
+
+import { BlackModal } from '../../components/BlackModal';
+import { Title } from '../../components/Title';
+import { MainLayout } from '../../layouts/MainLayout';
 
 const accountTypesDescriptions = [
   {
@@ -32,33 +35,39 @@ const accountTypesSelectTitles = new Map<string, string>([
 
 const AccountsDescriptionsPage: NextPage = () => {
   return (
-    <div className="flex w-screen flex-col items-center justify-center gap-60 bg-black-01 p-24 lg:h-screen">
-      <div className="fixed top-0 w-full bg-black-01 py-20 text-center text-white lg:relative">
-        <Header
+    <MainLayout>
+      <BlackModal
+        isOpen={true}
+        onOpenChange={() => {
+          console.log(1) // eslint-disable-line
+        }}
+      >
+        <Title
           title="Not sure which is best for you?"
           subtitle="Lear more about each option below"
         />
-      </div>
-      <RadioGroup className="mt-60 flex flex-col gap-15 text-white lg:mt-0 lg:flex-row">
-        {accountTypesDescriptions.map(accountType => (
-          <div
-            key={accountType.value}
-            className="flex w-full flex-col justify-between border border-white"
-          >
-            <div className="flex flex-col gap-12 p-20">
-              <Typography variant="heading-6">{accountType.title}</Typography>
-              <Typography variant="paragraph">{accountType.description}</Typography>
-            </div>
-            <RadioGroupItem
-              value={accountType.value}
-              className="w-full bg-green-frost-01 py-20 text-paragraph-emphasized text-black-01"
+
+        <RadioGroup className="mt-60 flex flex-col gap-15 text-white lg:mt-0 lg:flex-row">
+          {accountTypesDescriptions.map(accountType => (
+            <div
+              key={accountType.value}
+              className="flex w-full flex-col justify-between border border-white"
             >
-              {accountTypesSelectTitles.get(accountType.value)}
-            </RadioGroupItem>
-          </div>
-        ))}
-      </RadioGroup>
-    </div>
+              <div className="flex flex-col gap-12 p-20">
+                <Typography variant="h6">{accountType.title}</Typography>
+                <Typography variant="paragraph">{accountType.description}</Typography>
+              </div>
+              <RadioGroupItem
+                value={accountType.value}
+                className="w-full bg-green-frost-01 py-20 text-paragraph-emphasized text-black-01"
+              >
+                {accountTypesSelectTitles.get(accountType.value)}
+              </RadioGroupItem>
+            </div>
+          ))}
+        </RadioGroup>
+      </BlackModal>
+    </MainLayout>
   );
 };
 

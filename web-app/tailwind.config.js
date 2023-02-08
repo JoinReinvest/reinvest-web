@@ -170,7 +170,7 @@ module.exports = {
       green: {
         deep: '#11270B',
         frost: {
-          '01': '#C1EBD999',
+          '01': '#C1EBD9',
         },
       },
       gray: {

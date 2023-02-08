@@ -5,9 +5,9 @@ interface Props {
   subtitle?: string;
 }
 
-export const Header = ({ title, subtitle }: Props) => (
-  <>
-    <Typography variant="heading-5">{title}</Typography>
+export const Title = ({ title, subtitle }: Props) => (
+  <div className="mb-30 text-center">
+    <Typography variant="h5">{title}</Typography>
     {subtitle && <Typography variant="paragraph-large">{subtitle}</Typography>}
-  </>
+  </div>
 );
