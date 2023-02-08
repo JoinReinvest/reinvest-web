@@ -14,11 +14,11 @@ export const BlackModal = ({ isOpen = false, onOpenChange, children }: Props) =>
   <Dialog
     isOpen={isOpen}
     onOpenChange={onOpenChange}
-    className="modal-fullscreen"
+    className="black-modal"
   >
     <div className="flex h-full w-full flex-col items-center justify-between gap-40 overflow-y-hidden py-40 px-20 text-white">
       <Header />
-      <div className="lg:max-w-330 mx-auto w-full overflow-x-auto">{children}</div>
+      <div className="mx-auto w-full overflow-x-auto lg:max-w-330">{children}</div>
       <Footer />
     </div>
   </Dialog>

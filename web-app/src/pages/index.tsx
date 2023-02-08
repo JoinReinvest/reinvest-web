@@ -6,7 +6,6 @@ import { MainLayout } from '../layouts/MainLayout';
 const Index: NextPage = () => {
   return (
     <MainLayout>
-      Content
       <BlackModal
         isOpen={true}
         onOpenChange={() => {
