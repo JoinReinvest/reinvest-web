@@ -316,6 +316,15 @@
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-control/-/ui-input-control-0.3.1.tgz#f30d56a4462ca6bcde9773b311ef3ec16988faa3"
   integrity sha512-BTJ357HaQrAKBYAiLrGY4Df2IxlYhYpAmUSQzVDtIhzZlun/IOcFBURGEQRcGJjbRw93L3nsurSRvWfwgcNRLg==
 
+"@hookooekoo/ui-input-masked@^0.3.1":
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.3.1.tgz#8f15e893f1cc12bf9e915909678575e7eec81c77"
+  integrity sha512-fVu3bze9S60MMJETNSp8e3DomK2kPVuDQVMzUz5p45cgOpZjSav5sDPn6hRRykMde3mfTBYv7C9v72EEbwltmg==
+  dependencies:
+    "@hookooekoo/configs-stylelint" "^0.1.0"
+    "@hookooekoo/ui-input-control" "*"
+    react-imask "^6.4.3"
+
 "@hookooekoo/ui-input-text@^0.3.1":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-text/-/ui-input-text-0.3.1.tgz#efa890f400035adf579e0db22c7ee8d8ef1ee77c"
@@ -2673,6 +2682,11 @@ ignore@^5.2.1:
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.4.tgz#a291c0c6178ff1b960befe47fcdec301674a6324"
   integrity sha512-MAb38BcSbH0eHNBxn7ql2NH/kX33OkB3lZ1BNdh7ENeRChHTYsTvWrMubiIAMNS2llXEEgZ1MUOBtXChP3kaFQ==
 
+imask@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/imask/-/imask-6.4.3.tgz#b81b247043807995e048f559e98930c2fec8004a"
+  integrity sha512-aH2GHemGkr3cbRBfhogHMIx05eUxdHrZNlKTTLmz8VxpSopuHHJ8+85FsDlBVQqxPlDLhZuwj4lpHHWbLOdBSw==
+
 immutable@^4.0.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/immutable/-/immutable-4.1.0.tgz#f795787f0db780183307b9eb2091fcac1f6fafef"
@@ -3862,7 +3876,7 @@ prettier@^2.8.2:
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.3.tgz#ab697b1d3dd46fb4626fbe2f543afe0cc98d8632"
   integrity sha512-tJ/oJ4amDihPoufT5sM0Z1SKEuKay8LfVAMlbbhnnkvt6BUserZylqo2PN+p9KeljLr0OHa2rXHU1T8reeoTrw==
 
-prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.7.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -3903,6 +3917,14 @@ react-hook-form@^7.43.1:
   version "7.43.1"
   resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.43.1.tgz#0d0d7822f3f7fc05ffc41d5f012b49b90fcfa0f0"
   integrity sha512-+s3+s8LLytRMriwwuSqeLStVjRXFGxgjjx2jED7Z+wz1J/88vpxieRQGvJVvzrzVxshZ0BRuocFERb779m2kNg==
+
+react-imask@^6.4.3:
+  version "6.4.3"
+  resolved "https://registry.yarnpkg.com/react-imask/-/react-imask-6.4.3.tgz#845de954e03e98179a23b92722ed3661cbd11037"
+  integrity sha512-5WyCbubQErO8Wr/zLDyUyC1zCqQXP979QXW6BNirUGsM1VxFmVG0nNfXA1PSXlgdbaXWBiBj+VJBvg/8BDzieA==
+  dependencies:
+    imask "^6.4.3"
+    prop-types "^15.7.2"
 
 react-is@^16.10.2, react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"
