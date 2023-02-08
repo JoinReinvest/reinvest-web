@@ -1,5 +1,9 @@
-.hkek-input-text {
-  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none bg-inherit;
+@import url("@hookooekoo/ui-input-text/dist/index.css");
+@import url("@hookooekoo/ui-input-masked/dist/index.css");
+
+.hkek-input-text,
+.hkek-input-masked {
+  @apply placeholder:text-gray-02 focus-visible:outline-none bg-inherit text-white text-paragraph-large;
 
   &[disabled] {
     @apply text-gray-02;
@@ -14,7 +18,8 @@
   }
 }
 
-.hkek-input-text-control {
+.hkek-input-text-control,
+.hkek-input-masked-control {
   @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color;
   @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
@@ -27,7 +32,7 @@
   }
 
   &-placeholder {
-    @apply transition-transform-color absolute text-gray-02 line-clamp-1;
+    @apply transition-transform-color absolute text-gray-02 line-clamp-1 text-paragraph-large;
   }
 
   &-error-message {
@@ -44,7 +49,8 @@
   }
 
   &[data-is-dirty="true"] {
-    .hkek-input-text-control-placeholder {
+    .hkek-input-text-control-placeholder,
+    .hkek-input-masked-control-placeholder {
       @apply -z-10 text-base -translate-y-6 top-10;
     }
   }
@@ -52,12 +58,15 @@
   &[data-is-disabled="true"] {
     @apply bg-gray-05 border-gray-03 pointer-events-none;
 
-    .hkek-input-text-control-placeholder {
+    .hkek-input-text-control-placeholder,
+    .hkek-input-masked-control-placeholder {
       @apply z-10;
       @apply text-gray-02;
     }
   }
+}
 
+.hkek-input-text-control {
   &[data-has-content-left="true"] {
     @apply pl-8;
 
