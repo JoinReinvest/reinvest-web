@@ -1,10 +1,10 @@
 import { BlackModal } from 'components/BlackModal';
-import { Link } from 'components/Link';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 
-import { PhoneInput } from '../../components/PhoneInput';
+import { PhoneInput } from '../../components/FormElements/PhoneInput';
+import { WhyRequiredLink } from '../../components/Links/WhyRequiredLink';
 
 const EnterPhoneNumberPage: NextPage = () => {
   return (
@@ -22,17 +22,10 @@ const EnterPhoneNumberPage: NextPage = () => {
         <PhoneInput
           value={''}
           onChange={() => {
-          console.log(1) // eslint-disable-line
+            console.log(1) // eslint-disable-line
           }}
         />
-        <div className="mt-20 block">
-          <Link
-            href="/"
-            title="why required link"
-          >
-            Required. Why?
-          </Link>
-        </div>
+        <WhyRequiredLink href="/" />
       </BlackModal>
     </MainLayout>
   );

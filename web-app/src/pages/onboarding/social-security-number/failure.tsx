@@ -1,9 +1,11 @@
 import { BlackModal } from 'components/BlackModal';
-import { CircleFailure } from 'components/CircleFailure';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
+
+import { IconXCircle } from '../../../assets/icons/IconXCircle';
+import { Title } from '../../../components/Title';
 
 const OnboardingSocialSecurityNumberFailurePage: NextPage = () => (
   <MainLayout>
@@ -13,25 +15,20 @@ const OnboardingSocialSecurityNumberFailurePage: NextPage = () => (
         console.log(1) // eslint-disable-line
       }}
     >
-      <div className="flex flex-col gap-60">
-        <Typography
-          variant="h5"
-          className="lg:text-center"
-        >
-          We cannot verify your Social Secuirty at this time
-        </Typography>
+      <Title title="We cannot verify your Social Secuirty at this time" />
 
+      <div className="text-center">
         <Typography variant="paragraph-large">
           Please reach out to{' '}
           <Link
             href="mailto:support@reinvestcommunity.com"
-            title="support email"
+            title="Support email"
           >
             support@reinvestcommunity.com
           </Link>
         </Typography>
 
-        <CircleFailure className="self-center" />
+        <IconXCircle className="mx-auto mt-40" />
       </div>
     </BlackModal>
   </MainLayout>
