@@ -12,7 +12,7 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
   return (
     <MainLayout>
       <BlackModal isOpen={true}>
-        <div className="flex flex-col gap-36">
+        <div className="flex flex-col gap-60 lg:gap-36">
           <Typography
             variant="heading-5"
             className="md:text-center"
@@ -20,8 +20,8 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
             What&apos;s your social security number?
           </Typography>
 
-          <div className="flex flex-col gap-16">
-            <div className="flex flex-col gap-8">
+          <form className="flex flex-col gap-16">
+            <div className="flex flex-col gap-8 max-lg:order-2">
               <Typography variant="paragraph-emphasized">*REINVEST is required by law to collect your social security number.</Typography>
 
               <Typography variant="paragraph">
@@ -29,23 +29,21 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
               </Typography>
             </div>
 
-            <form className="flex flex-col gap-16">
-              <InputMasked
-                name="social-security-number"
-                value={fieldValue}
-                onChange={value => setFieldValue(value)}
-                maskOptions={{ mask: '000-000-000' }}
-                placeholder="SSN"
-              />
+            <InputMasked
+              name="social-security-number"
+              value={fieldValue}
+              onChange={value => setFieldValue(value)}
+              maskOptions={{ mask: '000-000-000' }}
+              placeholder="SSN"
+            />
 
-              <Link
-                href="/"
-                title="why is my social security number required?"
-              >
-                Required. Why?
-              </Link>
-            </form>
-          </div>
+            <Link
+              href="/"
+              title="why is my social security number required?"
+            >
+              Required. Why?
+            </Link>
+          </form>
         </div>
       </BlackModal>
     </MainLayout>

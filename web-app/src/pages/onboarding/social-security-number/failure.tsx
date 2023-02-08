@@ -1,5 +1,6 @@
 import { BlackModal } from 'components/BlackModal';
 import { CircleFailure } from 'components/CircleFailure';
+import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
@@ -7,15 +8,25 @@ import { NextPage } from 'next';
 const OnboardingSocialSecurityNumberFailurePage: NextPage = () => (
   <MainLayout>
     <BlackModal isOpen={true}>
-      <div className="flex flex-col items-center gap-96">
+      <div className="flex flex-col gap-60">
         <Typography
           variant="heading-5"
-          className="text-center"
+          className="lg:text-center"
         >
           We cannot verify your Social Secuirty at this time
         </Typography>
 
-        <CircleFailure />
+        <Typography variant="paragraph-large">
+          Please reach out to{' '}
+          <Link
+            href="mailto:support@reinvestcommunity.com"
+            title="support email"
+          >
+            support@reinvestcommunity.com
+          </Link>
+        </Typography>
+
+        <CircleFailure className="self-center" />
       </div>
     </BlackModal>
   </MainLayout>
