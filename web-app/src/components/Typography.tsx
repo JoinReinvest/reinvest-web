@@ -6,7 +6,7 @@ type Variants =
   | 'heading-2'
   | 'heading-3'
   | 'heading-4'
-  | 'heading-5'
+  | 'h5'
   | 'heading-6'
   | 'bonus-heading'
   | 'bonus-heading-mobile'
@@ -25,7 +25,7 @@ const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
   ['heading-2', 'h2'],
   ['heading-3', 'h3'],
   ['heading-4', 'h4'],
-  ['heading-5', 'h5'],
+  ['h5', 'h5'],
   ['heading-6', 'h6'],
   ['bonus-heading', 'h5'],
   ['bonus-heading-mobile', 'h5'],
@@ -42,7 +42,7 @@ const variants = cva(undefined, {
       'heading-2': 'typo-heading-2',
       'heading-3': 'typo-heading-3',
       'heading-4': 'typo-heading-4',
-      'heading-5': 'typo-heading-5',
+      h5: 'typo-heading-5',
       'heading-6': 'typo-heading-6',
       'bonus-heading': 'typo-bonus-heading',
       'bonus-heading-mobile': 'text-bonus-heading-mobile font-stretch-expanded',
