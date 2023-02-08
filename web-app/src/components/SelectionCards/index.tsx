@@ -1,10 +1,10 @@
-import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group'
-import cx from 'classnames'
-import { Typography } from 'components/Typography'
-
-import { SelectionCardsProps } from './interfaces'
-
 import './selection-cards.module.scss';
+
+import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
+import cx from 'classnames';
+import { Typography } from 'components/Typography';
+
+import { SelectionCardsProps } from './interfaces';
 
 export const SelectionCards = ({ value, onChange, options, name, required, disabled, orientation }: SelectionCardsProps) => (
   <RadioGroup
@@ -38,4 +38,4 @@ export const SelectionCards = ({ value, onChange, options, name, required, disab
       </RadioGroupItem>
     ))}
   </RadioGroup>
-)
+);

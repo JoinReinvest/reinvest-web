@@ -1,5 +1,5 @@
 .selection-cards {
-  @apply flex flex-col items-center gap-24 mb-30
+  @apply flex flex-col items-center gap-24 mb-30;
 
   .hkek-radio-group-item {
     &.hkek-radio-group-item[data-state="checked"],

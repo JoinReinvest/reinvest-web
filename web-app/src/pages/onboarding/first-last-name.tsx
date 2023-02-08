@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { FirstLastNameForm } from 'components/FirstLastNameForm';
-import { Header } from 'components/Header';
+import { Title } from 'components/Title';
 import { NextPage } from 'next';
 import { FormProvider, useForm } from 'react-hook-form';
-import zod from 'zod';
+import { z } from 'zod';
 
-const schema = zod
+const schema = z
   .object({
-    firstName: zod.string({ required_error: 'This field is required' }),
-    lastName: zod.string({ required_error: 'This field is required' }),
+    firstName: z.string({ required_error: 'This field is required' }),
+    lastName: z.string({ required_error: 'This field is required' }),
   })
   .required();
 
@@ -28,7 +28,7 @@ const FirstLastNamePage: NextPage = () => {
     <div className="bg-black-01 flex h-screen w-screen flex-col gap-60 p-24 md:items-center md:justify-center">
       <div className="max-w-332 flex flex-col gap-60 md:items-center md:justify-center">
         <div className="text-white md:text-center">
-          <Header title="Enter your first and last name as it appears on your ID" />
+          <Title title="Enter your first and last name as it appears on your ID" />
         </div>
         <FormProvider {...form}>
           <form
