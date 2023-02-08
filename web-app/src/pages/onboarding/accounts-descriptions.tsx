@@ -32,14 +32,14 @@ const accountTypesSelectTitles = new Map<string, string>([
 
 const AccountsDescriptionsPage: NextPage = () => {
   return (
-    <div className="bg-black-01 flex w-screen flex-col items-center justify-center gap-60 p-24 lg:h-screen">
-      <div className="bg-black-01 fixed top-0 w-full py-20 text-center text-white lg:relative">
+    <div className="flex w-screen flex-col items-center justify-center gap-60 bg-black-01 p-24 lg:h-screen">
+      <div className="fixed top-0 w-full bg-black-01 py-20 text-center text-white lg:relative">
         <Header
           title="Not sure which is best for you?"
           subtitle="Lear more about each option below"
         />
       </div>
-      <RadioGroup className="gap-15 mt-60 flex flex-col text-white lg:mt-0 lg:flex-row">
+      <RadioGroup className="mt-60 flex flex-col gap-15 text-white lg:mt-0 lg:flex-row">
         {accountTypesDescriptions.map(accountType => (
           <div
             key={accountType.value}
@@ -51,7 +51,7 @@ const AccountsDescriptionsPage: NextPage = () => {
             </div>
             <RadioGroupItem
               value={accountType.value}
-              className="text-paragraph-emphasized text-black-01 bg-green-frost-01 w-full py-20"
+              className="w-full bg-green-frost-01 py-20 text-paragraph-emphasized text-black-01"
             >
               {accountTypesSelectTitles.get(accountType.value)}
             </RadioGroupItem>

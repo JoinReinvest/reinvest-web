@@ -23,7 +23,7 @@ const accountTypes = [
 
 const AccountChoicesPage: NextPage = () => {
   return (
-    <div className="bg-black-01 flex h-screen w-screen flex-col items-center justify-center gap-60 p-24">
+    <div className="flex h-screen w-screen flex-col items-center justify-center gap-60 bg-black-01 p-24">
       <div className="text-white lg:w-1/4 lg:text-center">
         <Header title="Which type of account would you like to open?" />
       </div>
@@ -32,7 +32,9 @@ const AccountChoicesPage: NextPage = () => {
         <Link
           href="/onboarding/accounts-descriptions"
           title="Not sure which is best for you?"
-        />
+        >
+          Not sure which is best for you?
+        </Link>
       </div>
     </div>
   );

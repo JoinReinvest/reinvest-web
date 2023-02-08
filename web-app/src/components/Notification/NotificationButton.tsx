@@ -11,6 +11,6 @@ export const NotificationButton = ({ label, onClick, disabled = false }: Props) 
     onClick={onClick}
     disabled={disabled}
   >
-    <Typography variant='button'>{label}</Typography>
+    <Typography variant="button">{label}</Typography>
   </Button>
 );
