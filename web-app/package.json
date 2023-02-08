@@ -45,6 +45,7 @@
     "@hookooekoo/ui-checkbox": "^1.1.2",
     "@hookooekoo/ui-collapsible": "^0.1.3",
     "@hookooekoo/ui-icon": "^0.0.10",
+    "@hookooekoo/ui-input-masked": "^0.3.1",
     "@hookooekoo/ui-input-text": "^0.3.1",
     "@hookooekoo/ui-radio-group": "^0.4.2",
     "@hookooekoo/ui-select": "^0.3.2",

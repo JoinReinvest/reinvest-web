@@ -1,5 +1,7 @@
-.hkek-input-text {
-  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none bg-inherit;
+@import url("@hookooekoo/ui-input-masked/dist/index.css");
+
+.hkek-input-masked {
+  @apply placeholder:text-gray-02 text-white text-paragraph-large;
 
   &[disabled] {
     @apply text-gray-02;
@@ -14,7 +16,7 @@
   }
 }
 
-.hkek-input-text-control {
+.hkek-input-masked-control {
   @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color;
   @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
@@ -27,7 +29,7 @@
   }
 
   &-placeholder {
-    @apply transition-transform-color absolute text-gray-02 line-clamp-1;
+    @apply transition-transform-color absolute text-gray-02 line-clamp-1 text-paragraph-large;
   }
 
   &-error-message {
@@ -55,22 +57,6 @@
     .hkek-input-text-control-placeholder {
       @apply z-10;
       @apply text-gray-02;
-    }
-  }
-
-  &[data-has-content-left="true"] {
-    @apply pl-8;
-
-    .hkek-input-text-control-content {
-      @apply ml-42;
-    }
-  }
-
-  &[data-has-content-right="true"] {
-    @apply pr-8;
-
-    .hkek-input-text-control-content {
-      @apply mr-42;
     }
   }
 }
