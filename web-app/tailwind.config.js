@@ -38,13 +38,14 @@ module.exports = {
       48: '4.8rem',
       60: '6.0rem',
       72: '7.2rem',
+      96: '9.6rem',
       100: '10.0rem',
       180: '18.0rem',
     },
     fontSize: {
       base: '10px',
 
-      'h1': [
+      h1: [
         '5.4rem',
         {
           lineHeight: '90%',
@@ -53,7 +54,7 @@ module.exports = {
         },
       ],
 
-      'h2': [
+      h2: [
         '3.6rem',
         {
           lineHeight: '110%',
@@ -62,7 +63,7 @@ module.exports = {
         },
       ],
 
-      'h3': [
+      h3: [
         '3rem',
         {
           lineHeight: '110%',
@@ -71,7 +72,7 @@ module.exports = {
         },
       ],
 
-      'h4': [
+      h4: [
         '2.4rem',
         {
           lineHeight: '110%',
@@ -80,7 +81,7 @@ module.exports = {
         },
       ],
 
-      'h5': [
+      h5: [
         '2.0rem',
         {
           lineHeight: '110%',
@@ -89,7 +90,7 @@ module.exports = {
         },
       ],
 
-      'h6': [
+      h6: [
         '1.6rem',
         {
           lineHeight: 'auto',
@@ -143,7 +144,7 @@ module.exports = {
         },
       ],
 
-      'paragraph': [
+      paragraph: [
         '1.2rem',
         {
           lineHeight: 'auto',
