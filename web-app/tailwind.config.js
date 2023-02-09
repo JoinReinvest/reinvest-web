@@ -182,7 +182,6 @@ module.exports = {
     extend: {
       maxWidth: {
         330: '33rem',
-        332: '33.2rem',
         375: '37.5rem',
       },
 
