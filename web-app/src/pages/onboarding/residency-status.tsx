@@ -35,7 +35,7 @@ const ResidencyStatusPage: NextPage = () => {
           title="Residency Status"
           subtitle="Please select your US residency status."
         />
-        <div className="text-green-frost-01 my-16 flex items-center gap-8">
+        <div className="my-16 flex items-center gap-8 text-green-frost-01">
           <IconWarning />
           <Typography variant="paragraph-small">REINVEST does not accept non-US residents at this time.</Typography>
         </div>

@@ -1,10 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Logo } from 'assets/Logo';
-import { LoginForm } from 'components/LoginForm';
+import { LogoIcon } from 'assets/LogoIcon';
 import { Typography } from 'components/Typography';
 import { NextPage } from 'next';
+import Link from 'next/link';
+import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import zod, { Schema } from 'zod';
+
+import { Button } from '../components/Button';
+import { EmailInput } from '../components/FormElements/EmailInput';
+import { PasswordInput } from '../components/FormElements/PasswordInput';
+import { formValidationRules } from '../formValidationRules';
 
 export interface LoginFormFields {
   email: string;
@@ -12,22 +18,25 @@ export interface LoginFormFields {
 }
 
 export const formSchema: Schema<LoginFormFields> = zod.object({
-  email: zod.string({ required_error: 'This field is required' }).email('Please provide a valid email'),
-  password: zod.string({ required_error: 'This field is required' }),
+  email: formValidationRules.email,
+  password: formValidationRules.password,
 });
 
 const Login: NextPage = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
   const form = useForm<LoginFormFields>({
     resolver: zodResolver(formSchema),
   });
 
   const onSubmit: SubmitHandler<LoginFormFields> = async () => {
-    console.log(form.getValues('email'));
-    console.log(form.getValues('password'));
+    console.log(form.getValues('email')) // eslint-disable-line
+    console.log(form.getValues('password')) // eslint-disable-line
   };
 
   return (
-    <div className="gap-84 relative flex h-screen flex-col items-center justify-center text-white">
+    <div className="flex h-screen flex-col items-center justify-center gap-84 text-center text-white">
       <video
         autoPlay
         loop
@@ -40,21 +49,39 @@ const Login: NextPage = () => {
         />
         Your browser does not support the video tag.
       </video>
-      <Logo className="z-30" />
-      <div className="max-w-332 z-30 flex flex-col gap-24">
-        <div className="flex flex-col items-center justify-center gap-16 text-center">
-          <Typography variant="heading-2">Sign in</Typography>
+
+      <LogoIcon className="z-30" />
+
+      <FormProvider {...form}>
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          className="login-form z-30 flex max-w-330 flex-col items-center justify-center gap-16"
+        >
+          <Typography variant="h2">Sign in</Typography>
           <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
-        </div>
-        <FormProvider {...form}>
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-full flex-col items-center gap-16"
+
+          <EmailInput
+            onChange={setEmail}
+            value={email}
+          />
+          <PasswordInput
+            value={password}
+            onChange={setPassword}
+          />
+
+          <Link
+            href="/"
+            className="typo-paragraph-large"
           >
-            <LoginForm />
-          </form>
-        </FormProvider>
-      </div>
+            Forgot password?
+          </Link>
+
+          <Button
+            type="submit"
+            label="Sign In"
+          />
+        </form>
+      </FormProvider>
     </div>
   );
 };

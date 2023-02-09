@@ -12,17 +12,12 @@ export const TextInput = <FormValues extends FieldValues>(props: TextInputProps<
   const { field, fieldState } = useController<FormValues>(props);
   const { name, placeholder, required = false, onBlur, onFocus, disabled = false, showArrowIcon = false, showSearchIcon = false, type = 'text' } = props;
   const fieldValue = useMemo(() => field.value, [field]);
-  const onChange: TextInputProps<FieldValues>['onChange'] = event => {
-    if (props.type === 'number') {
-      return field.onChange(event.target.valueAsNumber);
-    }
 
-    return field.onChange(event.target.value);
-  };
+  const onChange: TextInputProps<FieldValues>['onChange'] = event => field.onChange(event.target.value);
 
   const iconLeftClass = cx({
     'absolute w-32 h-32 stroke-01': true,
-    'stroke-gray-03': !!disabled,
+    'stroke-gray-03': disabled,
   });
 
   const iconRightClass = cx({
