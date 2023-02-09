@@ -1,13 +1,14 @@
 import { BlackModal } from 'components/BlackModal';
-import { InputFile } from 'components/InputFile';
-import { Typography } from 'components/Typography';
+import { InputFile } from 'components/FormElements/InputFile';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
+import { Title } from '../../../components/Title';
+
 const OnboardingIdentificationPage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [document, setDocument] = useState<File | null>(null);
+  const [_document, setDocument] = useState<File | null>(null); // eslint-disable-line @typescript-eslint/no-unused-vars
 
   useEffect(() => {
     setIsOpen(true);
@@ -16,23 +17,14 @@ const OnboardingIdentificationPage: NextPage = () => {
   return (
     <MainLayout>
       <BlackModal isOpen={isOpen}>
-        <div className="flex flex-col gap-36">
-          <Typography
-            variant="h5"
-            className="text-center"
-          >
-            Please upload your Driver&apos;s License or Passport for further verification
-          </Typography>
-
-          <InputFile
-            label="Document 1"
-            name="identification"
-            placeholder="Upload File"
-            file={document}
-            onChange={setDocument}
-            accepts="image/*,.pdf"
-          />
-        </div>
+        <Title title="Please upload your Driver's License or Passport for further verification" />
+        <InputFile
+          label="Document 1"
+          name="identification_document"
+          placeholder="Upload File"
+          onChange={setDocument}
+          accepts="image/*,.pdf"
+        />
       </BlackModal>
     </MainLayout>
   );
