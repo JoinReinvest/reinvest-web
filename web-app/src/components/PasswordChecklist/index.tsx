@@ -7,18 +7,14 @@ interface Props {
   passwordConfirmation: string;
 }
 
+const generateCheckListItem = (label: string, state: boolean) => <CheckItem isChecked={state}>{label}</CheckItem>;
+
 export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: Props) => {
   const hasLowerCaseLetter = useMemo(() => password.toUpperCase() != password, [password]);
   const hasUpperCaseLetter = useMemo(() => password.toLowerCase() != password, [password]);
   const hasNumber = useMemo(() => /\d/.test(password), [password]);
-  const hasMinumumLength = useMemo(() => password?.length >= 8, [password]);
-
-  const passwordsMatch = useMemo(() => {
-    const passwordsHaveLength = !!password.length;
-    const passwordsMatch = password === passwordConfirmation;
-
-    return passwordsHaveLength && passwordsMatch;
-  }, [password, passwordConfirmation]);
+  const hasMinumumLength = useMemo(() => password.length >= 8, [password]);
+  const passwordsMatch = useMemo(() => !!password.length && password === passwordConfirmation, [password, passwordConfirmation]);
 
   const checks = useMemo<[string, boolean][]>(
     () => [
@@ -31,7 +27,5 @@ export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: 
     [hasLowerCaseLetter, hasUpperCaseLetter, hasNumber, hasMinumumLength, passwordsMatch],
   );
 
-  return <ul className="flex flex-col gap-4">{checks.map(([label, isChecked]) => generateCheckListItem(label, isChecked))}</ul>;
+  return <ul className="mt-20 flex flex-col gap-4">{checks.map(([label, isChecked]) => generateCheckListItem(label, isChecked))}</ul>;
 };
-
-const generateCheckListItem = (label: string, state: boolean) => <CheckItem isChecked={state}>{label}</CheckItem>;
