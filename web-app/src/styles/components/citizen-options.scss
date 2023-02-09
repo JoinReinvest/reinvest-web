@@ -1,0 +1,17 @@
+.citizen-options {
+  @apply flex flex-col gap-16;
+
+  .hkek-radio-group-item {
+    @apply flex items-center gap-20;
+  }
+
+  .citizen-options-indicator-container {
+    @apply border border-white flex h-36 w-36 rounded-full items-center justify-center;
+  }
+
+  .hkek-radio-group-item[data-state="checked"] {
+    .citizen-options-indicator-container {
+      @apply bg-green-frost-01 border-green-frost-01;
+    }
+  }
+}
