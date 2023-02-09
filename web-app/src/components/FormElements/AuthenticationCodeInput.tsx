@@ -6,10 +6,10 @@ const mask: InputMaskedProps['maskOptions'] = {
   mask: '000-000',
 };
 
-export const CodeInput = ({ value, onChange }: CustomMaskedInputInterface) => (
+export const AuthenticationCodeInput = ({ value, onChange }: CustomMaskedInputInterface) => (
   <InputMasked
     maskOptions={mask}
-    name="code_phone"
+    name="authentication_code"
     value={value}
     onChange={newValue => onChange(newValue)}
     placeholder="Authentication Code"

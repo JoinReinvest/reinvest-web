@@ -1,5 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
-import { CodeInput } from 'components/FormElements/CodeInput';
+import { AuthenticationCodeInput } from 'components/FormElements/AuthenticationCodeInput';
 import { Link } from 'components/Link';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
@@ -18,7 +18,7 @@ const CheckPhonePage: NextPage = () => {
           title="Check Your Phone"
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
         />
-        <CodeInput
+        <AuthenticationCodeInput
           value={'000-000'}
           onChange={() => {
             console.log(1); // eslint-disable-line
