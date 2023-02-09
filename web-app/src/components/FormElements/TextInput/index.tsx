@@ -11,7 +11,6 @@ import { TextInputProps } from './interfaces';
 export const TextInput = <FormValues extends FieldValues>(props: TextInputProps<FormValues>) => {
   const { field, fieldState } = useController<FormValues>(props);
   const { name, placeholder, required = false, onBlur, onFocus, disabled = false, showArrowIcon = false, showSearchIcon = false, type = 'text' } = props;
-
   const fieldValue = useMemo(() => field.value, [field]);
 
   const onChange: TextInputProps<FieldValues>['onChange'] = event => field.onChange(event.target.value);
