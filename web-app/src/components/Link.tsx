@@ -4,9 +4,10 @@ import { ReactNode } from 'react';
 interface LinkProps extends LinkType {
   children: ReactNode;
 }
+
 export const Link = (props: LinkProps) => (
   <PrimitiveLink
     {...props}
-    className="typo-link text-green-frost-01"
+    className={`typo-link text-green-frost-01 ${props.className}`}
   />
 );

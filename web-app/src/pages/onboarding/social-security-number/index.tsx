@@ -1,0 +1,42 @@
+import { BlackModal } from 'components/BlackModal';
+import { Typography } from 'components/Typography';
+import { MainLayout } from 'layouts/MainLayout';
+import { NextPage } from 'next';
+
+import { SSNInput } from '../../../components/FormElements/SSNInput';
+import { WhyRequiredLink } from '../../../components/Links/WhyRequiredLink';
+import { Title } from '../../../components/Title';
+
+const OnboardingSocialSecurityNumberPage: NextPage = () => {
+  return (
+    <MainLayout>
+      <BlackModal
+        isOpen={true}
+        onOpenChange={() => {
+          console.log(1) // eslint-disable-line
+        }}
+      >
+        <Title title="What's your social security number?" />
+
+        <Typography variant="paragraph-emphasized">*REINVEST is required by law to collect your social security number.</Typography>
+        <Typography
+          variant="paragraph"
+          className="mt-10 mb-20 text-white/50"
+        >
+          We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
+        </Typography>
+
+        <SSNInput
+          value={''}
+          onChange={() => {
+            console.log(1) // eslint-disable-line
+          }}
+        />
+
+        <WhyRequiredLink href="/" />
+      </BlackModal>
+    </MainLayout>
+  );
+};
+
+export default OnboardingSocialSecurityNumberPage;

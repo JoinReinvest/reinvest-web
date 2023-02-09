@@ -39,6 +39,7 @@ module.exports = {
       60: '6.0rem',
       72: '7.2rem',
       84: '8.4rem',
+      96: '9.6rem',
       100: '10.0rem',
       180: '18.0rem',
     },
@@ -48,8 +49,8 @@ module.exports = {
       h1: [
         '5.4rem',
         {
-          lineHeight: '90%',
-          letterSpacing: '-5%',
+          lineHeight: '0.9em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
@@ -57,8 +58,8 @@ module.exports = {
       h2: [
         '3.6rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
@@ -66,8 +67,8 @@ module.exports = {
       h3: [
         '3rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
@@ -75,8 +76,8 @@ module.exports = {
       h4: [
         '2.4rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
@@ -84,8 +85,8 @@ module.exports = {
       h5: [
         '2.0rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '500',
         },
       ],
@@ -93,8 +94,6 @@ module.exports = {
       h6: [
         '1.6rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -102,8 +101,6 @@ module.exports = {
       'bonus-heading': [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -111,8 +108,6 @@ module.exports = {
       button: [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -120,8 +115,6 @@ module.exports = {
       link: [
         '1.2rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -129,8 +122,6 @@ module.exports = {
       'paragraph-large': [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -138,8 +129,6 @@ module.exports = {
       'paragraph-emphasized': [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -147,8 +136,6 @@ module.exports = {
       paragraph: [
         '1.2rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -156,8 +143,6 @@ module.exports = {
       'paragraph-small': [
         '1.1rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],

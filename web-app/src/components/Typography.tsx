@@ -36,12 +36,12 @@ const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
 const variants = cva(undefined, {
   variants: {
     variant: {
-      'h1': 'typo-h1',
-      'h2': 'typo-h2',
-      'h3': 'typo-h3',
-      'h4': 'typo-h4',
-      'h5': 'typo-h5',
-      'h6': 'typo-h6',
+      h1: 'typo-h1',
+      h2: 'typo-h2',
+      h3: 'typo-h3',
+      h4: 'typo-h4',
+      h5: 'typo-h5',
+      h6: 'typo-h6',
       'bonus-heading': 'typo-bonus-heading',
       button: 'typo-button',
       'paragraph-large': 'typo-paragraph-large',
