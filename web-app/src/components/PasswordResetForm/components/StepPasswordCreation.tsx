@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Link } from 'components/Link';
-import { TextInput } from 'components/TextInput';
 import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
+import { TextInput } from '../../FormElements/TextInput';
 import { PasswordChecklist } from './PasswordChecklist';
 
 const schema = z.object({
@@ -30,15 +30,15 @@ export const StepPasswordCreation = () => {
   const passwordConfirmationField = form.watch('passwordConfirmation');
 
   const onSubmit: SubmitHandler<FormFields> = async values => {
-    console.info(values);
+    console.info(values); // eslint-disable-line
   };
 
   return (
     <div className="h-full">
-      <div className="flex h-full flex-col max-md:gap-60 md:gap-16">
+      <div className="max-md:gap-60 flex h-full flex-col md:gap-16">
         <div className="flex flex-col gap-8">
           <Typography
-            variant="heading-5"
+            variant="h5"
             className="md:pb-36 md:text-center"
           >
             Create new password
@@ -88,7 +88,7 @@ export const StepPasswordCreation = () => {
               type="submit"
               label="Continue"
               disabled={!form.formState.isValid}
-              className="w-full max-md:mt-60"
+              className="max-md:mt-60 w-full"
             />
           </div>
         </form>

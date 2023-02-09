@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').default} */
 const defaultTheme = require('tailwindcss/defaultTheme');
 
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: 'jit',
@@ -23,7 +25,6 @@ module.exports = {
       15: '1.5rem',
       16: '1.6rem',
       17: '1.7rem',
-      18: '1.8rem',
       20: '2rem',
       22: '2.2rem',
       24: '2.4rem',
@@ -33,11 +34,10 @@ module.exports = {
       32: '3.2rem',
       36: '3.6rem',
       40: '4.0rem',
-      42: '4.2rem',
       44: '4.4rem',
       48: '4.8rem',
-      60: '6.0rem',
       72: '7.2rem',
+      84: '8.4rem',
       96: '9.6rem',
       100: '10.0rem',
       180: '18.0rem',
@@ -45,56 +45,54 @@ module.exports = {
     fontSize: {
       base: '10px',
 
-      'h1': [
+      h1: [
         '5.4rem',
         {
-          lineHeight: '90%',
-          letterSpacing: '-5%',
+          lineHeight: '0.9em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
 
-      'h2': [
+      h2: [
         '3.6rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
 
-      'h3': [
+      h3: [
         '3rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
 
-      'h4': [
+      h4: [
         '2.4rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '400',
         },
       ],
 
-      'h5': [
+      h5: [
         '2.0rem',
         {
-          lineHeight: '110%',
-          letterSpacing: '-5%',
+          lineHeight: '1.1em',
+          letterSpacing: '-0.05em',
           fontWeight: '500',
         },
       ],
 
-      'h6': [
+      h6: [
         '1.6rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -102,8 +100,6 @@ module.exports = {
       'bonus-heading': [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -111,8 +107,6 @@ module.exports = {
       button: [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -120,8 +114,6 @@ module.exports = {
       link: [
         '1.2rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
@@ -129,8 +121,6 @@ module.exports = {
       'paragraph-large': [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -138,17 +128,13 @@ module.exports = {
       'paragraph-emphasized': [
         '1.4rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '500',
         },
       ],
 
-      'paragraph': [
+      paragraph: [
         '1.2rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -156,8 +142,6 @@ module.exports = {
       'paragraph-small': [
         '1.1rem',
         {
-          lineHeight: 'auto',
-          letterSpacing: '0%',
           fontWeight: '400',
         },
       ],
@@ -171,7 +155,7 @@ module.exports = {
       green: {
         deep: '#11270B',
         frost: {
-          '01': '#C1EBD999',
+          '01': '#C1EBD9',
         },
       },
       gray: {
@@ -197,10 +181,16 @@ module.exports = {
         330: '33rem',
         375: '37.5rem',
       },
+
       transitionProperty: {
         'height-width': 'height, width',
         'transform-color': 'transform, color',
       },
+
+      animation: {
+        spinner: 'fade-out 0.8s linear infinite',
+      },
+
       keyframes: {
         'fade-in': {
           '0%': {
@@ -225,7 +215,7 @@ module.exports = {
   plugins: [
     require('tailwindcss-text-fill'),
     require('@tailwindcss/line-clamp'),
-    function ({ addVariant, addUtilities }) {
+    plugin(function ({ addVariant, addUtilities }) {
       addVariant('child', '& > *');
 
       addVariant('state-checked', '&[data-state="checked"]');
@@ -238,6 +228,33 @@ module.exports = {
           'font-stretch': 'expanded',
         },
       });
-    },
+
+      addUtilities({
+        '.animation-delay-100': {
+          'animation-delay': '100ms',
+        },
+        '.animation-delay-200': {
+          'animation-delay': '200ms',
+        },
+        '.animation-delay-300': {
+          'animation-delay': '300ms',
+        },
+        '.animation-delay-400': {
+          'animation-delay': '400ms',
+        },
+        '.animation-delay-500': {
+          'animation-delay': '500ms',
+        },
+        '.animation-delay-600': {
+          'animation-delay': '600ms',
+        },
+        '.animation-delay-700': {
+          'animation-delay': '700ms',
+        },
+        '.animation-delay-800': {
+          'animation-delay': '800ms',
+        },
+      });
+    }),
   ],
 };

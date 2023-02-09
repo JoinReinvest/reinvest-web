@@ -8,7 +8,7 @@ export const StepConfirmation = () => (
       <CircleSuccess />
 
       <Typography
-        variant="heading-5"
+        variant="h5"
         className="text-center"
       >
         Your password has successfully been reset.{' '}

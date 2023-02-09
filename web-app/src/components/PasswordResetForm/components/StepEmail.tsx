@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { TextInput } from 'components/TextInput';
 import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
+
+import { TextInput } from '../../FormElements/TextInput';
 
 const schema = z.object({
   email: z.string().email(),
@@ -22,14 +23,14 @@ export const StepEmail = () => {
   });
 
   const onSubmit: SubmitHandler<FormFields> = async values => {
-    console.info(values);
+    console.info(values);// eslint-disable-line
   };
 
   return (
-    <div className="flex h-full flex-col gap-60 md:gap-36">
+    <div className="gap-60 flex h-full flex-col md:gap-36">
       <div className="flex flex-col gap-8">
         <Typography
-          variant="heading-5"
+          variant="h5"
           className="md:text-center"
         >
           Reset Password
