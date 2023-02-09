@@ -16,7 +16,7 @@ export const ButtonAdd = ({ title, subtitle, onClick, disabled = false }: Props)
     <IconAdd className="stroke-black-01" />
 
     <div>
-      <Typography variant="bonus-heading-mobile">{title}</Typography>
+      <Typography variant="bonus-heading">{title}</Typography>
       <Typography
         variant="paragraph"
         className="text-gray-01 opacity-60"
