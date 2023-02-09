@@ -11,10 +11,9 @@ export const CitizenOptions = ({ options }: CitizenOptionsProps) => {
         <RadioGroupItem
           key={`${title}-${index}`}
           value={value}
-          className="flex items-center gap-20"
         >
-          <div className="citizen-options-indicator-container flex h-36 w-36 rounded-full">
-            <RadioGroupIndicator className="flex items-center justify-center">
+          <div className="citizen-options-indicator-container">
+            <RadioGroupIndicator>
               <IconCheckmark />
             </RadioGroupIndicator>
           </div>
