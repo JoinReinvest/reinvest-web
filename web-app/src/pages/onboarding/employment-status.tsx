@@ -1,9 +1,10 @@
 import { BlackModal } from 'components/BlackModal';
 import { SelectionCards } from 'components/SelectionCards';
-import { Typography } from 'components/Typography';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
+
+import { Title } from '../../components/Title';
 
 const EMPLOYMENT_STATUS: ComponentProps<typeof SelectionCards>['options'] = [
   {
@@ -34,22 +35,15 @@ const OnboardingEmploymentStatusPage: NextPage = () => {
   return (
     <MainLayout>
       <BlackModal isOpen={isOpen}>
-        <div className="flex flex-col max-lg:gap-60 lg:gap-36">
-          <Typography
-            variant="h5"
-            className="lg:text-center"
-          >
-            Are you currently employed?
-          </Typography>
+        <Title title="Are you currently employed?" />
 
-          <SelectionCards
-            name="employment-status"
-            options={EMPLOYMENT_STATUS}
-            required={false}
-            orientation="vertical"
-            className="flex flex-col items-stretch max-lg:gap-22 lg:gap-16"
-          />
-        </div>
+        <SelectionCards
+          name="employment-status"
+          options={EMPLOYMENT_STATUS}
+          required={false}
+          orientation="vertical"
+          className="flex flex-col items-stretch gap-22"
+        />
       </BlackModal>
     </MainLayout>
   );
