@@ -30,11 +30,15 @@ const AccountChoicesPage: NextPage = () => {
       <BlackModal
         isOpen={true}
         onOpenChange={() => {
-          console.log(1) // eslint-disable-line
+          console.log(1); // eslint-disable-line
         }}
       >
         <Title title="Which type of account would you like to open?" />
-        <SelectionCards options={accountTypes} />
+        <SelectionCards
+          options={accountTypes}
+          className="mb-30 flex flex-col items-stretch gap-24"
+          orientation="vertical"
+        />
         <Link
           href="/onboarding/accounts-descriptions"
           title="Not sure which is best for you?"
