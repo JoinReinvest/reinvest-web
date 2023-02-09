@@ -1,6 +1,7 @@
 import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
 import { Typography } from 'components/Typography';
 import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
 
 import { BlackModal } from '../../components/BlackModal';
 import { Title } from '../../components/Title';
@@ -31,14 +32,15 @@ const accountTypes = [
 ];
 
 const AccountsDescriptionsPage: NextPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
+
   return (
     <MainLayout>
-      <BlackModal
-        isOpen={true}
-        onOpenChange={() => {
-          console.log(1) // eslint-disable-line
-        }}
-      >
+      <BlackModal isOpen={isOpen}>
         <Title
           title="Not sure which is best for you?"
           subtitle="Lear more about each option below"

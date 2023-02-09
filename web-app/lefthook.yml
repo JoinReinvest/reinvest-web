@@ -3,6 +3,7 @@ post-merge:
     update:
       run: yarn
 pre-commit:
+  parallel: true
   commands:
     linter:
       run: yarn lint
