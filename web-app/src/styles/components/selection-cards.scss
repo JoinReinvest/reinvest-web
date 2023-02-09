@@ -1,0 +1,14 @@
+.selection-cards {
+  @apply flex flex-col items-center gap-24 mb-30;
+}
+
+.selection-cards .hkek-radio-group-item {
+  &.hkek-radio-group-item[data-state="checked"],
+  &.hkek-radio-group-item:hover {
+    @apply bg-green-frost-01;
+
+    p {
+      @apply text-black-01 border-none;
+    }
+  }
+}

@@ -1,0 +1,17 @@
+@import url("@hookooekoo/ui-dialog/dist/index.css");
+
+.black-modal {
+  @apply w-screen h-screen max-h-screen bg-black-02 text-white;
+
+  &[data-state="open"] {
+    animation: fade-in 500ms ease;
+  }
+
+  &[data-state="closed"] {
+    animation: fade-out 500ms ease;
+  }
+}
+
+.hkek-dialog-overlay:has(+ .hkek-dialog-content.black-modal) {
+  @apply bg-black-02;
+}

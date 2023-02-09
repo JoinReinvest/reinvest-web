@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginLogo } from 'assets/LoginLogo';
 import { Logo } from 'assets/Logo';
 import { LoginForm } from 'components/LoginForm';
 import { Typography } from 'components/Typography';
@@ -40,10 +41,10 @@ const Login: NextPage = () => {
         />
         Your browser does not support the video tag.
       </video>
-      <Logo className="z-30" />
+      <LoginLogo className="z-30" />
       <div className="max-w-332 z-30 flex flex-col gap-24">
         <div className="flex flex-col items-center justify-center gap-16 text-center">
-          <Typography variant="heading-2">Sign in</Typography>
+          <Typography variant="h2">Sign in</Typography>
           <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
         </div>
         <FormProvider {...form}>

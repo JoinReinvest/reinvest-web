@@ -1,5 +1,6 @@
 import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
 import cx from 'classnames';
+import { Typography } from 'components/Typography';
 
 import { SelectionCardsProps } from './interfaces';
 
@@ -7,7 +8,7 @@ export const SelectionCards = ({ value, onChange, options, name, required, disab
   <RadioGroup
     name={name}
     value={value}
-    className="flex gap-36"
+    className="selection-cards"
     onChange={onChange}
     required={required}
     disabled={disabled}
@@ -21,14 +22,17 @@ export const SelectionCards = ({ value, onChange, options, name, required, disab
         value={option.value}
         className={cx(
           'px-36 py-24',
-          "state-checked:bg-green-frost-01 state-checked:text-black-01",
-          "state-unchecked:text-gray-03 state-unchecked:border state-unchecked:border-gray-03",
+          'state-checked:bg-green-frost-01 state-checked:text-black-01',
+          'state-unchecked:text-gray-03 state-unchecked:border state-unchecked:border-gray-03',
         )}
       >
-        <>
-          <h4 className='state-checked:'>{option.title}</h4>
-          <p>{option.description}</p>
-        </>
+        <Typography variant="paragraph-large">{option.title}</Typography>
+        <Typography
+          className="text-gray-03"
+          variant="paragraph-small"
+        >
+          {option.description}
+        </Typography>
       </RadioGroupItem>
     ))}
   </RadioGroup>

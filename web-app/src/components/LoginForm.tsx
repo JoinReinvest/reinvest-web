@@ -4,8 +4,7 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Button } from './Button';
-import { TextInput } from './TextInput';
-import { Typography } from './Typography';
+import { TextInput } from './FormElements/TextInput';
 
 export const LoginForm = () => {
   const [email, setEmail] = useState<string>('');
@@ -29,14 +28,7 @@ export const LoginForm = () => {
         control={control}
         onChange={event => setPassword(event.target.value)}
       />
-      <Link href="/">
-        <Typography
-          variant="link"
-          className="underline"
-        >
-          Forgot password?
-        </Typography>
-      </Link>
+      <Link href="/">Forgot password?</Link>
       <Button
         type="submit"
         label="Sign In"
