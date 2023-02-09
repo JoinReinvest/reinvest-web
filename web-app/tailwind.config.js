@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').default} */
 const defaultTheme = require('tailwindcss/defaultTheme');
 
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: 'jit',
@@ -181,10 +183,16 @@ module.exports = {
         330: '33rem',
         375: '37.5rem',
       },
+
       transitionProperty: {
         'height-width': 'height, width',
         'transform-color': 'transform, color',
       },
+
+      animation: {
+        spinner: 'fade-out 0.8s linear infinite',
+      },
+
       keyframes: {
         'fade-in': {
           '0%': {
@@ -209,7 +217,7 @@ module.exports = {
   plugins: [
     require('tailwindcss-text-fill'),
     require('@tailwindcss/line-clamp'),
-    function ({ addVariant, addUtilities }) {
+    plugin(function ({ addVariant, addUtilities }) {
       addVariant('child', '& > *');
 
       addVariant('state-checked', '&[data-state="checked"]');
@@ -222,6 +230,33 @@ module.exports = {
           'font-stretch': 'expanded',
         },
       });
-    },
+
+      addUtilities({
+        '.animation-delay-100': {
+          'animation-delay': '100ms',
+        },
+        '.animation-delay-200': {
+          'animation-delay': '200ms',
+        },
+        '.animation-delay-300': {
+          'animation-delay': '300ms',
+        },
+        '.animation-delay-400': {
+          'animation-delay': '400ms',
+        },
+        '.animation-delay-500': {
+          'animation-delay': '500ms',
+        },
+        '.animation-delay-600': {
+          'animation-delay': '600ms',
+        },
+        '.animation-delay-700': {
+          'animation-delay': '700ms',
+        },
+        '.animation-delay-800': {
+          'animation-delay': '800ms',
+        },
+      });
+    }),
   ],
 };
