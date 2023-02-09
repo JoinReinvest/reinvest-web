@@ -7,9 +7,9 @@ import { CitizenOptionsProps } from './interfaces';
 export const CitizenOptions = ({ options }: CitizenOptionsProps) => {
   return (
     <RadioGroup className="citizen-options">
-      {options.map(({ title, value }, index) => (
+      {options.map(({ title, value }) => (
         <RadioGroupItem
-          key={`${title}-${index}`}
+          key={title}
           value={value}
         >
           <div className="citizen-options-indicator-container">

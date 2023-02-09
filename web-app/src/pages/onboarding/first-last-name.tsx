@@ -4,16 +4,17 @@ import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { FormProvider, useForm, useFormContext } from 'react-hook-form';
+import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { TextInput } from '../../components/FormElements/TextInput';
+import { formValidationRules } from '../../formValidationRules';
 
 const schema = z
   .object({
-    firstName: z.string({ required_error: 'This field is required' }),
-    lastName: z.string({ required_error: 'This field is required' }),
-    middleName: z.string(),
+    firstName: formValidationRules.firstName,
+    lastName: formValidationRules.lastName,
+    middleName: formValidationRules.middleName,
   })
   .required();
 
@@ -27,7 +28,6 @@ const FirstLastNamePage: NextPage = () => {
   const [firstName, setFirstName] = useState<string>('');
   const [middleName, setMiddleName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
-  const { control } = useFormContext<FirstLastNameFormFields>();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -38,36 +38,32 @@ const FirstLastNamePage: NextPage = () => {
 
   const { handleSubmit } = form;
 
-  const onSubmit = (data: any) => console.log(data); // eslint-disable-line
+  const onSubmit = (data: any) => console.log(data) // eslint-disable-line
 
   return (
     <MainLayout>
       <BlackModal isOpen={isOpen}>
         <Title title="Enter your first and last name as it appears on your ID" />
         <FormProvider {...form}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="w-full"
-          >
+          <form onSubmit={handleSubmit(onSubmit)}>
             <TextInput
               value={firstName}
               name="firstName"
               placeholder="First name"
+              required
               onChange={event => setFirstName(event.target.value)}
-              control={control}
             />
             <TextInput
               value={middleName}
               name="middleName"
               placeholder="Middle Name (Optional)"
+              required
               onChange={event => setMiddleName(event.target.value)}
-              control={control}
             />
             <TextInput
               value={lastName}
               name="lastName"
               placeholder="Last name"
-              control={control}
               onChange={event => setLastName(event.target.value)}
             />
           </form>
