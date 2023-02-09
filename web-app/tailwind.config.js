@@ -39,6 +39,7 @@ module.exports = {
       48: '4.8rem',
       60: '6.0rem',
       72: '7.2rem',
+      84: '8.4rem',
       96: '9.6rem',
       100: '10.0rem',
       180: '18.0rem',
@@ -179,6 +180,7 @@ module.exports = {
     },
     extend: {
       maxWidth: {
+        332: '33.2rem',
         330: '33rem',
         375: '37.5rem',
       },

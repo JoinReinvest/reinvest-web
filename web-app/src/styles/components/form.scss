@@ -40,11 +40,11 @@
   }
 
   &[data-is-dirty-and-enabled="true"] {
-    @apply border-green-frost-01 text-black-01;
+    @apply border-green-frost-01 text-black-01 bg-green-frost-01 bg-opacity-10;
   }
 
   &[data-has-error="true"] {
-    @apply bg-tertiary-error/5 shadow-transparent mb-26;
+    @apply bg-tertiary-error/5 shadow-transparent mb-26 bg-white;
     @apply border-tertiary-error;
   }
 
