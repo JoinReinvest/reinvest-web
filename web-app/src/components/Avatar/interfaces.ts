@@ -8,5 +8,5 @@ export interface AvatarProps extends PrimitiveProps, VariantsProps {
   src: ImageProps['src'];
 }
 
-type PrimitiveProps = Pick<Props, 'altText'>;
+type PrimitiveProps = Pick<Props, 'altText' | 'className'>;
 type VariantsProps = VariantProps<typeof variants>;

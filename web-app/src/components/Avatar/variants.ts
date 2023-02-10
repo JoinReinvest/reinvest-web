@@ -7,6 +7,7 @@ export const variants = cva('relative', {
       md: 'w-44 h-44',
       lg: 'w-72 h-72',
       xl: 'w-100 h-100',
+      full: 'w-full h-full',
     },
   },
 });

@@ -4,8 +4,8 @@ import Image from 'next/image';
 import { AvatarProps } from './interfaces';
 import { variants } from './variants';
 
-export const Avatar = ({ src, size = 'lg', altText }: AvatarProps) => {
-  const styles = variants({ size });
+export const Avatar = ({ src, size = 'lg', altText, className }: AvatarProps) => {
+  const styles = variants({ size, className });
 
   return (
     <PrimitiveAvatar
@@ -18,6 +18,7 @@ export const Avatar = ({ src, size = 'lg', altText }: AvatarProps) => {
           src={src}
           alt={altText || ''}
           layout="fill"
+          priority
         />
       }
     />
