@@ -180,6 +180,7 @@ module.exports = {
       maxWidth: {
         330: '33rem',
         375: '37.5rem',
+        720: '72.0rem',
       },
 
       transitionProperty: {
