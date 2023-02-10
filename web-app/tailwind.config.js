@@ -228,6 +228,10 @@ module.exports = {
         '.font-stretch-expanded': {
           'font-stretch': 'expanded',
         },
+
+        '.font-stretch-normal': {
+          'font-stretch': 'normal',
+        },
       });
 
       addUtilities({
