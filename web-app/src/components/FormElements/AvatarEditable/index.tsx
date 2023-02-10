@@ -1,5 +1,6 @@
 import { AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
+import cx from 'classnames';
 import { Avatar } from 'components/Avatar';
 import { AvatarProps } from 'components/Avatar/interfaces';
 import { variants } from 'components/Avatar/variants';
@@ -10,7 +11,7 @@ import { ChangeEventHandler, ComponentProps, useMemo, useState } from 'react';
 import { AvatarEditableButton } from './AvatarEditableButton';
 import { getValidationsSchema } from './schema';
 
-interface Props extends Pick<AvatarProps, 'size'>, Pick<ComponentProps<typeof AvatarEditableButton>, 'name'> {
+interface Props extends Pick<AvatarProps, 'size' | 'className'>, Pick<ComponentProps<typeof AvatarEditableButton>, 'name'> {
   name: string;
   onChange: (file: File | null) => void;
   alt?: ImageProps['alt'];
@@ -18,10 +19,10 @@ interface Props extends Pick<AvatarProps, 'size'>, Pick<ComponentProps<typeof Av
   src?: ImageProps['src'];
 }
 
-export const AvatarEditable = ({ name, onChange, src, alt, size = 'lg', maxSizeInMegaBytes = 5.0 }: Props) => {
+export const AvatarEditable = ({ name, onChange, src, alt, className, size = 'lg', maxSizeInMegaBytes = 5.0 }: Props) => {
   const [imageSrc, setImageSrc] = useState(src || placeholderImage);
   const [error, setError] = useState<string | undefined>(undefined);
-  const className = variants({ size, className: 'rounded-full' });
+  const styles = variants({ size, className: 'rounded-full' });
   const schema = useMemo(() => getValidationsSchema(maxSizeInMegaBytes), [maxSizeInMegaBytes]);
   const hasError = !!error;
 
@@ -44,13 +45,13 @@ export const AvatarEditable = ({ name, onChange, src, alt, size = 'lg', maxSizeI
   };
 
   return (
-    <div className="flex flex-col gap-8">
+    <div className={cx('flex flex-col gap-8', className)}>
       <label
         className="flex cursor-pointer flex-col items-center"
         htmlFor={name}
       >
         <PrimitiveAvatarWithButton
-          className={className}
+          className={styles}
           avatar={
             <Avatar
               src={imageSrc}

@@ -1,6 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
 import { AvatarEditable } from 'components/FormElements/AvatarEditable';
-import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
@@ -16,20 +15,26 @@ const ResidencyStatusPage: NextPage = () => {
   return (
     <MainLayout>
       <BlackModal isOpen={isOpen}>
-        <Title title="Upload Profile Picture" />
+        <div className="flex flex-col items-center">
+          <Typography
+            variant="h5"
+            className="max-lg:typo-paragraph-large max-lg:order-2 max-lg:font-stretch-normal lg:pb-36"
+          >
+            Upload Profile Picture
+          </Typography>
 
-        <div className="flex flex-col items-center gap-24">
           <AvatarEditable
             name="profile-picture"
             onChange={file => {
               console.info(file); // eslint-disable-line
             }}
             size="xl"
+            className="max-lg:pb-12 lg:pb-24"
           />
 
           <Typography
             variant="paragraph-large"
-            className="text-white/50"
+            className="text-white/50 max-lg:pt-4"
           >
             Customize your profile picture
           </Typography>
