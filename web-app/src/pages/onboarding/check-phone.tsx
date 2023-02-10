@@ -1,30 +1,32 @@
 import { BlackModal } from 'components/BlackModal';
-import { CodeInput } from 'components/FormElements/CodeInput';
+import { AuthenticationCodeInput } from 'components/FormElements/AuthenticationCodeInput';
 import { Link } from 'components/Link';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
 
 const CheckPhonePage: NextPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
+
   return (
     <MainLayout>
-      <BlackModal
-        isOpen={true}
-        onOpenChange={() => {
-          console.log(1); // eslint-disable-line
-        }}
-      >
+      <BlackModal isOpen={isOpen}>
         <Title
           title="Check Your Phone"
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
         />
-        <CodeInput
+        <AuthenticationCodeInput
           value={'000-000'}
           onChange={() => {
             console.log(1); // eslint-disable-line
           }}
         />
-        <div className="flex justify-between">
+        <div className="my-20 flex justify-between">
           <Link
             href="/"
             title="resend code link"

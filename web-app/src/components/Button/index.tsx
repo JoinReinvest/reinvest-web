@@ -1,4 +1,5 @@
 import { Button as PrimitiveButton } from '@hookooekoo/ui-button';
+import { Typography } from 'components/Typography';
 
 import { ButtonIcon } from './ButtonIcon';
 import { ButtonProps } from './interfaces';
@@ -14,7 +15,7 @@ export const Button = ({ label, size, variant, showIcon, disabled, type = 'butto
       type={type}
       onClick={onClick}
     >
-      {label}
+      <Typography variant="button">{label}</Typography>
 
       {!!showIcon && (
         <ButtonIcon

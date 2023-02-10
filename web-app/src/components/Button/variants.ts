@@ -1,6 +1,6 @@
 import { cva } from 'class-variance-authority';
 
-export const variants = cva('text-15 font-medium', {
+export const variants = cva('text-15 font-medium w-full', {
   variants: {
     variant: {
       default: ['bg-green-frost-01'],

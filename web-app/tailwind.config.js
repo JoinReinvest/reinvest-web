@@ -1,6 +1,8 @@
 /** @type {import('tailwindcss').default} */
 const defaultTheme = require('tailwindcss/defaultTheme');
 
+const plugin = require('tailwindcss/plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   mode: 'jit',
@@ -23,7 +25,6 @@ module.exports = {
       15: '1.5rem',
       16: '1.6rem',
       17: '1.7rem',
-      18: '1.8rem',
       20: '2rem',
       22: '2.2rem',
       24: '2.4rem',
@@ -31,14 +32,12 @@ module.exports = {
       28: '2.8rem',
       30: '3.0rem',
       32: '3.2rem',
-      34: '3.4rem',
       36: '3.6rem',
       40: '4.0rem',
-      42: '4.2rem',
       44: '4.4rem',
       48: '4.8rem',
-      60: '6.0rem',
       72: '7.2rem',
+      84: '8.4rem',
       96: '9.6rem',
       100: '10.0rem',
       180: '18.0rem',
@@ -183,10 +182,16 @@ module.exports = {
         375: '37.5rem',
         720: '72.0rem',
       },
+
       transitionProperty: {
         'height-width': 'height, width',
         'transform-color': 'transform, color',
       },
+
+      animation: {
+        spinner: 'fade-out 0.8s linear infinite',
+      },
+
       keyframes: {
         'fade-in': {
           '0%': {
@@ -211,7 +216,7 @@ module.exports = {
   plugins: [
     require('tailwindcss-text-fill'),
     require('@tailwindcss/line-clamp'),
-    function ({ addVariant, addUtilities }) {
+    plugin(function ({ addVariant, addUtilities }) {
       addVariant('child', '& > *');
 
       addVariant('state-checked', '&[data-state="checked"]');
@@ -224,6 +229,33 @@ module.exports = {
           'font-stretch': 'expanded',
         },
       });
-    },
+
+      addUtilities({
+        '.animation-delay-100': {
+          'animation-delay': '100ms',
+        },
+        '.animation-delay-200': {
+          'animation-delay': '200ms',
+        },
+        '.animation-delay-300': {
+          'animation-delay': '300ms',
+        },
+        '.animation-delay-400': {
+          'animation-delay': '400ms',
+        },
+        '.animation-delay-500': {
+          'animation-delay': '500ms',
+        },
+        '.animation-delay-600': {
+          'animation-delay': '600ms',
+        },
+        '.animation-delay-700': {
+          'animation-delay': '700ms',
+        },
+        '.animation-delay-800': {
+          'animation-delay': '800ms',
+        },
+      });
+    }),
   ],
 };

@@ -5,9 +5,9 @@ export interface SelectionCardsProps extends PrimitiveProps {
 }
 
 export interface SelectionOption {
-  description: string;
   title: string;
   value: string;
+  description?: string;
 }
 
-type PrimitiveProps = Pick<PrimitiveRadioGroupProps, 'value' | 'onChange' | 'name' | 'required' | 'disabled' | 'orientation'>;
+type PrimitiveProps = Pick<PrimitiveRadioGroupProps, 'value' | 'onChange' | 'name' | 'required' | 'disabled' | 'orientation' | 'className'>;
