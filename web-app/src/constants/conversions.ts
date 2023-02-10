@@ -1,0 +1,1 @@
+export const BYTES_IN_MEGABYTE = 1048576;

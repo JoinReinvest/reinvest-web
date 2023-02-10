@@ -1,4 +1,5 @@
 import { IconFileUpload } from 'assets/icons/IconFileUpload';
+import { BYTES_IN_MEGABYTE } from 'constants/conversions';
 import { ChangeEventHandler, useMemo, useState } from 'react';
 
 import { Typography } from '../../Typography';
@@ -15,10 +16,8 @@ export interface InputFileProps {
   sizeLimitInByMegaBytes?: number;
 }
 
-const MEGABYTE_IN_BYTES = 1048576;
-
 export const InputFile = ({ label, name, placeholder, accepts = '*', file, onChange, sizeLimitInByMegaBytes = 5 }: InputFileProps) => {
-  const sizeLimitInBytes = useMemo(() => sizeLimitInByMegaBytes * MEGABYTE_IN_BYTES, [sizeLimitInByMegaBytes]);
+  const sizeLimitInBytes = useMemo(() => sizeLimitInByMegaBytes * BYTES_IN_MEGABYTE, [sizeLimitInByMegaBytes]);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const clearFiles = () => onChange(null);
   const hasFile = !!file;
