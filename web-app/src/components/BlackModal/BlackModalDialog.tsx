@@ -1,7 +1,7 @@
 import { Dialog as PrimitiveDialog, DialogClose, DialogProps as DialogPropsPrimitive } from '@hookooekoo/ui-dialog';
 import { IconClose } from 'assets/icons/IconClose';
 
-export const Dialog = ({ children, isOpen, onOpenChange }: DialogPropsPrimitive) => {
+export const BlackModalDialog = ({ children, isOpen, onOpenChange }: DialogPropsPrimitive) => {
   return (
     <PrimitiveDialog
       isOpen={isOpen}
