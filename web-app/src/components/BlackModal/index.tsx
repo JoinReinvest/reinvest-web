@@ -18,7 +18,7 @@ export const BlackModal = ({ isOpen = false, onOpenChange, children }: Props) =>
   >
     <div className="flex h-full w-full flex-col items-center justify-between gap-40 overflow-y-hidden py-40 px-20 text-white">
       <Header />
-      <div className="mx-auto w-full max-w-330 overflow-x-auto">{children}</div>
+      <div className="max-w-330 mx-auto w-full">{children}</div>
       <Footer />
     </div>
   </Dialog>
