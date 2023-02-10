@@ -26,7 +26,7 @@ const CheckPhonePage: NextPage = () => {
             console.log(1); // eslint-disable-line
           }}
         />
-        <div className="flex justify-between">
+        <div className="my-20 flex justify-between">
           <Link
             href="/"
             title="resend code link"

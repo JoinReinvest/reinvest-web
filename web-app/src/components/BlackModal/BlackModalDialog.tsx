@@ -6,7 +6,7 @@ export const BlackModalDialog = ({ children, isOpen, onOpenChange }: DialogProps
     <PrimitiveDialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
-      className="bg-black-02 flex h-full w-full flex-col justify-between overflow-x-auto p-24 text-white lg:p-72"
+      className="bg-black-02 flex h-full w-full flex-col justify-between overflow-x-auto p-24 text-white"
     >
       <>
         <DialogClose>
