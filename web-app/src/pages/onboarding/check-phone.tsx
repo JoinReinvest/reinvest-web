@@ -4,16 +4,18 @@ import { Link } from 'components/Link';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
 
 const CheckPhonePage: NextPage = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    setIsOpen(true);
+  }, []);
+
   return (
     <MainLayout>
-      <BlackModal
-        isOpen={true}
-        onOpenChange={() => {
-          console.log(1); // eslint-disable-line
-        }}
-      >
+      <BlackModal isOpen={isOpen}>
         <Title
           title="Check Your Phone"
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
