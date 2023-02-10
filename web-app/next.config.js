@@ -20,3 +20,6 @@ module.exports = withBundleAnalyzer({
     SITE_NAME: process.env.SITE_NAME,
   },
 });
+
+const withVideos = require('next-videos');
+module.exports = withVideos();

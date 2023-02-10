@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { LogoIcon } from 'assets/LogoIcon';
+import LoginBackground from 'assets/videos/login-background.mp4';
 import { Typography } from 'components/Typography';
 import { NextPage } from 'next';
 import Link from 'next/link';
@@ -31,12 +32,12 @@ const Login: NextPage = () => {
   });
 
   const onSubmit: SubmitHandler<LoginFormFields> = async () => {
-    console.log(form.getValues('email')) // eslint-disable-line
-    console.log(form.getValues('password')) // eslint-disable-line
+    console.log(form.getValues('email')); // eslint-disable-line
+    console.log(form.getValues('password')); // eslint-disable-line
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-84 text-center text-white">
+    <div className="gap-84 flex h-screen flex-col items-center justify-center text-center text-white">
       <video
         autoPlay
         loop
@@ -44,7 +45,7 @@ const Login: NextPage = () => {
         className="absolute h-screen w-screen object-cover"
       >
         <source
-          src="https://assets.mixkit.co/videos/preview/mixkit-set-of-plateaus-seen-from-the-heights-in-a-sunset-26070-large.mp4"
+          src={LoginBackground}
           type="video/mp4"
         />
         Your browser does not support the video tag.
@@ -55,7 +56,7 @@ const Login: NextPage = () => {
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="login-form z-30 flex max-w-330 flex-col items-center justify-center gap-16"
+          className="login-form max-w-330 z-30 flex flex-col items-center justify-center gap-16"
         >
           <Typography variant="h2">Sign in</Typography>
           <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
