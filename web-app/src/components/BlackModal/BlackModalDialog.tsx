@@ -6,10 +6,11 @@ export const BlackModalDialog = ({ children, isOpen, onOpenChange }: DialogProps
     <PrimitiveDialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
+      className="black-modal-dialog"
     >
       <>
         <DialogClose>
-          <IconClose />
+          <IconClose className="black-modal-dialog-close-icon" />
         </DialogClose>
         <div className="max-w-720 h-screen w-full overflow-hidden overflow-y-auto">{children}</div>
       </>

@@ -1,7 +1,7 @@
-.hkek-dialog-content {
+.black-modal-dialog {
   @apply w-full h-full bg-black-02 text-white overflow-x-auto p-24 lg:p-72 flex flex-col justify-between;
 
-  button svg {
+  .black-modal-dialog-close-icon {
     @apply ml-auto mb-48;
   }
 }
