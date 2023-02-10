@@ -40,7 +40,7 @@
   }
 
   &[data-is-dirty-and-enabled="true"] {
-    @apply border-green-frost-01 text-black-01;
+    @apply border-green-frost-01 text-black-01 bg-green-frost-01 bg-opacity-10;
   }
 
   &[data-has-error="true"] {
@@ -71,7 +71,7 @@
     @apply pl-8;
 
     .hkek-input-text-control-content {
-      @apply ml-42;
+      @apply ml-44;
     }
   }
 
@@ -79,7 +79,7 @@
     @apply pr-8;
 
     .hkek-input-text-control-content {
-      @apply mr-42;
+      @apply mr-44;
     }
   }
 }
