@@ -55,7 +55,7 @@ const Login: NextPage = () => {
           />
 
           <Link
-            href="/"
+            href="/register/email"
             className="typo-paragraph-large"
           >
             Forgot password?

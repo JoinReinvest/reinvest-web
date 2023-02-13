@@ -35,7 +35,7 @@ const RegisterPage: NextPage = () => {
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="login-form max-w-330 z-30 flex w-full flex-col items-center justify-center gap-16"
+          className="register-form max-w-330 z-30 flex w-full flex-col items-center justify-center gap-16"
         >
           <Typography variant="h2">Sign up</Typography>
           <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
@@ -46,7 +46,7 @@ const RegisterPage: NextPage = () => {
           />
 
           <Link
-            href="/"
+            href="/login"
             className="typo-paragraph-large"
           >
             Already have an account?
