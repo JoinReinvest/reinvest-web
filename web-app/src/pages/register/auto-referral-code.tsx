@@ -6,7 +6,7 @@ import { BlackModal } from '../../components/BlackModal';
 import { Title } from '../../components/Title';
 import { MainLayout } from '../../layouts/MainLayout';
 
-const ReferralCodePage: NextPage = () => {
+const AutoReferralCodePage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -30,4 +30,4 @@ const ReferralCodePage: NextPage = () => {
   );
 };
 
-export default ReferralCodePage;
+export default AutoReferralCodePage;
