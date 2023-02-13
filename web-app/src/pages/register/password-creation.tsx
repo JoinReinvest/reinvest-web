@@ -1,8 +1,9 @@
-import { CreatePasswordForm } from 'components/FormElements/CreatePasswordForm';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
 import { BlackModal } from '../../components/BlackModal';
+import { PasswordInput } from '../../components/FormElements/PasswordInput';
+import { WhyRequiredLink } from '../../components/Links/WhyRequiredLink';
 import { PasswordChecklist } from '../../components/PasswordChecklist';
 import { Title } from '../../components/Title';
 import { MainLayout } from '../../layouts/MainLayout';
@@ -22,7 +23,12 @@ const PasswordCreationPage: NextPage = () => {
           subtitle="Create a unique password for your account to continue."
         />
 
-        <CreatePasswordForm />
+        <PasswordInput
+          onChange={console.log} // eslint-disable-line
+          value={'email@example.com'}
+        />
+
+        <WhyRequiredLink href="/" />
 
         <PasswordChecklist
           password={'test'}
