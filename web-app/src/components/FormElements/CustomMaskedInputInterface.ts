@@ -1,4 +1,4 @@
 export interface CustomMaskedInputInterface {
-  onChange: (value: any) => void;
+  onChange: (value: string) => void;
   value: string;
 }
