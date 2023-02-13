@@ -1,13 +1,13 @@
 import { CreatePasswordForm } from 'components/FormElements/CreatePasswordForm';
+import { PasswordChecklist } from 'components/PasswordChecklist';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
 import { BlackModal } from '../../components/BlackModal';
-import { PasswordChecklist } from '../../components/PasswordChecklist';
 import { Title } from '../../components/Title';
 import { MainLayout } from '../../layouts/MainLayout';
 
-const PasswordCreationPage: NextPage = () => {
+const CreatePasswordPage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const PasswordCreationPage: NextPage = () => {
     <MainLayout>
       <BlackModal isOpen={isOpen}>
         <Title
-          title="Create new password"
+          title="Sign up to REINVEST"
           subtitle="Create a unique password for your account to continue."
         />
 
@@ -33,4 +33,4 @@ const PasswordCreationPage: NextPage = () => {
   );
 };
 
-export default PasswordCreationPage;
+export default CreatePasswordPage;
