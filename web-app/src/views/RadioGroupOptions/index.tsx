@@ -1,18 +1,19 @@
 import { RadioGroup, RadioGroupIndicator, RadioGroupItem } from '@hookooekoo/ui-radio-group';
 import { IconCheckmark } from 'assets/icons/IconCheckmark';
+import cx from 'classnames';
 import { Typography } from 'components/Typography';
 
-import { CitizenOptionsProps } from './interfaces';
+import { RadioGroupOptionsProps } from './interfaces';
 
-export const CitizenOptions = ({ options }: CitizenOptionsProps) => {
+export const RadioGroupOptions = ({ options, className }: RadioGroupOptionsProps) => {
   return (
-    <RadioGroup className="citizen-options">
+    <RadioGroup className={cx('radio-group-options', className)}>
       {options.map(({ title, value }) => (
         <RadioGroupItem
           key={title}
           value={value}
         >
-          <div className="citizen-options-indicator-container">
+          <div className="radio-group-options-indicator-container">
             <RadioGroupIndicator>
               <IconCheckmark />
             </RadioGroupIndicator>

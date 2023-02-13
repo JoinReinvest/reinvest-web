@@ -3,12 +3,12 @@ import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { CitizenOptions } from 'views/CitizenOptions';
-import { CitizenOption } from 'views/CitizenOptions/interfaces';
+import { RadioGroupOptions } from 'views/RadioGroupOptions';
+import { RadioGroupOption } from 'views/RadioGroupOptions/interfaces';
 
 import { WarningMessage } from '../../components/BlackModal/WarningMessage';
 
-const citizens: CitizenOption[] = [
+const citizens: RadioGroupOption[] = [
   {
     value: 'us',
     title: 'US Citizen',
@@ -38,7 +38,7 @@ const ResidencyStatusPage: NextPage = () => {
           subtitle="Please select your US residency status."
         />
         <WarningMessage message="REINVEST does not accept non-US residents at this time." />
-        <CitizenOptions options={citizens} />
+        <RadioGroupOptions options={citizens} />
       </BlackModal>
     </MainLayout>
   );
