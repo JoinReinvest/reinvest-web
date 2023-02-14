@@ -2,7 +2,8 @@
   @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none;
 
   &__menu {
-    @apply -left-14 w-32 bg-green-frost-01 text-black-01;
+    @apply -left-14 w-32 bg-green-frost-01 text-black-01 top-36;
+    width: calc(100% + 3.0rem);
   }
 
   &__control {
@@ -65,7 +66,7 @@
   }
 
   &[data-is-dirty-and-enabled="true"] {
-    @apply border-green-frost-01 text-black-01;
+    @apply border-green-frost-01 text-black-01 border-2;
   }
 
   &[data-has-error="true"] {

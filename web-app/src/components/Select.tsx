@@ -8,7 +8,7 @@ export interface SelectOption {
 
 type SelectProps = Omit<PrimitiveSelectProps<SelectOption>, 'defaultOpen' | 'onBlur' | 'getSelectedOption'>;
 
-export const Select = ({ name, value, options, disabled = false, error, onChange, placeholder, required = false }: SelectProps) => (
+export const Select = ({ name, value, options, disabled = false, error, onChange, placeholder, required = false, menuPortalTarget }: SelectProps) => (
   <PrimitiveSelect
     name={name}
     value={value}
@@ -21,5 +21,6 @@ export const Select = ({ name, value, options, disabled = false, error, onChange
     getSelectedOption={(options, value) => options.filter(option => option.value === value)}
     dropdownIcon={<IconArrowDown className="stroke-black-01 h-auto w-32" />}
     data-is-focused="false"
+    menuPortalTarget={menuPortalTarget}
   />
 );
