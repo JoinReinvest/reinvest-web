@@ -4,6 +4,7 @@ interface User {
   email: string;
   password: string;
 }
+
 const authenticateUser = async (cognitoUser: CognitoUser, cognitoAuthenticationDetails: AuthenticationDetails): Promise<CognitoUserSession> => {
   return new Promise((resolve, reject) => {
     cognitoUser.authenticateUser(cognitoAuthenticationDetails, {
@@ -12,6 +13,7 @@ const authenticateUser = async (cognitoUser: CognitoUser, cognitoAuthenticationD
     });
   });
 };
+
 export const signin = async (user: User, userPool: CognitoUserPool) => {
   const { email, password } = user;
   const authenticationData = {
