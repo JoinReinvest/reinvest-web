@@ -1,5 +1,7 @@
 .login-form .hkek-input-masked-control,
-.login-form .hkek-input-text-control {
+.login-form .hkek-input-text-control,
+.register-form .hkek-input-masked-control,
+.register-form .hkek-input-text-control {
   @apply bg-white;
 
   .hkek-input-masked,
