@@ -14,7 +14,7 @@
   }
 
   &[data-has-error="true"] {
-    @apply border-tertiary-error
+    @apply border-tertiary-error;
   }
 }
 
