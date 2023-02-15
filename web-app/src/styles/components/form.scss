@@ -45,7 +45,7 @@
 
   &[data-has-error="true"] {
     @apply bg-tertiary-error/5 shadow-transparent mb-26;
-    @apply border-tertiary-error;
+    @apply border-tertiary-error bg-tertiary-error/[.05];
   }
 
   &[data-is-dirty="true"] {

@@ -24,7 +24,7 @@ const PasswordCreationPage: NextPage = () => {
         />
 
         <PasswordInput
-          onChange={console.log}// eslint-disable-line
+          onChange={console.log} // eslint-disable-line
           value={'email@example.com'}
         />
 

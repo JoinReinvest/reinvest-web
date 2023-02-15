@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { LogoIcon } from 'assets/LogoIcon';
-import LoginBackground from 'assets/videos/login-background.mp4';
 import { Typography } from 'components/Typography';
+import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -37,22 +36,7 @@ const Login: NextPage = () => {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center justify-center gap-84 text-center text-white">
-      <video
-        autoPlay
-        loop
-        muted
-        className="absolute h-screen w-screen object-cover"
-      >
-        <source
-          src={LoginBackground}
-          type="video/mp4"
-        />
-        Your browser does not support the video tag.
-      </video>
-
-      <LogoIcon className="z-30" />
-
+    <LoginLayout>
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
@@ -71,7 +55,7 @@ const Login: NextPage = () => {
           />
 
           <Link
-            href="/"
+            href="/register/email"
             className="typo-paragraph-large"
           >
             Forgot password?
@@ -83,7 +67,7 @@ const Login: NextPage = () => {
           />
         </form>
       </FormProvider>
-    </div>
+    </LoginLayout>
   );
 };
 

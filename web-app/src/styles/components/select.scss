@@ -1,9 +1,8 @@
 .hkek-select {
-  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none;
+  @apply placeholder:text-gray-02 text-white focus-visible:outline-none text-paragraph-large;
 
   &__menu {
-    @apply -left-14 w-32 bg-green-frost-01 text-black-01 top-36;
-    width: calc(100% + 3.0rem);
+    @apply bg-green-frost-01 text-black-01 w-full
   }
 
   &__control {
@@ -12,15 +11,19 @@
       @apply text-white text-paragraph-large;
     }
 
-    &--menu-is-open {
-      .hkek-select__indicator {
-        @apply rotate-180;
-      }
+    /* stylelint-disable-next-line selector-class-pattern */
+    &--menu-is-open .hkek-select__indicator {
+      @apply rotate-180;
     }
   }
 
   &__option {
     @apply bg-green-frost-01;
+  }
+
+  &__value-container {
+    @apply text-paragraph-large;
+    @apply child:text-white #{!important};
   }
 
   &__indicators {
@@ -54,11 +57,11 @@
   }
 
   &-content-input {
-    @apply -top-4 relative w-full;
+    @apply -top-4 relative grow;
   }
 
   &-placeholder {
-    @apply transition-transform-color absolute text-gray-02 line-clamp-1 text-paragraph-large;
+    @apply transition-transform-color text-paragraph-large absolute text-gray-02 line-clamp-1;
   }
 
   &-error-message {
