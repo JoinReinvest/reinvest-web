@@ -35,7 +35,7 @@ const RegisterPage: NextPage = () => {
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="register-form max-w-330 z-30 flex w-full flex-col items-center justify-center gap-16"
+          className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
         >
           <Typography variant="h2">Sign up</Typography>
           <Typography variant="paragraph-large">Enter your email below to get started.</Typography>

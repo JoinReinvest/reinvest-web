@@ -40,7 +40,7 @@ const Login: NextPage = () => {
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="login-form max-w-330 z-30 flex flex-col items-center justify-center gap-16"
+          className="login-form z-30 flex max-w-330 flex-col items-center justify-center gap-16"
         >
           <Typography variant="h2">Sign in</Typography>
           <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
