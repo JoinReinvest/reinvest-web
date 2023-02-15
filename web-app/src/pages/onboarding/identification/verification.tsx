@@ -2,10 +2,9 @@ import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { BlackModal } from 'components/BlackModal';
+import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { useEffect, useState } from 'react';
-
-import { Title } from '../../../components/Title';
 
 export const OnboardingIdentificationSuccessPage = () => {
   const [isOpen, setIsOpen] = useState(false);

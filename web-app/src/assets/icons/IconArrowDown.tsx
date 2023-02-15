@@ -7,11 +7,9 @@ export const IconArrowDown = Icon(
     viewBox="0 0 32 32"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
-    stroke="black"
   >
     <path
       d="M11 14L16 19L21 14"
-      stroke="black"
       strokeWidth={1.5}
       strokeLinecap="round"
       strokeLinejoin="round"

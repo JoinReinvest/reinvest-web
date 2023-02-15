@@ -21,6 +21,8 @@ module.exports = withVideos(
     images: {},
     env: {
       SITE_NAME: process.env.SITE_NAME,
+      AWS_COGNITO_USER_POOL_ID: process.env.AWS_COGNITO_USER_POOL_ID,
+      AWS_COGNITO_CLIENT_ID: process.env.AWS_COGNITO_CLIENT_ID,
     },
   }),
 );
