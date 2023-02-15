@@ -8,14 +8,14 @@ export const Footer = () => (
       <br />
       <Link
         title="Terms of Conditions"
-        href="/"
+        href="/terms-and-conditions"
       >
         Terms of Conditions
       </Link>{' '}
       and{' '}
       <Link
         title="Privacy Policy page"
-        href="/"
+        href="/privacy-policy"
       >
         Privacy Policy
       </Link>
