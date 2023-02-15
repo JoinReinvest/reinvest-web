@@ -14,14 +14,14 @@ export const authOptions = {
         password: { type: 'password' },
       },
       async authorize(credentials) {
-        const { username, password } = credentials;
+        const { email, password } = credentials;
 
         var poolData = {
           UserPoolId: env.awsCognito.userPoolId,
           ClientId: env.awsCognito.clientId,
         };
 
-        await signin({ email: username, password }, new CognitoUserPool(poolData));
+        await signin({ email, password }, new CognitoUserPool(poolData));
       },
     }),
   ],
