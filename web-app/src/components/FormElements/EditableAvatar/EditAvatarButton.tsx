@@ -6,7 +6,7 @@ interface Props {
   name: string;
 }
 
-export const AvatarEditableButton = ({ name, handleChange }: Props) => (
+export const EditAvatarButton = ({ name, handleChange }: Props) => (
   <>
     <input
       type="file"

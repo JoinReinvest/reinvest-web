@@ -1,10 +1,11 @@
 import { BlackModal } from 'components/BlackModal';
-import { Link } from 'components/Link';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
+
+import { WhyRequiredLink } from '../../components/Links/WhyRequiredLink';
 
 const NET_OPTIONS: ComponentProps<typeof Select>['options'] = [
   '$25,000 - $50,000',
@@ -59,12 +60,7 @@ const CheckPhonePage: NextPage = () => {
             required
           />
 
-          <Link
-            title="Why is this information required?"
-            href="/"
-          >
-            Required. Why?
-          </Link>
+          <WhyRequiredLink href="/" />
         </div>
       </BlackModal>
     </MainLayout>

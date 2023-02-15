@@ -1,28 +1,22 @@
-import { AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
+import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
 import cx from 'classnames';
-import { Avatar } from 'components/Avatar';
-import { AvatarProps } from 'components/Avatar/interfaces';
-import { variants } from 'components/Avatar/variants';
 import { ErrorMessage } from 'components/FormElements/ErrorMessage';
-import { ImageProps } from 'next/image';
-import { ChangeEventHandler, ComponentProps, useMemo, useState } from 'react';
+import Image from 'next/image';
+import { ChangeEventHandler, useMemo, useState } from 'react';
 
-import { AvatarEditableButton } from './AvatarEditableButton';
+import { EditAvatarButton } from './EditAvatarButton';
 import { getValidationsSchema } from './schema';
 
-interface Props extends Pick<AvatarProps, 'size' | 'className'>, Pick<ComponentProps<typeof AvatarEditableButton>, 'name'> {
+interface Props extends AvatarProps {
   name: string;
   onChange: (file: File | null) => void;
-  alt?: ImageProps['alt'];
   maxSizeInMegaBytes?: number;
-  src?: ImageProps['src'];
 }
 
-export const AvatarEditable = ({ name, onChange, src, alt, className, size = 'lg', maxSizeInMegaBytes = 5.0 }: Props) => {
-  const [imageSrc, setImageSrc] = useState(src || placeholderImage);
+export const EditableAvatar = ({ name, onChange, image, altText, className, maxSizeInMegaBytes = 5.0 }: Props) => {
+  const [imageSrc, setImageSrc] = useState(image || placeholderImage);
   const [error, setError] = useState<string | undefined>(undefined);
-  const styles = variants({ size, className: 'rounded-full' });
   const schema = useMemo(() => getValidationsSchema(maxSizeInMegaBytes), [maxSizeInMegaBytes]);
   const hasError = !!error;
 
@@ -30,17 +24,17 @@ export const AvatarEditable = ({ name, onChange, src, alt, className, size = 'lg
     const file = target.files?.item(0);
     const validations = schema.safeParse({ sizeInBytes: file?.size, fileType: file?.type });
 
-    if (validations.success === false) {
+    if (!validations.success) {
       const firstError = validations.error.errors.at(0);
+
       setError(firstError?.message);
     }
 
-    if (validations.success === true && file) {
+    if (validations.success && !!file) {
       setError(undefined);
-      const fileUrl = URL.createObjectURL(file);
-      setImageSrc(fileUrl);
+      setImageSrc(URL.createObjectURL(file));
 
-      onChange(file || null);
+      onChange(file);
     }
   };
 
@@ -51,23 +45,22 @@ export const AvatarEditable = ({ name, onChange, src, alt, className, size = 'lg
         htmlFor={name}
       >
         <PrimitiveAvatarWithButton
-          className={styles}
           avatar={
-            <Avatar
-              src={imageSrc}
-              altText={alt}
-              size="full"
-              className="!absolute"
+            <Image
+              className="rounded-full"
+              src={imageSrc as string}
+              alt={altText || ''}
+              priority
             />
           }
           button={
-            <AvatarEditableButton
+            <EditAvatarButton
               name={name}
               handleChange={handleChange}
             />
           }
           horizontalButtonPosition="right"
-          verticalButtonPosition="bottom"
+          verticalButtonPosition="top"
         />
       </label>
 

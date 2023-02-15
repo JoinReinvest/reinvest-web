@@ -1,9 +1,11 @@
 import { BlackModal } from 'components/BlackModal';
-import { AvatarEditable } from 'components/FormElements/AvatarEditable';
+import { EditableAvatar } from 'components/FormElements/EditableAvatar';
 import { Typography } from 'components/Typography';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+
+import { Title } from '../../components/Title';
 
 const ResidencyStatusPage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,30 +17,22 @@ const ResidencyStatusPage: NextPage = () => {
   return (
     <MainLayout>
       <BlackModal isOpen={isOpen}>
-        <div className="flex flex-col items-center">
-          <Typography
-            variant="h5"
-            className="max-lg:typo-paragraph-large max-lg:order-2 max-lg:font-stretch-normal lg:pb-36"
-          >
-            Upload Profile Picture
-          </Typography>
+        <Title title=" Upload Profile Picture" />
 
-          <AvatarEditable
-            name="profile-picture"
-            onChange={file => {
-              console.info(file); // eslint-disable-line
-            }}
-            size="xl"
-            className="max-lg:pb-12 lg:pb-24"
-          />
+        <EditableAvatar
+          name="profile-picture"
+          onChange={file => {
+            console.info(file) // eslint-disable-line
+          }}
+          altText="avatar"
+        />
 
-          <Typography
-            variant="paragraph-large"
-            className="text-white/50 max-lg:pt-4"
-          >
-            Customize your profile picture
-          </Typography>
-        </div>
+        <Typography
+          variant="paragraph-large"
+          className="text-white/50"
+        >
+          Customize your profile picture
+        </Typography>
       </BlackModal>
     </MainLayout>
   );
