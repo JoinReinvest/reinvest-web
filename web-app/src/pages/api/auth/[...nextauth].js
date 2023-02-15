@@ -16,7 +16,7 @@ export const authOptions = {
       async authorize(credentials) {
         const { email, password } = credentials;
 
-        var poolData = {
+        const poolData = {
           UserPoolId: env.awsCognito.userPoolId,
           ClientId: env.awsCognito.clientId,
         };
