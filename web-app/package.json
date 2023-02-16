@@ -56,6 +56,8 @@
     "autoprefixer": "10.4.13",
     "class-variance-authority": "^0.4.0",
     "cssnano": "^5.1.14",
+    "graphql": "^16.6.0",
+    "graphql-request": "^5.1.0",
     "lefthook": "^1.2.8",
     "next": "13.1.6",
     "next-auth": "^4.19.2",
