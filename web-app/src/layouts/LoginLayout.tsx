@@ -1,5 +1,4 @@
 import { LogoIcon } from 'assets/LogoIcon';
-import LoginBackground from 'assets/videos/login-background.mp4';
 import React from 'react';
 
 export interface LoginLayoutProps {
@@ -8,7 +7,7 @@ export interface LoginLayoutProps {
 
 export const LoginLayout = ({ children }: LoginLayoutProps) => {
   return (
-    <div className="gap-84 flex h-screen flex-col items-center justify-center text-center text-white">
+    <div className="flex h-screen flex-col items-center justify-center gap-84 text-center text-white">
       <video
         autoPlay
         loop
@@ -16,7 +15,7 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
         className="absolute h-screen w-screen object-cover"
       >
         <source
-          src={LoginBackground}
+          src={require('../assets/videos/login-background.mp4')}
           type="video/mp4"
         />
         Your browser does not support the video tag.

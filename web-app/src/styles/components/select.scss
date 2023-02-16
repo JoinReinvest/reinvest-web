@@ -1,15 +1,29 @@
 .hkek-select {
-  @apply placeholder:text-gray-02 text-black-01 focus-visible:outline-none;
+  @apply placeholder:text-gray-02 text-white focus-visible:outline-none text-paragraph-large;
 
   &__menu {
-    @apply -left-14 w-32 bg-green-frost-01 text-black-01;
+    @apply bg-green-frost-01 text-black-01 w-full
   }
 
-  &__control--menu-is-open {
+  &__control {
     /* stylelint-disable-next-line selector-class-pattern */
-    .hkek-select__indicator {
+    .hkek-select__single-value {
+      @apply text-white text-paragraph-large;
+    }
+
+    /* stylelint-disable-next-line selector-class-pattern */
+    &--menu-is-open .hkek-select__indicator {
       @apply rotate-180;
     }
+  }
+
+  &__option {
+    @apply bg-green-frost-01;
+  }
+
+  &__value-container {
+    @apply text-paragraph-large;
+    @apply child:text-white #{!important};
   }
 
   &__indicators {
@@ -43,11 +57,11 @@
   }
 
   &-content-input {
-    @apply -top-4 relative;
+    @apply -top-4 relative grow;
   }
 
   &-placeholder {
-    @apply transition-transform-color absolute text-gray-02 line-clamp-1;
+    @apply transition-transform-color text-paragraph-large absolute text-gray-02 line-clamp-1;
   }
 
   &-error-message {
@@ -55,7 +69,7 @@
   }
 
   &[data-is-dirty-and-enabled="true"] {
-    @apply border-green-frost-01 text-black-01;
+    @apply border-green-frost-01 text-black-01 border-2;
   }
 
   &[data-has-error="true"] {
