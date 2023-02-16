@@ -16,7 +16,7 @@ export const useGetListAccount = (token: string) => {
   const graphQLClient = getGraphQLClient(token);
 
   return useQuery({
-    queryKey: ['todos'],
+    queryKey: ['getAccountDrafts'],
     queryFn: async () => {
       const { listAccountDrafts } = await graphQLClient.request(accountDraftsQuery);
 
