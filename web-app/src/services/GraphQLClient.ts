@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react';
 export const GraphQLClient = () => {
   const { data: session } = useSession();
 
-  const token = session?.user?.token;
+  const token = session?.token;
 
   return new PrimitiveGraphQLClient(env.apiUrl, {
     headers: {

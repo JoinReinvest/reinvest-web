@@ -25,7 +25,7 @@ export const authOptions = {
 
         const token = authData.accessToken.getJwtToken();
 
-        return { token };
+        return token;
       },
     }),
   ],
@@ -36,7 +36,7 @@ export const authOptions = {
       return token;
     },
     async session({ session, token }) {
-      session.user = token.user;
+      session.token = token.user;
 
       return session;
     },
