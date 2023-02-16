@@ -2,6 +2,7 @@ import { z } from 'zod';
 
 interface envInterface {
   analyze: boolean;
+  apiUrl: string;
   aws: {
     cognito: {
       clientId: string;
@@ -15,6 +16,7 @@ interface envInterface {
 }
 
 const envSchema = z.object({
+  apiUrl: z.string(),
   analyze: z.boolean().default(false),
   site: z.object({
     name: z.string(),
@@ -40,4 +42,5 @@ export const env: envInterface = envSchema.parse({
       userPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
     },
   },
+  apiUrl: process.env.API_URL,
 });

@@ -3,8 +3,6 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
 import { env } from '../../../env';
-import { getGraphQLClient } from '../../../services/getGraphQLClient';
-import { accountDraftsQuery } from '../../../services/getListAccount';
 import { signin } from '../../../services/signin';
 
 export const authOptions = {
@@ -27,24 +25,20 @@ export const authOptions = {
 
         const token = authData.accessToken.getJwtToken();
 
-        const client = getGraphQLClient(token);
-
-        return client.request(accountDraftsQuery);
+        return { token };
       },
     }),
   ],
   callbacks: {
+    async jwt({ token, user }) {
+      user && (token.user = user);
+
+      return token;
+    },
     async session({ session, token }) {
       session.user = token.user;
 
       return session;
-    },
-    async jwt({ token, user }) {
-      if (user) {
-        token.user = user;
-      }
-
-      return token;
     },
   },
 };
