@@ -1,5 +1,4 @@
 import { CognitoUserPool } from 'amazon-cognito-identity-js';
-import { gql } from 'graphql-request';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
