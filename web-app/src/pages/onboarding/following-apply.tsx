@@ -1,10 +1,10 @@
 import { BlackModal } from 'components/BlackModal';
+import { RadioGroupOptions } from 'components/RadioGroupOptions';
+import { RadioGroupOption } from 'components/RadioGroupOptions/interfaces';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { RadioGroupOptions } from 'views/RadioGroupOptions';
-import { RadioGroupOption } from 'views/RadioGroupOptions/interfaces';
 
 const followingApplies: RadioGroupOption[] = [
   {
