@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { Individual } from 'gql/types';
 import { gql } from 'graphql-request';
 
 import { GraphQLClient } from './GraphQLClient';
@@ -23,10 +24,10 @@ export const getIndividualQuery = gql`
   }
 `;
 
-export const useGetIndividual = () => {
+export const useGetIndividual = (): UseQueryResult<Individual> => {
   const graphQLClient = GraphQLClient();
 
-  return useQuery({
+  return useQuery<Individual>({
     queryKey: ['getIndividual'],
     queryFn: async () => {
       const { getIndividual } = await graphQLClient.request(getIndividualQuery);

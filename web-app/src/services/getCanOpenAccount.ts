@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { AccountType } from 'gql/types';
 import { gql } from 'graphql-request';
 
@@ -13,10 +13,10 @@ export const getCanOpenAccountQuery = gql`
   }
 `;
 
-export const useGetCanOpenAccount = (accountType: AccountType) => {
+export const useGetCanOpenAccount = (accountType: AccountType): UseQueryResult<boolean> => {
   const graphQLClient = GraphQLClient();
 
-  return useQuery({
+  return useQuery<boolean>({
     queryKey: ['getCanOpenAccount', accountType],
     queryFn: async () => {
       const { getCanOpenAccount } = await graphQLClient.request(getCanOpenAccountQuery, { accountType });

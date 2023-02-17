@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
 import { GraphQLClient } from './GraphQLClient';
@@ -9,7 +9,7 @@ export const removeDraftAccountMutatuion = gql`
   }
 `;
 
-export const useRemoveDraftAccountMutatuion = (id: string) => {
+export const useRemoveDraftAccountMutatuion = (id: string): UseMutationResult<boolean> => {
   const graphQLClient = GraphQLClient();
 
   return useMutation({

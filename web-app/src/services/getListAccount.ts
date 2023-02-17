@@ -1,4 +1,5 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { DraftAccount } from 'gql/types';
 import { gql } from 'graphql-request';
 
 import { GraphQLClient } from './GraphQLClient';
@@ -12,10 +13,10 @@ export const accountDraftsQuery = gql`
   }
 `;
 
-export const useGetListAccount = () => {
+export const useGetListAccount = (): UseQueryResult<DraftAccount[]> => {
   const graphQLClient = GraphQLClient();
 
-  return useQuery({
+  return useQuery<DraftAccount[]>({
     queryKey: ['getAccountDrafts'],
     queryFn: async () => {
       const { listAccountDrafts } = await graphQLClient.request(accountDraftsQuery);

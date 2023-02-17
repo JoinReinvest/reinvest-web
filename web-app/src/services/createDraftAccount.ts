@@ -1,5 +1,5 @@
-import { useMutation } from '@tanstack/react-query';
-import { AccountType } from 'gql/types';
+import { useMutation, UseMutationResult } from '@tanstack/react-query';
+import { AccountType, DraftAccount } from 'gql/types';
 import { gql } from 'graphql-request';
 
 import { GraphQLClient } from './GraphQLClient';
@@ -13,7 +13,7 @@ export const createDraftAccountMutatuion = gql`
   }
 `;
 
-export const useCreateDraftAccountMutatuion = (type: AccountType) => {
+export const useCreateDraftAccountMutatuion = (type: AccountType): UseMutationResult<DraftAccount> => {
   const graphQLClient = GraphQLClient();
 
   return useMutation({
