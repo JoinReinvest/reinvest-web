@@ -21,6 +21,12 @@
     "check-types": "tsc --pretty"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^3.0.0",
+    "@graphql-codegen/client-preset": "^2.0.0",
+    "@graphql-codegen/near-operation-file-preset": "^2.5.0",
+    "@graphql-codegen/typescript": "^3.0.0",
+    "@graphql-codegen/typescript-operations": "^3.0.0",
+    "@graphql-codegen/typescript-react-query": "^4.1.0",
     "@next/bundle-analyzer": "13.1.6",
     "classnames": "^2.3.2",
     "cross-env": "7.0.3",
