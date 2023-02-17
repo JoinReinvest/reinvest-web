@@ -28,7 +28,7 @@ export const completeProfileDetailsMutation = gql`
   }
 `;
 
-export const useCompleteTrustDraftAccount = (input: ProfileDetailsInput): UseMutationResult<Profile> => {
+export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutationResult<Profile> => {
   const graphQLClient = GraphQLClient();
 
   return useMutation({

@@ -9,7 +9,7 @@ export const removeDraftAccountMutatuion = gql`
   }
 `;
 
-export const useRemoveDraftAccountMutatuion = (id: string): UseMutationResult<boolean> => {
+export const useRemoveDraftAccount = (id: string): UseMutationResult<boolean> => {
   const graphQLClient = GraphQLClient();
 
   return useMutation({
