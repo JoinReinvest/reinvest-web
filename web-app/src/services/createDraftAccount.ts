@@ -13,7 +13,7 @@ export const createDraftAccountMutatuion = gql`
   }
 `;
 
-export const useCreateDraftAccountMutatuion = (type: AccountType): UseMutationResult<DraftAccount> => {
+export const useCreateDraftAccount = (type: AccountType): UseMutationResult<DraftAccount> => {
   const graphQLClient = GraphQLClient();
 
   return useMutation({
