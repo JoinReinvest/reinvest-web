@@ -13,7 +13,7 @@ export const createAvatarFileLinkMutation = gql`
   }
 `;
 
-export const useCompleteProfileDetails = (): UseMutationResult<FileLink> => {
+export const useCreateAvatarFileLink = (): UseMutationResult<FileLink> => {
   const graphQLClient = GraphQLClient();
 
   return useMutation({
