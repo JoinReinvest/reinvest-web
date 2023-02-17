@@ -32,7 +32,7 @@ export const useGetIndividualDraftAccount = (accountId: string) => {
   return useQuery({
     queryKey: ['getIndividualDraftAccount', accountId],
     queryFn: async () => {
-      const { getIndividualDraftAccount } = await graphQLClient.request(getIndividualDraftAccountQuery);
+      const { getIndividualDraftAccount } = await graphQLClient.request(getIndividualDraftAccountQuery, { accountId });
 
       return getIndividualDraftAccount;
     },

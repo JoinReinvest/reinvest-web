@@ -18,7 +18,7 @@ export const useGetAccount = (accountId: string) => {
   return useQuery({
     queryKey: ['getAccount', accountId],
     queryFn: async () => {
-      const { getAccount } = await graphQLClient.request(getAccountQuery);
+      const { getAccount } = await graphQLClient.request(getAccountQuery, { accountId });
 
       return getAccount;
     },
