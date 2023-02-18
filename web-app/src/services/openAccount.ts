@@ -9,7 +9,7 @@ export const openAccountMutation = gql`
   }
 `;
 
-export const useCreateDraftAccount = (draftAccountId: string): UseMutationResult<boolean> => {
+export const useOpenAccount = (draftAccountId: string): UseMutationResult<boolean> => {
   const graphQLClient = GraphQLClient();
 
   return useMutation({
