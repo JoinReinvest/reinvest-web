@@ -5,6 +5,7 @@ import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
+import { useCheckAuthorization } from 'services/useAuth';
 import { z } from 'zod';
 
 import { TextInput } from '../../components/FormElements/TextInput';
@@ -30,6 +31,8 @@ const FirstLastNamePage: NextPage = () => {
   const [lastName, setLastName] = useState<string>('');
   const [isOpen, setIsOpen] = useState(false);
 
+  useCheckAuthorization();
+
   useEffect(() => {
     setIsOpen(true);
   }, []);
@@ -38,7 +41,7 @@ const FirstLastNamePage: NextPage = () => {
 
   const { handleSubmit } = form;
 
-  const onSubmit = (data: any) => console.log(data) // eslint-disable-line
+  const onSubmit = (data: any) => console.log(data); // eslint-disable-line
 
   return (
     <MainLayout>
