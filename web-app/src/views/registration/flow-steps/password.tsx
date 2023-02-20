@@ -1,14 +1,18 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModal } from 'components/BlackModal';
+import { Button } from 'components/Button';
+import { Input } from 'components/FormElements/Input';
+import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
+import { PasswordChecklist } from 'components/PasswordChecklist';
+import { Title } from 'components/Title';
+import { formValidationRules } from 'formValidationRules';
+import { MainLayout } from 'layouts/MainLayout';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepParams } from 'services/form-flow';
-import { FormFields } from '../form-fields';
-import { formValidationRules } from 'formValidationRules';
-import { zodResolver } from '@hookform/resolvers/zod';
 import zod, { Schema } from 'zod';
-import { Input } from 'components/FormElements/Input';
-import { Typography } from 'components/Typography';
-import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
-import { Button } from 'components/Button';
-import { PasswordChecklist } from 'components/PasswordChecklist';
+
+import { FormFields } from '../form-fields';
 
 interface Fields extends Pick<FormFields, 'password'> {
   passwordConfirmation: string;
@@ -35,38 +39,50 @@ export const StepPassword: StepParams<FormFields> = {
       moveToNextStep();
     };
 
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+      setIsOpen(true);
+    }, []);
+
     return (
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="h2">Sign up</Typography>
-        <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
+      <MainLayout>
+        <BlackModal isOpen={isOpen}>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Title
+              title="Sign up to REINVEST"
+              subtitle="Create a unique password for your account to continue."
+            />
 
-        <Input
-          name="password"
-          control={control}
-          type="password"
-          placeholder="Password"
-          required
-        />
+            <Input
+              name="password"
+              control={control}
+              type="password"
+              placeholder="Password"
+              required
+            />
 
-        <Input
-          name="passwordConfirmation"
-          control={control}
-          placeholder="Confirm Password"
-          required
-        />
+            <Input
+              name="passwordConfirmation"
+              control={control}
+              placeholder="Confirm Password"
+              required
+            />
 
-        <WhyRequiredLink href="/" />
+            <WhyRequiredLink href="/" />
 
-        <PasswordChecklist
-          password={fields.password}
-          passwordConfirmation={fields.passwordConfirmation}
-        />
+            <PasswordChecklist
+              password={fields.password}
+              passwordConfirmation={fields.passwordConfirmation}
+            />
 
-        <Button
-          type="submit"
-          label="Sign Up"
-        />
-      </form>
+            <Button
+              type="submit"
+              label="Sign Up"
+            />
+          </form>
+        </BlackModal>
+      </MainLayout>
     );
   },
 };

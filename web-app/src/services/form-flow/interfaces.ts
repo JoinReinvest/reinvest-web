@@ -1,52 +1,46 @@
 import { FC, ReactNode } from 'react';
-import { FlowStep } from "./services/flow-step";
+
+import { FlowStep } from './services/flow-step';
 
 export interface StepComponentProps<FormFields> {
-	storeFields: FormFields;
-	updateStoreFields: (fields: Partial<FormFields>) => void;
-	moveToNextStep: () => void;
+  moveToNextStep: () => void;
+  storeFields: FormFields;
+  updateStoreFields: (fields: Partial<FormFields>) => void;
 }
 
 export interface FlowStepParams<FormFields> {
-	index: number;
-	isAValidationView?: boolean;
-	previousStep: FlowStep<FormFields> | null;
-	nextStep: FlowStep<FormFields> | null;
-	doesMeetConditionFields?: (fields: FormFields) => boolean;
-	willBePartOfTheFlow?: (fields: FormFields) => boolean;
-	Component: FC<StepComponentProps<FormFields>>;
-};
+  Component: FC<StepComponentProps<FormFields>>;
+  index: number;
+  nextStep: FlowStep<FormFields> | null;
+  previousStep: FlowStep<FormFields> | null;
+  doesMeetConditionFields?: (fields: FormFields) => boolean;
+  isAValidationView?: boolean;
+  willBePartOfTheFlow?: (fields: FormFields) => boolean;
+}
 
-export type StepParams<FormFields> = Pick<
-	FlowStepParams<FormFields>,
-	| "Component"
-	| "isAValidationView"
-	| "doesMeetConditionFields"
-	| "willBePartOfTheFlow"
->;
+export type StepParams<FormFields> = Pick<FlowStepParams<FormFields>, 'Component' | 'isAValidationView' | 'doesMeetConditionFields' | 'willBePartOfTheFlow'>;
 
 export type Steps<FormFields> = StepParams<FormFields>[];
 
 export interface ContextStateMeta {
-	isFirstStep: boolean;
-	isLastStep: boolean;
+  isFirstStep: boolean;
+  isLastStep: boolean;
 }
 
 export interface ContextState {
-	CurrentStepView: FC;
-	moveToPreviousValidStep: () => void;
-	moveToNextValidStep: () => void;
-	progressPercentage: number;
-	meta: ContextStateMeta;
-};
-
-export interface ContextProviderProps<FormFields> {
-	steps: Steps<FormFields>;
-	formFieldsInitialState: FormFields;
-	onFormFieldsUpdate?: (fields: FormFields) => Promise<void>;
-	isResumable?: boolean;
-	children: ReactNode;
+  CurrentStepView: FC;
+  meta: ContextStateMeta;
+  moveToNextValidStep: () => void;
+  moveToPreviousValidStep: () => void;
+  progressPercentage: number;
 }
 
-export type CurrentFormStep<FormFields> = FlowStep<FormFields> | null
+export interface ContextProviderProps<FormFields> {
+  children: ReactNode;
+  formFieldsInitialState: FormFields;
+  steps: Steps<FormFields>;
+  isResumable?: boolean;
+  onFormFieldsUpdate?: (fields: FormFields) => Promise<void>;
+}
 
+export type CurrentFormStep<FormFields> = FlowStep<FormFields> | null;

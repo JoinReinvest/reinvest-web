@@ -1,11 +1,14 @@
-import { StepParams } from 'services/form-flow';
-import { FormFields } from '../form-fields';
-import { Button } from 'components/Button';
-import { areElementsTrue } from 'utilities/array-validations';
-import { useMemo } from 'react';
 import { IconSpinner } from 'assets/icons/IconSpinner';
+import { BlackModal } from 'components/BlackModal';
+import { Button } from 'components/Button';
 import { Typography } from 'components/Typography';
+import { MainLayout } from 'layouts/MainLayout';
 import { useRouter } from 'next/router';
+import { useEffect, useMemo, useState } from 'react';
+import { StepParams } from 'services/form-flow';
+import { areElementsTrue } from 'utilities/array-validations';
+
+import { FormFields } from '../form-fields';
 
 export const StepRegistrationValidation: StepParams<FormFields> = {
   isAValidationView: true,
@@ -32,21 +35,30 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
     const onButtonClick = () => {
       router.push('/');
     };
+    const [isOpen, setIsOpen] = useState(false);
+
+    useEffect(() => {
+      setIsOpen(true);
+    }, []);
 
     return (
-      <div className="flex flex-col">
-        <div className="flex flex-col items-center">
-          <IconSpinner />
+      <MainLayout>
+        <BlackModal isOpen={isOpen}>
+          <div className="flex flex-col">
+            <div className="flex flex-col items-center">
+              <IconSpinner />
 
-          <Typography variant="h5">{title}</Typography>
-        </div>
+              <Typography variant="h5">{title}</Typography>
+            </div>
 
-        <Button
-          onClick={onButtonClick}
-          label="Continue"
-          disabled={isLoading}
-        />
-      </div>
+            <Button
+              onClick={onButtonClick}
+              label="Continue"
+              disabled={isLoading}
+            />
+          </div>
+        </BlackModal>
+      </MainLayout>
     );
   },
 };

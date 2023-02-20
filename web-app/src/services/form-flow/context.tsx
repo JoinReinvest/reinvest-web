@@ -1,5 +1,6 @@
-import { createContext } from "react";
-import { ContextState } from "./interfaces";
+import { createContext } from 'react';
+
+import { ContextState } from './interfaces';
 
 export const Context = createContext<ContextState>({
   CurrentStepView: () => <></>,

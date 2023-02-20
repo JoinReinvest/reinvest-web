@@ -1,13 +1,15 @@
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepParams } from 'services/form-flow';
-import { FormFields } from '../form-fields';
-import { formValidationRules } from 'formValidationRules';
 import { zodResolver } from '@hookform/resolvers/zod';
-import zod, { Schema } from 'zod';
+import { Button } from 'components/Button';
 import { Input } from 'components/FormElements/Input';
 import { Typography } from 'components/Typography';
+import { formValidationRules } from 'formValidationRules';
+import { LoginLayout } from 'layouts/LoginLayout';
 import Link from 'next/link';
-import { Button } from 'components/Button';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { StepParams } from 'services/form-flow';
+import zod, { Schema } from 'zod';
+
+import { FormFields } from '../form-fields';
 
 type Fields = Pick<FormFields, 'email'>;
 
@@ -27,32 +29,34 @@ export const StepEmail: StepParams<FormFields> = {
     };
 
     return (
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
-      >
-        <Typography variant="h2">Sign up</Typography>
-        <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
-
-        <Input
-          name="email"
-          type="email"
-          control={control}
-          required
-        />
-
-        <Link
-          href="/login"
-          className="typo-paragraph-large"
+      <LoginLayout>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="register-form max-w-330 z-30 flex w-full flex-col items-center justify-center gap-16"
         >
-          Already have an account?
-        </Link>
+          <Typography variant="h2">Sign up</Typography>
+          <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
 
-        <Button
-          type="submit"
-          label="Sign Up"
-        />
-      </form>
+          <Input
+            name="email"
+            type="email"
+            control={control}
+            required
+          />
+
+          <Link
+            href="/login"
+            className="typo-paragraph-large"
+          >
+            Already have an account?
+          </Link>
+
+          <Button
+            type="submit"
+            label="Sign Up"
+          />
+        </form>
+      </LoginLayout>
     );
   },
 };
