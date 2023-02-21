@@ -28,11 +28,13 @@
     "@graphql-codegen/typescript-operations": "^3.0.0",
     "@graphql-codegen/typescript-react-query": "^4.1.0",
     "@next/bundle-analyzer": "13.1.6",
+    "@tanstack/eslint-plugin-query": "^4.24.8",
+    "@tanstack/react-query-devtools": "^4.24.9",
     "classnames": "^2.3.2",
     "cross-env": "7.0.3",
     "rimraf": "4.1.2",
-    "sass": "^1.58.1",
-    "tailwindcss": "3.2.6"
+    "sass": "^1.58.3",
+    "tailwindcss": "3.2.7"
   },
   "dependencies": {
     "@hookform/resolvers": "^2.9.11",
@@ -56,13 +58,13 @@
     "@hookooekoo/ui-table": "^0.0.15",
     "@hookooekoo/ui-typography": "^0.1.5",
     "@tailwindcss/line-clamp": "^0.4.2",
-    "@tanstack/react-query": "^4.24.6",
-    "@types/node": "18.13.0",
+    "@tanstack/react-query": "^4.24.9",
+    "@types/node": "18.14.0",
     "@types/react": "18.0.28",
     "amazon-cognito-identity-js": "^6.1.2",
     "autoprefixer": "10.4.13",
     "class-variance-authority": "^0.4.0",
-    "cssnano": "^5.1.14",
+    "cssnano": "^5.1.15",
     "graphql": "^16.6.0",
     "graphql-request": "^5.1.0",
     "lefthook": "^1.2.9",
@@ -73,13 +75,23 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.1",
-    "recharts": "^2.4.1",
+    "recharts": "^2.4.3",
     "tailwindcss-text-fill": "^0.2.0",
     "typescript": "4.9.5",
     "zod": "3.20.6"
   },
   "eslintConfig": {
-    "extends": "@hookooekoo/eslint-config/next"
+    "extends": [
+      "@hookooekoo/eslint-config/next",
+      "plugin:@tanstack/eslint-plugin-query/recommended"
+    ],
+    "plugins": [
+      "@tanstack/query"
+    ],
+    "rules": {
+      "@tanstack/query/exhaustive-deps": "error",
+      "@tanstack/query/prefer-query-object-syntax": "error"
+    }
   },
   "stylelint": {
     "extends": "@hookooekoo/configs-stylelint/stylelint.js"

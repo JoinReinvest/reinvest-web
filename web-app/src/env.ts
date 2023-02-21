@@ -16,7 +16,7 @@ interface envInterface {
 }
 
 const envSchema = z.object({
-  apiUrl: z.string(),
+  apiUrl: z.string().url(),
   analyze: z.boolean().default(false),
   site: z.object({
     name: z.string(),

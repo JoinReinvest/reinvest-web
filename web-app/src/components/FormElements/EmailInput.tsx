@@ -3,7 +3,7 @@ import { InputMasked, InputMaskedProps } from '@hookooekoo/ui-input-masked';
 import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
 
 const mask: InputMaskedProps['maskOptions'] = {
-  mask: 'email@example.com',
+  mask: /^\S*@?\S*$/,
 };
 
 export const EmailInput = ({ value, onChange }: CustomMaskedInputInterface) => (
