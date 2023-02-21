@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
+import { Form } from 'components/FormElements/Form';
 import { InputMasked } from 'components/FormElements/InputMasked';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
@@ -42,10 +43,7 @@ export const StepReferralCode: StepParams<FormFields> = {
     return (
       <MainLayout>
         <BlackModal isOpen={isOpen}>
-          <form
-            onSubmit={handleSubmit(onSubmit)}
-            className="relative flex h-full flex-col"
-          >
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <Title
               title="Do you have a referral code? (optional)"
               subtitle="You and your referrer will receive $20 in dividends following your first investment!"
@@ -72,7 +70,7 @@ export const StepReferralCode: StepParams<FormFields> = {
                 label="Enter Code"
               />
             </div>
-          </form>
+          </Form>
         </BlackModal>
       </MainLayout>
     );

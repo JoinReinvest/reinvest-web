@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
 import { ConfirmPasswordInput } from 'components/FormElements/ConfirmPasswordInput';
+import { Form } from 'components/FormElements/Form';
 import { PasswordInput } from 'components/FormElements/PasswordInput';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
@@ -49,7 +50,7 @@ export const StepPassword: StepParams<FormFields> = {
     return (
       <MainLayout>
         <BlackModal isOpen={isOpen}>
-          <form onSubmit={handleSubmit(onSubmit)}>
+          <Form onSubmit={handleSubmit(onSubmit)}>
             <Title
               title="Sign up to REINVEST"
               subtitle="Create a unique password for your account to continue."
@@ -80,7 +81,7 @@ export const StepPassword: StepParams<FormFields> = {
               type="submit"
               label="Sign Up"
             />
-          </form>
+          </Form>
         </BlackModal>
       </MainLayout>
     );
