@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
-import { ConfirmPasswordInput } from 'components/FormElements/ConfirmPasswordInput';
 import { Form } from 'components/FormElements/Form';
 import { PasswordInput } from 'components/FormElements/PasswordInput';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
@@ -63,7 +62,7 @@ export const StepPassword: StepParams<FormFields> = {
               control={control}
             />
 
-            <ConfirmPasswordInput
+            <PasswordInput
               name="passwordConfirmation"
               onChange={console.log}
               control={control}
