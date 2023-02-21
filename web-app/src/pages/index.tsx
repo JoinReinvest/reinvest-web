@@ -1,21 +1,13 @@
-import { NextPage } from 'next';
-
-import { BlackModal } from '../components/BlackModal';
-import { MainLayout } from '../layouts/MainLayout';
+import { NextPage } from 'next'
+import { MainLayout } from '../layouts/MainLayout'
+import { logInIfNotAuthenticated } from '../services/authorization'
 
 const Index: NextPage = () => {
-  return (
-    <MainLayout>
-      <BlackModal
-        isOpen={true}
-        onOpenChange={() => {
-          console.log(1) // eslint-disable-line
-        }}
-      >
-        modal content
-      </BlackModal>
-    </MainLayout>
-  );
-};
+  logInIfNotAuthenticated()
 
-export default Index;
+  return (
+    <MainLayout>Dashboard Page</MainLayout>
+  )
+}
+
+export default Index

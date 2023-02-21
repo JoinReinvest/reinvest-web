@@ -8,6 +8,7 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { useCheckAuthorization } from 'services/useAuth';
 import { z } from 'zod';
+import { Input } from '../../components/FormElements/Input'
 
 import { TextInput } from '../../components/FormElements/TextInput';
 import { formValidationRules } from '../../formValidationRules';
@@ -44,17 +45,17 @@ const FirstLastNamePage: NextPage = () => {
       <BlackModal isOpen={isOpen}>
         <Title title="Enter your first and last name as it appears on your ID" />
         <form onSubmit={handleSubmit(onSubmit)}>
-          <TextInput
+          <Input
             name="firstName"
             placeholder="First name"
             control={control}
           />
-          <TextInput
+          <Input
             name="middleName"
             placeholder="Middle Name (Optional)"
             control={control}
           />
-          <TextInput
+          <Input
             name="lastName"
             placeholder="Last name"
             control={control}

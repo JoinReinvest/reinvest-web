@@ -4,6 +4,7 @@ import { Select } from 'components/Select';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
+import { Input } from '../../components/FormElements/Input'
 
 import { Title } from '../../components/Title';
 
@@ -35,7 +36,7 @@ const OnboardingEmploymentLocationPage: NextPage = () => {
         <Title title="Where are you employed?" />
 
         <form className="flex flex-col gap-16">
-          <TextInput
+          <Input
             name="employment-employer"
             value={formFields.employer}
             onChange={({ target }) => updateField({ employer: target.value })}
@@ -43,7 +44,7 @@ const OnboardingEmploymentLocationPage: NextPage = () => {
             required
           />
 
-          <TextInput
+          <Input
             name="employment-title"
             value={formFields.title}
             onChange={({ target }) => updateField({ title: target.value })}
