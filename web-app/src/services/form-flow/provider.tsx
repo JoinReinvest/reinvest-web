@@ -3,7 +3,7 @@ import { useCurrentStep } from './hooks/useCurrentStep';
 import { useFields } from './hooks/useFields';
 import { useProgressPercentage } from './hooks/useProgressPercentage';
 import { ContextProviderProps } from './interfaces';
-import { FlowStore } from './services/flow-store';
+import { FlowStore } from './flow-store';
 
 export function FormFlowProvider<FormFields>({
   steps,

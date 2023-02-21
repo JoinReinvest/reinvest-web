@@ -1,8 +1,8 @@
-import { useMemo } from 'react';
+import { useMemo } from 'react'
 
-import { CurrentFormStep } from '../interfaces';
-import { FlowStore } from '../services/flow-store';
-import { useFields } from './useFields';
+import { CurrentFormStep } from '../interfaces'
+import { FlowStore } from '../flow-store'
+import { useFields } from './useFields'
 
 type UseFieldsParams<FormFields> = Pick<ReturnType<typeof useFields<FormFields>>, 'getFields'>;
 
@@ -11,15 +11,13 @@ interface Params<FormFields> extends UseFieldsParams<FormFields> {
   flowStore: FlowStore<FormFields>;
 }
 
-export const useProgressPercentage = <FormFields>({ flowStore, getFields, currentStep }: Params<FormFields>) => {
+export const useProgressPercentage = <FormFields> ({ flowStore, getFields, currentStep }: Params<FormFields>) => {
   const progressPercentage = useMemo<number>(() => {
-    const fields = getFields();
-    const percentage_from = 100;
-    const { currentStepIndex, numberOfValidSteps } = flowStore.getTotalOfValidSteps(currentStep, fields);
+    const percentage_from = 100
+    const { currentStepIndex, numberOfValidSteps } = flowStore.getTotalOfValidSteps(currentStep, getFields())
 
-    return (currentStepIndex / numberOfValidSteps) * percentage_from;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentStep]);
+    return (currentStepIndex / numberOfValidSteps) * percentage_from
+  }, [currentStep, flowStore, getFields])
 
-  return { progressPercentage };
-};
+  return { progressPercentage }
+}

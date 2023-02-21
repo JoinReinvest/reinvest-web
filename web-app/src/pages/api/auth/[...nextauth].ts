@@ -1,47 +1,40 @@
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
-import NextAuth from 'next-auth';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import { CognitoUserPool } from 'amazon-cognito-identity-js'
+import NextAuth from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
 
-import { env } from '../../../env';
-import { signin } from '../../../services/signin';
+import { env } from '../../../env'
+import { signin } from '../../../services/signin'
 
 export default NextAuth({
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
-      credentials: {
-        email: { type: 'email' },
-        password: { type: 'password' },
-      },
-      async authorize(params) {
+      name: 'credentials',
+      async authorize ({ email, password }) {
         const poolData = {
           UserPoolId: env.aws.cognito.userPoolId,
           ClientId: env.aws.cognito.clientId,
-        };
+        }
 
-        const authData = await signin({ email, password }, new CognitoUserPool(poolData));
+        const authData = await signin({ email, password }, new CognitoUserPool(poolData))
 
-        return authData.accessToken.getJwtToken();
+        return authData.accessToken.getJwtToken()
       },
     }),
   ],
-  pages: {
-    signIn: "/login",
-  },
   callbacks: {
-    async jwt({ token, user }) {
-      console.log(111);
-      console.log(token);
-      console.log(user);
+    async jwt ({ token, user }) {
+      console.log(111)
+      console.log(token)
+      console.log(user)
 
-      return token;
+      return token
     },
-    async session({ session, token }) {
-      console.log(222);
-      console.log(session);
-      console.log(token);
+    async session ({ session, token }) {
+      console.log(222)
+      console.log(session)
+      console.log(token)
 
-      return session;
+      return session
     },
   },
-});
+})
