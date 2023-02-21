@@ -13,7 +13,7 @@ export default NextAuth({
         email: { type: 'email' },
         password: { type: 'password' },
       },
-      async authorize({ email, password }) {
+      async authorize(params) {
         const poolData = {
           UserPoolId: env.aws.cognito.userPoolId,
           ClientId: env.aws.cognito.clientId,
@@ -25,6 +25,9 @@ export default NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: "/login",
+  },
   callbacks: {
     async jwt({ token, user }) {
       console.log(111);

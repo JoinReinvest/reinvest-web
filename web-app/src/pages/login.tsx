@@ -2,6 +2,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Typography } from 'components/Typography'
 import { LoginLayout } from 'layouts/LoginLayout'
 import { NextPage } from 'next'
+import { mockCSRFToken } from 'next-auth/client/__tests__/helpers/mocks'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form'
 import zod, { Schema } from 'zod'
@@ -9,6 +11,7 @@ import zod, { Schema } from 'zod'
 import { Button } from '../components/Button'
 import { EmailInput } from '../components/FormElements/EmailInput'
 import { PasswordInput } from '../components/FormElements/PasswordInput'
+import { URL } from '../constants/urls'
 import { formValidationRules } from '../formValidationRules'
 
 interface Fields {
@@ -27,7 +30,10 @@ const Login: NextPage = () => {
   })
 
   const onSubmit: SubmitHandler<Fields> = async fields => {
-
+    await signIn('credentials', {
+      email: fields.email,
+      password: fields.password,
+    })
   }
 
   return (
@@ -44,7 +50,7 @@ const Login: NextPage = () => {
           <PasswordInput />
 
           <Link
-            href="/register/email"
+            href={URL.forgot_password}
             className="typo-paragraph-large"
           >
             Forgot password?
