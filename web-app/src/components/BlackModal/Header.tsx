@@ -3,13 +3,10 @@ import { IconArrowLeft } from 'assets/icons/IconArrowLeft';
 import { Logo } from 'assets/Logo';
 
 export const Header = () => (
-  <header className="w-full">
-    <div className="l-20 t-30 absolute">
-      <DialogClose>
-        <IconArrowLeft className="stroke-white" />
-      </DialogClose>
-    </div>
-
-    <Logo className="mx-auto fill-white" />
+  <header className="black-modal-header relative flex w-full items-center justify-center">
+    <DialogClose>
+      <IconArrowLeft className="stroke-white" />
+    </DialogClose>
+    <Logo className="fill-white" />
   </header>
 );
