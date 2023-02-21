@@ -56,7 +56,7 @@ export const StepReferralCode: StepParams<FormFields> = {
               placeholder="Referral Code"
             />
 
-            <div className="absolute bottom-0 w-full">
+            <div className="absolute bottom-0 w-full md:relative md:bottom-auto">
               <Button
                 type="button"
                 variant="outlined"

@@ -35,7 +35,7 @@ export const StepReferralCodeApplied: StepParams<FormFields> = {
             <Button
               label="Continue"
               onClick={moveToNextStep}
-              className="absolute bottom-0 w-full"
+              className="absolute bottom-0 w-full md:relative md:bottom-auto"
             />
           </div>
         </BlackModal>

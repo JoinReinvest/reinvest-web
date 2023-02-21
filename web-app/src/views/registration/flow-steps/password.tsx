@@ -72,6 +72,12 @@ export const StepPassword: StepParams<FormFields> = {
 
             <WhyRequiredLink href="/" />
 
+            <Button
+              type="submit"
+              label="Sign Up"
+              className="absolute bottom-0 hidden w-full md:relative md:bottom-auto md:block"
+            />
+
             <PasswordChecklist
               password={fields.password}
               passwordConfirmation={fields.passwordConfirmation}
@@ -80,6 +86,7 @@ export const StepPassword: StepParams<FormFields> = {
             <Button
               type="submit"
               label="Sign Up"
+              className="absolute bottom-0 w-full md:relative md:bottom-auto md:hidden"
             />
           </Form>
         </BlackModal>

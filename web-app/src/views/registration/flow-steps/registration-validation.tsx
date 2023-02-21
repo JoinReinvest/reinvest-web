@@ -44,17 +44,16 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
     return (
       <MainLayout>
         <BlackModal isOpen={isOpen}>
-          <div className="flex flex-col">
-            <div className="flex flex-col items-center">
-              <IconSpinner />
+          <div className="relative flex h-full flex-col items-center justify-center">
+            <IconSpinner />
 
-              <Typography variant="h5">{title}</Typography>
-            </div>
+            <Typography variant="h5">{title}</Typography>
 
             <Button
               onClick={onButtonClick}
               label="Continue"
               disabled={isLoading}
+              className="absolute bottom-0 w-full md:relative md:bottom-auto"
             />
           </div>
         </BlackModal>

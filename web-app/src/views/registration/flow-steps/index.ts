@@ -5,12 +5,4 @@ import { StepReferralCode } from './referral-code';
 import { StepReferralCodeApplied } from './referral-code-applied';
 import { StepRegistrationValidation } from './registration-validation';
 
-export const FLOW_STEPS = [
-  StepEmail,
-  StepReferralCode,
-  StepReferralCodeApplied,
-  StepPassword,
-  StepPassword,
-  StepAuthenticationCode,
-  StepRegistrationValidation,
-];
+export const FLOW_STEPS = [StepEmail, StepReferralCode, StepReferralCodeApplied, StepPassword, StepAuthenticationCode, StepRegistrationValidation];
