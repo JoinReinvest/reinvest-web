@@ -28,15 +28,14 @@ export const StepReferralCodeApplied: StepParams<FormFields> = {
     return (
       <MainLayout>
         <BlackModal isOpen={isOpen}>
-          <div>
-            <div>
-              <IconCheckCircle />
-              <Typography variant="h5">Referral code applied </Typography>
-            </div>
+          <div className="relative flex h-full flex-col items-center justify-center">
+            <IconCheckCircle className="mx-auto mb-24" />
+            <Typography variant="h5">Referral code applied </Typography>
 
             <Button
               label="Continue"
               onClick={moveToNextStep}
+              className="absolute bottom-0 w-full"
             />
           </div>
         </BlackModal>
