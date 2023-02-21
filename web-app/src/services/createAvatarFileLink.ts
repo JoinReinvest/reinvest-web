@@ -1,10 +1,10 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { FileLink } from 'gql/types';
+import { FileLink } from 'types/graphql';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const createAvatarFileLinkMutation = gql`
+const createAvatarFileLinkMutation = gql`
   mutation createAvatarFileLink {
     createAvatarFileLink {
       url
@@ -14,11 +14,11 @@ export const createAvatarFileLinkMutation = gql`
 `;
 
 export const useCreateAvatarFileLink = (): UseMutationResult<FileLink> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useMutation({
     mutationFn: async () => {
-      const { createAvatarFileLink } = await graphQLClient.request(createAvatarFileLinkMutation);
+      const { createAvatarFileLink } = await api.request(createAvatarFileLinkMutation);
 
       return createAvatarFileLink;
     },

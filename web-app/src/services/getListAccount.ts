@@ -1,10 +1,10 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { DraftAccount } from 'gql/types';
+import { DraftAccount } from 'types/graphql';
 import { gql } from 'graphql-request';
 
 import { apiClient } from './apiClient';
 
-export const accountDraftsQuery = gql`
+const accountDraftsQuery = gql`
   query {
     listAccountDrafts {
       id

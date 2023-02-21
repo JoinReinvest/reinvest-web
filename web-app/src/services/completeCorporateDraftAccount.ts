@@ -1,10 +1,10 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { CorporateDraftAccount } from 'gql/types';
+import { CorporateDraftAccount } from 'types/graphql';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const completeCorporateDraftAccountMutation = gql`
+const completeCorporateDraftAccountMutation = gql`
   mutation completeCorporateDraftAccount($accountId: ID) {
     completeCorporateDraftAccount(accountId: $accountId) {
       id
@@ -13,11 +13,11 @@ export const completeCorporateDraftAccountMutation = gql`
 `;
 
 export const useCompleteCorporateDraftAccount = (accountId: string): UseMutationResult<CorporateDraftAccount> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useMutation({
     mutationFn: async () => {
-      const { completeCorporateDraftAccount } = await graphQLClient.request(completeCorporateDraftAccountMutation, { accountId });
+      const { completeCorporateDraftAccount } = await api.request(completeCorporateDraftAccountMutation, { accountId });
 
       return completeCorporateDraftAccount;
     },

@@ -1,10 +1,10 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { IndividualDraftAccount } from 'gql/types';
+import { IndividualDraftAccount } from 'types/graphql';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const getIndividualDraftAccountQuery = gql`
+const getIndividualDraftAccountQuery = gql`
   query getIndividualDraftAccount($accountId: ID) {
     getIndividualDraftAccount(accountId: $accountId) {
       id
@@ -28,12 +28,12 @@ export const getIndividualDraftAccountQuery = gql`
 `;
 
 export const useGetIndividualDraftAccount = (accountId: string): UseQueryResult<IndividualDraftAccount> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useQuery<IndividualDraftAccount>({
     queryKey: ['getIndividualDraftAccount', accountId],
     queryFn: async () => {
-      const { getIndividualDraftAccount } = await graphQLClient.request(getIndividualDraftAccountQuery, { accountId });
+      const { getIndividualDraftAccount } = await api.request(getIndividualDraftAccountQuery, { accountId });
 
       return getIndividualDraftAccount;
     },

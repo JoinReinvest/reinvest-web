@@ -5,7 +5,7 @@ export const useCheckAuthorization = () => {
   const { status } = useSession();
   const router = useRouter();
 
-  if (status === 'unauthenticated') {
+  if (status !== 'authenticated') {
     router.push({
       pathname: '/login',
     });

@@ -1,20 +1,20 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const removeDraftAccountMutatuion = gql`
+const removeDraftAccountMutatuion = gql`
   mutation removeDraftAccount($id: ID) {
     removeDraftAccount(id: $id)
   }
 `;
 
 export const useRemoveDraftAccount = (id: string): UseMutationResult<boolean> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useMutation({
     mutationFn: async () => {
-      const { removeDraftAccount } = await graphQLClient.request(removeDraftAccountMutatuion, { id });
+      const { removeDraftAccount } = await api.request(removeDraftAccountMutatuion, { id });
 
       return removeDraftAccount;
     },

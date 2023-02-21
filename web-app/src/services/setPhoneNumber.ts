@@ -1,20 +1,20 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const setPhoneNumberMutation = gql`
+const setPhoneNumberMutation = gql`
   mutation setPhoneNumber($countryCode: String, phoneNumber: String) {
     setPhoneNumber(countryCode: $countryCode, phoneNumber: $phoneNumber)
   }
 `;
 
 export const useSetPhoneNumber = (countryCode: string, phoneNumber: string): UseMutationResult<boolean> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useMutation({
     mutationFn: async () => {
-      const { setPhoneNumber } = await graphQLClient.request(setPhoneNumberMutation, { countryCode, phoneNumber });
+      const { setPhoneNumber } = await api.request(setPhoneNumberMutation, { countryCode, phoneNumber });
 
       return setPhoneNumber;
     },

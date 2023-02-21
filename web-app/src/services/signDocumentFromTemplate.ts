@@ -1,10 +1,10 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { GenericFieldInput, SignatureId, TemplateName } from 'gql/types';
+import { GenericFieldInput, SignatureId, TemplateName } from 'types/graphql';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const signDocumentFromTemplateMutation = gql`
+const signDocumentFromTemplateMutation = gql`
   mutation signDocumentFromTemplate($templateId: TemplateName, $fields: [GenericFieldInput], signature: String) {
     signDocumentFromTemplate(templateId: $templateId, fields: $fields, signature: $signature) {
       url
@@ -14,11 +14,11 @@ export const signDocumentFromTemplateMutation = gql`
 `;
 
 export const useSignDocumentFromTemplate = (templateId: TemplateName, fields: GenericFieldInput[], signature: string): UseMutationResult<SignatureId> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useMutation({
     mutationFn: async () => {
-      const { signDocumentFromTemplate } = await graphQLClient.request(signDocumentFromTemplateMutation, { templateId, fields, signature });
+      const { signDocumentFromTemplate } = await api.request(signDocumentFromTemplateMutation, { templateId, fields, signature });
 
       return signDocumentFromTemplate;
     },

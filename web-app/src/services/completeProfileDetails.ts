@@ -1,10 +1,10 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { Profile, ProfileDetailsInput } from 'gql/types';
+import { Profile, ProfileDetailsInput } from 'types/graphql';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const completeProfileDetailsMutation = gql`
+const completeProfileDetailsMutation = gql`
   mutation completeProfileDetails($input: ProfileDetailsInput) {
     completeProfileDetails(input: $input) {
       externalId
@@ -29,11 +29,11 @@ export const completeProfileDetailsMutation = gql`
 `;
 
 export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutationResult<Profile> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useMutation({
     mutationFn: async () => {
-      const { completeProfileDetails } = await graphQLClient.request(completeProfileDetailsMutation, { input });
+      const { completeProfileDetails } = await api.request(completeProfileDetailsMutation, { input });
 
       return completeProfileDetails;
     },

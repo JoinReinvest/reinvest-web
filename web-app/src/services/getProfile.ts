@@ -1,10 +1,10 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { Profile } from 'gql/types';
+import { Profile } from 'types/graphql';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const getProfileQuery = gql`
+const getProfileQuery = gql`
   query getProfile {
     getProfile {
       externalId
@@ -40,12 +40,12 @@ export const getProfileQuery = gql`
 `;
 
 export const useGetAccount = (): UseQueryResult<Profile> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useQuery<Profile>({
     queryKey: ['getProfile'],
     queryFn: async () => {
-      const { getProfile } = await graphQLClient.request(getProfileQuery);
+      const { getProfile } = await api.request(getProfileQuery);
 
       return getProfile;
     },

@@ -1,10 +1,10 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { ProfileCompletionStatus } from 'gql/types';
+import { ProfileCompletionStatus } from 'types/graphql';
 import { gql } from 'graphql-request';
 
-import { GraphQLClient } from './GraphQLClient';
+import { apiClient } from './apiClient';
 
-export const getProfileCompletionStatusQuery = gql`
+const getProfileCompletionStatusQuery = gql`
   query profileCompletionStatus {
     profileCompletionStatus {
       detailsCompleted
@@ -14,12 +14,12 @@ export const getProfileCompletionStatusQuery = gql`
 `;
 
 export const useGetProfileCompletionStatus = (): UseQueryResult<ProfileCompletionStatus> => {
-  const graphQLClient = GraphQLClient();
+  const api = apiClient();
 
   return useQuery<ProfileCompletionStatus>({
     queryKey: ['getProfileCompletionStatus'],
     queryFn: async () => {
-      const { profileCompletionStatus } = await graphQLClient.request(getProfileCompletionStatusQuery);
+      const { profileCompletionStatus } = await api.request(getProfileCompletionStatusQuery);
 
       return profileCompletionStatus;
     },
