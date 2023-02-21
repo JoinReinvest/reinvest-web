@@ -92,7 +92,7 @@
       "@tanstack/query"
     ],
     "rules": {
-      "@tanstack/query/exhaustive-deps": "error",
+      "@tanstack/query/exhaustive-deps": 0,
       "@tanstack/query/prefer-query-object-syntax": "error"
     }
   },

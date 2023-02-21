@@ -1,12 +1,13 @@
-import { Hydrate, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { SessionProvider } from 'next-auth/react'
-import type { AppProps } from 'next/app'
-import Head from 'next/head'
+import '../styles/global.scss';
 
-import { env } from '../env'
-import { queryClient } from '../services/queryClient'
-import '../styles/global.scss'
+import { Hydrate, QueryClientProvider } from '@tanstack/react-query';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import type { AppProps } from 'next/app';
+import Head from 'next/head';
+import { SessionProvider } from 'next-auth/react';
+
+import { env } from '../env';
+import { queryClient } from '../services/queryClient';
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -53,7 +54,7 @@ const App = ({ Component, pageProps }: AppProps) => {
         </QueryClientProvider>
       </SessionProvider>
     </>
-  )
-}
+  );
+};
 
-export default App
+export default App;

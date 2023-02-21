@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { GenericFieldInput, SignatureId, TemplateName } from 'types/graphql';
 import { gql } from 'graphql-request';
+import { GenericFieldInput, SignatureId, TemplateName } from 'types/graphql';
 
 import { apiClient } from './apiClient';
 
