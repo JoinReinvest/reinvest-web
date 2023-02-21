@@ -1,7 +1,7 @@
 import zod from 'zod';
 
 const passwordSchema = zod
-  .string()
+  .string({ required_error: 'This field is required' })
   .min(8, 'At least 8 characters are required')
   .regex(/[a-z]/, { message: 'At least one lowercase letter is required' })
   .regex(/[A-Z]/, { message: 'At least one uppercase letter is required' })

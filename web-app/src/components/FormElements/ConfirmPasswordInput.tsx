@@ -1,12 +1,13 @@
-import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
+import { FieldValues } from 'react-hook-form';
+
+import { PasswordProps } from './CustomMaskedInputInterface';
 import { TextInput } from './TextInput';
 
-export const ConfirmPasswordInput = ({ value, onChange }: CustomMaskedInputInterface) => (
+export const ConfirmPasswordInput = <FormFields extends FieldValues>({ onChange, ...controlProps }: PasswordProps<FormFields>) => (
   <TextInput
-    value={value}
-    name="confirm_password"
     placeholder="Confirm Password"
     type="password"
     onChange={event => onChange(event.target.value)}
+    {...controlProps}
   />
 );

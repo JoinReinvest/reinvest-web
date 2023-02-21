@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
-import { Input } from 'components/FormElements/Input';
+import { ConfirmPasswordInput } from 'components/FormElements/ConfirmPasswordInput';
+import { PasswordInput } from 'components/FormElements/PasswordInput';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
@@ -54,19 +55,18 @@ export const StepPassword: StepParams<FormFields> = {
               subtitle="Create a unique password for your account to continue."
             />
 
-            <Input
+            <PasswordInput
               name="password"
+              onChange={console.log}
+              value={''}
               control={control}
-              type="password"
-              placeholder="Password"
-              required
             />
 
-            <Input
+            <ConfirmPasswordInput
               name="passwordConfirmation"
+              onChange={console.log}
               control={control}
-              placeholder="Confirm Password"
-              required
+              value={''}
             />
 
             <WhyRequiredLink href="/" />
