@@ -10,11 +10,10 @@ const config: CodegenConfig = {
       },
     },
   ],
-  documents: 'src/**/!(*.d).{ts,tsx}',
+  documents: ['src/**/*.{ts,tsx}'],
   ignoreNoDocuments: true,
   generates: {
-    'src/graphql/': {
-      preset: 'client',
+    'src/graphql/types.ts': {
       plugins: ['typescript'],
     },
     'src/graphql/hooks.ts': {
@@ -25,9 +24,6 @@ const config: CodegenConfig = {
         withHooks: true,
       },
     },
-  },
-  hooks: {
-    afterAllFileWrite: ['yarn lint --fix']
   }
 }
 
