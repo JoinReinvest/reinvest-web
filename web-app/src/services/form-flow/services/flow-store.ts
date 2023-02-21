@@ -1,5 +1,5 @@
-import { FlowStep } from './flow-step';
 import { Steps } from '../interfaces';
+import { FlowStep } from './flow-step';
 
 export class FlowStore<FormFields> {
   /** The first step. */
@@ -32,10 +32,7 @@ export class FlowStore<FormFields> {
    * @param fromStep - The step from which the lookup will begin
    * @param {FormFields} fields - The fields of the form
    */
-  public getNextValidStep = (
-    fromStep: FlowStep<FormFields> | null,
-    fields: FormFields
-  ): FlowStep<FormFields> | null => {
+  public getNextValidStep = (fromStep: FlowStep<FormFields> | null, fields: FormFields): FlowStep<FormFields> | null => {
     const isStepLast = fromStep?.index === this.tail?.index;
     let nextStep = fromStep?.nextStep || null;
 
@@ -65,10 +62,7 @@ export class FlowStore<FormFields> {
    * @param fromStep - The step from which the lookup will begin
    * @param {FormFields} fields - The fields of the form
    */
-  public getPreviousValidStep = (
-    fromStep: FlowStep<FormFields> | null,
-    fields: FormFields
-  ): FlowStep<FormFields> | null => {
+  public getPreviousValidStep = (fromStep: FlowStep<FormFields> | null, fields: FormFields): FlowStep<FormFields> | null => {
     const isStepFirst = fromStep?.index === this.head?.index;
     let previousStep = fromStep?.previousStep;
 
@@ -103,10 +97,7 @@ export class FlowStore<FormFields> {
    *  is the their index in reference to the number of valid steps
    * @param {FormFields} fields - The fields of the form
    */
-  public getTotalOfValidSteps = (
-    currentStep: FlowStep<FormFields> | null,
-    fields: FormFields
-  ) => {
+  public getTotalOfValidSteps = (currentStep: FlowStep<FormFields> | null, fields: FormFields) => {
     let currentStepIndexWithinValidSteps = 0;
     let numberOfValidSteps = 0;
     let step = this.head;
@@ -154,7 +145,7 @@ export class FlowStore<FormFields> {
       }
 
       step = step?.nextStep || null;
-    };
+    }
 
     return lastValidStep;
   };
@@ -164,7 +155,7 @@ export class FlowStore<FormFields> {
    * @param {Steps<FormFields>} steps - The list of steps of the flow
    */
   private initializeSteps = (steps: Steps<FormFields>) => {
-    for (let [index, step] of steps.entries()) {
+    for (const [index, step] of steps.entries()) {
       const stepNode = new FlowStep({
         ...step,
         previousStep: this.tail,

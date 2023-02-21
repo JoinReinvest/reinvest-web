@@ -1,9 +1,9 @@
 import { InputText as PrimitiveTextInput } from '@hookooekoo/ui-input-text';
-import { ComponentPropsWithoutRef } from 'react';
 import { IconArrowDown } from 'assets/icons/IconArrowDown';
 import { IconDisabled } from 'assets/icons/IconDisabled';
 import { IconSearch } from 'assets/icons/IconSearch';
 import cx from 'classnames';
+import { ComponentPropsWithoutRef } from 'react';
 import { useController } from 'react-hook-form';
 import { FieldValues, UseControllerProps } from 'react-hook-form';
 

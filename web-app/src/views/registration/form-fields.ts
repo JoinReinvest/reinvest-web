@@ -1,6 +1,6 @@
 export interface FormFields {
-  email: string;
-  referralCode?: string;
-  password: string;
   authenticationCode: string;
+  email: string;
+  password: string;
+  referralCode?: string;
 }
