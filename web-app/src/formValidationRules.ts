@@ -13,5 +13,5 @@ export const formValidationRules = {
   confirm_password: passwordSchema,
   firstName: zod.string({ required_error: 'This field is required' }),
   lastName: zod.string({ required_error: 'This field is required' }),
-  middleName: zod.string(),
+  middleName: zod.string().optional(),
 };

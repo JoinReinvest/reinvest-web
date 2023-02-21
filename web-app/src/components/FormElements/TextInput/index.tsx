@@ -8,9 +8,17 @@ import { FieldValues, useController } from 'react-hook-form';
 
 import { TextInputProps } from './interfaces';
 
-export const TextInput = <FormValues extends FieldValues>(props: TextInputProps<FormValues>) => {
-  const { field, fieldState } = useController<FormValues>(props);
-  const { name, placeholder, required = false, onBlur, onFocus, disabled = false, showArrowIcon = false, showSearchIcon = false, type = 'text' } = props;
+export const TextInput = <FormValues extends FieldValues>({
+  placeholder,
+  required = false,
+  onFocus,
+  disabled = false,
+  showArrowIcon = false,
+  showSearchIcon = false,
+  type = 'text',
+  ...controllerProps
+}: TextInputProps<FormValues>) => {
+  const { field, fieldState } = useController(controllerProps);
   const fieldValue = useMemo(() => field.value, [field]);
 
   const onChange: TextInputProps<FieldValues>['onChange'] = event => field.onChange(event.target.value);
@@ -28,18 +36,19 @@ export const TextInput = <FormValues extends FieldValues>(props: TextInputProps<
   return (
     <PrimitiveTextInput
       {...field}
-      name={name}
+      name={field.name}
       value={fieldValue}
       placeholder={placeholder}
       required={required}
       disabled={disabled}
       onChange={onChange}
-      onBlur={onBlur}
+      onBlur={field.onBlur}
       onFocus={onFocus}
       error={fieldState.error?.message}
       iconLeft={showSearchIcon && <IconSearch className={iconLeftClass} />}
       iconRight={showArrowIcon && !disabled ? <IconArrowDown className={iconRightClass} /> : disabled && <IconDisabled className={iconRightClass} />}
       type={type}
+      ref={field.ref}
     />
   );
 };
