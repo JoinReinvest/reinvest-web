@@ -1,17 +1,7 @@
-import { InputMasked, InputMaskedProps } from '@hookooekoo/ui-input-masked';
+import { InputMasked } from './InputMasked'
 
-import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
-
-const mask: InputMaskedProps['maskOptions'] = {
-  mask: '00/00/0000',
-};
-
-export const BirthDateInput = ({ value, onChange }: CustomMaskedInputInterface) => (
-  <InputMasked
-    maskOptions={mask}
-    name="birth_date"
-    value={value}
-    onChange={newValue => onChange(newValue)}
-    placeholder="Date of Birth"
-  />
-);
+export const BirthDateInput = () => <InputMasked
+  name="birth_date"
+  maskOptions={{ mask: '00/00/0000' }}
+  placeholder="Date of Birth"
+/>

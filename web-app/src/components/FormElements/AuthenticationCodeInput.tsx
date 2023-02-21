@@ -1,17 +1,7 @@
-import { InputMasked, InputMaskedProps } from '@hookooekoo/ui-input-masked';
+import { InputMasked } from './InputMasked'
 
-import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
-
-const mask: InputMaskedProps['maskOptions'] = {
-  mask: '000-000',
-};
-
-export const AuthenticationCodeInput = ({ value, onChange }: CustomMaskedInputInterface) => (
-  <InputMasked
-    maskOptions={mask}
-    name="authentication_code"
-    value={value}
-    onChange={newValue => onChange(newValue)}
-    placeholder="Authentication Code"
-  />
-);
+export const AuthenticationCodeInput = () => <InputMasked
+  name="authentication_code"
+  maskOptions={{ mask: '000-000' }}
+  placeholder="Authentication Code"
+/>

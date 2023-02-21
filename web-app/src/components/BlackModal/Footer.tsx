@@ -1,5 +1,6 @@
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
+import { URL } from '../../constants/urls'
 
 export const Footer = () => (
   <footer className="w-330 mx-auto text-center">
@@ -8,14 +9,14 @@ export const Footer = () => (
       <br />
       <Link
         title="Terms of Conditions"
-        href="/terms-and-conditions"
+        href={URL.terms_conditions}
       >
         Terms of Conditions
       </Link>{' '}
       and{' '}
       <Link
         title="Privacy Policy page"
-        href="/privacy-policy"
+        href={URL.privacy_policy}
       >
         Privacy Policy
       </Link>

@@ -1,7 +1,7 @@
 import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
 import cx from 'classnames';
-import { ErrorMessage } from 'components/FormElements/ErrorMessage';
+import { ErrorMessage } from 'components/BlackModal/ErrorMessage';
 import Image from 'next/image';
 import { ChangeEventHandler, useMemo, useState } from 'react';
 

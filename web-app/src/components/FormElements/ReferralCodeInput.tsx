@@ -1,17 +1,7 @@
-import { InputMasked, InputMaskedProps } from '@hookooekoo/ui-input-masked';
+import { InputMasked } from './InputMasked'
 
-import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
-
-const mask: InputMaskedProps['maskOptions'] = {
-  mask: '0000-0000',
-};
-
-export const ReferralCodeInput = ({ value, onChange }: CustomMaskedInputInterface) => (
-  <InputMasked
-    maskOptions={mask}
-    name="referral_code"
-    value={value}
-    onChange={newValue => onChange(newValue)}
-    placeholder="Referral code"
-  />
-);
+export const ReferralCodeInput = () => <InputMasked
+  name="referral_code"
+  maskOptions={{ mask: '0000-0000' }}
+  placeholder="Referral code"
+/>

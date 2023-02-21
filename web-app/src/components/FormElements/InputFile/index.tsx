@@ -3,7 +3,7 @@ import { BYTES_IN_MEGABYTE } from 'constants/conversions';
 import { ChangeEventHandler, useMemo, useState } from 'react';
 
 import { Typography } from '../../Typography';
-import { ErrorMessage } from '../ErrorMessage';
+import { ErrorMessage } from '../../BlackModal/ErrorMessage';
 import { UploadedFile } from './UploadedFile';
 
 export interface InputFileProps {
