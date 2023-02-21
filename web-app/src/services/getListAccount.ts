@@ -1,9 +1,10 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { DraftAccount } from 'types/graphql';
 import { gql } from 'graphql-request';
 
 import { apiClient } from './apiClient';
 
-export const accountDraftsQuery = gql`
+const accountDraftsQuery = gql`
   query {
     listAccountDrafts {
       id
@@ -12,10 +13,10 @@ export const accountDraftsQuery = gql`
   }
 `;
 
-export const useGetListAccount = () => {
+export const useGetListAccount = (): UseQueryResult<DraftAccount[]> => {
   const api = apiClient();
 
-  return useQuery({
+  return useQuery<DraftAccount[]>({
     queryKey: ['getAccountDrafts'],
     queryFn: async () => {
       const { listAccountDrafts } = await api.request(accountDraftsQuery);
