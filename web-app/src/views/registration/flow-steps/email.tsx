@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { Input } from 'components/FormElements/Input';
+import { EmailInput } from 'components/FormElements/EmailInput';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
 import { LoginLayout } from 'layouts/LoginLayout';
@@ -37,12 +37,12 @@ export const StepEmail: StepParams<FormFields> = {
           <Typography variant="h2">Sign up</Typography>
           <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
 
-          <Input
-            name="email"
-            type="email"
+          <EmailInput
+            onChange={console.log} // eslint-disable-line
+            value={'email@example.com'}
             control={control}
-            required
-          />
+            name="email"
+          ></EmailInput>
 
           <Link
             href="/login"
