@@ -1,11 +1,12 @@
-import '../styles/global.scss';
+import { Hydrate, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { SessionProvider } from 'next-auth/react'
+import type { AppProps } from 'next/app'
+import Head from 'next/head'
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import type { AppProps } from 'next/app';
-import Head from 'next/head';
-import { SessionProvider } from 'next-auth/react';
-
-const queryClient = new QueryClient();
+import { env } from '../env'
+import { queryClient } from '../services/queryClient'
+import '../styles/global.scss'
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -43,13 +44,16 @@ const App = ({ Component, pageProps }: AppProps) => {
           href="/manifest.json"
         />
       </Head>
-      <QueryClientProvider client={queryClient}>
-        <SessionProvider session={pageProps.session}>
-          <Component {...pageProps} />
-        </SessionProvider>
-      </QueryClientProvider>
+      <SessionProvider session={pageProps.session}>
+        <QueryClientProvider client={queryClient}>
+          <Hydrate state={pageProps.dehydratedState}>
+            <Component {...pageProps} />
+            {!env.isProduction && <ReactQueryDevtools initialIsOpen={false} />}
+          </Hydrate>
+        </QueryClientProvider>
+      </SessionProvider>
     </>
-  );
-};
+  )
+}
 
-export default App;
+export default App
