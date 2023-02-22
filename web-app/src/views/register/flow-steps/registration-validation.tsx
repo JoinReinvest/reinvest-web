@@ -1,8 +1,7 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
+import { CircleSuccess } from 'components/CircleSuccess';
 import { Typography } from 'components/Typography';
-import { MainLayout } from 'layouts/MainLayout';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { StepParams } from 'services/form-flow';
@@ -21,8 +20,7 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
 
   Component: () => {
     const router = useRouter();
-
-    const isLoading = true;
+    const [isLoading, setIsLoading] = useState(true);
 
     const title = useMemo(() => {
       if (isLoading) {
@@ -35,29 +33,34 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
     const onButtonClick = () => {
       router.push('/');
     };
-    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
-      setIsOpen(true);
+      // TO-DO: Attempt to create an user with the fields gathered
+      //    thus far - then update the `title` according to the API's
+      //    response - this should be done as soon as we arrive to this
+      //    view.
+
+      const timeout = setTimeout(() => {
+        setIsLoading(false);
+      }, 2000);
+
+      return () => {
+        clearTimeout(timeout);
+      };
     }, []);
 
     return (
-      <MainLayout>
-        <BlackModal isOpen={isOpen}>
-          <div className="relative flex h-full flex-col items-center justify-center">
-            <IconSpinner />
+      <div className="relative flex h-full flex-col items-center justify-center">
+        {isLoading ? <IconSpinner /> : <CircleSuccess />}
 
-            <Typography variant="h5">{title}</Typography>
+        <Typography variant="h5">{title}</Typography>
 
-            <Button
-              onClick={onButtonClick}
-              label="Continue"
-              disabled={isLoading}
-              className="absolute bottom-0 w-full md:relative md:bottom-auto"
-            />
-          </div>
-        </BlackModal>
-      </MainLayout>
+        <Button
+          onClick={onButtonClick}
+          label="Continue"
+          disabled={isLoading}
+        />
+      </div>
     );
   },
 };
