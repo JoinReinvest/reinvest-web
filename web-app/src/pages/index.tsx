@@ -1,19 +1,21 @@
 import { NextPage } from 'next';
+import { useSession } from 'next-auth/react';
 
-import { BlackModal } from '../components/BlackModal';
+import { Link } from '../components/Link';
+import { URL } from '../constants/urls';
 import { MainLayout } from '../layouts/MainLayout';
 
 const Index: NextPage = () => {
+  console.log(useSession());
+
   return (
     <MainLayout>
-      <BlackModal
-        isOpen={true}
-        onOpenChange={() => {
-          console.log(1) // eslint-disable-line
-        }}
+      <Link
+        title="Logout"
+        href={URL.logout}
       >
-        modal content
-      </BlackModal>
+        LogOut
+      </Link>
     </MainLayout>
   );
 };

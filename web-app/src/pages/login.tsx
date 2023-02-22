@@ -3,6 +3,8 @@ import { Typography } from 'components/Typography';
 import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import zod, { Schema } from 'zod';
@@ -10,29 +12,45 @@ import zod, { Schema } from 'zod';
 import { Button } from '../components/Button';
 import { EmailInput } from '../components/FormElements/EmailInput';
 import { PasswordInput } from '../components/FormElements/PasswordInput';
+import { URL } from '../constants/urls';
 import { formValidationRules } from '../formValidationRules';
 
-export interface LoginFormFields {
+interface Fields {
   email: string;
   password: string;
 }
 
-export const formSchema: Schema<LoginFormFields> = zod.object({
+const schema: Schema<Fields> = zod.object({
   email: formValidationRules.email,
   password: formValidationRules.password,
 });
 
 const Login: NextPage = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-
-  const form = useForm<LoginFormFields>({
-    resolver: zodResolver(formSchema),
+  const [error, setError] = useState<string>('');
+  const form = useForm<Fields>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
+    resolver: zodResolver(schema),
   });
 
-  const onSubmit: SubmitHandler<LoginFormFields> = async () => {
-    console.log(form.getValues('email')); // eslint-disable-line
-    console.log(form.getValues('password')); // eslint-disable-line
+  const router = useRouter();
+  const callbackUrl = (router.query?.callbackUrl as string) ?? '/';
+
+  const onSubmit: SubmitHandler<Fields> = async fields => {
+    const result = await signIn('credentials', {
+      email: fields.email,
+      password: fields.password,
+      redirect: false,
+      callbackUrl,
+    });
+
+    if (result?.error) {
+      setError(result.error);
+    } else {
+      await router.push(callbackUrl);
+    }
   };
 
   return (
@@ -45,17 +63,20 @@ const Login: NextPage = () => {
           <Typography variant="h2">Sign in</Typography>
           <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
 
-          <EmailInput
-            onChange={setEmail}
-            value={email}
-          />
-          <PasswordInput
-            value={password}
-            onChange={setPassword}
-          />
+          {error && (
+            <Typography
+              variant="paragraph-large"
+              className="text-tertiary-error"
+            >
+              {error}
+            </Typography>
+          )}
+
+          <EmailInput />
+          <PasswordInput />
 
           <Link
-            href="/register/email"
+            href={URL.forgot_password}
             className="typo-paragraph-large"
           >
             Forgot password?

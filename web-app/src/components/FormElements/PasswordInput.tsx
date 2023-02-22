@@ -1,17 +1,10 @@
-import { FieldValues, UseControllerProps } from 'react-hook-form';
+import { Input } from './Input';
 
-import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
-import { TextInput } from './TextInput';
-
-interface PasswordProps<FormFields extends FieldValues> extends CustomMaskedInputInterface, UseControllerProps<FormFields> {
-  className?: string;
-}
-
-export const PasswordInput = <FormFields extends FieldValues>({ onChange, ...controlProps }: PasswordProps<FormFields>) => (
-  <TextInput
+export const PasswordInput = props => (
+  <Input
     placeholder="Password"
+    name="password"
     type="password"
-    onChange={event => onChange(event.target.value)}
-    {...controlProps}
+    {...props}
   />
 );

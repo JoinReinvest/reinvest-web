@@ -8,9 +8,10 @@ import { signin } from '../../../services/signin';
 export default NextAuth({
   providers: [
     CredentialsProvider({
-      name: 'Credentials',
+      name: 'credentials',
+      id: 'credentials',
       credentials: {
-        email: { type: 'email' },
+        email: { type: 'text' },
         password: { type: 'password' },
       },
       async authorize({ email, password }) {
@@ -25,20 +26,25 @@ export default NextAuth({
       },
     }),
   ],
+  pages: {
+    signIn: '/login',
+    error: '/login',
+  },
+  session: {
+    strategy: 'jwt',
+  },
   callbacks: {
-    async jwt({ token, user }) {
-      console.log(111);
-      console.log(token);
-      console.log(user);
-
-      return token;
+    jwt({ token, user }) {
+      return {
+        ...token,
+        user,
+      };
     },
-    async session({ session, token }) {
-      console.log(222);
-      console.log(session);
-      console.log(token);
-
-      return session;
+    session({ token, session }) {
+      return {
+        ...session,
+        token: token.user as string,
+      };
     },
   },
 });

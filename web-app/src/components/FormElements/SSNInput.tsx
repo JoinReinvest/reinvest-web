@@ -1,17 +1,9 @@
-import { InputMasked, InputMaskedProps } from '@hookooekoo/ui-input-masked';
+import { InputMasked } from './InputMasked';
 
-import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
-
-const mask: InputMaskedProps['maskOptions'] = {
-  mask: '000-000-000',
-};
-
-export const SSNInput = ({ value, onChange }: CustomMaskedInputInterface) => (
+export const SSNInput = () => (
   <InputMasked
-    maskOptions={mask}
     name="ssn"
-    value={value}
-    onChange={newValue => onChange(newValue)}
+    maskOptions={{ mask: '000-000-000' }}
     placeholder="SSN"
   />
 );

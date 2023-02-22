@@ -10,6 +10,12 @@
   &[data-state="closed"] {
     animation: fade-out 500ms ease;
   }
+
+  .black-modal-header {
+    button {
+      @apply absolute left-0 top-1/2 -translate-y-1/2
+    }
+  }
 }
 
 .hkek-dialog-overlay:has(+ .hkek-dialog-content.black-modal) {

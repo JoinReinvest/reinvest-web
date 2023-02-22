@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 
+import { FlowStore } from '../flow-store';
 import { CurrentFormStep } from '../interfaces';
-import { FlowStore } from '../services/flow-store';
 import { useCurrentStepMeta } from './useCurrentStepMeta';
 import { useFields } from './useFields';
 
@@ -19,11 +19,9 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
     const Component = currentStep?.Component;
 
     if (Component) {
-      const fields = getFields();
-
       return () => (
         <Component
-          storeFields={fields}
+          storeFields={getFields()}
           updateStoreFields={updateFields}
           moveToNextStep={moveToNextValidStep}
         />
@@ -31,29 +29,24 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
     }
 
     return () => <></>;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
   const meta = useCurrentStepMeta({ flowStore, currentStep });
 
   useEffect(() => {
-    const fields = getFields();
-    const initialStep = isFormFlowResumable ? flowStore.getLastIncompleteStep(fields) : flowStore.getHead();
+    const initialStep = isFormFlowResumable ? flowStore.getLastIncompleteStep(getFields()) : flowStore.getHead();
 
     setCurrentStep(initialStep);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const moveToNextValidStep = () => {
-    const fields = getFields();
-    const nextStep = flowStore.getNextValidStep(currentStep, fields);
+    const nextStep = flowStore.getNextValidStep(currentStep, getFields());
 
     setCurrentStep(nextStep);
   };
 
   const moveToPreviousValidStep = () => {
-    const fields = getFields();
-    const previousStep = flowStore.getPreviousValidStep(currentStep, fields);
+    const previousStep = flowStore.getPreviousValidStep(currentStep, getFields());
 
     setCurrentStep(previousStep);
   };

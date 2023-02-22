@@ -10,7 +10,7 @@ export const WhyRequiredLink = ({ href }: Props) => (
   <div className="mt-20 block">
     <Link
       href={href}
-      title="why required link"
+      title="Why required"
     >
       Required. Why?
     </Link>

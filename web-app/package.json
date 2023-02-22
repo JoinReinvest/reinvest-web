@@ -19,8 +19,6 @@
     "lint": "next lint",
     "lint:fix": "yarn lint --fix",
     "generate": "graphql-codegen",
-    "prestart": "yarn generate",
-    "predev": "yarn generate",
     "check-types": "tsc --pretty"
   },
   "devDependencies": {

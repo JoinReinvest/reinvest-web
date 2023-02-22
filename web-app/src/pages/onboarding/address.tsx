@@ -10,6 +10,8 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { Input } from '../../components/FormElements/Input';
+
 interface FormFields {
   city: string;
   state: string | undefined;
@@ -45,14 +47,14 @@ const OnboardingAddressPage: NextPage = () => {
               icon="search"
             />
 
-            <TextInput
+            <Input
               name="street2"
               value=""
               control={form.control}
               placeholder="Apt, suite, unit, building, floor, etc"
             />
 
-            <TextInput
+            <Input
               name="city"
               value=""
               control={form.control}

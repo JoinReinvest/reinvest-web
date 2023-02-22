@@ -1,6 +1,6 @@
 import { FC, ReactNode } from 'react';
 
-import { FlowStep } from './services/flow-step';
+import { FlowStep } from './flow-step';
 
 export interface StepComponentProps<FormFields> {
   moveToNextStep: () => void;

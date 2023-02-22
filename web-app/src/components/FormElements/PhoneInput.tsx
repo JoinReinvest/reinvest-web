@@ -1,17 +1,9 @@
-import { InputMasked, InputMaskedProps } from '@hookooekoo/ui-input-masked';
+import { InputMasked } from './InputMasked';
 
-import { CustomMaskedInputInterface } from './CustomMaskedInputInterface';
-
-const mask: InputMaskedProps['maskOptions'] = {
-  mask: '+0 (000) 000-0000',
-};
-
-export const PhoneInput = ({ value, onChange }: CustomMaskedInputInterface) => (
+export const PhoneInput = () => (
   <InputMasked
-    maskOptions={mask}
     name="phone"
-    value={value}
-    onChange={newValue => onChange(newValue)}
+    maskOptions={{ mask: '+0 (000) 000-0000' }}
     placeholder="Phone Number"
   />
 );

@@ -14,8 +14,7 @@ const authenticateUser = async (cognitoUser: CognitoUser, cognitoAuthenticationD
   });
 };
 
-export const signin = async (user: UserAuthenticationInterface, userPool: CognitoUserPool) => {
-  const { email, password } = user;
+export const signin = async ({ email, password }: UserAuthenticationInterface, userPool: CognitoUserPool) => {
   const authenticationData = {
     Username: email,
     Password: password,
