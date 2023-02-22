@@ -1,9 +1,10 @@
+import { ErrorWrapper } from 'components/ErrorWrapper';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 
 const index = () => {
   return (
-    <div className="p-30 flex h-screen flex-col items-center justify-center gap-60">
+    <ErrorWrapper>
       <div>
         <Typography
           variant="h1"
@@ -20,7 +21,7 @@ const index = () => {
       >
         Go to login page
       </Link>
-    </div>
+    </ErrorWrapper>
   );
 };
 
