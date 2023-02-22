@@ -37,16 +37,12 @@ const OnboardingEmploymentLocationPage: NextPage = () => {
         <form className="flex flex-col gap-16">
           <Input
             name="employment-employer"
-            value={formFields.employer}
-            onChange={({ target }) => updateField({ employer: target.value })}
             placeholder="Name of Employer"
             required
           />
 
           <Input
             name="employment-title"
-            value={formFields.title}
-            onChange={({ target }) => updateField({ title: target.value })}
             placeholder="Title"
             required
           />

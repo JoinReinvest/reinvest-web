@@ -18,12 +18,7 @@ const EnterDateBirthPage: NextPage = () => {
     <MainLayout>
       <BlackModal isOpen={isOpen}>
         <Title title="Enter your date of birth" />
-        <BirthDateInput
-          value={'00/00/0000'}
-          onChange={() => {
-          console.log(1) // eslint-disable-line
-          }}
-        />
+        <BirthDateInput />
         <WhyRequiredLink href="/" />
       </BlackModal>
     </MainLayout>

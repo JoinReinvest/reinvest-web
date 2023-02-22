@@ -48,14 +48,12 @@ const OnboardingAddressPage: NextPage = () => {
 
             <Input
               name="street2"
-              value=""
               control={form.control}
               placeholder="Apt, suite, unit, building, floor, etc"
             />
 
             <Input
               name="city"
-              value=""
               control={form.control}
               placeholder="City"
             />
@@ -70,12 +68,7 @@ const OnboardingAddressPage: NextPage = () => {
               placeholder="State"
             />
 
-            <ZipCodeInput
-              value={form.getValues('zipCode')}
-              onChange={value => {
-                form.setValue('zipCode', value);
-              }}
-            />
+            <ZipCodeInput />
           </div>
         </div>
       </BlackModal>
