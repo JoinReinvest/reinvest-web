@@ -43,6 +43,7 @@ const Login: NextPage = () => {
       email: fields.email,
       password: fields.password,
       redirect: false,
+      callbackUrl
     });
 
     if (!!result?.error) {

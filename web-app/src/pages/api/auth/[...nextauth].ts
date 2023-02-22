@@ -1,5 +1,7 @@
 import { CognitoUserPool } from 'amazon-cognito-identity-js'
 import NextAuth from 'next-auth'
+import { mockSession } from 'next-auth/client/__tests__/helpers/mocks'
+
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 import { env } from '../../../env'
@@ -19,7 +21,7 @@ export default NextAuth({
           UserPoolId: env.aws.cognito.userPoolId,
           ClientId: env.aws.cognito.clientId,
         }
-console.log(123)
+
         const authData = await signin({ email, password }, new CognitoUserPool(poolData))
 
         return authData.accessToken.getJwtToken()
@@ -34,23 +36,15 @@ console.log(123)
     strategy: "jwt",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      user && (token.user = user);
+    async jwt ({ token, user }) {
+      user && (token.user = user)
 
-      console.log(111)
-      console.log('jwt', token)
-      console.log('jwt', user)
-
-      return token;
+      return token
     },
-    async session({ session, token }) {
-      session.token = token.user;
+    async session ({ token, session }) {
+      session.token = token.user as string
 
-      console.log(222)
-      console.log('session', session)
-      console.log('session', token)
-
-      return session;
+      return session
     },
   },
 })

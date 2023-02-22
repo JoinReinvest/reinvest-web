@@ -1,5 +1,6 @@
 import { getToken } from "next-auth/jwt"
 import { NextRequest, NextResponse } from "next/server"
+import { URL as URLS } from './constants/urls'
 
 export async function middleware (request: NextRequest) {
   const pathname = request.nextUrl.pathname
@@ -7,7 +8,7 @@ export async function middleware (request: NextRequest) {
   const token = await getToken({ req: request })
 
   if (!token) {
-    const url = new URL(`/login`, request.url)
+    const url = new URL(URLS.login, request.url)
 
     url.searchParams.set("callbackUrl", pathname)
 
@@ -19,6 +20,6 @@ export async function middleware (request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|login|register|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|login|logout|register|_next/static|_next/image|favicon.ico|manifest.json).*)',
   ],
 }
