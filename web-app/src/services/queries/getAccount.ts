@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { Account } from 'graphql/types';
 import { gql } from 'graphql-request';
+import { Account } from 'types/graphql';
 
 import { useApiClient } from '../apiClient';
 

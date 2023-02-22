@@ -1,6 +1,6 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { ProfileCompletionStatus } from 'graphql/types';
 import { gql } from 'graphql-request';
+import { ProfileCompletionStatus } from 'types/graphql';
 
 import { useApiClient } from '../apiClient';
 
