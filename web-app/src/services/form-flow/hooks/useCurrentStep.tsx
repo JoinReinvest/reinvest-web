@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 
-import { CurrentFormStep } from '../interfaces';
 import { FlowStore } from '../flow-store';
+import { CurrentFormStep } from '../interfaces';
 import { useCurrentStepMeta } from './useCurrentStepMeta';
 import { useFields } from './useFields';
 
@@ -37,7 +37,7 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
     const initialStep = isFormFlowResumable ? flowStore.getLastIncompleteStep(getFields()) : flowStore.getHead();
 
     setCurrentStep(initialStep);
-  }, [getFields, isFormFlowResumable, flowStore]);
+  }, []);
 
   const moveToNextValidStep = () => {
     const nextStep = flowStore.getNextValidStep(currentStep, getFields());

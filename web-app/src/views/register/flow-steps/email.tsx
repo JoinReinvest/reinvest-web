@@ -1,16 +1,16 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from 'components/Button'
-import { EmailInput } from 'components/FormElements/EmailInput'
-import { Typography } from 'components/Typography'
-import { formValidationRules } from 'formValidationRules'
-import { LoginLayout } from 'layouts/LoginLayout'
-import Link from 'next/link'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { StepParams } from 'services/form-flow'
-import zod, { Schema } from 'zod'
-import { URL } from '../../../constants/urls'
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from 'components/Button';
+import { EmailInput } from 'components/FormElements/EmailInput';
+import { Typography } from 'components/Typography';
+import { formValidationRules } from 'formValidationRules';
+import { LoginLayout } from 'layouts/LoginLayout';
+import Link from 'next/link';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { StepParams } from 'services/form-flow';
+import zod, { Schema } from 'zod';
 
-import { FormFields } from '../form-fields'
+import { URL } from '../../../constants/urls';
+import { FormFields } from '../form-fields';
 
 type Fields = Pick<FormFields, 'email'>;
 
@@ -18,27 +18,27 @@ export const StepEmail: StepParams<FormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }) => {
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,
-    })
+    });
 
-    const { handleSubmit, control } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) })
+    const { handleSubmit, control } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields)
+      updateStoreFields(fields);
 
       // Validate that the email is not used
-      moveToNextStep()
-    }
+      moveToNextStep();
+    };
 
     return (
       <LoginLayout>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
+          className="register-form max-w-330 z-30 flex w-full flex-col items-center justify-center gap-16"
         >
           <Typography variant="h2">Sign up</Typography>
           <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
 
-          <EmailInput {...control} />
+          <EmailInput control={control} />
 
           <Link
             href={URL.login}
@@ -53,6 +53,6 @@ export const StepEmail: StepParams<FormFields> = {
           />
         </form>
       </LoginLayout>
-    )
+    );
   },
-}
+};
