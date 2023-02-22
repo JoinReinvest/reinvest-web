@@ -24,7 +24,6 @@
   "devDependencies": {
     "@graphql-codegen/cli": "^3.0.0",
     "@graphql-codegen/client-preset": "^2.0.0",
-    "@graphql-codegen/near-operation-file-preset": "^2.5.0",
     "@graphql-codegen/typescript": "^3.0.0",
     "@next/bundle-analyzer": "13.1.6",
     "@tanstack/eslint-plugin-query": "^4.24.8",
