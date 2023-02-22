@@ -5,5 +5,5 @@ interface ErrorWrapperProps {
 }
 
 export const ErrorLayout = ({ children }: ErrorWrapperProps) => {
-  return <div className="flex h-screen flex-col items-center justify-center gap-60 p-30">{children}</div>;
+  return <div className="p-30 flex h-screen flex-col items-center justify-center gap-60">{children}</div>;
 };
