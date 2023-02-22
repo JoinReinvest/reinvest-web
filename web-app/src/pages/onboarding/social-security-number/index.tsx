@@ -28,12 +28,7 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
           We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
         </Typography>
 
-        <SSNInput
-          value={''}
-          onChange={() => {
-            console.log(1) // eslint-disable-line
-          }}
-        />
+        <SSNInput />
 
         <WhyRequiredLink href="/" />
       </BlackModal>

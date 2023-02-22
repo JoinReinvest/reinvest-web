@@ -1,8 +1,8 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { CorporateDraftAccount } from 'graphql/types';
 import { gql } from 'graphql-request';
+import { CorporateDraftAccount } from 'types/graphql';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const completeCorporateDraftAccountMutation = gql`
   mutation completeCorporateDraftAccount($accountId: ID) {
@@ -13,7 +13,7 @@ const completeCorporateDraftAccountMutation = gql`
 `;
 
 export const useCompleteCorporateDraftAccount = (accountId: string): UseMutationResult<CorporateDraftAccount> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useMutation({
     mutationFn: async () => {

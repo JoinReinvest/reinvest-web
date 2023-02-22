@@ -26,7 +26,6 @@ export function Input<FormFields extends FieldValues>({
   showSearchIcon = false,
   autoCapitalize = false,
   autoComplete = false,
-  className,
   ...controllerProps
 }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);

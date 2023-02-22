@@ -1,8 +1,8 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { Profile, ProfileDetailsInput } from 'graphql/types';
 import { gql } from 'graphql-request';
+import { Profile, ProfileDetailsInput } from 'types/graphql';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const completeProfileDetailsMutation = gql`
   mutation completeProfileDetails($input: ProfileDetailsInput) {
@@ -29,7 +29,7 @@ const completeProfileDetailsMutation = gql`
 `;
 
 export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutationResult<Profile> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useMutation({
     mutationFn: async () => {

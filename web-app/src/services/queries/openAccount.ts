@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const openAccountMutation = gql`
   mutation openAccount($draftAccountId: String) {
@@ -10,7 +10,7 @@ const openAccountMutation = gql`
 `;
 
 export const useOpenAccount = (draftAccountId: string): UseMutationResult<boolean> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useMutation({
     mutationFn: async () => {

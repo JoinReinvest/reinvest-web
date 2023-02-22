@@ -21,12 +21,7 @@ const EnterPhoneNumberPage: NextPage = () => {
           title="Enter your phone number"
           subtitle="We’ll text you a confirmation code within 10 minutes."
         />
-        <PhoneInput
-          value={''}
-          onChange={() => {
-            console.log(1) // eslint-disable-line
-          }}
-        />
+        <PhoneInput />
         <WhyRequiredLink href="/" />
       </BlackModal>
     </MainLayout>

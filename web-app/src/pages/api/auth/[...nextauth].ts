@@ -14,7 +14,7 @@ export default NextAuth({
         email: { type: 'text' },
         password: { type: 'password' },
       },
-      async authorize({ email, password }) {
+      async authorize({ email, password }: { email: string; password: string }) {
         const poolData = {
           UserPoolId: env.aws.cognito.userPoolId,
           ClientId: env.aws.cognito.clientId,

@@ -1,8 +1,8 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { Profile } from 'graphql/types';
 import { gql } from 'graphql-request';
+import { Profile } from 'types/graphql';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const getProfileQuery = gql`
   query getProfile {
@@ -40,7 +40,7 @@ const getProfileQuery = gql`
 `;
 
 export const useGetAccount = (): UseQueryResult<Profile> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useQuery<Profile>({
     queryKey: ['getProfile'],

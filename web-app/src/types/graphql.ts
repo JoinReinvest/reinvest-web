@@ -5,13 +5,13 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
   Boolean: boolean;
-  Int: number;
-  Float: number;
   EmailAddress: any;
+  Float: number;
+  ID: string;
   ISODate: any;
+  Int: number;
+  String: string;
   inCents_Int_NotNull_min_0: any;
   numberOfLinks_Int_NotNull_min_1_max_10: any;
 };
@@ -35,7 +35,7 @@ export type AccountOverview = {
 export enum AccountType {
   Corporate = 'CORPORATE',
   Individual = 'INDIVIDUAL',
-  Trust = 'TRUST'
+  Trust = 'TRUST',
 }
 
 export type Address = {
@@ -50,11 +50,11 @@ export type Address = {
 
 export type AddressInput = {
   addressLine1: Scalars['String'];
-  addressLine2?: InputMaybe<Scalars['String']>;
   city: Scalars['String'];
   country: Scalars['String'];
   state: Scalars['String'];
   zip: Scalars['String'];
+  addressLine2?: InputMaybe<Scalars['String']>;
 };
 
 export type CorporateDraftAccount = {
@@ -69,13 +69,13 @@ export type Dollar = {
 };
 
 export type DollarInput = {
-  formatted?: InputMaybe<Scalars['String']>;
   inCents: Scalars['inCents_Int_NotNull_min_0'];
+  formatted?: InputMaybe<Scalars['String']>;
 };
 
 export enum Domicile {
   Citizen = 'CITIZEN',
-  Resident = 'RESIDENT'
+  Resident = 'RESIDENT',
 }
 
 export type DraftAccount = {
@@ -101,14 +101,14 @@ export enum EmploymentStatus {
   Employed = 'EMPLOYED',
   Retired = 'RETIRED',
   Student = 'STUDENT',
-  Unemployed = 'UNEMPLOYED'
+  Unemployed = 'UNEMPLOYED',
 }
 
 export enum Experience {
   Expert = 'EXPERT',
   NoExperience = 'NO_EXPERIENCE',
   SomeExperience = 'SOME_EXPERIENCE',
-  VeryExperienced = 'VERY_EXPERIENCED'
+  VeryExperienced = 'VERY_EXPERIENCED',
 }
 
 export type FileLink = {
@@ -169,62 +169,40 @@ export type Mutation = {
   signDocumentFromTemplate?: Maybe<SignatureId>;
   verifyPhoneNumber?: Maybe<Scalars['Boolean']>;
 };
-
-
 export type MutationCompleteCorporateDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
-
-
 export type MutationCompleteIndividualDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
   input?: InputMaybe<IndividualAccountInput>;
 };
-
-
 export type MutationCompleteProfileDetailsArgs = {
   input?: InputMaybe<ProfileDetailsInput>;
 };
-
-
 export type MutationCompleteTrustDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
-
-
 export type MutationCreateDocumentsFileLinksArgs = {
   numberOfLinks: Scalars['numberOfLinks_Int_NotNull_min_1_max_10'];
 };
-
-
 export type MutationCreateDraftAccountArgs = {
   type?: InputMaybe<AccountType>;
 };
-
-
 export type MutationOpenAccountArgs = {
   draftAccountId?: InputMaybe<Scalars['String']>;
 };
-
-
 export type MutationRemoveDraftAccountArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
-
-
 export type MutationSetPhoneNumberArgs = {
   countryCode?: InputMaybe<Scalars['String']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
 };
-
-
 export type MutationSignDocumentFromTemplateArgs = {
   fields: Array<InputMaybe<GenericFieldInput>>;
   signature: Scalars['String'];
   templateId: TemplateName;
 };
-
-
 export type MutationVerifyPhoneNumberArgs = {
   authCode?: InputMaybe<Scalars['String']>;
   countryCode?: InputMaybe<Scalars['String']>;
@@ -297,33 +275,21 @@ export type Query = {
   listAccountDrafts?: Maybe<Array<Maybe<DraftAccount>>>;
   profileCompletionStatus?: Maybe<ProfileCompletionStatus>;
 };
-
-
 export type QueryCanOpenAccountArgs = {
   accountType?: InputMaybe<AccountType>;
 };
-
-
 export type QueryGetAccountArgs = {
   accountId?: InputMaybe<Scalars['String']>;
 };
-
-
 export type QueryGetCorporateDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
-
-
 export type QueryGetIndividualDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
-
-
 export type QueryGetTemplateArgs = {
   templateName?: InputMaybe<TemplateName>;
 };
-
-
 export type QueryGetTrustDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
@@ -342,7 +308,7 @@ export type Template = {
 
 export enum TemplateName {
   AutoReinvestmentAgreement = 'AUTO_REINVESTMENT_AGREEMENT',
-  SubscriptionAgreement = 'SUBSCRIPTION_AGREEMENT'
+  SubscriptionAgreement = 'SUBSCRIPTION_AGREEMENT',
 }
 
 export type TrustDraftAccount = {

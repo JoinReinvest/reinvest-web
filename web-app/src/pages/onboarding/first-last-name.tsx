@@ -4,13 +4,10 @@ import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
-import { useCheckAuthorization } from 'services/useAuth';
 import { z } from 'zod';
 
 import { Input } from '../../components/FormElements/Input';
-import { TextInput } from '../../components/FormElements/TextInput';
 import { formValidationRules } from '../../formValidationRules';
 
 const schema = z.object({
@@ -27,8 +24,6 @@ export interface FirstLastNameFormFields {
 
 const FirstLastNamePage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  useCheckAuthorization();
 
   useEffect(() => {
     setIsOpen(true);

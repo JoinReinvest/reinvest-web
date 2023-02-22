@@ -1,8 +1,8 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
-import { Template } from 'graphql/types';
 import { gql } from 'graphql-request';
+import { Template } from 'types/graphql';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const getTemplateQuery = gql`
   query getTemplate() {
@@ -15,7 +15,7 @@ const getTemplateQuery = gql`
 `;
 
 export const useGetTemplate = (): UseQueryResult<Template> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useQuery<Template>({
     queryKey: ['getTemplate'],
