@@ -1,6 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
 import { WarningMessage } from 'components/BlackModal/WarningMessage';
-import { TextInput } from 'components/FormElements/TextInput';
 import { ZipCodeInput } from 'components/FormElements/ZipCodeInput';
 import { Select } from 'components/Select';
 import { Typography } from 'components/Typography';

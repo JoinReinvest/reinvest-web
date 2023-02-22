@@ -1,5 +1,4 @@
 import { BlackModal } from 'components/BlackModal';
-import { TextInput } from 'components/FormElements/TextInput';
 import { Select } from 'components/Select';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
