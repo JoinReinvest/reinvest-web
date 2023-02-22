@@ -5,7 +5,7 @@ import { gql } from 'graphql-request';
 import { apiClient } from '../apiClient';
 
 const getIndividualQuery = gql`
-  query getIndividual() {
+  query getIndividual {
     getIndividual {
       firstName
       middleName

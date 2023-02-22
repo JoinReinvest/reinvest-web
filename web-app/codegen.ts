@@ -1,4 +1,4 @@
-import { CodegenConfig } from '@graphql-codegen/cli'
+import { CodegenConfig } from '@graphql-codegen/cli';
 
 const config: CodegenConfig = {
   schema: [
@@ -13,18 +13,10 @@ const config: CodegenConfig = {
   documents: ['src/**/*.{ts,tsx}'],
   ignoreNoDocuments: true,
   generates: {
-    'src/graphql/types.ts': {
+    'src/types/graphql.ts': {
       plugins: ['typescript'],
     },
-    'src/graphql/hooks.ts': {
-      preset: 'near-operation-file',
-      presetConfig: { extension: '.generated.tsx', baseTypesPath: 'types.ts' },
-      plugins: ['typescript-operations', 'typescript-react-query'],
-      config: {
-        withHooks: true,
-      },
-    },
-  }
-}
+  },
+};
 
-export default config
+export default config;

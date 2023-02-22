@@ -5,11 +5,8 @@ import { gql } from 'graphql-request';
 import { apiClient } from '../apiClient';
 
 const getCanOpenAccountQuery = gql`
-  query canOpenAccount($accountType: String) {
-    canOpenAccount(accountType: $accountType) {
-      id
-      type
-    }
+  query canOpenAccount($accountType: AccountType) {
+    canOpenAccount(accountType: $accountType)
   }
 `;
 
