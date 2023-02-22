@@ -1,11 +1,9 @@
-import { CognitoUserPool } from 'amazon-cognito-identity-js'
-import NextAuth from 'next-auth'
-import { mockSession } from 'next-auth/client/__tests__/helpers/mocks'
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
+import NextAuth from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
 
-import CredentialsProvider from 'next-auth/providers/credentials'
-
-import { env } from '../../../env'
-import { signin } from '../../../services/signin'
+import { env } from '../../../env';
+import { signin } from '../../../services/signin';
 
 export default NextAuth({
   providers: [
@@ -13,38 +11,40 @@ export default NextAuth({
       name: 'credentials',
       id: 'credentials',
       credentials: {
-        email: { type: "text" },
-        password: { type: "password" },
+        email: { type: 'text' },
+        password: { type: 'password' },
       },
-      async authorize ({ email, password }) {
+      async authorize({ email, password }) {
         const poolData = {
           UserPoolId: env.aws.cognito.userPoolId,
           ClientId: env.aws.cognito.clientId,
-        }
+        };
 
-        const authData = await signin({ email, password }, new CognitoUserPool(poolData))
+        const authData = await signin({ email, password }, new CognitoUserPool(poolData));
 
-        return authData.accessToken.getJwtToken()
+        return authData.accessToken.getJwtToken();
       },
     }),
   ],
   pages: {
-    signIn: "/login",
+    signIn: '/login',
     error: '/login',
   },
   session: {
-    strategy: "jwt",
+    strategy: 'jwt',
   },
   callbacks: {
-    async jwt ({ token, user }) {
-      user && (token.user = user)
-
-      return token
+    jwt({ token, user }) {
+      return {
+        ...token,
+        user,
+      };
     },
-    async session ({ token, session }) {
-      session.token = token.user as string
-
-      return session
+    session({ token, session }) {
+      return {
+        ...session,
+        token: token.user as string,
+      };
     },
   },
-})
+});

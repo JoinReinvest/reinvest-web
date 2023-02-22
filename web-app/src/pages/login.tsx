@@ -3,9 +3,9 @@ import { Typography } from 'components/Typography';
 import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import zod, { Schema } from 'zod';
 
@@ -36,20 +36,20 @@ const Login: NextPage = () => {
   });
 
   const router = useRouter();
-  const callbackUrl = (router.query?.callbackUrl as string) ?? "/";
+  const callbackUrl = (router.query?.callbackUrl as string) ?? '/';
 
   const onSubmit: SubmitHandler<Fields> = async fields => {
     const result = await signIn('credentials', {
       email: fields.email,
       password: fields.password,
       redirect: false,
-      callbackUrl
+      callbackUrl,
     });
 
-    if (!!result?.error) {
-      setError(result.error)
+    if (result?.error) {
+      setError(result.error);
     } else {
-       await router.push(callbackUrl);
+      await router.push(callbackUrl);
     }
   };
 
