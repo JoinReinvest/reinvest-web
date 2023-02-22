@@ -56,7 +56,10 @@ export const StepPassword: StepParams<FormFields> = {
             />
 
             <PasswordInput control={control} />
-            <PasswordInput name="passwordConfirmation" control={control} />
+            <PasswordInput
+              name="passwordConfirmation"
+              control={control}
+            />
 
             <WhyRequiredLink href="/" />
 

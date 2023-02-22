@@ -4,8 +4,8 @@ import { Select } from 'components/Select';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
-import { Input } from '../../components/FormElements/Input'
 
+import { Input } from '../../components/FormElements/Input';
 import { Title } from '../../components/Title';
 
 const INDUSTRIES: ComponentProps<typeof Select>['options'] = ['Aerospace', 'Engineering', 'Design', 'Manufacturing', 'Marketing'].map(industry => ({

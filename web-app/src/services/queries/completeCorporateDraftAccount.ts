@@ -1,6 +1,6 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { gql } from 'graphql-request';
 import { CorporateDraftAccount } from 'graphql/types';
+import { gql } from 'graphql-request';
 
 import { apiClient } from '../apiClient';
 

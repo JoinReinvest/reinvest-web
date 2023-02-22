@@ -8,8 +8,8 @@ import { FormProvider, useForm } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import { useCheckAuthorization } from 'services/useAuth';
 import { z } from 'zod';
-import { Input } from '../../components/FormElements/Input'
 
+import { Input } from '../../components/FormElements/Input';
 import { TextInput } from '../../components/FormElements/TextInput';
 import { formValidationRules } from '../../formValidationRules';
 

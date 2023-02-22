@@ -4,6 +4,8 @@ import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
 import Link from 'next/link';
 import { signIn } from 'next-auth/react';
+import { useRouter } from 'next/router'
+import { useState } from 'react'
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import zod, { Schema } from 'zod';
 
@@ -24,15 +26,30 @@ const schema: Schema<Fields> = zod.object({
 });
 
 const Login: NextPage = () => {
+  const [error, setError] = useState<string>('');
   const form = useForm<Fields>({
+    defaultValues: {
+      email: '',
+      password: '',
+    },
     resolver: zodResolver(schema),
   });
 
+  const router = useRouter();
+  const callbackUrl = (router.query?.callbackUrl as string) ?? "/";
+
   const onSubmit: SubmitHandler<Fields> = async fields => {
-    await signIn('credentials', {
+    const result = await signIn('credentials', {
       email: fields.email,
       password: fields.password,
+      redirect: false,
     });
+
+    if (!!result?.error) {
+      setError(result.error)
+    } else {
+       await router.push(callbackUrl);
+    }
   };
 
   return (
@@ -40,10 +57,19 @@ const Login: NextPage = () => {
       <FormProvider {...form}>
         <form
           onSubmit={form.handleSubmit(onSubmit)}
-          className="login-form max-w-330 z-30 flex flex-col items-center justify-center gap-16"
+          className="login-form z-30 flex max-w-330 flex-col items-center justify-center gap-16"
         >
           <Typography variant="h2">Sign in</Typography>
           <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
+
+          {error && (
+            <Typography
+              variant="paragraph-large"
+              className="text-tertiary-error"
+            >
+              {error}
+            </Typography>
+          )}
 
           <EmailInput />
           <PasswordInput />

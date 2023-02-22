@@ -1,13 +1,9 @@
-import { NextPage } from 'next'
-import { MainLayout } from '../layouts/MainLayout'
-import { logInIfNotAuthenticated } from '../services/authorization'
+import { NextPage } from 'next';
+
+import { MainLayout } from '../layouts/MainLayout';
 
 const Index: NextPage = () => {
-  logInIfNotAuthenticated()
+  return <MainLayout>Dashboard Page</MainLayout>;
+};
 
-  return (
-    <MainLayout>Dashboard Page</MainLayout>
-  )
-}
-
-export default Index
+export default Index;

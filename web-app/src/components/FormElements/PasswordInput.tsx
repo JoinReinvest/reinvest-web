@@ -1,8 +1,10 @@
-import { Input } from './Input'
+import { Input } from './Input';
 
-export const PasswordInput = (props) => <Input
-  placeholder="Password"
-  name="password"
-  type="password"
-  {...props}
-/>
+export const PasswordInput = props => (
+  <Input
+    placeholder="Password"
+    name="password"
+    type="password"
+    {...props}
+  />
+);

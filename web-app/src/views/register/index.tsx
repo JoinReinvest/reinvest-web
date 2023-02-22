@@ -1,7 +1,7 @@
-import { useFormFlowContext } from 'services/form-flow'
+import { useFormFlowContext } from 'services/form-flow';
 
 export const RegistrationView = () => {
-  const { CurrentStepView } = useFormFlowContext()
+  const { CurrentStepView } = useFormFlowContext();
 
-  return <CurrentStepView />
-}
+  return <CurrentStepView />;
+};

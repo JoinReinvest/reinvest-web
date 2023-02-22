@@ -9,8 +9,8 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
-import { ReferralCodeInput } from '../../../components/FormElements/ReferralCodeInput'
 
+import { ReferralCodeInput } from '../../../components/FormElements/ReferralCodeInput';
 import { FormFields } from '../form-fields';
 
 type Fields = Pick<FormFields, 'referralCode'>;

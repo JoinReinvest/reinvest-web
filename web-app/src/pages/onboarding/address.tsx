@@ -9,7 +9,8 @@ import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Input } from '../../components/FormElements/Input'
+
+import { Input } from '../../components/FormElements/Input';
 
 interface FormFields {
   city: string;

@@ -1,7 +1,7 @@
-import { NextPage } from 'next'
-import { FormFlowProvider } from 'services/form-flow'
-import { RegistrationView } from 'views/register'
-import { FLOW_STEPS } from 'views/register/flow-steps'
+import { NextPage } from 'next';
+import { FormFlowProvider } from 'services/form-flow';
+import { RegistrationView } from 'views/register';
+import { FLOW_STEPS } from 'views/register/flow-steps';
 
 const RegisterPage: NextPage = () => {
   return (
@@ -9,12 +9,12 @@ const RegisterPage: NextPage = () => {
       steps={FLOW_STEPS}
       formFieldsInitialState={{ email: '', referralCode: undefined, password: '', passwordConfirmation: '', authenticationCode: '' }}
       onFormFieldsUpdate={async fields => {
-        console.info(fields)
+        console.info(fields);
       }}
     >
       <RegistrationView />
     </FormFlowProvider>
-  )
-}
+  );
+};
 
-export default RegisterPage
+export default RegisterPage;

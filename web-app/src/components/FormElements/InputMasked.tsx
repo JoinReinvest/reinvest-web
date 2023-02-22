@@ -1,4 +1,4 @@
-import { InputMasked as PrimitiveInputMasked } from '@hookooekoo/ui-input-masked'
+import { InputMasked as PrimitiveInputMasked } from '@hookooekoo/ui-input-masked';
 import { ComponentPropsWithoutRef, useMemo } from 'react';
 import { useController } from 'react-hook-form';
 import { FieldValues, UseControllerProps } from 'react-hook-form';

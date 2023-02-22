@@ -1,6 +1,7 @@
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
-import { URL } from '../../constants/urls'
+
+import { URL } from '../../constants/urls';
 
 export const Footer = () => (
   <footer className="w-330 mx-auto text-center">

@@ -3,5 +3,5 @@ export const URL = {
   register: '/register',
   forgot_password: '/forgot_password',
   terms_conditions: '/terms-and-conditions',
-  privacy_policy: '/privacy-policy'
-}
+  privacy_policy: '/privacy-policy',
+};

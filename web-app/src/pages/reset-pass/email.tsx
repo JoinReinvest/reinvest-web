@@ -1,6 +1,7 @@
-import { NextPage } from 'next'
-import { EmailInput } from '../../components/FormElements/EmailInput'
-import { Title } from '../../components/Title'
+import { NextPage } from 'next';
+
+import { EmailInput } from '../../components/FormElements/EmailInput';
+import { Title } from '../../components/Title';
 
 const EmailPage: NextPage = () => {
   return (
@@ -12,7 +13,7 @@ const EmailPage: NextPage = () => {
 
       <EmailInput />
     </>
-  )
-}
+  );
+};
 
-export default EmailPage
+export default EmailPage;

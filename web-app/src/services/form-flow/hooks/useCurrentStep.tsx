@@ -29,7 +29,7 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
     }
 
     return () => <></>;
-  }, [currentStep, getFields, updateFields]);
+  }, [currentStep]);
 
   const meta = useCurrentStepMeta({ flowStore, currentStep });
 
