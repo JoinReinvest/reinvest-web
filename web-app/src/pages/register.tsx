@@ -7,10 +7,7 @@ const RegisterPage: NextPage = () => {
   return (
     <FormFlowProvider
       steps={FLOW_STEPS}
-      formFieldsInitialState={{ email: '', referralCode: undefined, password: '', passwordConfirmation: '', authenticationCode: '' }}
-      onFormFieldsUpdate={async fields => {
-        console.info(fields);
-      }}
+      formFieldsInitialState={{ email: '', referralCode: undefined, password: '', authenticationCode: '' }}
     >
       <RegistrationView />
     </FormFlowProvider>

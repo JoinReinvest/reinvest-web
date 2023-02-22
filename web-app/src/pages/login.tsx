@@ -1,4 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { InputEmail } from 'components/FormElements/InputEmail';
+import { InputPassword } from 'components/FormElements/InputPassword';
 import { Typography } from 'components/Typography';
 import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
@@ -10,8 +12,6 @@ import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import zod, { Schema } from 'zod';
 
 import { Button } from '../components/Button';
-import { EmailInput } from '../components/FormElements/EmailInput';
-import { PasswordInput } from '../components/FormElements/PasswordInput';
 import { URL } from '../constants/urls';
 import { formValidationRules } from '../formValidationRules';
 
@@ -72,8 +72,15 @@ const Login: NextPage = () => {
             </Typography>
           )}
 
-          <EmailInput />
-          <PasswordInput />
+          <InputEmail
+            name="email"
+            control={form.control}
+          />
+
+          <InputPassword
+            name="password"
+            control={form.control}
+          />
 
           <Link
             href={URL.forgot_password}
