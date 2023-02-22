@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { DraftAccount } from 'graphql/types';
 import { gql } from 'graphql-request';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const accountDraftsQuery = gql`
   query listAccountDrafts {
@@ -14,7 +14,7 @@ const accountDraftsQuery = gql`
 `;
 
 export const useGetListAccount = (): UseQueryResult<DraftAccount[]> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useQuery<DraftAccount[]>({
     queryKey: ['getAccountDrafts'],

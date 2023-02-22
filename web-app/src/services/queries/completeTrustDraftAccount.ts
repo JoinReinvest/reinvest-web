@@ -2,7 +2,7 @@ import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { TrustDraftAccount } from 'graphql/types';
 import { gql } from 'graphql-request';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const completeTrustDraftAccountMutation = gql`
   mutation completeTrustDraftAccount($accountId: ID) {
@@ -13,7 +13,7 @@ const completeTrustDraftAccountMutation = gql`
 `;
 
 export const useCompleteTrustDraftAccount = (accountId: string): UseMutationResult<TrustDraftAccount> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useMutation({
     mutationFn: async () => {

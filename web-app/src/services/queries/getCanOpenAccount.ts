@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { AccountType } from 'graphql/types';
 import { gql } from 'graphql-request';
 
-import { apiClient } from '../apiClient';
+import { useApiClient } from '../apiClient';
 
 const getCanOpenAccountQuery = gql`
   query canOpenAccount($accountType: AccountType) {
@@ -11,7 +11,7 @@ const getCanOpenAccountQuery = gql`
 `;
 
 export const useGetCanOpenAccount = (accountType: AccountType): UseQueryResult<boolean> => {
-  const api = apiClient();
+  const api = useApiClient();
 
   return useQuery<boolean>({
     queryKey: ['getCanOpenAccount', accountType],

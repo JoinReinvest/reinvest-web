@@ -3,7 +3,7 @@ import { GraphQLError } from 'graphql/error';
 import { GraphQLClient } from 'graphql-request';
 import { useSession } from 'next-auth/react';
 
-export const apiClient = () => {
+export const useApiClient = () => {
   const { data: session } = useSession();
 
   const token = session?.token;
