@@ -1,1 +1,1 @@
-export const areElementsTrue = <Type>(elements: Type[]): boolean => elements.every(element => !!element);
+export const areElementsTrue = <Type>(elements: Type[]): boolean => elements.every(Boolean);
