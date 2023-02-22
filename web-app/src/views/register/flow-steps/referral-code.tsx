@@ -1,17 +1,16 @@
-import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModal } from 'components/BlackModal';
-import { Button } from 'components/Button';
-import { Form } from 'components/FormElements/Form';
-import { InputMasked } from 'components/FormElements/InputMasked';
-import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
-import { useEffect, useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepParams } from 'services/form-flow';
-import zod, { Schema } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { BlackModal } from 'components/BlackModal'
+import { Button } from 'components/Button'
+import { Form } from 'components/FormElements/Form'
+import { Title } from 'components/Title'
+import { MainLayout } from 'layouts/MainLayout'
+import { useEffect, useState } from 'react'
+import { SubmitHandler, useForm } from 'react-hook-form'
+import { StepParams } from 'services/form-flow'
+import zod, { Schema } from 'zod'
 
-import { ReferralCodeInput } from '../../../components/FormElements/ReferralCodeInput';
-import { FormFields } from '../form-fields';
+import { ReferralCodeInput } from '../../../components/FormElements/ReferralCodeInput'
+import { FormFields } from '../form-fields'
 
 type Fields = Pick<FormFields, 'referralCode'>;
 
@@ -21,25 +20,25 @@ export const StepReferralCode: StepParams<FormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }) => {
     const schema: Schema<Fields> = zod.object({
       referralCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid referral code' }),
-    });
+    })
 
-    const { handleSubmit, control } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
+    const { handleSubmit, control } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) })
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
+      updateStoreFields(fields)
 
-      moveToNextStep();
-    };
+      moveToNextStep()
+    }
 
     const onSkip = () => {
-      moveToNextStep();
-    };
+      moveToNextStep()
+    }
 
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false)
 
     useEffect(() => {
-      setIsOpen(true);
-    }, []);
+      setIsOpen(true)
+    }, [])
 
     return (
       <MainLayout>
@@ -69,6 +68,6 @@ export const StepReferralCode: StepParams<FormFields> = {
           </Form>
         </BlackModal>
       </MainLayout>
-    );
+    )
   },
-};
+}
