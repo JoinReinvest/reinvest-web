@@ -5,7 +5,7 @@ import { gql } from 'graphql-request';
 import { apiClient } from '../apiClient';
 
 const accountDraftsQuery = gql`
-  query {
+  query listAccountDrafts {
     listAccountDrafts {
       id
       type
