@@ -1,9 +1,10 @@
-import { ErrorWrapper } from 'components/ErrorWrapper';
 import { Typography } from 'components/Typography';
+import { ErrorLayout } from 'layouts/ErrorLayout';
+import { Link } from 'react-router-dom';
 
 const index = () => {
   return (
-    <ErrorWrapper>
+    <ErrorLayout>
       <Typography
         variant="h1"
         className="text-center"
@@ -12,7 +13,13 @@ const index = () => {
         <span className="mx-20">|</span>
         Internal Server Error
       </Typography>
-    </ErrorWrapper>
+      <Link
+        title="Go to dashboard"
+        href="/"
+      >
+        Go to dashboard
+      </Link>
+    </ErrorLayout>
   );
 };
 
