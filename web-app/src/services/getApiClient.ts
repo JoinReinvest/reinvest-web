@@ -1,7 +1,7 @@
 import { env } from 'env';
 import { GraphQLClient } from 'graphql-request';
 
-export const getApiClient = (token: string) => {
+export const getApiClient = (token: string | undefined) => {
   if (!token) {
     throw new Error('Empty token');
   }
