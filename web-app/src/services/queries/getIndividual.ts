@@ -3,17 +3,7 @@ import { gql } from 'graphql-request';
 import { Individual } from 'types/graphql';
 
 import { useApiClient } from '../useApiClient';
-
-const AddressFragment = gql`
-  fragment AddressFragment on Address {
-    addressLine1
-    addressLine2
-    city
-    zip
-    country
-    state
-  }
-`;
+import { AddressFragment } from './fragments/address';
 
 export const getIndividualQuery = gql`
   ${AddressFragment}

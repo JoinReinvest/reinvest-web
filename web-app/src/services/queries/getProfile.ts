@@ -3,8 +3,10 @@ import { gql } from 'graphql-request';
 import { Profile } from 'types/graphql';
 
 import { useApiClient } from '../useApiClient';
+import { AddressFragment } from './fragments/address';
 
 const getProfileQuery = gql`
+  ${AddressFragment}
   query getProfile {
     getProfile {
       externalId
@@ -23,12 +25,7 @@ const getProfileQuery = gql`
         dateOfBirth
         domicile
         address {
-          addressLine1
-          addressLine2
-          city
-          zip
-          country
-          state
+          ...AddressFragment
         }
       }
       completionStatus {
