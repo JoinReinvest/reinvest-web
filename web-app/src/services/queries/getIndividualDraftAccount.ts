@@ -3,25 +3,25 @@ import { gql } from 'graphql-request';
 import { IndividualDraftAccount } from 'types/graphql';
 
 import { useApiClient } from '../apiClient';
+import { EmployerFragment } from './fragments/employer';
+import { FromToFragment } from './fragments/fromTo';
 
 const getIndividualDraftAccountQuery = gql`
+  ${FromToFragment}
+  ${EmployerFragment}
   query getIndividualDraftAccount($accountId: ID) {
     getIndividualDraftAccount(accountId: $accountId) {
       id
       experience
       employmentStatus
       employer {
-        nameOfEmployer
-        occupation
-        industry
+        ...EmployerFragment
       }
       netWorth {
-        from
-        to
+        ...FromToFragment
       }
       netIncome {
-        from
-        to
+        ...FromToFragment
       }
     }
   }

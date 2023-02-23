@@ -3,25 +3,24 @@ import { gql } from 'graphql-request';
 import { Profile } from 'types/graphql';
 
 import { useApiClient } from '../apiClient';
+import { AccountsFragment } from './fragments/accounts';
+import { CompletionStatusFragment } from './fragments/completionStatus';
+import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 const getProfileQuery = gql`
+  ${ProfileDetailsFragment}
+  ${CompletionStatusFragment}
+  ${AccountsFragment}
   query getProfile {
     getProfile {
       externalId
       label
       avatarUrl
       accounts {
-        id
-        type
-        avatarUrl
-        positionTotal
+        ...AccountsFragment
       }
       details {
-        firstName
-        middleName
-        lastName
-        dateOfBirth
-        domicile
+        ...ProfileDetailsFragment
         address {
           addressLine1
           addressLine2
@@ -32,8 +31,7 @@ const getProfileQuery = gql`
         }
       }
       completionStatus {
-        detailsCompleted
-        phoneCompleted
+        ...CompletionStatusFragment
       }
     }
   }

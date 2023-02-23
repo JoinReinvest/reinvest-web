@@ -3,15 +3,13 @@ import { gql } from 'graphql-request';
 import { Individual } from 'types/graphql';
 
 import { useApiClient } from '../apiClient';
+import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 const getIndividualQuery = gql`
+  ${ProfileDetailsFragment}
   query getIndividual {
     getIndividual {
-      firstName
-      middleName
-      lastName
-      dateOfBirth
-      domicile
+      ...ProfileDetailsFragment
       address {
         addressLine1
         addressLine2
@@ -34,5 +32,6 @@ export const useGetIndividual = (): UseQueryResult<Individual> => {
 
       return getIndividual;
     },
+    enabled: false,
   });
 };
