@@ -32,7 +32,7 @@ export default NextAuth({
 
         return {
           token: authToken,
-          data: getIndividual,
+          user: getIndividual,
         };
       },
     }),
@@ -55,7 +55,7 @@ export default NextAuth({
       return {
         ...session,
         token: token.token,
-        user: token.data as object,
+        user: token.user as object,
       };
     },
   },
