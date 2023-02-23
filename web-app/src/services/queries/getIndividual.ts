@@ -32,6 +32,5 @@ export const useGetIndividual = (): UseQueryResult<Individual> => {
 
       return getIndividual;
     },
-    enabled: false,
   });
 };
