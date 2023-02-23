@@ -36,7 +36,7 @@ const Login: NextPage = () => {
   });
 
   const router = useRouter();
-  const callbackUrl = (router.query?.callbackUrl as string) ?? '/dashboard';
+  const callbackUrl = (router.query?.callbackUrl as string) ?? '/';
 
   const onSubmit: SubmitHandler<Fields> = async fields => {
     const result = await signIn('credentials', {
