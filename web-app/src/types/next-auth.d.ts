@@ -1,5 +1,3 @@
-import { DefaultSession } from 'next-auth';
-
 import { Individual } from './graphql';
 
 interface User extends Individual {
@@ -11,7 +9,7 @@ interface User extends Individual {
 declare module 'next-auth' {
   interface Session {
     token: string;
-    user: DefaultSession['user'];
+    user: User;
   }
 }
 
