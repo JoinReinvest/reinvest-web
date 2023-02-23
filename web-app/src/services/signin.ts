@@ -1,4 +1,4 @@
-import { AuthenticationDetails, CognitoUser, CognitoUserPool, CognitoUserSession } from 'amazon-cognito-identity-js';
+import { AuthenticationDetails, CognitoUser, CognitoUserAttribute, CognitoUserPool, CognitoUserSession } from 'amazon-cognito-identity-js';
 
 export interface UserAuthenticationInterface {
   email: string;
@@ -31,4 +31,24 @@ export const signin = async ({ email, password }: UserAuthenticationInterface, u
     idToken: authenticatedUser.getIdToken(),
     refreshToken: authenticatedUser.getRefreshToken(),
   };
+};
+
+export const signup = async ({ email, password }: UserAuthenticationInterface, userPool: CognitoUserPool) => {
+  const userAttributes = [
+    {
+      Name: 'custom:incentive_token',
+      Value: '123456',
+    } as CognitoUserAttribute,
+  ];
+
+  return userPool.signUp(email, password, userAttributes, [], (err, result) => {
+    if (err) {
+      alert(err.message || JSON.stringify(err));
+
+      return;
+    }
+
+    const cognitoUser = result.user;
+    console.log('user name is ' + cognitoUser.getUsername());
+  });
 };

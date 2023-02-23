@@ -19,14 +19,14 @@ export const StepReferralCode: StepParams<FormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }) => {
     const schema: Schema<Fields> = zod.object({
-      referralCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid referral code' }),
+      referralCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid referral code' }),
     });
 
     const { handleSubmit, control } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-
+      console.log('test');
       moveToNextStep();
     };
 
@@ -49,7 +49,10 @@ export const StepReferralCode: StepParams<FormFields> = {
               subtitle="You and your referrer will receive $20 in dividends following your first investment!"
             />
 
-            <ReferralCodeInput control={control} />
+            <ReferralCodeInput
+              control={control}
+              name="referralCode"
+            />
 
             <div className="absolute bottom-0 w-full md:relative md:bottom-auto">
               <Button

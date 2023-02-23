@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
@@ -6,11 +7,13 @@ import { PasswordInput } from 'components/FormElements/PasswordInput';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
+import { env } from 'env';
 import { formValidationRules } from 'formValidationRules';
 import { MainLayout } from 'layouts/MainLayout';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepParams } from 'services/form-flow';
+import { signup } from 'services/signin';
 import zod, { Schema } from 'zod';
 
 import { FormFields } from '../form-fields';
@@ -35,8 +38,13 @@ export const StepPassword: StepParams<FormFields> = {
       passwordConfirmation: watch('passwordConfirmation'),
     };
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
+      const poolData = {
+        UserPoolId: env.aws.cognito.userPoolId,
+        ClientId: env.aws.cognito.clientId,
+      };
+      await signup({ email: storeFields.email, password: fields.password }, new CognitoUserPool(poolData));
       moveToNextStep();
     };
 
@@ -71,7 +79,7 @@ export const StepPassword: StepParams<FormFields> = {
             <Button
               type="submit"
               label="Sign Up"
-              className="absolute bottom-0 w-full md:relative md:bottom-auto md:hidden"
+              className="absolute bottom-0 w-full md:relative md:bottom-auto"
             />
           </Form>
         </BlackModal>
