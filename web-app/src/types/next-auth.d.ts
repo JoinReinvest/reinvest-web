@@ -1,9 +1,9 @@
 import { Individual } from './graphql';
 
 interface User extends Individual {
-  email?: string | null | undefined;
-  image?: string | null | undefined;
-  name?: string | null | undefined;
+  email?: string;
+  image?: string;
+  name?: string;
 }
 
 declare module 'next-auth' {
