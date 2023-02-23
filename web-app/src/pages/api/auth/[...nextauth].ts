@@ -2,7 +2,7 @@ import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { getApiClient } from 'services/getApiClient';
-import { getIndividualQuery } from 'services/queries/getIndividual';
+import { getProfileQuery } from 'services/queries/getProfile';
 
 import { env } from '../../../env';
 import { signin } from '../../../services/signin';
@@ -28,11 +28,11 @@ export default NextAuth({
 
         const client = getApiClient(authToken);
 
-        const { getIndividual } = await client.request(getIndividualQuery);
+        const { getProfile } = await client.request(getProfileQuery);
 
         return {
           token: authToken,
-          user: getIndividual,
+          user: getProfile.details,
         };
       },
     }),
@@ -54,8 +54,7 @@ export default NextAuth({
     session({ token, session }) {
       return {
         ...session,
-        token: token.token,
-        user: token.user as object,
+        ...token,
       };
     },
   },

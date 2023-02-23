@@ -5,7 +5,7 @@ import { Individual } from 'types/graphql';
 import { useApiClient } from '../useApiClient';
 import { AddressFragment } from './fragments/address';
 
-export const getIndividualQuery = gql`
+const getIndividualQuery = gql`
   ${AddressFragment}
   query getIndividual {
     getIndividual {

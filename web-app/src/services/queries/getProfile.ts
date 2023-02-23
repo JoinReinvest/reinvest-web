@@ -5,7 +5,7 @@ import { Profile } from 'types/graphql';
 import { useApiClient } from '../useApiClient';
 import { AddressFragment } from './fragments/address';
 
-const getProfileQuery = gql`
+export const getProfileQuery = gql`
   ${AddressFragment}
   query getProfile {
     getProfile {
