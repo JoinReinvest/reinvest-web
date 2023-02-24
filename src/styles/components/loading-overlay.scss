@@ -1,0 +1,11 @@
+.loading-overlay {
+  @apply w-screen h-screen max-h-screen grid place-items-center bg-black-02/70 backdrop-blur-sm cursor-wait;
+
+  &[data-state='open'] {
+    animation: fade-in 500ms ease;
+  }
+
+  &[data-state='closed'] {
+    animation: fade-out 500ms ease;
+  }
+}
