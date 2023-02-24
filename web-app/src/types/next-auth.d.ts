@@ -1,6 +1,6 @@
-import { Individual } from './graphql';
+import { Profile } from './graphql'
 
-interface User extends Individual {
+interface User extends Profile['details'] {
   email?: string;
   image?: string;
   name?: string;
