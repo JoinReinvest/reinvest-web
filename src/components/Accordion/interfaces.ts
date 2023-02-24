@@ -1,8 +1,8 @@
 import { VariantProps } from 'class-variance-authority';
 import { ReactNode } from 'react';
 
+import { variant } from './variants';
 import { variant as iconVariants } from './variants/accordion-icon';
-import { variant } from './variants/index';
 
 export interface AccordionProps extends VariantsProps {
   children: ReactNode;
