@@ -29,6 +29,7 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
     }
 
     return () => <></>;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
   const meta = useCurrentStepMeta({ flowStore, currentStep });
@@ -37,6 +38,7 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
     const initialStep = isFormFlowResumable ? flowStore.getLastIncompleteStep(getFields()) : flowStore.getHead();
 
     setCurrentStep(initialStep);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const moveToNextValidStep = () => {

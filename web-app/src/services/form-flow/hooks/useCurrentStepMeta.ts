@@ -18,6 +18,7 @@ export const useCurrentStepMeta = <FormFields>({ flowStore, currentStep }: Param
     const isLastStep = currentStep?.index === flowTail?.index;
 
     return { isFirstStep, isLastStep };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
   return { isFirstStep, isLastStep };

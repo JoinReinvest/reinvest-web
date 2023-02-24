@@ -1,6 +1,6 @@
+import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { ErrorLayout } from 'layouts/ErrorLayout';
-import { Link } from 'react-router-dom';
 
 const index = () => {
   return (

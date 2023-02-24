@@ -8,7 +8,7 @@ import { AddressFragment } from './fragments/address';
 import { CompletionStatusFragment } from './fragments/completionStatus';
 import { ProfileDetailsFragment } from './fragments/profileDetails';
 
-const getProfileQuery = gql`
+export const getProfileQuery = gql`
   ${ProfileDetailsFragment}
   ${CompletionStatusFragment}
   ${AccountsFragment}
