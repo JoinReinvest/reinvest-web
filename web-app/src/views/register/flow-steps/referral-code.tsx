@@ -48,10 +48,7 @@ export const StepReferralCode: StepParams<FormFields> = {
               subtitle="You and your referrer will receive $20 in dividends following your first investment!"
             />
 
-            <ReferralCodeInput
-              control={control}
-              name="referralCode"
-            />
+            <ReferralCodeInput control={control} />
 
             <div className="absolute bottom-0 w-full md:relative md:bottom-auto">
               <Button
