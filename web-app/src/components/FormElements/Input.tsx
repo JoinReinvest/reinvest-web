@@ -17,6 +17,8 @@ type PrimitiveProps = Pick<PrimitiveTextInputProps, 'autoCapitalize' | 'type' | 
 
 type PrimitiveTextInputProps = ComponentPropsWithoutRef<typeof PrimitiveTextInput>;
 
+export type CustomInputProps<FormFields extends FieldValues> = Omit<Props<FormFields>, 'placeholder' | 'type'>;
+
 export function Input<FormFields extends FieldValues>({
   type = 'text',
   required = false,

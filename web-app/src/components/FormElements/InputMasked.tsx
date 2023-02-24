@@ -1,5 +1,5 @@
 import { InputMasked as PrimitiveInputMasked } from '@hookooekoo/ui-input-masked';
-import { ComponentPropsWithoutRef, useMemo } from 'react';
+import { ComponentPropsWithoutRef } from 'react';
 import { useController } from 'react-hook-form';
 import { FieldValues, UseControllerProps } from 'react-hook-form';
 
@@ -7,7 +7,9 @@ type PrimitiveProps = Pick<PrimitiveInputProps, 'required' | 'disabled' | 'place
 
 type PrimitiveInputProps = ComponentPropsWithoutRef<typeof PrimitiveInputMasked>;
 
-interface InputMaskedProps<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {}
+export interface InputMaskedProps<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {}
+
+export type CustomInputMaskedProps<FormFields extends FieldValues> = Omit<InputMaskedProps<FormFields>, 'placeholder' | 'maskOptions'>;
 
 export function InputMasked<FormFields extends FieldValues>({
   required = false,
@@ -17,13 +19,12 @@ export function InputMasked<FormFields extends FieldValues>({
   ...controllerProps
 }: InputMaskedProps<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
-  const value = useMemo(() => field.value, [field]);
 
   return (
     <PrimitiveInputMasked
       name={field.name}
-      value={value}
       onChange={field.onChange}
+      value={field.value}
       onBlur={field.onBlur}
       maskOptions={maskOptions}
       placeholder={placeholder}

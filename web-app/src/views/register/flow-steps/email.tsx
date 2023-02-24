@@ -1,58 +1,64 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { EmailInput } from 'components/FormElements/EmailInput';
+import { InputEmail } from 'components/FormElements/InputEmail';
 import { Typography } from 'components/Typography';
+import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
-import { LoginLayout } from 'layouts/LoginLayout';
 import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepParams } from 'services/form-flow';
+import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { URL } from '../../../constants/urls';
-import { FormFields } from '../form-fields';
+import { RegisterFormFields } from '../form-fields';
 
-type Fields = Pick<FormFields, 'email'>;
+type Fields = Pick<RegisterFormFields, 'email'>;
 
-export const StepEmail: StepParams<FormFields> = {
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }) => {
+export const StepEmail: StepParams<RegisterFormFields> = {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,
     });
 
-    const { handleSubmit, control } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
+    const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
+      // TO-DO: Validate that the e-mail is not being used
+      //    by another user - if so, display an error on the input
+      //    otherwise, call `moveToNextStep()`.
 
-      // Validate that the email is not used
+      updateStoreFields(fields);
       moveToNextStep();
     };
 
     return (
-      <LoginLayout>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
+      >
+        <Typography variant="h2">Sign up</Typography>
+        <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
+
+        <InputEmail
+          name="email"
+          control={control}
+          required
+        />
+
+        <Link
+          href={URL.login}
+          className="typo-paragraph-large"
         >
-          <Typography variant="h2">Sign up</Typography>
-          <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
+          Already have an account?
+        </Link>
 
-          <EmailInput control={control} />
-
-          <Link
-            href={URL.login}
-            className="typo-paragraph-large"
-          >
-            Already have an account?
-          </Link>
-
-          <Button
-            type="submit"
-            label="Sign Up"
-          />
-        </form>
-      </LoginLayout>
+        <Button
+          type="submit"
+          label="Sign Up"
+          variant="default"
+          disabled={shouldButtonBeDisabled}
+        />
+      </form>
     );
   },
 };

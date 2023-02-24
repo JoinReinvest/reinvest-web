@@ -1,7 +1,6 @@
-export interface FormFields {
+export interface RegisterFormFields {
   authenticationCode: string;
   email: string;
   password: string;
-  passwordConfirmation: string;
   referralCode?: string;
 }
