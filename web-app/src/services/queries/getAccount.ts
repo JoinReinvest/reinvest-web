@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { Account } from 'types/graphql';
 
-import { useApiClient } from '../apiClient';
+import { useApiClient } from '../useApiClient';
 
 const getAccountQuery = gql`
   query getAccount($accountId: String) {

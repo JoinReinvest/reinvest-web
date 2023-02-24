@@ -17,6 +17,7 @@ export const useProgressPercentage = <FormFields>({ flowStore, getFields, curren
     const { currentStepIndex, numberOfValidSteps } = flowStore.getTotalOfValidSteps(currentStep, getFields());
 
     return (currentStepIndex / numberOfValidSteps) * percentage_from;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
   return { progressPercentage };

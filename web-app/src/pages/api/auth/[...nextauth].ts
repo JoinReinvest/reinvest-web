@@ -1,7 +1,8 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-
-import { signin } from '../../../services/signin';
+import { getApiClient } from 'services/getApiClient';
+import { getProfileQuery } from 'services/queries/getProfile';
+import { signin } from 'services/signin';
 
 export default NextAuth({
   providers: [
@@ -12,10 +13,20 @@ export default NextAuth({
         email: { type: 'text' },
         password: { type: 'password' },
       },
+      // @ts-expect-error - refer to https://next-auth.js.org/v3/providers/credentials#example
       async authorize({ email, password }: { email: string; password: string }) {
         const authData = await signin({ email, password });
 
-        return authData.accessToken.getJwtToken();
+        const authToken = authData.accessToken.getJwtToken();
+
+        const client = getApiClient(authToken);
+
+        const { getProfile } = await client.request(getProfileQuery);
+
+        return {
+          token: authToken,
+          user: getProfile.details,
+        };
       },
     }),
   ],
@@ -30,13 +41,13 @@ export default NextAuth({
     jwt({ token, user }) {
       return {
         ...token,
-        user,
+        ...user,
       };
     },
     session({ token, session }) {
       return {
         ...session,
-        token: token.user as string,
+        ...token,
       };
     },
   },

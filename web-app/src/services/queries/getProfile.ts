@@ -2,38 +2,33 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { Profile } from 'types/graphql';
 
-import { useApiClient } from '../apiClient';
+import { useApiClient } from '../useApiClient';
+import { AccountsFragment } from './fragments/accounts';
+import { AddressFragment } from './fragments/address';
+import { CompletionStatusFragment } from './fragments/completionStatus';
+import { ProfileDetailsFragment } from './fragments/profileDetails';
 
-const getProfileQuery = gql`
+export const getProfileQuery = gql`
+  ${ProfileDetailsFragment}
+  ${CompletionStatusFragment}
+  ${AccountsFragment}
+  ${AddressFragment}
   query getProfile {
     getProfile {
       externalId
       label
       avatarUrl
       accounts {
-        id
-        type
-        avatarUrl
-        positionTotal
+        ...AccountsFragment
       }
       details {
-        firstName
-        middleName
-        lastName
-        dateOfBirth
-        domicile
+        ...ProfileDetailsFragment
         address {
-          addressLine1
-          addressLine2
-          city
-          zip
-          country
-          state
+          ...AddressFragment
         }
       }
       completionStatus {
-        detailsCompleted
-        phoneCompleted
+        ...CompletionStatusFragment
       }
     }
   }

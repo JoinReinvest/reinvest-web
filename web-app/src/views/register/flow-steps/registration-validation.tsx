@@ -10,9 +10,9 @@ import { confirmEmail } from 'services/confirmEmail';
 import { StepParams } from 'services/form-flow';
 import { areElementsTrue } from 'utilities/array-validations';
 
-import { FormFields } from '../form-fields';
+import { RegisterFormFields } from '../form-fields';
 
-export const StepRegistrationValidation: StepParams<FormFields> = {
+export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
@@ -24,6 +24,7 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
   Component: ({ storeFields }) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
+    const [isOpen, setIsOpen] = useState(true);
 
     const title = useMemo(() => {
       if (isLoading) {
@@ -36,7 +37,6 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
     const onButtonClick = () => {
       router.push('/');
     };
-    const [isOpen, setIsOpen] = useState(false);
 
     useEffect(() => {
       setIsOpen(true);

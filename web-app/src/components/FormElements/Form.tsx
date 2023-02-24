@@ -1,8 +1,7 @@
-import { FormEventHandler, ReactNode } from 'react';
+import { FormEventHandler, PropsWithChildren } from 'react';
 
-interface FormProps {
-  children: ReactNode;
-  onSubmit: FormEventHandler<HTMLFormElement> | undefined;
+interface FormProps extends PropsWithChildren {
+  onSubmit?: FormEventHandler<HTMLFormElement>;
 }
 
 export const Form = ({ onSubmit, children }: FormProps) => {
