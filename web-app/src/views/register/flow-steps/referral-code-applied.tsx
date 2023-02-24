@@ -1,12 +1,12 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { Button } from 'components/Button';
-import { Typography } from 'components/Typography';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { areElementsTrue } from 'utilities/array-validations';
 
-import { FormFields } from '../form-fields';
+import { Title } from '../../../components/Title';
+import { RegisterFormFields } from '../form-fields';
 
-export const StepReferralCodeApplied: StepParams<FormFields> = {
+export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
@@ -15,10 +15,10 @@ export const StepReferralCodeApplied: StepParams<FormFields> = {
     return areElementsTrue(requiredFields);
   },
 
-  Component: ({ moveToNextStep }: StepComponentProps<FormFields>) => (
+  Component: ({ moveToNextStep }: StepComponentProps<RegisterFormFields>) => (
     <div className="relative flex h-full flex-col items-center justify-center">
       <IconCheckCircle className="mx-auto mb-24" />
-      <Typography variant="h5">Referral code applied</Typography>
+      <Title title="Referral code applied" />
 
       <Button
         label="Continue"

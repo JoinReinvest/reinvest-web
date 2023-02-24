@@ -1,15 +1,15 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
-import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { StepParams } from 'services/form-flow';
 import { areElementsTrue } from 'utilities/array-validations';
 
-import { FormFields } from '../form-fields';
+import { Title } from '../../../components/Title';
+import { RegisterFormFields } from '../form-fields';
 
-export const StepRegistrationValidation: StepParams<FormFields> = {
+export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
@@ -53,7 +53,7 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
       <div className="relative flex h-full flex-col items-center justify-center">
         {isLoading ? <IconSpinner /> : <CircleSuccess />}
 
-        <Typography variant="h5">{title}</Typography>
+        <Title title={title} />
 
         <Button
           onClick={onButtonClick}

@@ -9,12 +9,12 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { FormFields } from '../form-fields';
+import { RegisterFormFields } from '../form-fields';
 
-type Fields = Pick<FormFields, 'email'>;
+type Fields = Pick<RegisterFormFields, 'email'>;
 
-export const StepEmail: StepParams<FormFields> = {
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FormFields>) => {
+export const StepEmail: StepParams<RegisterFormFields> = {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,
     });

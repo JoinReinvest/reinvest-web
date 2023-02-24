@@ -10,18 +10,18 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import { areElementsTrue } from 'utilities/array-validations';
 import zod, { Schema } from 'zod';
 
-import { FormFields } from '../form-fields';
+import { RegisterFormFields } from '../form-fields';
 
-type Fields = Pick<FormFields, 'authenticationCode'>;
+type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
 
-export const StepAuthenticationCode: StepParams<FormFields> = {
+export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.password];
 
     return areElementsTrue(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       authenticationCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid authentication code' }),
     });

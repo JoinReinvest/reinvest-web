@@ -7,6 +7,8 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { InputAuthenticationCode } from '../../components/FormElements/InputAuthenticationCode';
+
 const CheckPhonePage: NextPage = () => {
   const { control } = useForm<{ authenticationCode: string }>();
 
@@ -27,6 +29,7 @@ const CheckPhonePage: NextPage = () => {
         <InputAuthenticationCode
           name="authenticationCode"
           control={control}
+          required
         />
 
         <div className="my-20 flex justify-between">

@@ -13,9 +13,18 @@ export const RegistrationView = () => {
     moveToPreviousValidStep,
   } = useFormFlowContext();
 
+  const shouldDisplayFirstStep = isMounted() && isFirstStep;
+  const shouldDisplayRestOfSteps = isMounted() && !isFirstStep;
+
   return (
     <>
-      {isMounted() && !isFirstStep ? (
+      {shouldDisplayFirstStep && (
+        <LoginLayout>
+          <CurrentStepView />
+        </LoginLayout>
+      )}
+
+      {shouldDisplayRestOfSteps && (
         <MainLayout>
           <BlackModal
             isOpen={!isFirstStep}
@@ -24,10 +33,6 @@ export const RegistrationView = () => {
             <CurrentStepView />
           </BlackModal>
         </MainLayout>
-      ) : (
-        <LoginLayout>
-          <CurrentStepView />
-        </LoginLayout>
       )}
     </>
   );
