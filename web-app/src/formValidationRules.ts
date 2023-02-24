@@ -15,5 +15,5 @@ export const formValidationRules = {
   firstName: zod.string({ required_error: requiredError }),
   lastName: zod.string({ required_error: requiredError }),
   middleName: zod.string().optional(),
-  referralCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid referral code' }),
+  referralCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid referral code' }),
 };

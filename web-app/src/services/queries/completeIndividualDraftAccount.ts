@@ -4,11 +4,11 @@ import { IndividualAccountInput, IndividualDraftAccount } from 'types/graphql';
 
 import { useApiClient } from '../useApiClient';
 import { EmployerFragment } from './fragments/employer';
-import { FromToFragment } from './fragments/fromTo';
+import { NetRangeFragment } from './fragments/netRange';
 
 const completeIndividualDraftAccountMutation = gql`
   ${EmployerFragment}
-  ${FromToFragment}
+  ${NetRangeFragment}
   mutation completeIndividualDraftAccount($accountId: ID, $input: IndividualAccountInput) {
     completeIndividualDraftAccount(accountId: $accountId, input: $input) {
       id
@@ -18,10 +18,10 @@ const completeIndividualDraftAccountMutation = gql`
         ...EmployerFragment
       }
       netWorth {
-        ...FromToFragment
+        ...NetRangeFragment
       }
       netIncome {
-        ...FromToFragment
+        ...NetRangeFragment
       }
     }
   }

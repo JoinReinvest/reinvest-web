@@ -4,10 +4,10 @@ import { IndividualDraftAccount } from 'types/graphql';
 
 import { useApiClient } from '../useApiClient';
 import { EmployerFragment } from './fragments/employer';
-import { FromToFragment } from './fragments/fromTo';
+import { NetRangeFragment } from './fragments/netRange';
 
 const getIndividualDraftAccountQuery = gql`
-  ${FromToFragment}
+  ${NetRangeFragment}
   ${EmployerFragment}
   query getIndividualDraftAccount($accountId: ID) {
     getIndividualDraftAccount(accountId: $accountId) {
@@ -18,10 +18,10 @@ const getIndividualDraftAccountQuery = gql`
         ...EmployerFragment
       }
       netWorth {
-        ...FromToFragment
+        ...NetRangeFragment
       }
       netIncome {
-        ...FromToFragment
+        ...NetRangeFragment
       }
     }
   }

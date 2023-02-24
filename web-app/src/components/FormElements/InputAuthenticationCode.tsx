@@ -6,7 +6,7 @@ export function InputAuthenticationCode<FormFields extends FieldValues>(props: C
     <InputMasked
       {...props}
       placeholder="Authentication Code"
-      maskOptions={{ mask: '0000-0000' }}
+      maskOptions={{ mask: '000-000' }}
     />
   );
 }
