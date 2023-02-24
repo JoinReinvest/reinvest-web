@@ -2,7 +2,7 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { IndividualDraftAccount } from 'types/graphql';
 
-import { useApiClient } from '../apiClient';
+import { useApiClient } from '../useApiClient';
 import { EmployerFragment } from './fragments/employer';
 import { FromToFragment } from './fragments/fromTo';
 

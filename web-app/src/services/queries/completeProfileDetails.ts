@@ -2,7 +2,7 @@ import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { Profile, ProfileDetailsInput } from 'types/graphql';
 
-import { useApiClient } from '../apiClient';
+import { useApiClient } from '../useApiClient';
 import { CompletionStatusFragment } from './fragments/completionStatus';
 import { ProfileDetailsFragment } from './fragments/profileDetails';
 
