@@ -7,8 +7,6 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-import { InputAuthenticationCode } from '../../components/FormElements/InputAuthenticationCode';
-
 const CheckPhonePage: NextPage = () => {
   const { control } = useForm<{ authenticationCode: string }>();
 

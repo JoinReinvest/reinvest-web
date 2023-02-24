@@ -16,8 +16,6 @@ export default NextAuth({
         password: { type: 'password' },
       },
       // @ts-expect-error - refer to https://next-auth.js.org/v3/providers/credentials#example
-      // This methods expect to return an user-like object or `null | false`
-      // if the authorization fails.
       async authorize({ email, password }: { email: string; password: string }) {
         const poolData = {
           UserPoolId: env.aws.cognito.userPoolId,
