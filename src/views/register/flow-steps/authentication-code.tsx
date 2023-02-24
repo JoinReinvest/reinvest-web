@@ -6,8 +6,7 @@ import { Link } from 'components/Link';
 import { Title } from 'components/Title';
 import { useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { areElementsTrue } from 'utilities/array-validations';
+import { areArrayElementsTrue, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
@@ -18,7 +17,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.password];
 
-    return areElementsTrue(requiredFields);
+    return areArrayElementsTrue(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
