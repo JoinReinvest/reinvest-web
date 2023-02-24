@@ -13,7 +13,6 @@ const RegisterPage: NextPage = () => {
         password: '',
         passwordConfirmation: '',
         authenticationCode: '',
-        authenticationCodeConfirm: false,
       }}
       onFormFieldsUpdate={async fields => {
         console.info(fields);

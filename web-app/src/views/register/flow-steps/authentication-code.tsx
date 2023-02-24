@@ -35,12 +35,6 @@ export const StepAuthenticationCode: StepParams<FormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
 
-      await confirmEmail(storeFields.email, fields.authenticationCode, result => {
-        if (result === 'SUCCESS') {
-          updateStoreFields({ authenticationCodeConfirm: true });
-        }
-      });
-
       moveToNextStep();
     };
 

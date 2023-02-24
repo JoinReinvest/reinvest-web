@@ -1,10 +1,12 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
+import { CircleSuccess } from 'components/CircleSuccess';
 import { Typography } from 'components/Typography';
 import { MainLayout } from 'layouts/MainLayout';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
+import { confirmEmail } from 'services/confirmEmail';
 import { StepParams } from 'services/form-flow';
 import { areElementsTrue } from 'utilities/array-validations';
 
@@ -28,7 +30,7 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
         return 'Creating your account';
       }
 
-      return 'Your password has successfully been reset. ';
+      return 'Your login credentials were successfully created';
     }, [isLoading]);
 
     const onButtonClick = () => {
@@ -38,21 +40,25 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
 
     useEffect(() => {
       setIsOpen(true);
+      confirmEmail(storeFields.email, storeFields.authenticationCode, result => {
+        if (result === 'SUCCESS') {
+          setIsLoading(false);
+        }
+      });
     }, []);
-
-    useEffect(() => {
-      if (storeFields.authenticationCodeConfirm) {
-        setIsLoading(false);
-      }
-    }, [storeFields]);
 
     return (
       <MainLayout>
         <BlackModal isOpen={isOpen}>
           <div className="relative flex h-full flex-col items-center justify-center">
-            <IconSpinner />
+            {isLoading ? <IconSpinner /> : <CircleSuccess />}
 
-            <Typography variant="h5">{title}</Typography>
+            <Typography
+              variant="h5"
+              className="text-center"
+            >
+              {title}
+            </Typography>
 
             <Button
               onClick={onButtonClick}
