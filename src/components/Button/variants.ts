@@ -15,6 +15,9 @@ export const variants = cva('text-15 font-medium w-full', {
       true: ['cursor-not-allowed'],
       false: ['text-green-deep'],
     },
+    loading: {
+      true: ['flex justify-center items-center gap-x-8'],
+    },
     showIcon: {
       left: ['flex flex-row-reverse justify-center items-center gap-x-8', 'py-8 px-16'],
       right: ['flex justify-center items-center gap-x-8', 'py-8 px-16'],
