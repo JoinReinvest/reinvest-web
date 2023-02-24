@@ -2,23 +2,18 @@ import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { Individual } from 'types/graphql';
 
-import { useApiClient } from '../apiClient';
+import { useApiClient } from '../useApiClient';
+import { AddressFragment } from './fragments/address';
+import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 const getIndividualQuery = gql`
+  ${ProfileDetailsFragment}
+  ${AddressFragment}
   query getIndividual {
     getIndividual {
-      firstName
-      middleName
-      lastName
-      dateOfBirth
-      domicile
+      ...ProfileDetailsFragment
       address {
-        addressLine1
-        addressLine2
-        city
-        zip
-        country
-        state
+        ...AddressFragment
       }
     }
   }
