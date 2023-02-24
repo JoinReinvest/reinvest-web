@@ -1,7 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { InputEmail } from 'components/FormElements/InputEmail';
-import { LoadingOverlay } from 'components/LoadingOverlay';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
@@ -42,35 +41,34 @@ export const StepEmail: StepParams<RegisterFormFields> = {
     };
 
     return (
-      <LoadingOverlay display={isValidatingEmail}>
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
+      >
+        <Typography variant="h2">Sign up</Typography>
+        <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
+
+        <InputEmail
+          name="email"
+          control={control}
+          required
+        />
+
+        <Link
+          href={URL.login}
+          className="typo-paragraph-large"
         >
-          <Typography variant="h2">Sign up</Typography>
-          <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
+          Already have an account?
+        </Link>
 
-          <InputEmail
-            name="email"
-            control={control}
-            required
-          />
-
-          <Link
-            href={URL.login}
-            className="typo-paragraph-large"
-          >
-            Already have an account?
-          </Link>
-
-          <Button
-            type="submit"
-            label="Sign Up"
-            variant="default"
-            disabled={shouldButtonBeDisabled}
-          />
-        </form>
-      </LoadingOverlay>
+        <Button
+          type="submit"
+          label="Sign Up"
+          variant="default"
+          disabled={shouldButtonBeDisabled}
+          loading={isValidatingEmail}
+        />
+      </form>
     );
   },
 };

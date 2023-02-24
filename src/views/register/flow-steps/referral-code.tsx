@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputReferralCode } from 'components/FormElements/InputReferralCode';
-import { LoadingOverlay } from 'components/LoadingOverlay';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
@@ -52,35 +51,34 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
     };
 
     return (
-      <LoadingOverlay display={isValidatingReferralCode}>
-        <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title
-            title="Do you have a referral code? (optional)"
-            subtitle="You and your referrer will receive $20 in dividends following your first investment!"
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <Title
+          title="Do you have a referral code? (optional)"
+          subtitle="You and your referrer will receive $20 in dividends following your first investment!"
+        />
+
+        <InputReferralCode
+          name="referralCode"
+          control={control}
+        />
+
+        <div className="absolute bottom-0 w-full md:relative md:bottom-auto">
+          <Button
+            type="button"
+            variant="outlined"
+            label="Skip"
+            onClick={onSkip}
+            className="mb-16 text-white"
           />
 
-          <InputReferralCode
-            name="referralCode"
-            control={control}
+          <Button
+            type="submit"
+            label="Enter Code"
+            disabled={shouldButtonBeDisabled}
+            loading={isValidatingReferralCode}
           />
-
-          <div className="absolute bottom-0 w-full md:relative md:bottom-auto">
-            <Button
-              type="button"
-              variant="outlined"
-              label="Skip"
-              onClick={onSkip}
-              className="mb-16 text-white"
-            />
-
-            <Button
-              type="submit"
-              label="Enter Code"
-              disabled={shouldButtonBeDisabled}
-            />
-          </div>
-        </Form>
-      </LoadingOverlay>
+        </div>
+      </Form>
     );
   },
 };
