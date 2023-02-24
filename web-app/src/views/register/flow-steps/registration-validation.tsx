@@ -41,8 +41,6 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
     }, []);
 
     useEffect(() => {
-      console.log(storeFields);
-
       if (storeFields.authenticationCodeConfirm) {
         setIsLoading(false);
       }

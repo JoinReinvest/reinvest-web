@@ -7,13 +7,12 @@ import { PasswordInput } from 'components/FormElements/PasswordInput';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
-import { env } from 'env';
 import { formValidationRules } from 'formValidationRules';
 import { MainLayout } from 'layouts/MainLayout';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepParams } from 'services/form-flow';
-import { signup } from 'services/signin';
+import { signup } from 'services/signup';
 import zod, { Schema } from 'zod';
 
 import { FormFields } from '../form-fields';
@@ -40,12 +39,12 @@ export const StepPassword: StepParams<FormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
-      const poolData = {
-        UserPoolId: env.aws.cognito.userPoolId,
-        ClientId: env.aws.cognito.clientId,
-      };
-      await signup({ email: storeFields.email, password: fields.password }, new CognitoUserPool(poolData));
-      moveToNextStep();
+
+      await signup({ email: storeFields.email, password: fields.password }, result => {
+        if (result) {
+          moveToNextStep();
+        }
+      });
     };
 
     const [isOpen, setIsOpen] = useState(false);

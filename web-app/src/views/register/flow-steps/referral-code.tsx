@@ -26,7 +26,6 @@ export const StepReferralCode: StepParams<FormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      console.log('test');
       moveToNextStep();
     };
 

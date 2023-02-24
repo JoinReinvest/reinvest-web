@@ -7,8 +7,8 @@ import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { confirmEmail } from 'services/confirmEmail';
 import { StepParams } from 'services/form-flow';
-import { confirmRegistered } from 'services/signin';
 import { areElementsTrue } from 'utilities/array-validations';
 import zod, { Schema } from 'zod';
 
@@ -35,7 +35,7 @@ export const StepAuthenticationCode: StepParams<FormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
 
-      await confirmRegistered(storeFields.email, fields.authenticationCode, result => {
+      await confirmEmail(storeFields.email, fields.authenticationCode, result => {
         if (result === 'SUCCESS') {
           updateStoreFields({ authenticationCodeConfirm: true });
         }
