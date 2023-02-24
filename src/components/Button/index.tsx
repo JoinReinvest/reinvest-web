@@ -5,7 +5,7 @@ import { ButtonIcon } from './ButtonIcon';
 import { ButtonProps } from './interfaces';
 import { variants } from './variants';
 
-export const Button = ({ label, size, variant, showIcon, disabled, type = 'button', onClick, className = '' }: ButtonProps) => {
+export const Button = ({ label, size, variant, showIcon, disabled = false, type = 'button', onClick, className = '' }: ButtonProps) => {
   const styles = variants({ variant, size, showIcon, disabled, className });
 
   return (

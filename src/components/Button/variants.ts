@@ -3,7 +3,7 @@ import { cva } from 'class-variance-authority';
 export const variants = cva('text-15 font-medium w-full', {
   variants: {
     variant: {
-      default: ['bg-green-frost-01'],
+      default: '',
       outlined: ['border-2 border-green-frost-01'],
       dashed: ['border border-dashed border-green-frost-01'],
     },
@@ -30,6 +30,11 @@ export const variants = cva('text-15 font-medium w-full', {
       disabled: true,
       variant: 'default',
       className: 'bg-gray-04 text-gray-02',
+    },
+    {
+      variant: 'default',
+      disabled: false,
+      className: 'bg-green-frost-01',
     },
     {
       disabled: true,
