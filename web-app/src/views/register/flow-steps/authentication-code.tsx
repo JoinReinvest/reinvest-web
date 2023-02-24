@@ -8,6 +8,7 @@ import { MainLayout } from 'layouts/MainLayout';
 import { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepParams } from 'services/form-flow';
+import { confirmRegistered } from 'services/signin';
 import { areElementsTrue } from 'utilities/array-validations';
 import zod, { Schema } from 'zod';
 
@@ -25,14 +26,21 @@ export const StepAuthenticationCode: StepParams<FormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }) => {
     const schema: Schema<Fields> = zod.object({
-      authenticationCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid authentication code' }),
+      authenticationCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
     });
     const { handleSubmit, control } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const [isOpen, setIsOpen] = useState(false);
     const subtitleMessage = useMemo(() => `Enter the email authentication code sent to your email ${storeFields.email}.`, [storeFields.email]);
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
+
+      await confirmRegistered(storeFields.email, fields.authenticationCode, result => {
+        if (result === 'SUCCESS') {
+          updateStoreFields({ authenticationCodeConfirm: true });
+        }
+      });
+
       moveToNextStep();
     };
 

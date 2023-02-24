@@ -1,8 +1,6 @@
-import { CognitoUserPool } from 'amazon-cognito-identity-js';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 
-import { env } from '../../../env';
 import { signin } from '../../../services/signin';
 
 export default NextAuth({
@@ -15,12 +13,7 @@ export default NextAuth({
         password: { type: 'password' },
       },
       async authorize({ email, password }: { email: string; password: string }) {
-        const poolData = {
-          UserPoolId: env.aws.cognito.userPoolId,
-          ClientId: env.aws.cognito.clientId,
-        };
-
-        const authData = await signin({ email, password }, new CognitoUserPool(poolData));
+        const authData = await signin({ email, password });
 
         return authData.accessToken.getJwtToken();
       },

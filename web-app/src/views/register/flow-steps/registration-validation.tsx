@@ -19,10 +19,9 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
     return areElementsTrue(requiredFields);
   },
 
-  Component: () => {
+  Component: ({ storeFields }) => {
     const router = useRouter();
-
-    const isLoading = true;
+    const [isLoading, setIsLoading] = useState(true);
 
     const title = useMemo(() => {
       if (isLoading) {
@@ -40,6 +39,14 @@ export const StepRegistrationValidation: StepParams<FormFields> = {
     useEffect(() => {
       setIsOpen(true);
     }, []);
+
+    useEffect(() => {
+      console.log(storeFields);
+
+      if (storeFields.authenticationCodeConfirm) {
+        setIsLoading(false);
+      }
+    }, [storeFields]);
 
     return (
       <MainLayout>
