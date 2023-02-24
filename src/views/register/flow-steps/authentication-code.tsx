@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { areElementsTrue } from 'utilities/array-validations';
 import zod, { Schema } from 'zod';
+import { formValidationRules } from '../../../formValidationRules'
 
 import { RegisterFormFields } from '../form-fields';
 
@@ -23,7 +24,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
-      authenticationCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
+      authenticationCode: formValidationRules.authenticationCode,
     });
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
@@ -32,12 +33,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
     const subtitleMessage = useMemo(() => `Enter the email authentication code sent to your email ${storeFields.email}.`, [storeFields.email]);
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      // TO-DO: Validate that the authentication code the one we
-      //    expect - if so call `updateStoreFields(fields)`, and then
-      //    invoke `moveToNextStep()`, otherwise add an error to the input
-      //    saying that they wrote the wrong authentication code.
       updateStoreFields(fields);
-
       moveToNextStep();
     };
 
