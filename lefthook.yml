@@ -1,17 +1,13 @@
 post-merge:
   commands:
     update:
-      root: "web-app/"
       run: yarn
 pre-commit:
   parallel: true
   commands:
     linter:
-      root: "web-app/"
       run: yarn lint
     check_types:
-      root: "web-app/"
       run: yarn check-types
     stylelint:
-      root: "web-app/"
       run: yarn style-lint
