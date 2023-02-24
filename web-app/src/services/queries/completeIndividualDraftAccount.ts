@@ -2,26 +2,26 @@ import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { IndividualAccountInput, IndividualDraftAccount } from 'types/graphql';
 
-import { useApiClient } from '../apiClient';
+import { useApiClient } from '../useApiClient';
+import { EmployerFragment } from './fragments/employer';
+import { FromToFragment } from './fragments/fromTo';
 
 const completeIndividualDraftAccountMutation = gql`
+  ${EmployerFragment}
+  ${FromToFragment}
   mutation completeIndividualDraftAccount($accountId: ID, $input: IndividualAccountInput) {
     completeIndividualDraftAccount(accountId: $accountId, input: $input) {
       id
       experience
       employmentStatus
       employer {
-        nameOfEmployer
-        occupation
-        industry
+        ...EmployerFragment
       }
       netWorth {
-        from
-        to
+        ...FromToFragment
       }
       netIncome {
-        from
-        to
+        ...FromToFragment
       }
     }
   }
