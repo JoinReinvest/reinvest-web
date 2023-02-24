@@ -3,8 +3,12 @@ import { gql } from 'graphql-request';
 import { Profile, ProfileDetailsInput } from 'types/graphql';
 
 import { useApiClient } from '../useApiClient';
+import { CompletionStatusFragment } from './fragments/completionStatus';
+import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 const completeProfileDetailsMutation = gql`
+  ${ProfileDetailsFragment}
+  ${CompletionStatusFragment}
   mutation completeProfileDetails($input: ProfileDetailsInput) {
     completeProfileDetails(input: $input) {
       externalId
@@ -14,15 +18,10 @@ const completeProfileDetailsMutation = gql`
         id
       }
       details {
-        firstName
-        middleName
-        lastName
-        dateOfBirth
-        domicile
+        ...ProfileDetailsFragment
       }
       completionStatus {
-        detailsCompleted
-        phoneCompleted
+        ...CompletionStatusFragment
       }
     }
   }

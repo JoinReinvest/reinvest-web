@@ -4,16 +4,14 @@ import { Individual } from 'types/graphql';
 
 import { useApiClient } from '../useApiClient';
 import { AddressFragment } from './fragments/address';
+import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 const getIndividualQuery = gql`
+  ${ProfileDetailsFragment}
   ${AddressFragment}
   query getIndividual {
     getIndividual {
-      firstName
-      middleName
-      lastName
-      dateOfBirth
-      domicile
+      ...ProfileDetailsFragment
       address {
         ...AddressFragment
       }
