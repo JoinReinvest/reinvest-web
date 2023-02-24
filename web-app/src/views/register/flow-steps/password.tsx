@@ -10,16 +10,16 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { FormFields } from '../form-fields';
+import { RegisterFormFields } from '../form-fields';
 
-interface Fields extends Pick<FormFields, 'password'> {
+interface Fields extends Pick<RegisterFormFields, 'password'> {
   passwordConfirmation: string;
 }
 
-export const StepPassword: StepParams<FormFields> = {
+export const StepPassword: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => !!fields.email,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,

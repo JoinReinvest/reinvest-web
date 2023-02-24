@@ -7,16 +7,17 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { FormFields } from '../form-fields';
+import { formValidationRules } from '../../../formValidationRules';
+import { RegisterFormFields } from '../form-fields';
 
-type Fields = Pick<FormFields, 'referralCode'>;
+type Fields = Pick<RegisterFormFields, 'referralCode'>;
 
-export const StepReferralCode: StepParams<FormFields> = {
+export const StepReferralCode: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => !!fields.email,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
-      referralCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid referral code' }),
+      referralCode: formValidationRules.referralCode,
     });
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });

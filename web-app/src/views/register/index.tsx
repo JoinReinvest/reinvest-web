@@ -13,7 +13,7 @@ export const RegistrationView = () => {
     moveToPreviousValidStep,
   } = useFormFlowContext();
 
-  const shouldDisplayFirstStep = isMounted() && !!isFirstStep;
+  const shouldDisplayFirstStep = isMounted() && isFirstStep;
   const shouldDisplayRestOfSteps = isMounted() && !isFirstStep;
 
   return (
