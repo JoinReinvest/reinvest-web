@@ -4,11 +4,11 @@ import { InputEmail } from 'components/FormElements/InputEmail';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
-import Link from 'next/link';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { Link } from '../../../components/Link';
 import { RegisterFormFields } from '../form-fields';
 
 type Fields = Pick<RegisterFormFields, 'email'>;
@@ -48,6 +48,7 @@ export const StepEmail: StepParams<RegisterFormFields> = {
         <Link
           href={URL.login}
           className="typo-paragraph-large"
+          title="Log in"
         >
           Already have an account?
         </Link>
