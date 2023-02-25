@@ -5,6 +5,7 @@ import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
 import Link from 'next/link';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
@@ -15,6 +16,8 @@ type Fields = Pick<RegisterFormFields, 'email'>;
 
 export const StepEmail: StepParams<RegisterFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
+    const [isValidatingEmail, setIsValidatingEmail] = useState(false);
+
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,
     });
@@ -22,13 +25,19 @@ export const StepEmail: StepParams<RegisterFormFields> = {
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
       // TO-DO: Validate that the e-mail is not being used
       //    by another user - if so, display an error on the input
       //    otherwise, call `moveToNextStep()`.
-
-      updateStoreFields(fields);
-      moveToNextStep();
+      try {
+        setIsValidatingEmail(true);
+        updateStoreFields(fields);
+        await new Promise(resolve => setTimeout(resolve, 2000));
+        setIsValidatingEmail(false);
+        moveToNextStep();
+      } catch (error) {
+        setIsValidatingEmail(false);
+      }
     };
 
     return (
@@ -57,6 +66,7 @@ export const StepEmail: StepParams<RegisterFormFields> = {
           label="Sign Up"
           variant="default"
           disabled={shouldButtonBeDisabled}
+          loading={isValidatingEmail}
         />
       </form>
     );
