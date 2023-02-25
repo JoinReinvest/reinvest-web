@@ -3,8 +3,9 @@ import { VariantProps } from 'class-variance-authority';
 
 import { variants } from './variants';
 
-export interface ButtonProps extends HkekButtonProps, VariantProps<typeof variants> {
+export interface ButtonProps extends PrimitiveProps, VariantProps<typeof variants> {
   label: string;
+  loading?: boolean;
 }
 
-type HkekButtonProps = Omit<PrimitiveButtonProps, 'children' | 'disabled'>;
+type PrimitiveProps = Omit<PrimitiveButtonProps, 'children' | 'disabled'>;
