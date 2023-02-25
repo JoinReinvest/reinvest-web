@@ -1,12 +1,11 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
+import { Title } from 'components/Title';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { StepParams } from 'services/form-flow';
-import { areElementsTrue } from 'utilities/array-validations';
+import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
 
-import { Title } from '../../../components/Title';
 import { RegisterFormFields } from '../form-fields';
 
 export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
@@ -15,7 +14,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.password, fields.authenticationCode];
 
-    return areElementsTrue(requiredFields);
+    return allRequiredFieldsExists(requiredFields);
   },
 
   Component: () => {
