@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { areArrayElementsTrue, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { formValidationRules } from '../../../formValidationRules';
 import { ForgotPasswordFormFields } from '../form-fields';
 
 type Fields = Pick<ForgotPasswordFormFields, 'authenticationCode'>;
@@ -22,7 +23,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
     const schema: Schema<Fields> = zod.object({
-      authenticationCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid authentication code' }),
+      authenticationCode: formValidationRules.authenticationCode,
     });
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
