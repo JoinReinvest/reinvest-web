@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
-import { Link } from 'components/Link';
 import { Title } from 'components/Title';
 import { useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -10,6 +9,7 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'service
 import zod, { Schema } from 'zod';
 
 import { GetHelpLink } from '../../../components/Links/GetHelp';
+import { ResendCodeLink } from '../../../components/Links/ResendCodeLink';
 import { RegisterFormFields } from '../form-fields';
 
 type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
@@ -54,12 +54,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
         />
 
         <div className="flex justify-between">
-          <Link
-            href="/"
-            title="Resend Code"
-          >
-            Resend Code
-          </Link>
+          <ResendCodeLink href="/" />
           <GetHelpLink />
         </div>
 

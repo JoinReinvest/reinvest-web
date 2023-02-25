@@ -1,6 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
-import { Link } from 'components/Link';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
@@ -8,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { GetHelpLink } from '../../components/Links/GetHelp';
+import { ResendCodeLink } from '../../components/Links/ResendCodeLink';
 
 const CheckPhonePage: NextPage = () => {
   const { control } = useForm<{ authenticationCode: string }>();
@@ -33,12 +33,7 @@ const CheckPhonePage: NextPage = () => {
         />
 
         <div className="my-20 flex justify-between">
-          <Link
-            href="/"
-            title="resend code link"
-          >
-            Resend Code
-          </Link>
+          <ResendCodeLink href="/" />
           <GetHelpLink />
         </div>
       </BlackModal>
