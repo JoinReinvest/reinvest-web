@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { GetHelpLink } from '../../../components/Links/GetHelp';
 import { RegisterFormFields } from '../form-fields';
 
 type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
@@ -59,12 +60,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
           >
             Resend Code
           </Link>
-          <Link
-            href="/"
-            title="Get Help"
-          >
-            Get Help
-          </Link>
+          <GetHelpLink />
         </div>
 
         <Button

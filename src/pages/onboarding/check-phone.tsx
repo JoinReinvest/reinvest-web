@@ -7,6 +7,8 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
+import { GetHelpLink } from '../../components/Links/GetHelp';
+
 const CheckPhonePage: NextPage = () => {
   const { control } = useForm<{ authenticationCode: string }>();
 
@@ -37,12 +39,7 @@ const CheckPhonePage: NextPage = () => {
           >
             Resend Code
           </Link>
-          <Link
-            href="/"
-            title="get help link"
-          >
-            Get Help
-          </Link>
+          <GetHelpLink />
         </div>
       </BlackModal>
     </MainLayout>

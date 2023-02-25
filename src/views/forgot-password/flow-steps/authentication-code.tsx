@@ -9,6 +9,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { GetHelpLink } from '../../../components/Links/GetHelp';
 import { formValidationRules } from '../../../formValidationRules';
 import { ForgotPasswordFormFields } from '../form-fields';
 
@@ -60,12 +61,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
           >
             Resend Code
           </Link>
-          <Link
-            href="/"
-            title="Get Help"
-          >
-            Get Help
-          </Link>
+          <GetHelpLink />
         </div>
 
         <Button
