@@ -9,20 +9,21 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { RegisterFormFields } from '../form-fields';
+import { formValidationRules } from '../../../formValidationRules';
+import { ForgotPasswordFormFields } from '../form-fields';
 
-type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
+type Fields = Pick<ForgotPasswordFormFields, 'authenticationCode'>;
 
-export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
+export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.email, fields.password];
+    const requiredFields = [fields.email];
 
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
     const schema: Schema<Fields> = zod.object({
-      authenticationCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid authentication code' }),
+      authenticationCode: formValidationRules.authenticationCode,
     });
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
@@ -69,7 +70,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
 
         <Button
           type="submit"
-          label="Sign Up"
+          label="Sign In"
           disabled={shouldButtonBeDisabled}
         />
       </Form>

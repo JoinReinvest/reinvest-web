@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
+import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
-import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
@@ -85,6 +85,7 @@ const Login: NextPage = () => {
           <Link
             href={URL.forgot_password}
             className="typo-paragraph-large"
+            title="Forgot Password"
           >
             Forgot password?
           </Link>
