@@ -1,7 +1,7 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { Button } from 'components/Button';
 import { Title } from 'components/Title';
-import { areArrayElementsTrue, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
 
@@ -11,7 +11,7 @@ export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.referralCode];
 
-    return areArrayElementsTrue(requiredFields);
+    return allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ moveToNextStep }: StepComponentProps<RegisterFormFields>) => (

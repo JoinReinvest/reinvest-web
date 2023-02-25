@@ -3,7 +3,7 @@ import { Button } from 'components/Button';
 import { Title } from 'components/Title';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
-import { areArrayElementsTrue, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
 
 import { ForgotPasswordFormFields } from '../form-fields';
 
@@ -13,7 +13,7 @@ export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.authenticationCode, fields.password];
 
-    return areArrayElementsTrue(requiredFields);
+    return allRequiredFieldsExists(requiredFields);
   },
 
   Component: () => {

@@ -7,7 +7,7 @@ import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { areArrayElementsTrue, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { ForgotPasswordFormFields } from '../form-fields';
@@ -20,7 +20,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.authenticationCode];
 
-    return areArrayElementsTrue(requiredFields);
+    return allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {

@@ -4,7 +4,7 @@ import { CircleSuccess } from 'components/CircleSuccess';
 import { Title } from 'components/Title';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { areArrayElementsTrue, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
 
@@ -14,7 +14,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.password, fields.authenticationCode];
 
-    return areArrayElementsTrue(requiredFields);
+    return allRequiredFieldsExists(requiredFields);
   },
 
   Component: () => {
