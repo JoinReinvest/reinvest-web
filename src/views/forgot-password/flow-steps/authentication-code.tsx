@@ -10,18 +10,18 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'service
 import zod, { Schema } from 'zod';
 
 import { formValidationRules } from '../../../formValidationRules';
-import { RegisterFormFields } from '../form-fields';
+import { ForgotPasswordFormFields } from '../form-fields';
 
-type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
+type Fields = Pick<ForgotPasswordFormFields, 'authenticationCode'>;
 
-export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
+export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.email, fields.password];
+    const requiredFields = [fields.email];
 
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       authenticationCode: formValidationRules.authenticationCode,
     });
@@ -32,6 +32,10 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
     const subtitleMessage = useMemo(() => `Enter the email authentication code sent to your email ${storeFields.email}.`, [storeFields.email]);
 
     const onSubmit: SubmitHandler<Fields> = fields => {
+      // TO-DO: Validate that the authentication code the one we
+      //    expect - if so call `updateStoreFields(fields)`, and then
+      //    invoke `moveToNextStep()`, otherwise add an error to the input
+      //    saying that they wrote the wrong authentication code.
       updateStoreFields(fields);
       moveToNextStep();
     };
@@ -66,7 +70,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
 
         <Button
           type="submit"
-          label="Sign Up"
+          label="Sign In"
           disabled={shouldButtonBeDisabled}
         />
       </Form>

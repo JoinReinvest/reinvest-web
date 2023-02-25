@@ -7,20 +7,23 @@ import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { signup } from 'services/signup';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { RegisterFormFields } from '../form-fields';
+import { ForgotPasswordFormFields } from '../form-fields';
 
-interface Fields extends Pick<RegisterFormFields, 'password'> {
+interface Fields extends Pick<ForgotPasswordFormFields, 'password'> {
   passwordConfirmation: string;
 }
 
-export const StepPassword: StepParams<RegisterFormFields> = {
-  doesMeetConditionFields: fields => !!fields.email,
+export const StepPassword: StepParams<ForgotPasswordFormFields> = {
+  doesMeetConditionFields: fields => {
+    const requiredFields = [fields.email, fields.authenticationCode];
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
+    return allRequiredFieldsExists(requiredFields);
+  },
+
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,
@@ -35,21 +38,16 @@ export const StepPassword: StepParams<RegisterFormFields> = {
       passwordConfirmation: watch('passwordConfirmation'),
     };
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
+    const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-
-      await signup({ email: storeFields.email, password: fields.password }, result => {
-        if (result) {
-          moveToNextStep();
-        }
-      });
+      moveToNextStep();
     };
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title
-          title="Sign up to REINVEST"
-          subtitle="Create a unique password for your account to continue."
+          title="Create new password"
+          subtitle="Your new password must be different from previous used passwords."
         />
 
         <InputPassword
