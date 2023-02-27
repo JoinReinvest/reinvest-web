@@ -1,7 +1,7 @@
 import { gql } from 'graphql-request';
 
 export const CompletionStatusFragment = gql`
-  fragment CompletionStatusFragment on CompletionStatus {
+  fragment CompletionStatusFragment on ProfileCompletionStatus {
     detailsCompleted
     phoneCompleted
   }

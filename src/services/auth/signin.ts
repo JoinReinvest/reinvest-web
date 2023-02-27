@@ -1,8 +1,11 @@
-import { AuthenticationDetails, CognitoUser, CognitoUserPool, CognitoUserSession } from 'amazon-cognito-identity-js';
+import { AuthenticationDetails, CognitoUser, CognitoUserSession } from 'amazon-cognito-identity-js';
+
+import { getUserPoll } from '../getUserPool';
 
 export interface UserAuthenticationInterface {
   email: string;
   password: string;
+  referralCode?: string;
 }
 
 const authenticateUser = async (cognitoUser: CognitoUser, cognitoAuthenticationDetails: AuthenticationDetails): Promise<CognitoUserSession> => {
@@ -14,13 +17,15 @@ const authenticateUser = async (cognitoUser: CognitoUser, cognitoAuthenticationD
   });
 };
 
-export const signin = async ({ email, password }: UserAuthenticationInterface, userPool: CognitoUserPool) => {
+export const signin = async ({ email, password }: UserAuthenticationInterface) => {
   const authenticationData = {
     Username: email,
     Password: password,
   };
 
   const authenticationDetails = new AuthenticationDetails(authenticationData);
+
+  const userPool = getUserPoll();
 
   const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
 

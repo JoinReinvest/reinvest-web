@@ -10,6 +10,7 @@ import zod, { Schema } from 'zod';
 
 import { GetHelpLink } from '../../../components/Links/GetHelp';
 import { ResendCodeLink } from '../../../components/Links/ResendCodeLink';
+import { formValidationRules } from '../../../formValidationRules';
 import { RegisterFormFields } from '../form-fields';
 
 type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
@@ -23,7 +24,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
-      authenticationCode: zod.string().regex(/^\d{8}$/, { message: 'Invalid authentication code' }),
+      authenticationCode: formValidationRules.authenticationCode,
     });
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
@@ -32,10 +33,6 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
     const subtitleMessage = useMemo(() => `Enter the email authentication code sent to your email ${storeFields.email}.`, [storeFields.email]);
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      // TO-DO: Validate that the authentication code the one we
-      //    expect - if so call `updateStoreFields(fields)`, and then
-      //    invoke `moveToNextStep()`, otherwise add an error to the input
-      //    saying that they wrote the wrong authentication code.
       updateStoreFields(fields);
       moveToNextStep();
     };

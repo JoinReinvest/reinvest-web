@@ -9,10 +9,10 @@ import { CompletionStatusFragment } from './fragments/completionStatus';
 import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 export const getProfileQuery = gql`
-  ${ProfileDetailsFragment}
-  ${CompletionStatusFragment}
   ${AccountsFragment}
   ${AddressFragment}
+  ${CompletionStatusFragment}
+  ${ProfileDetailsFragment}
   query getProfile {
     getProfile {
       externalId
