@@ -6,7 +6,7 @@ import { Typography } from './Typography';
 
 type WhyRequiredBlackModalDialogProps = Omit<DialogProps, 'children'>;
 
-export const WhyRequiredBlackModalDialog = ({ isOpen, onOpenChange }: WhyRequiredBlackModalDialogProps) => {
+export const WhyRequiredBlackModal = ({ isOpen, onOpenChange }: WhyRequiredBlackModalDialogProps) => {
   return (
     <BlackModalDialog
       isOpen={isOpen}
