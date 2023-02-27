@@ -1,0 +1,26 @@
+@use "fonts";
+@use "components/typography";
+@use "components/checkbox";
+@use "components/form";
+@use "components/table";
+@use "components/stepper";
+@use "components/select";
+@use "components/switch";
+@use "components/black-modal";
+@use "components/selection-cards";
+@use "components/radio-group-options";
+@use "components/login-form";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html {
+  @apply text-base font-sans;
+}
+
+body {
+  -webkit-tap-highlight-color: transparent;
+
+  @apply m-0 p-0 overflow-x-hidden text-base;
+}

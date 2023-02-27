@@ -1,0 +1,39 @@
+@import url("@hookooekoo/ui-stepper/dist/index.css");
+
+.hkek-stepper {
+  &-dot {
+    @apply py-3 rounded-full transition-height-width duration-500 ease-in;
+
+    &[data-active="false"] {
+      @apply w-9 h-9;
+    }
+
+    &[data-active="true"] {
+      @apply w-14 h-14;
+    }
+
+    &[data-filled="false"] {
+      @apply bg-gray-03;
+    }
+
+    &[data-filled="true"] {
+      @apply bg-black-01;
+    }
+  }
+
+  &-line {
+    @apply border-t-2 transition duration-500 ease-in-out;
+
+    &[data-filled="false"] {
+      @apply border-gray-03;
+    }
+
+    &[data-filled="true"] {
+      @apply border-black-01;
+    }
+  }
+
+  &-label {
+    @apply mt-16 typo-paragraph;
+  }
+}

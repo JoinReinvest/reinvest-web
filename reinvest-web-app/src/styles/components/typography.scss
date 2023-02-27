@@ -1,0 +1,55 @@
+@tailwind components;
+
+@layer components {
+  .typo-h1 {
+    @apply text-h1 font-stretch-expanded;
+  }
+
+  .typo-h2 {
+    @apply text-h2;
+  }
+
+  .typo-h3 {
+    @apply text-h3 font-stretch-expanded;
+  }
+
+  .typo-h4 {
+    @apply text-h4;
+  }
+
+  .typo-h5 {
+    @apply text-h5 font-stretch-expanded;
+  }
+
+  .typo-h6 {
+    @apply text-h6;
+  }
+
+  .typo-bonus-heading {
+    @apply text-bonus-heading font-stretch-expanded;
+  }
+
+  .typo-button {
+    @apply text-button;
+  }
+
+  .typo-link {
+    @apply text-link underline font-stretch-expanded;
+  }
+
+  .typo-paragraph {
+    @apply text-paragraph;
+  }
+
+  .typo-paragraph-large {
+    @apply text-paragraph-large;
+  }
+
+  .typo-paragraph-emphasized {
+    @apply text-paragraph-emphasized;
+  }
+
+  .typo-paragraph-small {
+    @apply text-paragraph-small;
+  }
+}

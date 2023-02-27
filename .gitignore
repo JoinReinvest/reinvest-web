@@ -1,17 +1,15 @@
-node_modules/
-.DS_Store
-Thumbs.db
-.next/
-dist/
-*.tsbuildinfo
+# dependencies
+node_modules
 
 .idea
 
-yarn-error.log
+# sst
+.sst
+.sst.config.*.mjs
+.build
 
+# misc
+.DS_Store
+
+# env
 .env
-.env.production
-.env.development
-.env.local
-
-./out

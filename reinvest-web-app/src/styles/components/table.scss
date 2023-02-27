@@ -1,0 +1,15 @@
+.hkek-table {
+  @apply table-auto typo-paragraph border border-gray-04  select-none;
+
+  tr {
+    @apply border-b border-b-gray-04;
+  }
+
+  thead th {
+    @apply pt-16 pb-10 px-30 font-normal;
+  }
+
+  tbody td {
+    @apply py-10 px-30;
+  }
+}
