@@ -14,7 +14,7 @@ export const confirmEmail = async (email: string, authCode: string, callback: (r
 
   return cognitoUser.confirmRegistration(authCode, true, (err, result) => {
     if (err) {
-      return callback(err.message || JSON.stringify(err));
+      return callback(err.message || err);
     }
 
     return callback(result);

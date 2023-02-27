@@ -1,11 +1,12 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
+import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
 import { Title } from 'components/Title';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import { confirmEmail } from 'services/auth/confirmEmail';
-import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
 
@@ -18,9 +19,10 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields }) => {
+  Component: ({ storeFields }: StepComponentProps<RegisterFormFields>) => {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState('');
 
     const title = useMemo(() => {
       if (isLoading) {
@@ -37,21 +39,27 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     useEffect(() => {
       confirmEmail(storeFields.email, storeFields.authenticationCode, result => {
         if (result === 'SUCCESS') {
-          setIsLoading(false);
+          setError('');
+
+          return setIsLoading(false);
         }
+
+        setError(result);
       });
-    }, []);
+    }, [storeFields.authenticationCode, storeFields.email]);
 
     return (
       <div className="relative flex h-full flex-col items-center justify-center">
-        {isLoading ? <IconSpinner /> : <CircleSuccess />}
+        {isLoading && !error && <IconSpinner />}
+        {error && <IconXCircle />}
+        {!isLoading && !error && <CircleSuccess />}
 
-        <Title title={title} />
+        <Title title={error ? error : title} />
 
         <Button
           onClick={onButtonClick}
           label="Continue"
-          disabled={isLoading}
+          disabled={isLoading || !!error}
         />
       </div>
     );
