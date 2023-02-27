@@ -6,6 +6,7 @@ import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
+import { WhyRequiredBlackModalDialog } from 'components/WhyRequiredBlackModalDialog';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -24,6 +25,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [error, setError] = useState<string | undefined>('');
+    const [whyRequiredOpened, setWhyRequiredOpened] = useState(false);
     const schema: Schema<Fields> = zod.object({
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,
@@ -50,12 +52,21 @@ export const StepPassword: StepParams<RegisterFormFields> = {
       });
     };
 
+    const openWhyReqiredOnClick = () => setWhyRequiredOpened(!whyRequiredOpened);
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title
           title="Sign up to REINVEST"
           subtitle="Create a unique password for your account to continue."
         />
+
+        {whyRequiredOpened && (
+          <WhyRequiredBlackModalDialog
+            isOpen={whyRequiredOpened}
+            onOpenChange={openWhyReqiredOnClick}
+          />
+        )}
 
         {error && (
           <Typography
@@ -76,7 +87,10 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           control={control}
         />
 
-        <WhyRequiredLink href="/" />
+        <WhyRequiredLink
+          href="/register#why-required"
+          onClick={openWhyReqiredOnClick}
+        />
 
         <PasswordChecklist
           password={fields.password}
