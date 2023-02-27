@@ -2,7 +2,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputPassword } from 'components/FormElements/InputPassword';
-import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
@@ -87,9 +86,10 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           control={control}
         />
 
-        <WhyRequiredLink
-          href="/register#why-required"
+        <Button
+          label="Required. Why?"
           onClick={openWhyReqiredOnClick}
+          className="why-required"
         />
 
         <PasswordChecklist

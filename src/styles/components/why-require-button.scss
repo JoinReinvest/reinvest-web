@@ -1,0 +1,7 @@
+button.why-required {
+  @apply text-green-frost-01 bg-inherit w-max p-0 font-stretch-normal;
+
+  p {
+    @apply typo-link;
+  }
+}
