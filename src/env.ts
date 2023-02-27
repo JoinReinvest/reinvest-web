@@ -12,6 +12,7 @@ interface envInterface {
   isProduction: boolean;
   site: {
     name: string;
+    url: string;
   };
 }
 
@@ -20,6 +21,7 @@ const envSchema = z.object({
   analyze: z.boolean().default(false),
   site: z.object({
     name: z.string(),
+    url: z.string(),
   }),
   isProduction: z.boolean().default(false),
   aws: z.object({
@@ -34,6 +36,7 @@ export const env: envInterface = envSchema.parse({
   analyze: process.env.ANALYZE === 'true',
   site: {
     name: process.env.SITE_NAME,
+    url: process.env.REINVEST_SITE_URL,
   },
   isProduction: process.env.NODE_ENV === 'production',
   aws: {
