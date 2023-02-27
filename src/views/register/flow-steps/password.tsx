@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModal } from 'components/BlackModal';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputPassword } from 'components/FormElements/InputPassword';
@@ -8,8 +7,8 @@ import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { signup } from 'services/auth/signup';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { signup } from 'services/signup';
 import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';

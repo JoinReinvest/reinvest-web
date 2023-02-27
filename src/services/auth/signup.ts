@@ -1,9 +1,9 @@
 import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 
-import { getUserPoll } from './getUserPool';
+import { getUserPoll } from '../getUserPool';
 import { UserAuthenticationInterface } from './signin';
 
-export const signup = async ({ email, password }: UserAuthenticationInterface, callback: (result: string | undefined) => void) => {
+export const signup = async ({ email, password }: UserAuthenticationInterface, callback: (result: string | Error | undefined) => void) => {
   const userAttributes = [
     {
       Name: 'custom:incentive_token',
@@ -15,7 +15,7 @@ export const signup = async ({ email, password }: UserAuthenticationInterface, c
 
   return userPool.signUp(email, password, userAttributes, userAttributes, (err, result) => {
     if (err) {
-      callback(err.message || JSON.stringify(err));
+      callback(err);
 
       return;
     }

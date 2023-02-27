@@ -1,8 +1,8 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
+import { signin } from 'services/auth/signin';
 import { getApiClient } from 'services/getApiClient';
 import { getProfileQuery } from 'services/queries/getProfile';
-import { signin } from 'services/signin';
 
 export default NextAuth({
   providers: [

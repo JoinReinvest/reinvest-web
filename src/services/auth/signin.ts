@@ -1,6 +1,6 @@
 import { AuthenticationDetails, CognitoUser, CognitoUserSession } from 'amazon-cognito-identity-js';
 
-import { getUserPoll } from './getUserPool';
+import { getUserPoll } from '../getUserPool';
 
 export interface UserAuthenticationInterface {
   email: string;

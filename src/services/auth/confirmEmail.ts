@@ -1,6 +1,6 @@
 import { CognitoUser } from 'amazon-cognito-identity-js';
 
-import { getUserPoll } from './getUserPool';
+import { getUserPoll } from '../getUserPool';
 
 export const confirmEmail = async (email: string, authCode: string, callback: (response: string) => void) => {
   const userPool = getUserPoll();
@@ -12,7 +12,7 @@ export const confirmEmail = async (email: string, authCode: string, callback: (r
 
   const cognitoUser = new CognitoUser(userData);
 
-  cognitoUser.confirmRegistration(authCode, true, (err, result) => {
+  return cognitoUser.confirmRegistration(authCode, true, (err, result) => {
     if (err) {
       callback(err.message || JSON.stringify(err));
     }
