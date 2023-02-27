@@ -42,11 +42,11 @@ export const StepPassword: StepParams<RegisterFormFields> = {
       updateStoreFields(fields);
 
       await signup({ email: storeFields.email, password: fields.password, referralCode: storeFields.referralCode }, result => {
-        if (result) {
+        if (typeof result === 'string') {
           return moveToNextStep();
         }
 
-        return setError(result);
+        return setError(result?.message);
       });
     };
 
@@ -60,7 +60,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
         {error && (
           <Typography
             variant="paragraph-large"
-            className="text-tertiary-error"
+            className="mb-12 text-tertiary-error"
           >
             {error}
           </Typography>
