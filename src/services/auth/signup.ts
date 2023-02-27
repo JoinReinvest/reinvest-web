@@ -15,13 +15,11 @@ export const signup = async ({ email, password }: UserAuthenticationInterface, c
 
   return userPool.signUp(email, password, userAttributes, userAttributes, (err, result) => {
     if (err) {
-      callback(err);
-
-      return;
+      return callback(err);
     }
 
     const cognitoUser = result?.user;
 
-    callback(cognitoUser?.getUsername());
+    return callback(cognitoUser?.getUsername());
   });
 };

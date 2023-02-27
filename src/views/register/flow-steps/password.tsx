@@ -5,7 +5,9 @@ import { InputPassword } from 'components/FormElements/InputPassword';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
+import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { signup } from 'services/auth/signup';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -21,6 +23,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => !!fields.email,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
+    const [error, setError] = useState<string | undefined>('');
     const schema: Schema<Fields> = zod.object({
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,
@@ -40,8 +43,10 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
       await signup({ email: storeFields.email, password: fields.password }, result => {
         if (result) {
-          moveToNextStep();
+          return moveToNextStep();
         }
+
+        return setError(result);
       });
     };
 
@@ -51,6 +56,15 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           title="Sign up to REINVEST"
           subtitle="Create a unique password for your account to continue."
         />
+
+        {error && (
+          <Typography
+            variant="paragraph-large"
+            className="text-tertiary-error"
+          >
+            {error}
+          </Typography>
+        )}
 
         <InputPassword
           name="password"
