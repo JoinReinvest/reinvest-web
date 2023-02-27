@@ -32,7 +32,7 @@ const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
   ['paragraph-emphasized', 'p'],
   ['paragraph', 'p'],
   ['paragraph-small', 'p'],
-  ['link', 'p'],
+  ['link', 'div'],
 ]);
 
 const variants = cva(undefined, {

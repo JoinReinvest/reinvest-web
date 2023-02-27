@@ -6,7 +6,7 @@ import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
-import { WhyRequiredBlackModalDialog } from 'components/WhyRequiredBlackModalDialog';
+import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -62,7 +62,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
         />
 
         {isWhyRequiredOpen && (
-          <WhyRequiredBlackModalDialog
+          <WhyRequiredBlackModal
             isOpen={isWhyRequiredOpen}
             onOpenChange={openWhyReqiredOnClick}
           />
