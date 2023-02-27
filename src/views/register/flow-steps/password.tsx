@@ -44,11 +44,11 @@ export const StepPassword: StepParams<RegisterFormFields> = {
       updateStoreFields(fields);
 
       await signup({ email: storeFields.email, password: fields.password, referralCode: storeFields.referralCode }, result => {
-        if (typeof result === 'string') {
+        if (result === storeFields.email) {
           return moveToNextStep();
         }
 
-        return setError(result?.message);
+        return setError((result as Error).message);
       });
     };
 
