@@ -1,20 +1,17 @@
-import { LinkType } from '@hookooekoo/ui-link';
-
-import { Link } from '../Link';
+import { Typography } from 'components/Typography';
 
 interface Props {
-  href: LinkType['href'];
   onClick: () => void;
 }
 
-export const WhyRequiredLink = ({ href, onClick }: Props) => (
-  <div className="mt-20 block">
-    <Link
-      href={href}
-      title="Why required"
-      onClick={onClick}
-    >
-      Required. Why?
-    </Link>
+export const WhyRequiredLink = ({ onClick }: Props) => (
+  <div
+    className="mt-20 w-max text-green-frost-01"
+    onKeyDown={onClick}
+    onClick={onClick}
+    role="button"
+    tabIndex={0}
+  >
+    <Typography variant="link">Required. Why?</Typography>
   </div>
 );

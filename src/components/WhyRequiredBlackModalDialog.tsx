@@ -1,6 +1,7 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
 
 import { BlackModalDialog } from './BlackModal/BlackModalDialog';
+import { Title } from './Title';
 import { Typography } from './Typography';
 
 type WhyRequiredBlackModalDialogProps = Omit<DialogProps, 'children'>;
@@ -11,12 +12,7 @@ export const WhyRequiredBlackModalDialog = ({ isOpen, onOpenChange }: WhyRequire
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
-      <Typography
-        variant="h5"
-        className="mb-24"
-      >
-        [Tooltip Item Name]
-      </Typography>
+      <Title title="[Tooltip Item Name]" />
       <Typography variant="paragraph-large">
         Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
         veritatis et quasi architecto beatae vitae <br /> <br /> dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
