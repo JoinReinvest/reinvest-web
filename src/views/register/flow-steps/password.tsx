@@ -41,7 +41,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
 
-      await signup({ email: storeFields.email, password: fields.password }, result => {
+      await signup({ email: storeFields.email, password: fields.password, referralCode: storeFields.referralCode }, result => {
         if (result) {
           return moveToNextStep();
         }

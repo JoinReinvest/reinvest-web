@@ -27,7 +27,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
         return 'Creating your account';
       }
 
-      return 'Your password has successfully been reset. ';
+      return 'Your login credentials were successfully created';
     }, [isLoading]);
 
     const onButtonClick = () => {

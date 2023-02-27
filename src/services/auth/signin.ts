@@ -5,6 +5,7 @@ import { getUserPoll } from '../getUserPool';
 export interface UserAuthenticationInterface {
   email: string;
   password: string;
+  referralCode?: string;
 }
 
 const authenticateUser = async (cognitoUser: CognitoUser, cognitoAuthenticationDetails: AuthenticationDetails): Promise<CognitoUserSession> => {

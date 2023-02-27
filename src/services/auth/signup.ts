@@ -3,11 +3,11 @@ import { CognitoUserAttribute } from 'amazon-cognito-identity-js';
 import { getUserPoll } from '../getUserPool';
 import { UserAuthenticationInterface } from './signin';
 
-export const signup = async ({ email, password }: UserAuthenticationInterface, callback: (result: string | Error | undefined) => void) => {
+export const signup = async ({ email, password, referralCode }: UserAuthenticationInterface, callback: (result: string | Error | undefined) => void) => {
   const userAttributes = [
     {
       Name: 'custom:incentive_token',
-      Value: '123456',
+      Value: referralCode,
     } as CognitoUserAttribute,
   ];
 
