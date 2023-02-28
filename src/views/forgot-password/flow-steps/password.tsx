@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ErrorMessage } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
-import { Typography } from 'components/Typography';
 import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
@@ -76,14 +76,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           />
         )}
 
-        {error && (
-          <Typography
-            variant="paragraph-large"
-            className="mb-12 text-tertiary-error"
-          >
-            {error}
-          </Typography>
-        )}
+        {error && <ErrorMessage message={error} />}
 
         <InputPassword
           name="password"

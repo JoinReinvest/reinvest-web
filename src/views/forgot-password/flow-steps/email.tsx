@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ErrorMessage } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { Title } from 'components/Title';
-import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -51,14 +51,7 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
           subtitle="Enter the email associated with your account and we’ll send an email with instructions to reset your password."
         />
 
-        {error && (
-          <Typography
-            variant="paragraph-large"
-            className="mb-12 text-tertiary-error"
-          >
-            {error}
-          </Typography>
-        )}
+        {error && <ErrorMessage message={error} />}
 
         <InputEmail
           control={control}
