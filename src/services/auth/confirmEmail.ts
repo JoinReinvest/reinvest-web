@@ -1,16 +1,7 @@
-import { CognitoUser } from 'amazon-cognito-identity-js';
-
-import { getUserPoll } from '../getUserPool';
+import { getCognitoUser } from 'services/getCognitoUser';
 
 export const confirmEmail = async (email: string, authCode: string, callback: (response: string) => void) => {
-  const userPool = getUserPoll();
-
-  const userData = {
-    Username: email,
-    Pool: userPool,
-  };
-
-  const cognitoUser = new CognitoUser(userData);
+  const cognitoUser = getCognitoUser(email);
 
   return cognitoUser.confirmRegistration(authCode, true, (err, result) => {
     if (err) {
