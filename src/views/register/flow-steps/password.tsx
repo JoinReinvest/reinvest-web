@@ -6,7 +6,6 @@ import { InputPassword } from 'components/FormElements/InputPassword';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
-import { Typography } from 'components/Typography';
 import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
