@@ -31,17 +31,17 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
       //    - if so proceed to the next step by calling
       //    `moveToNextStep()`, otherwise display an error
       setIsLoading(true);
-      const result = await forgotPassword(fields.email);
-
       updateStoreFields(fields);
 
-      if (result === 'SUCCESS') {
-        moveToNextStep();
-      } else {
-        setError(result);
-      }
+      try {
+        await forgotPassword(fields.email);
 
-      setIsLoading(false);
+        moveToNextStep();
+      } catch (err) {
+        setError(err as string);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     return (
