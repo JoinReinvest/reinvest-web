@@ -1,7 +1,6 @@
+import { env } from 'env';
+import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
-
-import { env } from '../env';
-import { MainLayout } from '../layouts/MainLayout';
 
 const Glossary: NextPage = () => {
   return (
