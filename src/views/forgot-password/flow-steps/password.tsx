@@ -6,6 +6,7 @@ import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
+import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -31,6 +32,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,
     });
+    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -58,12 +60,21 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
       }
     };
 
+    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title
           title="Create new password"
           subtitle="Your new password must be different from previous used passwords."
         />
+
+        {isWhyRequiredOpen && (
+          <WhyRequiredBlackModal
+            isOpen={isWhyRequiredOpen}
+            onOpenChange={openWhyReqiredOnClick}
+          />
+        )}
 
         {error && (
           <Typography
@@ -84,7 +95,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           control={control}
         />
 
-        <WhyRequiredLink href="/" />
+        <WhyRequiredLink onClick={openWhyReqiredOnClick} />
 
         <PasswordChecklist
           password={fields.password}
