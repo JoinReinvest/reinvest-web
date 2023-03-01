@@ -1,4 +1,4 @@
-import { ButtonProps } from '@hookooekoo/ui-button';
+import { ButtonHTMLAttributes } from 'react';
 
 export interface NotificationProps {
   actions: [NotificationAction, NotificationAction];
@@ -11,4 +11,4 @@ export interface NotificationAction extends PrimitiveButtonProps {
   label: string;
 }
 
-type PrimitiveButtonProps = Pick<ButtonProps, 'onClick' | 'disabled'>;
+type PrimitiveButtonProps = Pick<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick' | 'disabled'>;
