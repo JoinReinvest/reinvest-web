@@ -19,7 +19,7 @@ const EnterDateBirthPage: NextPage = () => {
       <BlackModal isOpen={isOpen}>
         <Title title="Enter your date of birth" />
         <BirthDateInput />
-        <WhyRequiredLink href="/" />
+        <WhyRequiredLink />
       </BlackModal>
     </MainLayout>
   );

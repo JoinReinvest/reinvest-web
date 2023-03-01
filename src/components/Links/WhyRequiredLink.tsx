@@ -1,7 +1,7 @@
 import { Typography } from 'components/Typography';
 
 interface Props {
-  onClick: () => void;
+  onClick?: () => void;
 }
 
 export const WhyRequiredLink = ({ onClick }: Props) => (
