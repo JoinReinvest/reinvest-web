@@ -1,12 +1,12 @@
 import { BlackModal } from 'components/BlackModal';
-import { RadioGroupOptions } from 'components/RadioGroupOptions';
-import { RadioGroupOption } from 'components/RadioGroupOptions/interfaces';
+import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-const followingApplies: RadioGroupOption[] = [
+const followingApplies: RadioGroupOptionItem[] = [
   {
     title:
       'Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.',
@@ -29,6 +29,7 @@ const followingApplies: RadioGroupOption[] = [
 
 const FollowingApplyPage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const form = useForm<{ selected: string }>();
 
   useEffect(() => {
     setIsOpen(true);
@@ -39,6 +40,8 @@ const FollowingApplyPage: NextPage = () => {
       <BlackModal isOpen={isOpen}>
         <Title title="Do any of the following apply to you?" />
         <RadioGroupOptions
+          name="selected"
+          control={form.control}
           options={followingApplies}
           className="following-apply"
         />
