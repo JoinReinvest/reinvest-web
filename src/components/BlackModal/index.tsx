@@ -1,25 +1,30 @@
-import { Dialog } from '@hookooekoo/ui-dialog';
-import { ReactNode } from 'react';
+import { Dialog, DialogProps } from '@hookooekoo/ui-dialog';
+import { PropsWithChildren } from 'react';
 
 import { Footer } from './Footer';
 import { Header } from './Header';
 
-export interface Props {
-  children: ReactNode;
-  isOpen: boolean;
-  onOpenChange?: (state: boolean) => void;
-}
+export interface Props extends PrimitiveProps, PropsWithChildren {}
 
-export const BlackModal = ({ isOpen = false, onOpenChange, children }: Props) => (
-  <Dialog
-    isOpen={isOpen}
-    onOpenChange={onOpenChange}
-    className="black-modal"
-  >
-    <div className="flex h-full w-full flex-col items-center justify-between gap-40 overflow-y-hidden py-40 px-20 text-white">
-      <Header />
-      <div className="mx-auto h-full w-full max-w-330">{children}</div>
-      <Footer />
-    </div>
-  </Dialog>
-);
+type PrimitiveProps = Pick<DialogProps, 'isOpen' | 'onOpenChange'>;
+
+export const BlackModal = ({ isOpen = false, onOpenChange, children }: Props) => {
+  const onEscapeKeyDown: DialogProps['onEscapeKeyDown'] = event => {
+    event.preventDefault();
+  };
+
+  return (
+    <Dialog
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+      className="black-modal"
+      onEscapeKeyDown={onEscapeKeyDown}
+    >
+      <div className="flex h-full w-full flex-col items-center justify-between gap-40 overflow-y-hidden py-40 px-20 text-white">
+        <Header />
+        <div className="mx-auto h-full w-full max-w-330">{children}</div>
+        <Footer />
+      </div>
+    </Dialog>
+  );
+};
