@@ -1,13 +1,14 @@
 import { BlackModal } from 'components/BlackModal';
+import { InputBirthDate } from 'components/FormElements/InputBirthDate';
+import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-
-import { BirthDateInput } from '../../components/FormElements/BirthDateInput';
-import { WhyRequiredLink } from '../../components/Links/WhyRequiredLink';
+import { useForm } from 'react-hook-form';
 
 const EnterDateBirthPage: NextPage = () => {
+  const form = useForm<{ date: Date }>();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -18,8 +19,14 @@ const EnterDateBirthPage: NextPage = () => {
     <MainLayout>
       <BlackModal isOpen={isOpen}>
         <Title title="Enter your date of birth" />
-        <BirthDateInput />
-        <WhyRequiredLink href="/" />
+
+        <InputBirthDate
+          name="date"
+          control={form.control}
+        />
+
+        <WhyRequiredLink />
+        
       </BlackModal>
     </MainLayout>
   );

@@ -60,7 +60,7 @@ const CheckPhonePage: NextPage = () => {
             required
           />
 
-          <WhyRequiredLink href="/" />
+          <WhyRequiredLink />
         </div>
       </BlackModal>
     </MainLayout>
