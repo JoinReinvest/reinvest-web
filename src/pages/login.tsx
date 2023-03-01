@@ -90,6 +90,14 @@ const Login: NextPage = () => {
             Forgot password?
           </Link>
 
+          <Link
+            href={URL.register}
+            className="typo-paragraph-large"
+            title="Don't have an account?"
+          >
+            Don’t have an account?
+          </Link>
+
           <Button
             type="submit"
             label="Sign In"
