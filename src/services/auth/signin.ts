@@ -8,12 +8,17 @@ export interface UserAuthenticationInterface {
   referralCode?: string;
 }
 
+export const cognitoCallbacks = (resolve, reject) => ({
+  onSuccess: resolve,
+  onFailure: reject,
+  mfaRequired: codeDeliveryDetails => {
+    console.log('codeDeliveryDetails', codeDeliveryDetails);
+  },
+});
+
 const authenticateUser = async (cognitoUser: CognitoUser, cognitoAuthenticationDetails: AuthenticationDetails): Promise<CognitoUserSession> => {
   return new Promise((resolve, reject) => {
-    cognitoUser.authenticateUser(cognitoAuthenticationDetails, {
-      onSuccess: resolve,
-      onFailure: reject,
-    });
+    cognitoUser.authenticateUser(cognitoAuthenticationDetails, cognitoCallbacks(resolve, reject));
   });
 };
 

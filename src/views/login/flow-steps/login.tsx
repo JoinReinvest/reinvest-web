@@ -37,9 +37,9 @@ export const StepLogin: StepParams<LoginFormFields> = {
     const callbackUrl = (router.query?.callbackUrl as string) ?? '/';
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      console.log(fields);
       setIsValidatingCredentials(true);
-      const result = await signIn('credentials', {
+      updateStoreFields(fields);
+      const result = signIn('credentials', {
         email: fields.email,
         password: fields.password,
         redirect: false,
@@ -48,10 +48,12 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
       if (result?.error) {
         setError(result.error);
-      } else {
-        // await router.push(callbackUrl);
-        moveToNextStep();
+        setIsValidatingCredentials(false);
+
+        return;
       }
+
+      moveToNextStep();
 
       setIsValidatingCredentials(false);
     };

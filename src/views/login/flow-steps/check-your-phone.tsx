@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CognitoUser } from 'amazon-cognito-identity-js';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
@@ -6,11 +7,23 @@ import { GetHelpLink } from 'components/Links/GetHelp';
 import { ResendCodeLink } from 'components/Links/ResendCodeLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
-import { useForm } from 'react-hook-form';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { cognitoCallbacks } from 'services/auth/signin';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { getUserPoll } from 'services/getUserPool';
 import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
+
+const sendMfaCode = async (email: string, authCode: string) => {
+  const userPool = getUserPoll();
+
+  const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
+
+  return new Promise((resolve, reject) => {
+    cognitoUser.sendMFACode(authCode, cognitoCallbacks(resolve, reject));
+  });
+};
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
@@ -23,8 +36,12 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit = () => {
-      console.log(storeFields);
+    const onSubmit: SubmitHandler<LoginFormFields> = async fields => {
+      try {
+        await sendMfaCode(storeFields.email, fields.authenticationCode);
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     return (
