@@ -1,12 +1,14 @@
 import { CustomInputMaskedProps, InputMasked } from 'components/FormElements/InputMasked';
+import dayjs from 'dayjs';
 import { FieldValues } from 'react-hook-form';
 
-interface Props<FormFields extends FieldValues> extends CustomInputMaskedProps<FormFields> {
-  maxDate?: Date;
-  minDate?: Date;
-}
+type Props<FormFields extends FieldValues> = CustomInputMaskedProps<FormFields>;
 
-export function InputBirthDate<FormFields extends FieldValues>({ minDate = new Date(1900, 0, 1), maxDate = new Date(), ...props }: Props<FormFields>) {
+export function InputBirthDate<FormFields extends FieldValues>(props: Props<FormFields>) {
+  const maxDate = dayjs().toDate();
+  const minDate = dayjs(maxDate).subtract(100, 'years').toDate();
+  const dateFormat = 'MM/DD/YYYY';
+
   return (
     <InputMasked
       maskOptions={{
@@ -14,17 +16,15 @@ export function InputBirthDate<FormFields extends FieldValues>({ minDate = new D
         pattern: 'm{/}`d{/}`Y',
         min: minDate,
         max: maxDate,
-        format: date => {
-          const day = date.getDate();
-          const month = date.getMonth() + 1;
-          const year = date.getFullYear();
+        format: value => {
+          const date = dayjs(value);
 
-          return `${month}/${day}/${year}`;
+          return date.format(dateFormat);
         },
-        parse: dateString => {
-          const dateParsed = dateString.split('/').join(', ');
+        parse: value => {
+          const date = dayjs(value, dateFormat).toDate();
 
-          return new Date(dateParsed);
+          return new Date(date);
         },
       }}
       placeholder="Date of Birth"
