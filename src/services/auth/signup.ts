@@ -7,7 +7,7 @@ export const signup = async ({ email, password, referralCode }: UserAuthenticati
   const userAttributes = [
     {
       Name: 'custom:incentive_token',
-      Value: referralCode,
+      Value: referralCode || '',
     } as CognitoUserAttribute,
   ];
 
