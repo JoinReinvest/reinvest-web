@@ -1186,10 +1186,10 @@
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
 
-"@hookooekoo/ui-checkbox@^1.1.4":
-  version "1.1.4"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-checkbox/-/ui-checkbox-1.1.4.tgz#21135acd18dfe2d0cc20549986ed655b02f72468"
-  integrity sha512-00AmZ2zEYSvVEm+uGLXCqtfoCrCtsxhQdIeR+7sfOBFqkiqKh1NaRTOtha9cCnXAHoMkab+yIbi6C39/V9Bymg==
+"@hookooekoo/ui-checkbox@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-checkbox/-/ui-checkbox-3.0.0.tgz#67524847703c34ce1cc51978b896b18c63421ec5"
+  integrity sha512-INeM//BQIqMFhddaNoC/JGUL0aL9YxRdoTAFd8NgArL9wAqaxMOXg7r53p/8FhdKdcBUZ/si9IxMzdO1TTndGg==
   dependencies:
     "@hookooekoo/ui-icon" "*"
     "@radix-ui/react-checkbox" "^1.0.1"
@@ -1226,12 +1226,13 @@
     "@hookooekoo/configs-stylelint" "*"
     "@radix-ui/react-label" "^2.0.0"
 
-"@hookooekoo/ui-input-masked@^0.3.3":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.3.3.tgz#b8a66626c847505e66a89149f4920989fd9207e3"
-  integrity sha512-3ebsB0F0a7IvkKwWISRYBocCbjg/Nfe3a4vab01RRRGewynDX02BC/7IO8YQArAPeKpiduLcaIuDOs54A5jiJA==
+"@hookooekoo/ui-input-masked@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.4.0.tgz#7b860657f23f5e5b8f5b9de75081e7f00ba2276d"
+  integrity sha512-K0WnlQH2yd0aoG4YTOFmmv+KlPP3SSx2VTba6MUJTduQPNh4KVZSPX3MY+tj6iIqt+bm194k1XHAuAEFuuwl3Q==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
+    "@hookooekoo/hooks-forwarded-ref" "*"
     "@hookooekoo/ui-input-control" "*"
     react-imask "^6.4.3"
 
@@ -1249,10 +1250,10 @@
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-link/-/ui-link-0.0.8.tgz#94acd83040751c7a8c7851368f1064c142f23445"
   integrity sha512-+xfOn+fE5HQKjeOSH7l4f5aXRPXg0XJu3HhysqpF8aLh+5FOKFFDODHmXlK0JBxLbHw8dbWnEMx9MPhxg/6Evw==
 
-"@hookooekoo/ui-radio-group@^0.4.5":
-  version "0.4.5"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-radio-group/-/ui-radio-group-0.4.5.tgz#e5c6b347a6106edea15f5ec0d44917bd15288ae9"
-  integrity sha512-q7yNy9pVR+SKO5T8SwfkfJDgrnMXQ1hfo2l6WICLJIaWgYNa+KPsdgC1lvpAmYDf8M4K0XCp3UxpSE09qozWXQ==
+"@hookooekoo/ui-radio-group@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-radio-group/-/ui-radio-group-1.0.0.tgz#99e25715c4b886d92fc19f8df1d06278dd9dba3e"
+  integrity sha512-YWbNjTAiSJLv44q/+ov/fBMcJ4TpvgpOa4zWfcNoymnhUBOnHNIWM1TfL92t3lVpiPly8kLVCsyqNqzL/x69sA==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
     "@radix-ui/react-radio-group" "^1.1.1"
@@ -1271,12 +1272,13 @@
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-stepper/-/ui-stepper-0.1.5.tgz#89fab36d28130b201cdb59118989ddb3e6e3dba3"
   integrity sha512-XyWd2S0fdpfO9mgrVKNJxpz8q3fjF8giSAjhR1EZtaXcIHxRsidaN5zt/hYikMvTlj4Q0dxpUMQHqwgx6Zm43Q==
 
-"@hookooekoo/ui-switch@^0.1.8":
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-switch/-/ui-switch-0.1.8.tgz#9aa6d307540a9a289ed6bea59300dd9782dcad32"
-  integrity sha512-ceibp/4k9U7V5NW0Tux9M7AyagyvqpESDbw+X+80gDfu+4YN++/XKDGeU58bLw8olJD69U0Y7xqCmMpQbehlfQ==
+"@hookooekoo/ui-switch@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-switch/-/ui-switch-1.0.0.tgz#b86d959215c88ed808770d37523f99d214752d01"
+  integrity sha512-k8+0PV7d2tiugJz+lM6YoLWd3TKAIj7C7kc1eP3JU84YVq3bWnKlHltlajAdeS8AkXgpyOx/Cu/frdBPdGl7GA==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
+    "@hookooekoo/hooks-forwarded-ref" "*"
     "@hookooekoo/ui-input-control" "*"
     "@radix-ui/react-switch" "^1.0.1"
 
