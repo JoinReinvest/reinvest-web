@@ -60,7 +60,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           control={control}
         />
 
-        <WhyRequiredLink href="/" />
+        <WhyRequiredLink />
 
         <PasswordChecklist
           password={fields.password}
