@@ -1,6 +1,5 @@
 import { AuthenticationDetails, CognitoUser, CognitoUserSession } from 'amazon-cognito-identity-js';
-
-import { getUserPoll } from '../getUserPool';
+import { getCognitoUser } from 'services/getCognitoUser';
 
 export interface UserAuthenticationInterface {
   email: string;
@@ -25,9 +24,7 @@ export const signin = async ({ email, password }: UserAuthenticationInterface) =
 
   const authenticationDetails = new AuthenticationDetails(authenticationData);
 
-  const userPool = getUserPoll();
-
-  const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
+  const cognitoUser = getCognitoUser(email);
 
   const authenticatedUser = await authenticateUser(cognitoUser, authenticationDetails);
 
