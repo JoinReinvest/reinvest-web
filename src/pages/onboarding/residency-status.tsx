@@ -1,13 +1,13 @@
 import { BlackModal } from 'components/BlackModal';
 import { WarningMessage } from 'components/BlackModal/WarningMessage';
-import { RadioGroupOptions } from 'components/RadioGroupOptions';
-import { RadioGroupOption } from 'components/RadioGroupOptions/interfaces';
+import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-const citizens: RadioGroupOption[] = [
+const citizens: RadioGroupOptionItem[] = [
   {
     value: 'us',
     title: 'US Citizen',
@@ -24,6 +24,7 @@ const citizens: RadioGroupOption[] = [
 
 const ResidencyStatusPage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const form = useForm<{ selected: string }>();
 
   useEffect(() => {
     setIsOpen(true);
@@ -37,7 +38,11 @@ const ResidencyStatusPage: NextPage = () => {
           subtitle="Please select your US residency status."
         />
         <WarningMessage message="REINVEST does not accept non-US residents at this time." />
-        <RadioGroupOptions options={citizens} />
+        <RadioGroupOptions
+          name="selected"
+          control={form.control}
+          options={citizens}
+        />
       </BlackModal>
     </MainLayout>
   );

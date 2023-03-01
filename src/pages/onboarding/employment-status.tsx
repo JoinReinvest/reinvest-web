@@ -1,8 +1,9 @@
 import { BlackModal } from 'components/BlackModal';
-import { SelectionCards } from 'components/SelectionCards';
+import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { Title } from '../../components/Title';
 
@@ -26,6 +27,7 @@ const EMPLOYMENT_STATUS: ComponentProps<typeof SelectionCards>['options'] = [
 ];
 
 const OnboardingEmploymentStatusPage: NextPage = () => {
+  const form = useForm<{ selection: string }>();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -38,7 +40,8 @@ const OnboardingEmploymentStatusPage: NextPage = () => {
         <Title title="Are you currently employed?" />
 
         <SelectionCards
-          name="employment-status"
+          name="selection"
+          control={form.control}
           options={EMPLOYMENT_STATUS}
           required={false}
           orientation="vertical"
