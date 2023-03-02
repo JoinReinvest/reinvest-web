@@ -36,6 +36,8 @@
     "tailwindcss": "3.2.7"
   },
   "dependencies": {
+    "@aws-amplify/auth": "^5.1.10",
+    "@aws-amplify/core": "^5.0.16",
     "@hookform/resolvers": "^2.9.11",
     "@hookooekoo/configs-postcss": "^0.1.2",
     "@hookooekoo/configs-stylelint": "^0.1.4",

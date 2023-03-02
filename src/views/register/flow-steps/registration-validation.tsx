@@ -1,3 +1,4 @@
+import { Auth } from '@aws-amplify/auth';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
@@ -5,7 +6,6 @@ import { CircleSuccess } from 'components/CircleSuccess';
 import { Title } from 'components/Title';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { confirmEmail } from 'services/auth/confirmEmail';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
@@ -37,15 +37,16 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     };
 
     useEffect(() => {
-      confirmEmail(storeFields.email, storeFields.authenticationCode, result => {
-        if (result === 'SUCCESS') {
-          setError('');
-
-          return setIsLoading(false);
+      const confirmEmail = async () => {
+        try {
+          await Auth.confirmSignUp(storeFields.email, storeFields.authenticationCode);
+        } catch (err) {
+          setError((err as Error).message);
+        } finally {
+          setIsLoading(false);
         }
-
-        setError(result);
-      });
+      };
+      confirmEmail();
     }, [storeFields.authenticationCode, storeFields.email]);
 
     return (

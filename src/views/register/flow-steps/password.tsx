@@ -1,3 +1,4 @@
+import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ErrorMessage } from 'components/ErrorMessage';
@@ -10,7 +11,6 @@ import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { signup } from 'services/auth/signup';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
@@ -42,14 +42,22 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
+      try {
+        await Auth.signUp({
+          username: storeFields.email,
+          password: fields.password,
+          attributes: {
+            'custom:incentive_token': storeFields.referralCode || '',
+          },
+          autoSignIn: {
+            enabled: true,
+          },
+        });
 
-      await signup({ email: storeFields.email, password: fields.password, referralCode: storeFields.referralCode }, result => {
-        if (result === storeFields.email) {
-          return moveToNextStep();
-        }
-
-        return setError((result as Error).message);
-      });
+        return moveToNextStep();
+      } catch (err) {
+        setError((err as Error).message);
+      }
     };
 
     const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);

@@ -1,3 +1,4 @@
+import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
@@ -6,7 +7,6 @@ import { Typography } from 'components/Typography';
 import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
 import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import zod, { Schema } from 'zod';
@@ -27,6 +27,7 @@ const schema: Schema<Fields> = zod.object({
 
 const Login: NextPage = () => {
   const [error, setError] = useState<string>('');
+  const router = useRouter();
   const form = useForm<Fields>({
     defaultValues: {
       email: '',
@@ -35,21 +36,13 @@ const Login: NextPage = () => {
     resolver: zodResolver(schema),
   });
 
-  const router = useRouter();
-  const callbackUrl = (router.query?.callbackUrl as string) ?? '/';
-
   const onSubmit: SubmitHandler<Fields> = async fields => {
-    const result = await signIn('credentials', {
-      email: fields.email,
-      password: fields.password,
-      redirect: false,
-      callbackUrl,
-    });
-
-    if (result?.error) {
-      setError(result.error);
-    } else {
-      await router.push(callbackUrl);
+    const { email, password } = fields;
+    try {
+      await Auth.signIn(email, password);
+      router.push('/');
+    } catch (err) {
+      setError((err as Error).message);
     }
   };
 

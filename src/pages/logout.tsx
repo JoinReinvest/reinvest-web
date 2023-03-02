@@ -1,14 +1,19 @@
+import { Auth } from '@aws-amplify/auth';
 import { NextPage } from 'next';
-import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
-import { URL } from '../constants/urls';
-
 const Logout: NextPage = () => {
+  const router = useRouter();
   useEffect(() => {
-    signOut({
-      callbackUrl: URL.login,
-    });
+    const signOut = async () => {
+      try {
+        await Auth.signOut();
+      } finally {
+        router.push('/login');
+      }
+    };
+    signOut();
   });
 
   return <></>;
