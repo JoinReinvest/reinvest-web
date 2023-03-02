@@ -1,20 +1,6 @@
 import { z } from 'zod';
 
-interface envInterface {
-  analyze: boolean;
-  apiUrl: string;
-  aws: {
-    cognito: {
-      clientId: string;
-      userPoolId: string;
-    };
-  };
-  isProduction: boolean;
-  site: {
-    name: string;
-    url: string;
-  };
-}
+type envInterface = z.infer<typeof envSchema>;
 
 const envSchema = z.object({
   apiUrl: z.string().url(),
