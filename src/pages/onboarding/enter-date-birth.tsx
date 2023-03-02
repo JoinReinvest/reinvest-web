@@ -26,7 +26,6 @@ const EnterDateBirthPage: NextPage = () => {
         />
 
         <WhyRequiredLink />
-        
       </BlackModal>
     </MainLayout>
   );

@@ -1,13 +1,12 @@
-import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AuthContext } from 'components/AuthProvider';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { LoginLayout } from 'layouts/LoginLayout';
 import { NextPage } from 'next';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { FormProvider, SubmitHandler, useForm } from 'react-hook-form';
 import zod, { Schema } from 'zod';
 
@@ -27,7 +26,8 @@ const schema: Schema<Fields> = zod.object({
 
 const Login: NextPage = () => {
   const [error, setError] = useState<string>('');
-  const router = useRouter();
+  const authContext = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(false);
   const form = useForm<Fields>({
     defaultValues: {
       email: '',
@@ -37,13 +37,15 @@ const Login: NextPage = () => {
   });
 
   const onSubmit: SubmitHandler<Fields> = async fields => {
+    setIsLoading(true);
     const { email, password } = fields;
-    try {
-      await Auth.signIn(email, password);
-      router.push('/');
-    } catch (err) {
-      setError((err as Error).message);
+    const result = await authContext.actions.signin(email, password);
+
+    if (result instanceof Error) {
+      setError(result.message);
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -94,6 +96,7 @@ const Login: NextPage = () => {
           <Button
             type="submit"
             label="Sign In"
+            loading={isLoading}
           />
         </form>
       </FormProvider>

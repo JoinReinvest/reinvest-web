@@ -87,8 +87,6 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           name="passwordConfirmation"
           control={control}
         />
-
-
         <WhyRequiredLink onClick={openWhyReqiredOnClick} />
 
         <PasswordChecklist

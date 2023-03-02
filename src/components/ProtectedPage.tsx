@@ -1,6 +1,7 @@
-import { Auth, CognitoUser } from '@aws-amplify/auth';
 import { useRouter } from 'next/router';
-import { useEffect } from 'react';
+import { useContext, useEffect } from 'react';
+
+import { AuthContext } from './AuthProvider';
 
 interface ProtectedPageProps {
   children: JSX.Element;
@@ -9,24 +10,21 @@ interface ProtectedPageProps {
 export const ProtectedPage = ({ children }: ProtectedPageProps) => {
   const router = useRouter();
 
+  const { loading, user } = useContext(AuthContext);
+
   useEffect(() => {
-    const getToken = async () => {
-      const currentUser: CognitoUser = await Auth.currentAuthenticatedUser();
-      const token = currentUser.getSignInUserSession()?.getAccessToken().getJwtToken();
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [loading, user, router]);
 
-      return token || null;
-    };
+  if (loading) {
+    return <div>loading</div>;
+  }
 
-    getToken()
-      .then(value => {
-        if (!value) {
-          router.push('/login');
-        }
-      })
-      .catch(() => {
-        router.push('/login');
-      });
-  });
+  if (!user) {
+    return <div>redirect</div>;
+  }
 
   return children;
 };
