@@ -1,6 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CognitoUser } from 'amazon-cognito-identity-js';
 import { AuthContext } from 'components/AuthProvider';
+import { CognitoUser } from '@aws-amplify/auth';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';

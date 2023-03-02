@@ -15,16 +15,6 @@ import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
 
-// const sendMfaCode = async (email: string, authCode: string) => {
-//   const userPool = getUserPoll();
-
-//   const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
-
-//   return new Promise((resolve, reject) => {
-//     cognitoUser.sendMFACode(authCode, cognitoCallbacks(resolve, reject));
-//   });
-// };
-
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
     const context = useContext(AuthContext);
