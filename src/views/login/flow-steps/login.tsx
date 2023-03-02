@@ -1,18 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CognitoUser } from 'amazon-cognito-identity-js';
+import { AuthContext } from 'components/AuthProvider';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
-import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
-import { GetHelpLink } from 'components/Links/GetHelp';
-import { ResendCodeLink } from 'components/Links/ResendCodeLink';
-import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
-import { useRouter } from 'next/router';
-import { signIn } from 'next-auth/react';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
@@ -30,30 +26,25 @@ export const StepLogin: StepParams<LoginFormFields> = {
     });
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
     const [error, setError] = useState<string>('');
+    const authContext = useContext(AuthContext);
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-
-    const router = useRouter();
-    const callbackUrl = (router.query?.callbackUrl as string) ?? '/';
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
-      const result = signIn('credentials', {
-        email: fields.email,
-        password: fields.password,
-        redirect: false,
-        callbackUrl,
-      });
+      const { email, password } = fields;
+      const result = await authContext.actions.signIn(email, password);
 
-      if (result?.error) {
-        setError(result.error);
-        setIsValidatingCredentials(false);
-
-        return;
+      if (result instanceof Error) {
+        setError(result.message);
       }
 
-      moveToNextStep();
+      const cognitoUser = result as CognitoUser;
+
+      if (cognitoUser.challengeName === 'SMS_MFA') {
+        moveToNextStep();
+      }
 
       setIsValidatingCredentials(false);
     };
@@ -91,6 +82,14 @@ export const StepLogin: StepParams<LoginFormFields> = {
           title="Forgot Password"
         >
           Forgot password?
+        </Link>
+
+        <Link
+          href={URL.register}
+          className="typo-paragraph-large"
+          title="Don't have an account?"
+        >
+          Don’t have an account?
         </Link>
 
         <Button

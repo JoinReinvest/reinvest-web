@@ -1,46 +1,52 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { CognitoUser } from 'amazon-cognito-identity-js';
+import { AuthContext } from 'components/AuthProvider';
 import { Button } from 'components/Button';
+import { ErrorMessage } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { ResendCodeLink } from 'components/Links/ResendCodeLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
+import { useContext, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { cognitoCallbacks } from 'services/auth/signin';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { getUserPoll } from 'services/getUserPool';
 import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
 
-const sendMfaCode = async (email: string, authCode: string) => {
-  const userPool = getUserPoll();
+// const sendMfaCode = async (email: string, authCode: string) => {
+//   const userPool = getUserPoll();
 
-  const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
+//   const cognitoUser = new CognitoUser({ Username: email, Pool: userPool });
 
-  return new Promise((resolve, reject) => {
-    cognitoUser.sendMFACode(authCode, cognitoCallbacks(resolve, reject));
-  });
-};
+//   return new Promise((resolve, reject) => {
+//     cognitoUser.sendMFACode(authCode, cognitoCallbacks(resolve, reject));
+//   });
+// };
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
+    const context = useContext(AuthContext);
     const schema: Schema<LoginFormFields> = zod.object({
       email: formValidationRules.email,
       password: formValidationRules.password,
       authenticationCode: formValidationRules.authenticationCode,
     });
+    const [error, setError] = useState('');
+    const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
 
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<LoginFormFields> = async fields => {
+      setIsValidatingCredentials(true);
       try {
-        await sendMfaCode(storeFields.email, fields.authenticationCode);
+        await context.actions.confirmSignIn(fields.authenticationCode);
       } catch (err) {
-        console.log(err);
+        setError((err as Error).message);
+      } finally {
+        setIsValidatingCredentials(false);
       }
     };
 
@@ -50,6 +56,8 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
           title="Check Your Phone"
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
         />
+
+        <ErrorMessage message={error} />
 
         <InputAuthenticationCode
           name="authenticationCode"
@@ -67,7 +75,7 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
           label="Sign Up"
           variant="default"
           disabled={shouldButtonBeDisabled}
-          // loading={isValidatingEmail}
+          loading={isValidatingCredentials}
         />
       </Form>
     );
