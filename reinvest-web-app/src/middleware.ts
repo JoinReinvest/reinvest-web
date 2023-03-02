@@ -8,6 +8,10 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   const token = await getToken({ req: request });
 
+  if (pathname.match('/((api|login|logout|register|forgot-password|_next/static|_next/image|favicon.ico|icons|manifest.json|sw.js).*)')) {
+    return NextResponse.next();
+  }
+
   if (!token) {
     const url = new URL(URLS.login, request.url);
 
@@ -18,7 +22,3 @@ export async function middleware(request: NextRequest) {
 
   return response;
 }
-
-export const config = {
-  matcher: ['/((?!api|login|logout|register|forgot-password|_next/static|_next/image|favicon.ico|manifest.json).*)'],
-};
