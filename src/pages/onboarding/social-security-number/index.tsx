@@ -30,7 +30,7 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
 
         <SSNInput />
 
-        <WhyRequiredLink href="/" />
+        <WhyRequiredLink />
       </BlackModal>
     </MainLayout>
   );

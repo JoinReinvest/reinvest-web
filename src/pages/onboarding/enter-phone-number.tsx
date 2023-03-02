@@ -28,7 +28,7 @@ const EnterPhoneNumberPage: NextPage = () => {
           control={form.control}
         />
 
-        <WhyRequiredLink href="/" />
+        <WhyRequiredLink />
       </BlackModal>
     </MainLayout>
   );

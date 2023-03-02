@@ -1,11 +1,11 @@
 import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
+import { BlackModal } from 'components/BlackModal';
+import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
+import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
-
-import { BlackModal } from '../../components/BlackModal';
-import { Title } from '../../components/Title';
-import { MainLayout } from '../../layouts/MainLayout';
+import { useForm } from 'react-hook-form';
 
 const accountTypes = [
   {
@@ -33,6 +33,7 @@ const accountTypes = [
 
 const AccountsDescriptionsPage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const form = useForm<{ selected: string }>();
 
   useEffect(() => {
     setIsOpen(true);
@@ -46,7 +47,11 @@ const AccountsDescriptionsPage: NextPage = () => {
           subtitle="Lear more about each option below"
         />
 
-        <RadioGroup className="mb-30 flex flex-col items-center gap-24">
+        <RadioGroup
+          name="selected"
+          control={form.control}
+          className="mb-30 flex flex-col items-center gap-24"
+        >
           {accountTypes.map(account => (
             <div
               key={account.value}

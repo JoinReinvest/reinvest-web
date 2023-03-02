@@ -13,7 +13,8 @@ type Variants =
   | 'paragraph-large'
   | 'paragraph-emphasized'
   | 'paragraph'
-  | 'paragraph-small';
+  | 'paragraph-small'
+  | 'link';
 
 interface Props extends Omit<PrimitiveProps, 'variant'> {
   variant: Variants;
@@ -31,6 +32,7 @@ const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
   ['paragraph-emphasized', 'p'],
   ['paragraph', 'p'],
   ['paragraph-small', 'p'],
+  ['link', 'div'],
 ]);
 
 const variants = cva(undefined, {
@@ -48,6 +50,7 @@ const variants = cva(undefined, {
       'paragraph-emphasized': 'typo-paragraph-emphasized',
       paragraph: 'typo-paragraph',
       'paragraph-small': 'typo-paragraph-small',
+      link: 'typo-link',
     },
   },
 });

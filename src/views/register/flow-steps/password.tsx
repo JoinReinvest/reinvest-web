@@ -1,15 +1,16 @@
+import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ErrorMessage } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
-import { Typography } from 'components/Typography';
+import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { signup } from 'services/auth/signup';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
@@ -24,6 +25,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [error, setError] = useState<string | undefined>('');
+    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
     const schema: Schema<Fields> = zod.object({
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,
@@ -40,15 +42,25 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
+      try {
+        await Auth.signUp({
+          username: storeFields.email,
+          password: fields.password,
+          attributes: {
+            'custom:incentive_token': storeFields.referralCode || '',
+          },
+          autoSignIn: {
+            enabled: true,
+          },
+        });
 
-      await signup({ email: storeFields.email, password: fields.password, referralCode: storeFields.referralCode }, result => {
-        if (result === storeFields.email) {
-          return moveToNextStep();
-        }
-
-        return setError((result as Error).message);
-      });
+        return moveToNextStep();
+      } catch (err) {
+        setError((err as Error).message);
+      }
     };
+
+    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -57,14 +69,14 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           subtitle="Create a unique password for your account to continue."
         />
 
-        {error && (
-          <Typography
-            variant="paragraph-large"
-            className="mb-12 text-tertiary-error"
-          >
-            {error}
-          </Typography>
+        {isWhyRequiredOpen && (
+          <WhyRequiredBlackModal
+            isOpen={isWhyRequiredOpen}
+            onOpenChange={openWhyReqiredOnClick}
+          />
         )}
+
+        {error && <ErrorMessage message={error} />}
 
         <InputPassword
           name="password"
@@ -76,7 +88,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           control={control}
         />
 
-        <WhyRequiredLink href="/" />
+        <WhyRequiredLink onClick={openWhyReqiredOnClick} />
 
         <PasswordChecklist
           password={fields.password}
