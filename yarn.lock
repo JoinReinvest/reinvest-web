@@ -1231,13 +1231,12 @@
     "@hookooekoo/configs-stylelint" "*"
     "@radix-ui/react-label" "^2.0.0"
 
-"@hookooekoo/ui-input-masked@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.4.0.tgz#7b860657f23f5e5b8f5b9de75081e7f00ba2276d"
-  integrity sha512-K0WnlQH2yd0aoG4YTOFmmv+KlPP3SSx2VTba6MUJTduQPNh4KVZSPX3MY+tj6iIqt+bm194k1XHAuAEFuuwl3Q==
+"@hookooekoo/ui-input-masked@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.5.0.tgz#1173e5118b31bc23cb2eb957b16910ba6a641c6c"
+  integrity sha512-ShX8OHUJCqHhEfsbsUwYM7QJWHOgnp96lCuhiV6HOKhuO3sA57SILMf71ezeoAjJ4Fzd9XWuZcVd8zbfGjhPpw==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
-    "@hookooekoo/hooks-forwarded-ref" "*"
     "@hookooekoo/ui-input-control" "*"
     react-imask "^6.4.3"
 
