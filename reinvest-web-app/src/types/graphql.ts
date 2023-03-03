@@ -5,13 +5,13 @@ export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: 
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  ID: string;
-  String: string;
   Boolean: boolean;
-  Int: number;
-  Float: number;
   EmailAddress: any;
+  Float: number;
+  ID: string;
   ISODate: any;
+  Int: number;
+  String: string;
   firstName_String_NotNull_minLength_1: any;
   inCents_Int_NotNull_min_0: any;
   lastName_String_NotNull_minLength_1: any;
@@ -37,7 +37,7 @@ export type AccountOverview = {
 export enum AccountType {
   Corporate = 'CORPORATE',
   Individual = 'INDIVIDUAL',
-  Trust = 'TRUST'
+  Trust = 'TRUST',
 }
 
 /** Only one of these statements can be valid */
@@ -47,7 +47,7 @@ export type AccreditedInvestorInput = {
 
 export enum AccreditedInvestorStatement {
   IAmAnAccreditedInvestor = 'I_AM_AN_ACCREDITED_INVESTOR',
-  IAmNotExceeding_10PercentOfMyNetWorthOrAnnualIncome = 'I_AM_NOT_EXCEEDING_10_PERCENT_OF_MY_NET_WORTH_OR_ANNUAL_INCOME'
+  IAmNotExceeding_10PercentOfMyNetWorthOrAnnualIncome = 'I_AM_NOT_EXCEEDING_10_PERCENT_OF_MY_NET_WORTH_OR_ANNUAL_INCOME',
 }
 
 export type Address = {
@@ -62,11 +62,11 @@ export type Address = {
 
 export type AddressInput = {
   addressLine1: Scalars['String'];
-  addressLine2?: InputMaybe<Scalars['String']>;
   city: Scalars['String'];
   country: Scalars['String'];
   state: Scalars['String'];
   zip: Scalars['String'];
+  addressLine2?: InputMaybe<Scalars['String']>;
 };
 
 export type AnnualRevenueInput = {
@@ -80,7 +80,7 @@ export type CompanyNameInput = {
 export enum CorporateCompanyType {
   Corporation = 'CORPORATION',
   Llc = 'LLC',
-  Partnership = 'PARTNERSHIP'
+  Partnership = 'PARTNERSHIP',
 }
 
 export type CorporateCompanyTypeInput = {
@@ -123,8 +123,8 @@ export type Dollar = {
 };
 
 export type DollarInput = {
-  formatted?: InputMaybe<Scalars['String']>;
   inCents: Scalars['inCents_Int_NotNull_min_0'];
+  formatted?: InputMaybe<Scalars['String']>;
 };
 
 export type Domicile = {
@@ -140,15 +140,15 @@ export type Domicile = {
  * Choose the right one and add details depending on the chosen type
  */
 export type DomicileInput = {
+  type: DomicileType;
   forGreenCard?: InputMaybe<GreenCardInput>;
   forVisa?: InputMaybe<VisaInput>;
-  type: DomicileType;
 };
 
 export enum DomicileType {
   Citizen = 'CITIZEN',
   GreenCard = 'GREEN_CARD',
-  Visa = 'VISA'
+  Visa = 'VISA',
 }
 
 export type DraftAccount = {
@@ -182,7 +182,7 @@ export enum EmploymentStatus {
   Employed = 'EMPLOYED',
   Retired = 'RETIRED',
   Student = 'STUDENT',
-  Unemployed = 'UNEMPLOYED'
+  Unemployed = 'UNEMPLOYED',
 }
 
 export type EmploymentStatusInput = {
@@ -193,7 +193,7 @@ export enum Experience {
   Expert = 'EXPERT',
   NoExperience = 'NO_EXPERIENCE',
   SomeExperience = 'SOME_EXPERIENCE',
-  VeryExperienced = 'VERY_EXPERIENCED'
+  VeryExperienced = 'VERY_EXPERIENCED',
 }
 
 export type FinraStatementInput = {
@@ -288,62 +288,51 @@ export type Mutation = {
   verifyPhoneNumber?: Maybe<Scalars['Boolean']>;
 };
 
-
 export type MutationCompleteCorporateDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
   input?: InputMaybe<CorporateDraftAccountInput>;
 };
-
 
 export type MutationCompleteIndividualDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
   input?: InputMaybe<IndividualAccountInput>;
 };
 
-
 export type MutationCompleteProfileDetailsArgs = {
   input?: InputMaybe<ProfileDetailsInput>;
 };
-
 
 export type MutationCompleteTrustDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
   input?: InputMaybe<TrustDraftAccountInput>;
 };
 
-
 export type MutationCreateDocumentsFileLinksArgs = {
   numberOfLinks: Scalars['numberOfLinks_Int_NotNull_min_1_max_10'];
 };
-
 
 export type MutationCreateDraftAccountArgs = {
   type?: InputMaybe<AccountType>;
 };
 
-
 export type MutationOpenAccountArgs = {
   draftAccountId?: InputMaybe<Scalars['String']>;
 };
 
-
 export type MutationRemoveDraftAccountArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
-
 
 export type MutationSetPhoneNumberArgs = {
   countryCode?: InputMaybe<Scalars['String']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
 };
 
-
 export type MutationSignDocumentFromTemplateArgs = {
   fields: Array<InputMaybe<GenericFieldInput>>;
   signature: Scalars['String'];
   templateId: TemplateName;
 };
-
 
 export type MutationVerifyPhoneNumberArgs = {
   authCode?: InputMaybe<Scalars['String']>;
@@ -465,31 +454,25 @@ export type Query = {
   profileCompletionStatus?: Maybe<ProfileCompletionStatus>;
 };
 
-
 export type QueryCanOpenAccountArgs = {
   accountType?: InputMaybe<AccountType>;
 };
-
 
 export type QueryGetAccountArgs = {
   accountId?: InputMaybe<Scalars['String']>;
 };
 
-
 export type QueryGetCorporateDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
-
 
 export type QueryGetIndividualDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
 
-
 export type QueryGetTemplateArgs = {
   templateName?: InputMaybe<TemplateName>;
 };
-
 
 export type QueryGetTrustDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
@@ -519,10 +502,10 @@ export type StakeholderInput = {
   address: AddressInput;
   dateOfBirth: Scalars['ISODate'];
   domicile: DomicileInput;
-  email?: InputMaybe<EmailInput>;
   idScan: Array<InputMaybe<FileLinkInput>>;
   legalName: LegalNameInput;
   ssn: SsnInput;
+  email?: InputMaybe<EmailInput>;
 };
 
 export type Statement = {
@@ -539,18 +522,18 @@ export type Statement = {
  * Choose type and add details depending on the chosen type
  */
 export type StatementInput = {
+  type: StatementType;
   forAccreditedInvestor?: InputMaybe<AccreditedInvestorInput>;
   forFINRA?: InputMaybe<FinraStatementInput>;
   forPolitician?: InputMaybe<PoliticianStatementInput>;
   forStakeholder?: InputMaybe<TradingCompanyStakeholderInput>;
-  type: StatementType;
 };
 
 export enum StatementType {
   AccreditedInvestor = 'AccreditedInvestor',
   FinraMember = 'FINRAMember',
   Politician = 'Politician',
-  TradingCompanyStakeholder = 'TradingCompanyStakeholder'
+  TradingCompanyStakeholder = 'TradingCompanyStakeholder',
 }
 
 export type Template = {
@@ -562,7 +545,7 @@ export type Template = {
 
 export enum TemplateName {
   AutoReinvestmentAgreement = 'AUTO_REINVESTMENT_AGREEMENT',
-  SubscriptionAgreement = 'SUBSCRIPTION_AGREEMENT'
+  SubscriptionAgreement = 'SUBSCRIPTION_AGREEMENT',
 }
 
 export type TradingCompanyStakeholderInput = {
@@ -571,7 +554,7 @@ export type TradingCompanyStakeholderInput = {
 
 export enum TrustCompanyType {
   Irrevocable = 'IRREVOCABLE',
-  Revocable = 'REVOCABLE'
+  Revocable = 'REVOCABLE',
 }
 
 export type TrustCompanyTypeInput = {
