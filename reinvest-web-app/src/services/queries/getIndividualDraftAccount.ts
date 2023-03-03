@@ -12,17 +12,6 @@ const getIndividualDraftAccountQuery = gql`
   query getIndividualDraftAccount($accountId: ID) {
     getIndividualDraftAccount(accountId: $accountId) {
       id
-      experience
-      employmentStatus
-      employer {
-        ...EmployerFragment
-      }
-      netWorth {
-        ...NetRangeFragment
-      }
-      netIncome {
-        ...NetRangeFragment
-      }
     }
   }
 `;

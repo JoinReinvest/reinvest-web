@@ -12,7 +12,6 @@ const completeIndividualDraftAccountMutation = gql`
   mutation completeIndividualDraftAccount($accountId: ID, $input: IndividualAccountInput) {
     completeIndividualDraftAccount(accountId: $accountId, input: $input) {
       id
-      experience
       employmentStatus
       employer {
         ...EmployerFragment
