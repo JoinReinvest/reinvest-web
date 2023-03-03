@@ -10,6 +10,9 @@ export const Context = createContext<ContextState>({
   moveToNextValidStep: () => {},
   progressPercentage: 0,
   meta: {
+    previousStepIdentifier: null,
+    currentStepIdentifier: null,
+    nextStepIdentifier: null,
     isFirstStep: true,
     isLastStep: false,
   },
