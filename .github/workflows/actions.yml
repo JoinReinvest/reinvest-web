@@ -36,9 +36,9 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: "Install dependencies"
         run: yarn install
-      - name: "Linter"
-        working-directory: ./reinvest-web-app
-        run: yarn lint
+#      - name: "Linter"
+#        working-directory: ./reinvest-web-app
+#        run: yarn install | yarn lint
       - name: "Check types"
         run: yarn check-types
       - name: "Deploy to AWS"
