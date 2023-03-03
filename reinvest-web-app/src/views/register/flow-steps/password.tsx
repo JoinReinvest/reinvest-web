@@ -59,6 +59,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
         const error = err as Error
         
         if(error.name === 'UsernameExistsException') {
+          await Auth.resendSignUp(storeFields.email);
           return moveToNextStep();
         }
 

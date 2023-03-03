@@ -58,7 +58,12 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
         />
 
         {error && <Message message={error} />}
-        {error && <Message message={infoMessage} variant="info" />}
+        {infoMessage && (
+          <Message
+            message={infoMessage}
+            variant="info"
+          />
+        )}
 
         <InputAuthenticationCode
           name="authenticationCode"
