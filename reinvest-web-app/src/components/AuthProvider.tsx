@@ -2,6 +2,10 @@ import { Auth, CognitoUser } from '@aws-amplify/auth';
 import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
+export enum ChallengeName {
+  SMS_MFA = 'SMS_MFA'
+}
+
 interface AuthContextInterface {
   actions: {
     confirmSignIn: (authenticationCode: string) => Promise<CognitoUser | Error | null>;
@@ -37,7 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     try {
       const user: CognitoUser = await Auth.signIn(email, password);
 
-      if (user.challengeName !== 'SMS_MFA') {
+      if (user.challengeName !== ChallengeName.SMS_MFA) {
         router.push('/');
       }
 
@@ -50,7 +54,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const confirmSignIn = async (authenticationCode: string) => {
-    const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, 'SMS_MFA');
+    const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
 
     setUser(confirmedUser);
     router.push('/');

@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AuthContext } from 'components/AuthProvider';
+import { AuthContext, ChallengeName } from 'components/AuthProvider';
 import { CognitoUser } from '@aws-amplify/auth';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
@@ -42,7 +42,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
       const cognitoUser = result as CognitoUser;
 
-      if (cognitoUser.challengeName === 'SMS_MFA') {
+      if (cognitoUser.challengeName === ChallengeName.SMS_MFA) {
         moveToNextStep();
       }
 
