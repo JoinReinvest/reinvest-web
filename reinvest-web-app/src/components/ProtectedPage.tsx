@@ -1,8 +1,8 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { useRouter } from 'next/router';
-import { useContext, useEffect } from 'react';
+import { useEffect } from 'react';
 
-import { AuthContext } from './AuthProvider';
+import { useAuth } from './AuthProvider';
 
 interface ProtectedPageProps {
   children: JSX.Element;
@@ -11,7 +11,7 @@ interface ProtectedPageProps {
 export const ProtectedPage = ({ children }: ProtectedPageProps) => {
   const router = useRouter();
 
-  const { loading, user } = useContext(AuthContext);
+  const { loading, user } = useAuth();
 
   useEffect(() => {
     if (!loading && !user) {

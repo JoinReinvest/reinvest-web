@@ -1,5 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AuthContext } from 'components/AuthProvider';
+import { useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
 import { ErrorMessage } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
@@ -8,7 +8,7 @@ import { GetHelpLink } from 'components/Links/GetHelp';
 import { ResendCodeLink } from 'components/Links/ResendCodeLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
@@ -17,7 +17,7 @@ import { LoginFormFields } from '../form-fields';
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
-    const context = useContext(AuthContext);
+    const context = useAuth()
     const schema: Schema<LoginFormFields> = zod.object({
       email: formValidationRules.email,
       password: formValidationRules.password,
