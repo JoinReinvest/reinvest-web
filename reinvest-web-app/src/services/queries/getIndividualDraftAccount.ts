@@ -3,12 +3,7 @@ import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
 import { Query } from 'types/graphql';
 
-import { EmployerFragment } from './fragments/employer';
-import { NetRangeFragment } from './fragments/netRange';
-
 const getIndividualDraftAccountQuery = gql`
-  ${NetRangeFragment}
-  ${EmployerFragment}
   query getIndividualDraftAccount($accountId: ID) {
     getIndividualDraftAccount(accountId: $accountId) {
       id

@@ -3,13 +3,9 @@ import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
 import { Query } from 'types/graphql';
 
-import { AccountsFragment } from './fragments/accounts';
-import { AddressFragment } from './fragments/address';
 import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 export const getProfileQuery = gql`
-  ${AccountsFragment}
-  ${AddressFragment}
   ${ProfileDetailsFragment}
   query getProfile {
     getProfile {
