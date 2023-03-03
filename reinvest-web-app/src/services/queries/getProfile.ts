@@ -5,30 +5,32 @@ import { Query } from 'types/graphql';
 
 import { AccountsFragment } from './fragments/accounts';
 import { AddressFragment } from './fragments/address';
-import { CompletionStatusFragment } from './fragments/completionStatus';
 import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 export const getProfileQuery = gql`
   ${AccountsFragment}
   ${AddressFragment}
-  ${CompletionStatusFragment}
   ${ProfileDetailsFragment}
   query getProfile {
     getProfile {
       externalId
       label
-      avatarUrl
-      accounts {
-        ...AccountsFragment
+      avatar {
+        id
+        url
       }
+      isCompleted
       details {
         ...ProfileDetailsFragment
-        address {
-          ...AddressFragment
-        }
       }
-      completionStatus {
-        ...CompletionStatusFragment
+      accounts {
+        id
+        type
+        avatar {
+          id
+          url
+        }
+        positionTotal
       }
     }
   }

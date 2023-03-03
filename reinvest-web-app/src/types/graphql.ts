@@ -1,28 +1,26 @@
-// TO-DO: Deprecate the need of disable the eslint rule
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
 export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
 export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
-
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
-  Boolean: boolean;
-  EmailAddress: any;
-  Float: number;
   ID: string;
-  ISODate: any;
-  Int: number;
   String: string;
+  Boolean: boolean;
+  Int: number;
+  Float: number;
+  EmailAddress: any;
+  ISODate: any;
+  firstName_String_NotNull_minLength_1: any;
   inCents_Int_NotNull_min_0: any;
+  lastName_String_NotNull_minLength_1: any;
   numberOfLinks_Int_NotNull_min_1_max_10: any;
 };
 
 export type Account = {
   __typename?: 'Account';
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatar?: Maybe<GetAvatarLink>;
   id?: Maybe<Scalars['String']>;
   positionTotal?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
@@ -30,7 +28,7 @@ export type Account = {
 
 export type AccountOverview = {
   __typename?: 'AccountOverview';
-  avatarUrl?: Maybe<Scalars['String']>;
+  avatar?: Maybe<GetAvatarLink>;
   id?: Maybe<Scalars['String']>;
   positionTotal?: Maybe<Scalars['String']>;
   type?: Maybe<Scalars['String']>;
@@ -39,7 +37,17 @@ export type AccountOverview = {
 export enum AccountType {
   Corporate = 'CORPORATE',
   Individual = 'INDIVIDUAL',
-  Trust = 'TRUST',
+  Trust = 'TRUST'
+}
+
+/** Only one of these statements can be valid */
+export type AccreditedInvestorInput = {
+  statement: AccreditedInvestorStatement;
+};
+
+export enum AccreditedInvestorStatement {
+  IAmAnAccreditedInvestor = 'I_AM_AN_ACCREDITED_INVESTOR',
+  IAmNotExceeding_10PercentOfMyNetWorthOrAnnualIncome = 'I_AM_NOT_EXCEEDING_10_PERCENT_OF_MY_NET_WORTH_OR_ANNUAL_INCOME'
 }
 
 export type Address = {
@@ -54,16 +62,58 @@ export type Address = {
 
 export type AddressInput = {
   addressLine1: Scalars['String'];
+  addressLine2?: InputMaybe<Scalars['String']>;
   city: Scalars['String'];
   country: Scalars['String'];
   state: Scalars['String'];
   zip: Scalars['String'];
-  addressLine2?: InputMaybe<Scalars['String']>;
 };
 
+export type AnnualRevenueInput = {
+  revenue: Scalars['String'];
+};
+
+export type CompanyNameInput = {
+  name: Scalars['String'];
+};
+
+export enum CorporateCompanyType {
+  Corporation = 'CORPORATION',
+  Llc = 'LLC',
+  Partnership = 'PARTNERSHIP'
+}
+
+export type CorporateCompanyTypeInput = {
+  type: CorporateCompanyType;
+};
+
+/** [MOCK] */
 export type CorporateDraftAccount = {
   __typename?: 'CorporateDraftAccount';
+  address?: Maybe<Address>;
+  annualRevenue?: Maybe<Scalars['String']>;
+  avatar?: Maybe<GetAvatarLink>;
+  companyDocuments?: Maybe<Array<Maybe<FileLinkId>>>;
+  companyType?: Maybe<CorporateCompanyType>;
+  ein?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  numberOfEmployees?: Maybe<Scalars['String']>;
+  stakeholders?: Maybe<Array<Maybe<Stakeholder>>>;
+};
+
+export type CorporateDraftAccountInput = {
+  address?: InputMaybe<AddressInput>;
+  annualRevenue?: InputMaybe<AnnualRevenueInput>;
+  avatar?: InputMaybe<FileLinkInput>;
+  companyDocuments?: InputMaybe<Array<InputMaybe<FileLinkInput>>>;
+  companyType?: InputMaybe<CorporateCompanyTypeInput>;
+  ein?: InputMaybe<EinInput>;
+  name?: InputMaybe<CompanyNameInput>;
+  numberOfEmployees?: InputMaybe<NumberOfEmployeesInput>;
+  removeDocuments?: InputMaybe<Array<InputMaybe<FileLinkInput>>>;
+  removeStakeholders?: InputMaybe<Array<InputMaybe<SsnInput>>>;
+  stakeholders?: InputMaybe<Array<InputMaybe<StakeholderInput>>>;
 };
 
 export type Dollar = {
@@ -73,13 +123,32 @@ export type Dollar = {
 };
 
 export type DollarInput = {
-  inCents: Scalars['inCents_Int_NotNull_min_0'];
   formatted?: InputMaybe<Scalars['String']>;
+  inCents: Scalars['inCents_Int_NotNull_min_0'];
 };
 
-export enum Domicile {
+export type Domicile = {
+  __typename?: 'Domicile';
+  birthCountry?: Maybe<Scalars['String']>;
+  citizenshipCountry?: Maybe<Scalars['String']>;
+  type?: Maybe<DomicileType>;
+  visaType?: Maybe<Scalars['String']>;
+};
+
+/**
+ * An investor statement of domicile type.
+ * Choose the right one and add details depending on the chosen type
+ */
+export type DomicileInput = {
+  forGreenCard?: InputMaybe<GreenCardInput>;
+  forVisa?: InputMaybe<VisaInput>;
+  type: DomicileType;
+};
+
+export enum DomicileType {
   Citizen = 'CITIZEN',
-  Resident = 'RESIDENT',
+  GreenCard = 'GREEN_CARD',
+  Visa = 'VISA'
 }
 
 export type DraftAccount = {
@@ -88,40 +157,58 @@ export type DraftAccount = {
   type?: Maybe<AccountType>;
 };
 
+export type EinInput = {
+  ein: Scalars['String'];
+};
+
+export type EmailInput = {
+  email: Scalars['EmailAddress'];
+};
+
 export type Employer = {
   __typename?: 'Employer';
   industry?: Maybe<Scalars['String']>;
   nameOfEmployer?: Maybe<Scalars['String']>;
-  occupation?: Maybe<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type EmployerInput = {
-  industry?: InputMaybe<Scalars['String']>;
-  nameOfEmployer?: InputMaybe<Scalars['String']>;
-  occupation?: InputMaybe<Scalars['String']>;
+  industry: Scalars['String'];
+  nameOfEmployer: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export enum EmploymentStatus {
   Employed = 'EMPLOYED',
   Retired = 'RETIRED',
   Student = 'STUDENT',
-  Unemployed = 'UNEMPLOYED',
+  Unemployed = 'UNEMPLOYED'
 }
+
+export type EmploymentStatusInput = {
+  status: EmploymentStatus;
+};
 
 export enum Experience {
   Expert = 'EXPERT',
   NoExperience = 'NO_EXPERIENCE',
   SomeExperience = 'SOME_EXPERIENCE',
-  VeryExperienced = 'VERY_EXPERIENCED',
+  VeryExperienced = 'VERY_EXPERIENCED'
 }
 
-export type FileLink = {
-  __typename?: 'FileLink';
-  id?: Maybe<Scalars['String']>;
-  url?: Maybe<Scalars['String']>;
+export type FinraStatementInput = {
+  name: Scalars['String'];
 };
 
+/** Link id */
+export type FileLinkId = {
+  __typename?: 'FileLinkId';
+  id?: Maybe<Scalars['String']>;
+};
+
+/** Link id input */
 export type FileLinkInput = {
+  /** This is @PutFileLink.id */
   id: Scalars['String'];
 };
 
@@ -130,83 +217,134 @@ export type GenericFieldInput = {
   value: Scalars['String'];
 };
 
-export type Individual = {
-  __typename?: 'Individual';
-  address?: Maybe<Address>;
-  dateOfBirth?: Maybe<Scalars['String']>;
-  domicile?: Maybe<Scalars['String']>;
-  firstName?: Maybe<Scalars['String']>;
-  lastName?: Maybe<Scalars['String']>;
-  middleName?: Maybe<Scalars['String']>;
+/** Link id + url to read the avatar */
+export type GetAvatarLink = {
+  __typename?: 'GetAvatarLink';
+  id?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+/** Link id + url to read the document */
+export type GetDocumentLink = {
+  __typename?: 'GetDocumentLink';
+  id?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
+};
+
+export type GreenCardInput = {
+  birthCountry: Scalars['String'];
+  citizenshipCountry: Scalars['String'];
 };
 
 export type IndividualAccountInput = {
   employer?: InputMaybe<EmployerInput>;
-  employmentStatus?: InputMaybe<EmploymentStatus>;
-  experience?: InputMaybe<Experience>;
+  employmentStatus?: InputMaybe<EmploymentStatusInput>;
   netIncome?: InputMaybe<NetRangeInput>;
   netWorth?: InputMaybe<NetRangeInput>;
 };
 
 export type IndividualDraftAccount = {
   __typename?: 'IndividualDraftAccount';
+  avatar?: Maybe<GetAvatarLink>;
   employer?: Maybe<Employer>;
   employmentStatus?: Maybe<EmploymentStatus>;
-  experience?: Maybe<Experience>;
   id?: Maybe<Scalars['ID']>;
   netIncome?: Maybe<NetRange>;
   netWorth?: Maybe<NetRange>;
 };
 
+export type LegalNameInput = {
+  name: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  /** [MOCK] Complete corporate draft account */
   completeCorporateDraftAccount?: Maybe<CorporateDraftAccount>;
+  /** [MOCK] Complete individual draft account */
   completeIndividualDraftAccount?: Maybe<IndividualDraftAccount>;
+  /**
+   * Profile onboarding mutation.
+   * Every field in the input can be requested separately.
+   * In case of any failure all changes in the request are not stored in the database.
+   * To finish onboarding send field 'verifyAndFinish'
+   */
   completeProfileDetails?: Maybe<Profile>;
+  /** [MOCK] Complete trust draft account */
   completeTrustDraftAccount?: Maybe<TrustDraftAccount>;
-  createAvatarFileLink?: Maybe<FileLink>;
-  createDocumentsFileLinks?: Maybe<Array<Maybe<FileLink>>>;
+  createAvatarFileLink?: Maybe<PutFileLink>;
+  createDocumentsFileLinks?: Maybe<Array<Maybe<PutFileLink>>>;
+  /**
+   * [MOCK] Create draft of an account to fulfill with data before open it.
+   * You can have only one draft account created of a specific type in the same time.
+   */
   createDraftAccount?: Maybe<DraftAccount>;
+  /** [MOCK] */
   openAccount?: Maybe<Scalars['Boolean']>;
+  /** [MOCK] Remove draft account */
   removeDraftAccount?: Maybe<Scalars['Boolean']>;
   setPhoneNumber?: Maybe<Scalars['Boolean']>;
   signDocumentFromTemplate?: Maybe<SignatureId>;
   verifyPhoneNumber?: Maybe<Scalars['Boolean']>;
 };
+
+
 export type MutationCompleteCorporateDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
+  input?: InputMaybe<CorporateDraftAccountInput>;
 };
+
+
 export type MutationCompleteIndividualDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
   input?: InputMaybe<IndividualAccountInput>;
 };
+
+
 export type MutationCompleteProfileDetailsArgs = {
   input?: InputMaybe<ProfileDetailsInput>;
 };
+
+
 export type MutationCompleteTrustDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
+  input?: InputMaybe<TrustDraftAccountInput>;
 };
+
+
 export type MutationCreateDocumentsFileLinksArgs = {
   numberOfLinks: Scalars['numberOfLinks_Int_NotNull_min_1_max_10'];
 };
+
+
 export type MutationCreateDraftAccountArgs = {
   type?: InputMaybe<AccountType>;
 };
+
+
 export type MutationOpenAccountArgs = {
   draftAccountId?: InputMaybe<Scalars['String']>;
 };
+
+
 export type MutationRemoveDraftAccountArgs = {
   id?: InputMaybe<Scalars['ID']>;
 };
+
+
 export type MutationSetPhoneNumberArgs = {
   countryCode?: InputMaybe<Scalars['String']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
 };
+
+
 export type MutationSignDocumentFromTemplateArgs = {
   fields: Array<InputMaybe<GenericFieldInput>>;
   signature: Scalars['String'];
   templateId: TemplateName;
 };
+
+
 export type MutationVerifyPhoneNumberArgs = {
   authCode?: InputMaybe<Scalars['String']>;
   countryCode?: InputMaybe<Scalars['String']>;
@@ -215,19 +353,25 @@ export type MutationVerifyPhoneNumberArgs = {
 
 export type NetRange = {
   __typename?: 'NetRange';
-  from?: Maybe<Scalars['String']>;
-  to?: Maybe<Scalars['String']>;
+  range?: Maybe<Scalars['String']>;
 };
 
 export type NetRangeInput = {
-  from: Scalars['String'];
-  to: Scalars['String'];
+  range: Scalars['String'];
+};
+
+export type NumberOfEmployeesInput = {
+  numberOfEmployees: Scalars['String'];
 };
 
 export type PersonName = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
+  firstName: Scalars['firstName_String_NotNull_minLength_1'];
+  lastName: Scalars['lastName_String_NotNull_minLength_1'];
   middleName?: InputMaybe<Scalars['String']>;
+};
+
+export type PoliticianStatementInput = {
+  description: Scalars['String'];
 };
 
 /**
@@ -237,11 +381,11 @@ export type PersonName = {
 export type Profile = {
   __typename?: 'Profile';
   accounts?: Maybe<Array<Maybe<AccountOverview>>>;
-  avatarUrl?: Maybe<Scalars['String']>;
-  completionStatus?: Maybe<ProfileCompletionStatus>;
-  details?: Maybe<Individual>;
+  avatar?: Maybe<GetAvatarLink>;
+  details?: Maybe<ProfileDetails>;
   /** The external, nice-looking profile ID */
   externalId?: Maybe<Scalars['String']>;
+  isCompleted?: Maybe<Scalars['Boolean']>;
   /** The name/label of the user */
   label?: Maybe<Scalars['String']>;
 };
@@ -252,56 +396,162 @@ export type ProfileCompletionStatus = {
   phoneCompleted?: Maybe<Scalars['Boolean']>;
 };
 
+export type ProfileDetails = {
+  __typename?: 'ProfileDetails';
+  address?: Maybe<Address>;
+  dateOfBirth?: Maybe<Scalars['String']>;
+  domicile?: Maybe<Domicile>;
+  firstName?: Maybe<Scalars['String']>;
+  idScan?: Maybe<Array<Maybe<FileLinkId>>>;
+  lastName?: Maybe<Scalars['String']>;
+  middleName?: Maybe<Scalars['String']>;
+  ssn?: Maybe<Scalars['String']>;
+  statements?: Maybe<Array<Maybe<Statement>>>;
+};
+
 export type ProfileDetailsInput = {
+  /** Permanent address of an investor */
   address?: InputMaybe<AddressInput>;
+  /** Previously uploaded avatar. Please provide the id returned in @createAvatarFileLink mutation */
   avatar?: InputMaybe<FileLinkInput>;
   /** Date of Birth in format YYYY-MM-DD */
   dateOfBirth?: InputMaybe<Scalars['ISODate']>;
-  /** Is the investor US. Citizen or US. Resident */
-  domicile?: InputMaybe<Domicile>;
-  idScan?: InputMaybe<FileLinkInput>;
+  /** Is the investor US. Citizen or US. Resident with Green Card or Visa */
+  domicile?: InputMaybe<DomicileInput>;
+  /**
+   * ID scan can be provided in more then one document, ie. 2 scans of both sides of the ID.
+   * Required "id" provided in the @FileLink type from the @createDocumentsFileLinks mutation
+   */
+  idScan?: InputMaybe<Array<InputMaybe<FileLinkInput>>>;
+  /** An investor name */
   name?: InputMaybe<PersonName>;
+  /** If an investor decided to remove one of the statements during onboarding */
+  removeStatements?: InputMaybe<Array<InputMaybe<StatementInput>>>;
   /** A valid SSN number */
-  ssn?: InputMaybe<Scalars['String']>;
+  ssn?: InputMaybe<SsnInput>;
+  /** FINRA, Politician, Trading company stakeholder, accredited investor statements */
+  statements?: InputMaybe<Array<InputMaybe<StatementInput>>>;
+  /** Send this field if you want to finish the onboarding. In case of success verification, onboarding will be considered as completed */
+  verifyAndFinish?: InputMaybe<Scalars['Boolean']>;
+};
+
+/** Link id + PUT url to store resource in the storage */
+export type PutFileLink = {
+  __typename?: 'PutFileLink';
+  id?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
 };
 
 export type Query = {
   __typename?: 'Query';
+  /** [MOCK] */
   canOpenAccount?: Maybe<Scalars['Boolean']>;
+  /** [MOCK] Return account information - schema WIP! */
   getAccount?: Maybe<Account>;
+  /** [MOCK] Return all accounts overview */
+  getAccountsOverview?: Maybe<Array<Maybe<AccountOverview>>>;
+  /** [MOCK] */
   getCorporateDraftAccount?: Maybe<CorporateDraftAccount>;
-  getIndividual?: Maybe<Individual>;
+  /** [MOCK] Individual draft account */
   getIndividualDraftAccount?: Maybe<IndividualDraftAccount>;
+  /** [MOCK] */
   getProfile?: Maybe<Profile>;
   getTemplate?: Maybe<Template>;
+  /** [MOCK] */
   getTrustDraftAccount?: Maybe<TrustDraftAccount>;
   hello?: Maybe<Scalars['Boolean']>;
+  /** [MOCK] List all existing draft accounts if you need come back to onboarding */
   listAccountDrafts?: Maybe<Array<Maybe<DraftAccount>>>;
   profileCompletionStatus?: Maybe<ProfileCompletionStatus>;
 };
+
+
 export type QueryCanOpenAccountArgs = {
   accountType?: InputMaybe<AccountType>;
 };
+
+
 export type QueryGetAccountArgs = {
   accountId?: InputMaybe<Scalars['String']>;
 };
+
+
 export type QueryGetCorporateDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
+
+
 export type QueryGetIndividualDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
 };
+
+
 export type QueryGetTemplateArgs = {
   templateName?: InputMaybe<TemplateName>;
 };
+
+
 export type QueryGetTrustDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
+};
+
+export type SsnInput = {
+  ssn: Scalars['String'];
 };
 
 export type SignatureId = {
   __typename?: 'SignatureId';
   signatureId?: Maybe<Scalars['String']>;
 };
+
+export type Stakeholder = {
+  __typename?: 'Stakeholder';
+  address?: Maybe<Address>;
+  dateOfBirth?: Maybe<Scalars['ISODate']>;
+  domicile?: Maybe<Domicile>;
+  email?: Maybe<Scalars['EmailAddress']>;
+  idScan?: Maybe<Array<Maybe<FileLinkId>>>;
+  legalName?: Maybe<Scalars['String']>;
+  ssn?: Maybe<Scalars['String']>;
+};
+
+export type StakeholderInput = {
+  address: AddressInput;
+  dateOfBirth: Scalars['ISODate'];
+  domicile: DomicileInput;
+  email?: InputMaybe<EmailInput>;
+  idScan: Array<InputMaybe<FileLinkInput>>;
+  legalName: LegalNameInput;
+  ssn: SsnInput;
+};
+
+export type Statement = {
+  __typename?: 'Statement';
+  details?: Maybe<Array<Maybe<Scalars['String']>>>;
+  type?: Maybe<StatementType>;
+};
+
+/**
+ * An investor statements for:
+ * - being a FINRA member
+ * - politician
+ * - public trading company stakeholder
+ * Choose type and add details depending on the chosen type
+ */
+export type StatementInput = {
+  forAccreditedInvestor?: InputMaybe<AccreditedInvestorInput>;
+  forFINRA?: InputMaybe<FinraStatementInput>;
+  forPolitician?: InputMaybe<PoliticianStatementInput>;
+  forStakeholder?: InputMaybe<TradingCompanyStakeholderInput>;
+  type: StatementType;
+};
+
+export enum StatementType {
+  AccreditedInvestor = 'AccreditedInvestor',
+  FinraMember = 'FINRAMember',
+  Politician = 'Politician',
+  TradingCompanyStakeholder = 'TradingCompanyStakeholder'
+}
 
 export type Template = {
   __typename?: 'Template';
@@ -312,10 +562,53 @@ export type Template = {
 
 export enum TemplateName {
   AutoReinvestmentAgreement = 'AUTO_REINVESTMENT_AGREEMENT',
-  SubscriptionAgreement = 'SUBSCRIPTION_AGREEMENT',
+  SubscriptionAgreement = 'SUBSCRIPTION_AGREEMENT'
 }
 
+export type TradingCompanyStakeholderInput = {
+  tickerSymbols: Array<Scalars['String']>;
+};
+
+export enum TrustCompanyType {
+  Irrevocable = 'IRREVOCABLE',
+  Revocable = 'REVOCABLE'
+}
+
+export type TrustCompanyTypeInput = {
+  type?: InputMaybe<TrustCompanyType>;
+};
+
+/** [MOCK] */
 export type TrustDraftAccount = {
   __typename?: 'TrustDraftAccount';
+  address?: Maybe<Address>;
+  annualRevenue?: Maybe<Scalars['String']>;
+  avatar?: Maybe<GetAvatarLink>;
+  companyDocuments?: Maybe<Array<Maybe<FileLinkId>>>;
+  companyType?: Maybe<TrustCompanyType>;
+  ein?: Maybe<Scalars['String']>;
   id?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  numberOfEmployees?: Maybe<Scalars['String']>;
+  stakeholders?: Maybe<Array<Maybe<Stakeholder>>>;
+};
+
+export type TrustDraftAccountInput = {
+  address?: InputMaybe<AddressInput>;
+  annualRevenue?: InputMaybe<AnnualRevenueInput>;
+  avatar?: InputMaybe<FileLinkInput>;
+  companyDocuments?: InputMaybe<Array<InputMaybe<FileLinkInput>>>;
+  companyType?: InputMaybe<TrustCompanyTypeInput>;
+  ein?: InputMaybe<EinInput>;
+  name?: InputMaybe<CompanyNameInput>;
+  numberOfEmployees?: InputMaybe<NumberOfEmployeesInput>;
+  removeDocuments?: InputMaybe<Array<InputMaybe<FileLinkInput>>>;
+  removeStakeholders?: InputMaybe<Array<InputMaybe<SsnInput>>>;
+  stakeholders?: InputMaybe<Array<InputMaybe<StakeholderInput>>>;
+};
+
+export type VisaInput = {
+  birthCountry: Scalars['String'];
+  citizenshipCountry: Scalars['String'];
+  visaType: Scalars['String'];
 };
