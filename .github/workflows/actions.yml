@@ -46,7 +46,7 @@ jobs:
           AWS_COGNITO_CLIENT_ID: ${{ secrets[format('{0}_AWS_COGNITO_CLIENT_ID', env.ENVIRONMENT)] }}
           API_URL: ${{ secrets[format('{0}_API_URL', env.ENVIRONMENT)] }}
           ANALYZE: ${{ secrets.ANALYZE }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+          AWS_COGNITO_REGION: ${{secrets.AWS_COGNITO_REGION}}
         run: |
           environment=${{env.ENVIRONMENT}}
           yarn deploy --stage "${environment,,}"
