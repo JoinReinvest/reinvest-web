@@ -14,6 +14,7 @@ const envSchema = z.object({
     cognito: z.object({
       clientId: z.string(),
       userPoolId: z.string(),
+      region: z.string(),
     }),
   }),
 });
@@ -29,6 +30,7 @@ export const env: envInterface = envSchema.parse({
     cognito: {
       clientId: process.env.AWS_COGNITO_CLIENT_ID,
       userPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
+      region: process.env.AWS_COGNITO_REGION,
     },
   },
   apiUrl: process.env.API_URL,

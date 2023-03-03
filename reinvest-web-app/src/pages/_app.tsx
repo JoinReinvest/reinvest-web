@@ -11,7 +11,7 @@ import { env } from '../env';
 import { queryClient } from '../services/queryClient';
 
 Amplify.configure({
-  aws_cognito_region: 'us-east-1',
+  aws_cognito_region: env.aws.cognito.region,
   aws_user_pools_id: env.aws.cognito.userPoolId,
   aws_user_pools_web_client_id: env.aws.cognito.clientId,
 });
