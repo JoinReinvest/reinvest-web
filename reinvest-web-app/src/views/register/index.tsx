@@ -11,6 +11,7 @@ export const RegistrationView = () => {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
+    progressPercentage,
   } = useFormFlowContext();
 
   const shouldDisplayFirstStep = isMounted() && isFirstStep;
@@ -29,6 +30,7 @@ export const RegistrationView = () => {
           <BlackModal
             isOpen={!isFirstStep}
             onOpenChange={moveToPreviousValidStep}
+            progressBarValue={progressPercentage}
           >
             <CurrentStepView />
           </BlackModal>
