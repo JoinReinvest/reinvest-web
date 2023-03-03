@@ -1,8 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
-import { Account } from 'types/graphql';
-
-import { useApiClient } from '../useApiClient';
+import { getApiClient } from 'services/getApiClient';
+import { Query } from 'types/graphql';
 
 const getAccountQuery = gql`
   query getAccount($accountId: String) {
@@ -13,13 +12,13 @@ const getAccountQuery = gql`
   }
 `;
 
-export const useGetAccount = (accountId: string): UseQueryResult<Account> => {
-  const api = useApiClient();
+export const useGetAccount = (accountId: string): UseQueryResult<Query['getAccount']> => {
+  const api = getApiClient();
 
-  return useQuery<Account>({
+  return useQuery<Query['getAccount']>({
     queryKey: ['getAccount', accountId],
     queryFn: async () => {
-      const { getAccount } = await api.request(getAccountQuery, { accountId });
+      const { getAccount } = await api.request<Query>(getAccountQuery, { accountId });
 
       return getAccount;
     },

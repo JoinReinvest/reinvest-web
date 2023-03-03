@@ -1,8 +1,8 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
-import { Profile } from 'types/graphql';
+import { getApiClient } from 'services/getApiClient';
+import { Query } from 'types/graphql';
 
-import { useApiClient } from '../useApiClient';
 import { AccountsFragment } from './fragments/accounts';
 import { AddressFragment } from './fragments/address';
 import { CompletionStatusFragment } from './fragments/completionStatus';
@@ -34,13 +34,13 @@ export const getProfileQuery = gql`
   }
 `;
 
-export const useGetAccount = (): UseQueryResult<Profile> => {
-  const api = useApiClient();
+export const useGetUserProfile = (): UseQueryResult<Query['getProfile']> => {
+  const api = getApiClient();
 
-  return useQuery<Profile>({
+  return useQuery<Query['getProfile']>({
     queryKey: ['getProfile'],
     queryFn: async () => {
-      const { getProfile } = await api.request(getProfileQuery);
+      const { getProfile } = await api.request<Query>(getProfileQuery);
 
       return getProfile;
     },

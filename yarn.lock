@@ -11,9 +11,9 @@
     "@jridgewell/trace-mapping" "^0.3.9"
 
 "@aws-cdk/asset-awscli-v1@^2.2.49", "@aws-cdk/asset-awscli-v1@^2.2.85":
-  version "2.2.88"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-awscli-v1/-/asset-awscli-v1-2.2.88.tgz#777e0e94b050e19c54e9670b3374e8fe0dde63a1"
-  integrity sha512-0A64KW2OIB1tGMx7uV7Vdc88G2WGIf0TIFYPH6bU+9tI5iB5Erw9Tu2Mo2w7lmMI0j7dRlMBtAXQMQkKEP1liA==
+  version "2.2.91"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-awscli-v1/-/asset-awscli-v1-2.2.91.tgz#2b2705561f664b24618230f1e4e87ab5e00df8fd"
+  integrity sha512-a66YsYr8csu9LBBpm+kQQlJL7PnC4KcfjSfSWA86VeQZfAkBF/QRlL0XghUO4WUV55UPx93jm86z4eNwthyAsg==
 
 "@aws-cdk/asset-kubectl-v20@^2.1.1":
   version "2.1.1"
@@ -21,9 +21,9 @@
   integrity sha512-U1ntiX8XiMRRRH5J1IdC+1t5CE89015cwyt5U63Cpk0GnMlN5+h9WsWMlKlPXZR4rdq/m806JRlBMRpBUB2Dhw==
 
 "@aws-cdk/asset-node-proxy-agent-v5@^2.0.38", "@aws-cdk/asset-node-proxy-agent-v5@^2.0.71":
-  version "2.0.72"
-  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-node-proxy-agent-v5/-/asset-node-proxy-agent-v5-2.0.72.tgz#006377d30c156d8bbef7ee962d53e0b732178ba9"
-  integrity sha512-oI8M4yc6sRRmlb862C1mbQA0KOrMOdkniEiEYyzIyJGvZIWhG6eBQXu+862q4vGu8ZQdWr7gpirDyJpqjEAUdQ==
+  version "2.0.73"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/asset-node-proxy-agent-v5/-/asset-node-proxy-agent-v5-2.0.73.tgz#32d061c80d06b2da2fa87a77462f1a70967986df"
+  integrity sha512-6HK9q8TEV0g9WopnKwK62qDBUTVdswfw6K1jXzJrQsDUEB7+OvgQjfR5vrEtc++MEbc625Xc5hzfxv3gGmc6DQ==
 
 "@aws-cdk/aws-apigatewayv2-alpha@^2.62.2-alpha.0":
   version "2.62.2-alpha.0"
@@ -438,9 +438,9 @@
     tslib "^2.3.1"
 
 "@aws-sdk/client-iot@^3.279.0":
-  version "3.282.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/client-iot/-/client-iot-3.282.0.tgz#2777852ef79b16b789d9fea5b0d94bc41c1bdfea"
-  integrity sha512-zvbQm/xsxpaae2RLRFFIr2Dfi+4XhY1HQlHCRd5LBPZkwvLhUokcANCHKkEdQ9N2wUY6vhDuw5SwaKCU4XHt4A==
+  version "3.283.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/client-iot/-/client-iot-3.283.0.tgz#2ef41216c4f4f542c2e29f4fd2d935d8777c3f9b"
+  integrity sha512-PqRhG8IxKEJIIvAmfi9cd2aOpHhoS8Fqe8+CYA4mH5O0wNJnEL1nx/duhkTWBbKb5VjEVEqgTJmUTu/3vn4sUQ==
   dependencies:
     "@aws-crypto/sha256-browser" "3.0.0"
     "@aws-crypto/sha256-js" "3.0.0"
@@ -1879,9 +1879,9 @@
   integrity sha512-yOlFc+7UtL/89t2ZhjPvvB/DeAr3r+Dq58IgzsFkOAvVC6NMJXmCGjbptdXdR9qsX7pKcTL+s87FtYREi2dEEQ==
 
 "@types/node@*":
-  version "18.14.4"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.4.tgz#0e64ec0b35a772e1e3d849f9a0ff61782d0cb647"
-  integrity sha512-VhCw7I7qO2X49+jaKcAUwi3rR+hbxT5VcYF493+Z5kMLI0DL568b7JI4IDJaxWFH0D/xwmGJNoXisyX+w7GH/g==
+  version "18.14.5"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-18.14.5.tgz#4a13a6445862159303fc38586598a9396fc408b3"
+  integrity sha512-CRT4tMK/DHYhw1fcCEBwME9CSaZNclxfzVMe7GsO6ULSwsttbj70wSiX6rZdIjGblu93sTJxLdhNIT85KKI7Qw==
 
 "@types/node@^14.18.36":
   version "14.18.37"
@@ -2138,9 +2138,9 @@ aws-iot-device-sdk@^2.2.12:
     websocket-stream "^5.5.2"
 
 aws-sdk@^2.1211.0, aws-sdk@^2.1326.0:
-  version "2.1326.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1326.0.tgz#91da60f08d10e4e1db0640c97bc7d2298fde8f17"
-  integrity sha512-LSGiO4RSooupHnkvYbPOuOYqwAxmcnYinwIxBz4P1YI8ulhZZ/pypOj/HKqC629UyhY1ndSMtlM1l56U74UclA==
+  version "2.1327.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1327.0.tgz#14a5b1b919072b310b16d27e02d59d69e8e70ba1"
+  integrity sha512-adyoVv5MGGyq6Gm2k/W2h1dqmtMw+td5IW86vomKtMTT0S0eI2iYNABCk9G2EBqZOq8nx6RYuEyhascN7eaaig==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -2364,9 +2364,9 @@ camelcase@^2.0.1:
   integrity sha512-DLIsRzJVBQu72meAKPkWQOLcujdXT32hwdfnkI1frSiSRMK1MofjKHf+MEx0SB6fjEFXL8fBDv1dKymBlOp4Qw==
 
 caniuse-lite@^1.0.30001449:
-  version "1.0.30001458"
-  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001458.tgz#871e35866b4654a7d25eccca86864f411825540c"
-  integrity sha512-lQ1VlUUq5q9ro9X+5gOEyH7i3vm+AYVT1WDCVB69XOZ17KZRhnZ9J0Sqz7wTHQaLBJccNCHq8/Ww5LlOIZbB0w==
+  version "1.0.30001460"
+  resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30001460.tgz#31d2e26f0a2309860ed3eff154e03890d9d851a7"
+  integrity sha512-Bud7abqjvEjipUkpLs4D7gR0l8hBYBHoa+tGtKJHvT2AYzLp1z7EmVkUT4ERpVUfca8S2HGIVs883D8pUH1ZzQ==
 
 case@1.6.3:
   version "1.6.3"
@@ -2830,9 +2830,9 @@ ee-first@1.1.1:
   integrity sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.315"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.315.tgz#b60a6676b3a1db332cfc8919118344aa06b9ac99"
-  integrity sha512-ndBQYz3Eyy3rASjjQ9poMJGoAlsZ/aZnq6GBsGL4w/4sWIAwiUHVSsMuADbxa8WJw7pZ0oxLpGbtoDt4vRTdCg==
+  version "1.4.317"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.317.tgz#9a3d38a1a37f26a417d3d95dafe198ff11ed072b"
+  integrity sha512-JhCRm9v30FMNzQSsjl4kXaygU+qHBD0Yh7mKxyjmF0V8VwYVB6qpBRX28GyAucrM9wDCpSUctT6FpMUQxbyKuA==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -3546,6 +3546,60 @@ lcid@^1.0.0:
   dependencies:
     invert-kv "^1.0.0"
 
+lefthook-darwin-arm64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-arm64/-/lefthook-darwin-arm64-1.3.3.tgz#93ef3f9d5509fd199f2ea94fc90d06e64441910d"
+  integrity sha512-dtfgqtoY7/6V5p3nTZ88+sQluTrc80ZXjZb7VNg1JYcUybKt5dSvhipj03LRmAdmMbmI4T88vKgOwAAxSiJqcg==
+
+lefthook-darwin-x64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-darwin-x64/-/lefthook-darwin-x64-1.3.3.tgz#5d86e1be24056d58ffedc02750778557db40edf7"
+  integrity sha512-TshLjcQWUeQ+xwnkAEStKSCoidLLAg2/Esbog3h7wuBCskAXvD/0WcFM1uSdAOQrVT+LVeJ2STvLviK8xvvavw==
+
+lefthook-freebsd-arm64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-arm64/-/lefthook-freebsd-arm64-1.3.3.tgz#8da364379fddc6728c3dd1e9b4ff32a2ce295431"
+  integrity sha512-dx4kW4O+dExhZFdwnqsCIXwPpgYiPmQnlqxpqdVLC+ITPmp1NrflgLyBAsfPkrlwRrwRmUmvocXRYcrH4l6exQ==
+
+lefthook-freebsd-x64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-freebsd-x64/-/lefthook-freebsd-x64-1.3.3.tgz#257dfa35fd4d85fc66fb3cb219519136b58d81ea"
+  integrity sha512-XcyrklF59sht7n6j/P7ke3hFpqI5wm2xHfAArhhkimXxmL4/aBTYCecew2t4eIiXtjWio2Dij/sxCK5roEjUiQ==
+
+lefthook-linux-arm64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-arm64/-/lefthook-linux-arm64-1.3.3.tgz#3851d15e4236f60f92f271349e7602c9f2f7c638"
+  integrity sha512-yvS8Qg3eDXl1bXpihURTJivVNspW4ZVXVyj7U+sb5cTa+bvzv4GeJpftBAprK2kLUSdzsvNXPEi3EdUDj1CJQQ==
+
+lefthook-linux-x64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-linux-x64/-/lefthook-linux-x64-1.3.3.tgz#888a09b9f1a2193ffa24696b6784cb8034b36c71"
+  integrity sha512-e1t85k/kS+NmfUIG6D4X8us4JZIwuI4zoZkuYZDLRiqGh4gpFd8+Edr2E3pJU5Xncd+7sFdGq5RqVpC+yLtQXg==
+
+lefthook-windows-arm64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-arm64/-/lefthook-windows-arm64-1.3.3.tgz#dba65be625890daae73717d46d9169ea18cb9aef"
+  integrity sha512-WFdPKfvet7pqyDtaKi89opcox8eiz/QtPOmzRc1ZcDQTpIghavFYxswdEJtEpghoYzZ6Yt44EevBu8PFEmPMDg==
+
+lefthook-windows-x64@1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook-windows-x64/-/lefthook-windows-x64-1.3.3.tgz#e8c8e925268dc8e1c17607a9bfb463e61329bc94"
+  integrity sha512-9ab4HuCAsLVs+0gWDwJCnKDdsX7fBZ7iuK/hmhEuwyQmrkC1adac+USGLoRATg50rvy4FjclHrNMcu+tZ8rXYQ==
+
+lefthook@^1.3.3:
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/lefthook/-/lefthook-1.3.3.tgz#096e78c0a98de9007e8de844a50bcdc23d0cad6f"
+  integrity sha512-ZBqsjirNDlNts0L2pKKKcZwSVE0bFNHMupq9/7E0ETagdxoJFVYFxg+zEaAoyKJqGuc1i+k70sB9t1A6Z0EiTA==
+  optionalDependencies:
+    lefthook-darwin-arm64 "1.3.3"
+    lefthook-darwin-x64 "1.3.3"
+    lefthook-freebsd-arm64 "1.3.3"
+    lefthook-freebsd-x64 "1.3.3"
+    lefthook-linux-arm64 "1.3.3"
+    lefthook-linux-x64 "1.3.3"
+    lefthook-windows-arm64 "1.3.3"
+    lefthook-windows-x64 "1.3.3"
+
 leven@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/leven/-/leven-2.1.0.tgz#c2e7a9f772094dee9d34202ae8acce4687875580"
@@ -4244,9 +4298,9 @@ reinterval@^1.1.0:
   integrity sha512-QIRet3SYrGp0HUHO88jVskiG6seqUGC5iAG7AwI/BV4ypGcuqk9Du6YQBUOUqm9c8pw1eyLoIaONifRua1lsEQ==
 
 remeda@^1.3.0:
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/remeda/-/remeda-1.8.0.tgz#ba8d99026c3f3be6fd268bddb3ed06dddd8b0d05"
-  integrity sha512-zhrGQbeIVJhXArg8/USMkZQeD36rr62SAt96bw5aOBjo7V399rOn7FrgQRG5WfxO9zME09vOtOs5nx1UsZ/80A==
+  version "1.8.1"
+  resolved "https://registry.yarnpkg.com/remeda/-/remeda-1.8.1.tgz#811b43730203b59a3f42fd5b643e207d58f9fe99"
+  integrity sha512-X7MpoWqenIx9Ts6DJ92mn0ottXvPUXbkeJr7AyGYYFxAkCtjIwgMpLo7mNMpFHyqFnerR4d2HPBVZkL/mSbrGQ==
 
 require-directory@^2.1.1:
   version "2.1.1"
@@ -4437,9 +4491,9 @@ splitargs@0:
   integrity sha512-UUFYD2oWbNwULH6WoVtLUOw8ch586B+HUqcsAjjjeoBQAM1bD4wZRXu01koaxyd8UeYpybWqW4h+lO1Okv40Tg==
 
 sst@^2.1.5:
-  version "2.1.5"
-  resolved "https://registry.yarnpkg.com/sst/-/sst-2.1.5.tgz#aeeeab91396e709a9b77fbca33694ac270d69baf"
-  integrity sha512-k+LwuWX+93kJ24JY77LltqlhE/ILgwzx8gnsozRnJt7ZCP12nErJIvHs2YFUCOqJValzecF+iDe+0PmXWh79Eg==
+  version "2.1.6"
+  resolved "https://registry.yarnpkg.com/sst/-/sst-2.1.6.tgz#123534afef74cbd97d0ac789141d338b18ac5616"
+  integrity sha512-sACZWvpVE7l55rz4HfZgnrI3xCHXJiXpo5J/6BPrBgix0FB1vL+T4RhR7qz3V/xqcrsN1Mbq39KgcwVAq+YgZQ==
   dependencies:
     "@aws-cdk/aws-apigatewayv2-alpha" "^2.62.2-alpha.0"
     "@aws-cdk/aws-apigatewayv2-authorizers-alpha" "^2.62.2-alpha.0"
