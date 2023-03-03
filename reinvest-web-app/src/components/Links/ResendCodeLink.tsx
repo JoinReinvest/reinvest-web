@@ -1,16 +1,17 @@
-import { LinkType } from '@hookooekoo/ui-link';
-
-import { Link } from '../Link';
+import { Typography } from 'components/Typography';
 
 interface Props {
-  href: LinkType['href'];
+  onClick?: () => void;
 }
 
-export const ResendCodeLink = ({ href }: Props) => (
-  <Link
-    href={href}
-    title="Resend Code"
+export const ResendCodeLink = ({ onClick }: Props) => (
+  <div
+    className="w-max text-green-frost-01"
+    onKeyDown={onClick}
+    onClick={onClick}
+    role="button"
+    tabIndex={0}
   >
-    Resend Code
-  </Link>
+    <Typography variant="link">Resend Code</Typography>
+  </div>
 );
