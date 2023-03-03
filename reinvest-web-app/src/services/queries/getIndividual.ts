@@ -25,7 +25,7 @@ export const useGetIndividual = (): UseQueryResult<Individual> => {
   return useQuery<Individual>({
     queryKey: ['getIndividual'],
     queryFn: async () => {
-      const { getIndividual } = await api.request<any>(getIndividualQuery);
+      const { getIndividual } = await api.request(getIndividualQuery);
 
       return getIndividual;
     },

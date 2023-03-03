@@ -17,7 +17,7 @@ export const useCreateAvatarFileLink = (): UseMutationResult<FileLink> => {
 
   return useMutation({
     mutationFn: async () => {
-      const { createAvatarFileLink } = await api.request<any>(createAvatarFileLinkMutation);
+      const { createAvatarFileLink } = await api.request(createAvatarFileLinkMutation);
 
       return createAvatarFileLink;
     },

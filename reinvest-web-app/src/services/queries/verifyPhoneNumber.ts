@@ -13,7 +13,7 @@ export const useVerifyPhoneNumber = (countryCode: string, phoneNumber: string, a
 
   return useMutation({
     mutationFn: async () => {
-      const { verifyPhoneNumber } = await api.request<any>(verifyPhoneNumberMutation, { countryCode, phoneNumber, authCode });
+      const { verifyPhoneNumber } = await api.request(verifyPhoneNumberMutation, { countryCode, phoneNumber, authCode });
 
       return verifyPhoneNumber;
     },

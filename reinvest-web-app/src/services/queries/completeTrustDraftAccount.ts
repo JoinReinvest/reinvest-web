@@ -16,7 +16,7 @@ export const useCompleteTrustDraftAccount = (accountId: string): UseMutationResu
 
   return useMutation({
     mutationFn: async () => {
-      const { completeTrustDraftAccount } = await api.request<any>(completeTrustDraftAccountMutation, { accountId });
+      const { completeTrustDraftAccount } = await api.request(completeTrustDraftAccountMutation, { accountId });
 
       return completeTrustDraftAccount;
     },

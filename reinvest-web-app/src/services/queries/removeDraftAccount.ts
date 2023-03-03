@@ -13,7 +13,7 @@ export const useRemoveDraftAccount = (id: string): UseMutationResult<boolean> =>
 
   return useMutation({
     mutationFn: async () => {
-      const { removeDraftAccount } = await api.request<any>(removeDraftAccountMutatuion, { id });
+      const { removeDraftAccount } = await api.request(removeDraftAccountMutatuion, { id });
 
       return removeDraftAccount;
     },

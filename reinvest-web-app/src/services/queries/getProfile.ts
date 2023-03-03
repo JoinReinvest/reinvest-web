@@ -40,7 +40,7 @@ export const useGetUserProfile = (): UseQueryResult<Profile> => {
   return useQuery<Profile>({
     queryKey: ['getProfile'],
     queryFn: async () => {
-      const { getProfile } = await api.request<any>(getProfileQuery);
+      const { getProfile } = await api.request(getProfileQuery);
 
       return getProfile;
     },

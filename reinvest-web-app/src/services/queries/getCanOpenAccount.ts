@@ -15,7 +15,7 @@ export const useGetCanOpenAccount = (accountType: AccountType): UseQueryResult<b
   return useQuery<boolean>({
     queryKey: ['getCanOpenAccount', accountType],
     queryFn: async () => {
-      const { getCanOpenAccount } = await api.request<any>(getCanOpenAccountQuery, { accountType });
+      const { getCanOpenAccount } = await api.request(getCanOpenAccountQuery, { accountType });
 
       return getCanOpenAccount;
     },

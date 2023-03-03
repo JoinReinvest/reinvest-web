@@ -32,7 +32,7 @@ export const useCompleteIndividualDraftAccount = (accountId: string, input: Indi
 
   return useMutation({
     mutationFn: async () => {
-      const { completeIndividualDraftAccount } = await api.request<any>(completeIndividualDraftAccountMutation, { accountId, input });
+      const { completeIndividualDraftAccount } = await api.request(completeIndividualDraftAccountMutation, { accountId, input });
 
       return completeIndividualDraftAccount;
     },

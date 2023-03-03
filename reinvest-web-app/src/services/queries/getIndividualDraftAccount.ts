@@ -33,7 +33,7 @@ export const useGetIndividualDraftAccount = (accountId: string): UseQueryResult<
   return useQuery<IndividualDraftAccount>({
     queryKey: ['getIndividualDraftAccount', accountId],
     queryFn: async () => {
-      const { getIndividualDraftAccount } = await api.request<any>(getIndividualDraftAccountQuery, { accountId });
+      const { getIndividualDraftAccount } = await api.request(getIndividualDraftAccountQuery, { accountId });
 
       return getIndividualDraftAccount;
     },

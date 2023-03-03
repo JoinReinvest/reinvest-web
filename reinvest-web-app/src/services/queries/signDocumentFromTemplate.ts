@@ -17,7 +17,7 @@ export const useSignDocumentFromTemplate = (templateId: TemplateName, fields: Ge
 
   return useMutation({
     mutationFn: async () => {
-      const { signDocumentFromTemplate } = await api.request<any>(signDocumentFromTemplateMutation, { templateId, fields, signature });
+      const { signDocumentFromTemplate } = await api.request(signDocumentFromTemplateMutation, { templateId, fields, signature });
 
       return signDocumentFromTemplate;
     },

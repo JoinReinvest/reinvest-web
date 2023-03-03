@@ -18,7 +18,7 @@ export const useGetAccount = (accountId: string): UseQueryResult<Account> => {
   return useQuery<Account>({
     queryKey: ['getAccount', accountId],
     queryFn: async () => {
-      const { getAccount } = await api.request<any>(getAccountQuery, { accountId });
+      const { getAccount } = await api.request(getAccountQuery, { accountId });
 
       return getAccount;
     },

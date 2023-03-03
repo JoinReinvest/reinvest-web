@@ -19,7 +19,7 @@ export const useGetTemplate = (): UseQueryResult<Template> => {
   return useQuery<Template>({
     queryKey: ['getTemplate'],
     queryFn: async () => {
-      const { getTemplate } = await api.request<any>(getTemplateQuery);
+      const { getTemplate } = await api.request(getTemplateQuery);
 
       return getTemplate;
     },
