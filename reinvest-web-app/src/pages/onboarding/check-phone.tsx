@@ -33,7 +33,6 @@ const CheckPhonePage: NextPage = () => {
         />
 
         <div className="my-20 flex justify-between">
-          <ResendCodeLink href="/" />
           <GetHelpLink />
         </div>
       </BlackModal>

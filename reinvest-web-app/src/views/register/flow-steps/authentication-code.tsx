@@ -29,6 +29,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
       authenticationCode: formValidationRules.authenticationCode,
     });
     const [error, setError] = useState<string | undefined>('');
+    const [infoMessage, setInfoMessage] = useState('');
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -43,6 +44,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
     const resendCodeOnClick = async () => {
       try {
         await Auth.resendSignUp(storeFields.email);
+        setInfoMessage('Code has been sent');
       } catch (err) {
         setError((err as Error).message);
       }
@@ -55,7 +57,8 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
           subtitle={subtitleMessage}
         />
 
-        {error && <Message message={error} /> }
+        {error && <Message message={error} />}
+        {error && <Message message={infoMessage} variant="info" />}
 
         <InputAuthenticationCode
           name="authenticationCode"

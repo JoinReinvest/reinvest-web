@@ -55,7 +55,6 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
         />
 
         <div className="flex justify-between">
-          <ResendCodeLink href="/" />
           <GetHelpLink />
         </div>
 
