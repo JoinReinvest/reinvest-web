@@ -1,2 +1,16 @@
-extends:
-  - ./reinvest-web-app/lefthook.yml
+post-merge:
+  commands:
+    update:
+      run: yarn
+pre-commit:
+  parallel: true
+  commands:
+    linter:
+      root: "reinvest-web-app/"
+      run: yarn lint
+    check_types:
+      root: "reinvest-web-app/"
+      run: yarn check-types
+    stylelint:
+      root: "reinvest-web-app/"
+      run: yarn style-lint

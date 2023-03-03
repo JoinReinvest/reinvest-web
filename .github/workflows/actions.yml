@@ -36,17 +36,21 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: "Install dependencies"
         run: yarn install
-      - name: "Prepare envs"
+      - name: "Linter"
+        run: yarn lint
+      - name: "Check types"
+        run: yarn check-types
+      - name: "Deploy to AWS"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          SITE_NAME: ${{ secrets.SITE_NAME }}
-          REINVEST_SITE_URL: ${{ secrets.REINVEST_SITE_URL }}
           AWS_COGNITO_USER_POOL_ID: ${{ secrets[format('{0}_AWS_COGNITO_USER_POOL_ID', env.ENVIRONMENT)] }}
           AWS_COGNITO_CLIENT_ID: ${{ secrets[format('{0}_AWS_COGNITO_CLIENT_ID', env.ENVIRONMENT)] }}
+          AWS_COGNITO_REGION: ${{secrets.AWS_COGNITO_REGION}}
+          SITE_NAME: ${{ secrets.SITE_NAME }}
+          REINVEST_SITE_URL: ${{ secrets.REINVEST_SITE_URL }}
           API_URL: ${{ secrets[format('{0}_API_URL', env.ENVIRONMENT)] }}
           ANALYZE: ${{ secrets.ANALYZE }}
-          AWS_COGNITO_REGION: ${{secrets.AWS_COGNITO_REGION}}
         run: |
           environment=${{env.ENVIRONMENT}}
           yarn deploy --stage "${environment,,}"

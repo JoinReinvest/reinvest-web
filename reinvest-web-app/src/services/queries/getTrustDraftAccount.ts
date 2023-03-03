@@ -1,7 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
-import { TrustDraftAccount } from 'types/graphql';
+import { Maybe, Query, TrustDraftAccount } from 'types/graphql';
 
 const getTrustDraftAccountQuery = gql`
   query getTrustDraftAccount($accountId: ID) {
@@ -11,13 +11,13 @@ const getTrustDraftAccountQuery = gql`
   }
 `;
 
-export const useGetTrustDraftAccount = (accountId: string): UseQueryResult<TrustDraftAccount> => {
+export const useGetTrustDraftAccount = (accountId: string): UseQueryResult => {
   const api = getApiClient();
 
-  return useQuery<TrustDraftAccount>({
+  return useQuery<Maybe<TrustDraftAccount> | undefined>({
     queryKey: ['getTrustDraftAccount', accountId],
     queryFn: async () => {
-      const { getTrustDraftAccount } = await api.request(getTrustDraftAccountQuery, { accountId });
+      const { getTrustDraftAccount } = await api.request<Query>(getTrustDraftAccountQuery, { accountId });
 
       return getTrustDraftAccount;
     },

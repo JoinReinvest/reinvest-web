@@ -53,6 +53,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
           setIsLoading(false);
         }
       };
+
       confirmEmail();
     }, [storeFields.authenticationCode, storeFields.email]);
 
