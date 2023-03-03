@@ -1,7 +1,7 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { ErrorMessage } from 'components/ErrorMessage';
+import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
@@ -76,7 +76,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           />
         )}
 
-        {error && <ErrorMessage message={error} />}
+        {error && <Message message={error} />}
 
         <InputPassword
           name="password"
