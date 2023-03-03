@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
-import { ErrorMessage } from 'components/ErrorMessage';
+import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
@@ -47,7 +47,7 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
         />
 
-        <ErrorMessage message={error} />
+        {error && <Message message={error} />}
 
         <InputAuthenticationCode
           name="authenticationCode"
