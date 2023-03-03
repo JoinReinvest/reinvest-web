@@ -10,7 +10,7 @@ import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { resetPassword } from 'services/auth/resetPassword';
+import { Auth } from '@aws-amplify/auth';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
@@ -50,11 +50,11 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
       setIsLoading(true);
 
       try {
-        await resetPassword(storeFields.email, fields.password, storeFields.authenticationCode);
+        await Auth.forgotPasswordSubmit(storeFields.email, storeFields.authenticationCode, fields.password)
 
         moveToNextStep();
       } catch (err) {
-        setError(err as string);
+        setError((err as Error).message);
       } finally {
         setIsLoading(false);
       }

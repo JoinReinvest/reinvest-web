@@ -7,9 +7,9 @@ import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { forgotPassword } from 'services/auth/forgotPassword';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
+import { Auth } from '@aws-amplify/auth';
 
 import { ForgotPasswordFormFields } from '../form-fields';
 
@@ -34,7 +34,7 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
       updateStoreFields(fields);
 
       try {
-        await forgotPassword(fields.email);
+        await Auth.forgotPassword(fields.email);
 
         moveToNextStep();
       } catch (err) {
