@@ -18,7 +18,7 @@ export const useGetProfileCompletionStatus = (): UseQueryResult<ProfileCompletio
   return useQuery<ProfileCompletionStatus>({
     queryKey: ['getProfileCompletionStatus'],
     queryFn: async () => {
-      const { profileCompletionStatus } = await api.request<any>(getProfileCompletionStatusQuery);
+      const { profileCompletionStatus } = await api.request(getProfileCompletionStatusQuery);
 
       return profileCompletionStatus;
     },

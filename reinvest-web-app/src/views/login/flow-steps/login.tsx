@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { AuthContext } from 'components/AuthProvider';
+import { ChallengeName, useAuth } from 'components/AuthProvider';
+import { CognitoUser } from '@aws-amplify/auth';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';
@@ -7,7 +8,7 @@ import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
@@ -25,7 +26,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     });
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
     const [error, setError] = useState<string>('');
-    const authContext = useContext(AuthContext);
+    const authContext = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
@@ -41,7 +42,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
       const cognitoUser = result as CognitoUser;
 
-      if (cognitoUser.challengeName === 'SMS_MFA') {
+      if (cognitoUser.challengeName === ChallengeName.SMS_MFA) {
         moveToNextStep();
       }
 

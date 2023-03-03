@@ -13,7 +13,7 @@ export const useOpenAccount = (draftAccountId: string): UseMutationResult<boolea
 
   return useMutation({
     mutationFn: async () => {
-      const { openAccount } = await api.request<any>(openAccountMutation, { draftAccountId });
+      const { openAccount } = await api.request(openAccountMutation, { draftAccountId });
 
       return openAccount;
     },

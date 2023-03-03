@@ -17,7 +17,7 @@ export const useCreateDraftAccount = (type: AccountType): UseMutationResult<Draf
 
   return useMutation({
     mutationFn: async () => {
-      const { createDraftAccount } = await api.request<any>(createDraftAccountMutatuion, { type });
+      const { createDraftAccount } = await api.request(createDraftAccountMutatuion, { type });
 
       return createDraftAccount;
     },

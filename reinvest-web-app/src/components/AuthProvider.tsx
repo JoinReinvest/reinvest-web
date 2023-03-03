@@ -2,9 +2,14 @@ import { Auth, CognitoUser } from '@aws-amplify/auth';
 import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
+export enum ChallengeName {
+  SMS_MFA = 'SMS_MFA'
+}
+
 interface AuthContextInterface {
   actions: {
-    signin: (email: string, password: string) => Promise<CognitoUser | Error | null>;
+    confirmSignIn: (authenticationCode: string) => Promise<CognitoUser | Error | null>;
+    signIn: (email: string, password: string) => Promise<CognitoUser | Error | null>;
   };
   loading: boolean;
   user: CognitoUser | null;
@@ -14,7 +19,10 @@ export const AuthContext = createContext<AuthContextInterface>({
   user: null,
   loading: true,
   actions: {
-    signin: async () => {
+    signIn: async () => {
+      return null;
+    },
+    confirmSignIn: async () => {
       return null;
     },
   },
@@ -29,11 +37,15 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
 
-  const signin = async (email: string, password: string): Promise<CognitoUser | Error> => {
+  const signIn = async (email: string, password: string): Promise<CognitoUser | Error> => {
     try {
-      const user = await Auth.signIn(email, password);
+      const user: CognitoUser = await Auth.signIn(email, password);
+
+      if (user.challengeName !== ChallengeName.SMS_MFA) {
+        router.push('/');
+      }
+
       setUser(user);
-      router.push('/');
 
       return user;
     } catch (error) {
@@ -41,8 +53,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  const confirmSignIn = async (authenticationCode: string) => {
+    const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
+
+    setUser(confirmedUser);
+    router.push('/');
+
+    return confirmedUser;
+  };
+
   const ctx = useMemo(() => {
-    return { loading, user, actions: { signin } };
+    return { loading, user, actions: { signIn, confirmSignIn } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 

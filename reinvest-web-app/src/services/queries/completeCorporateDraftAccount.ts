@@ -16,7 +16,7 @@ export const useCompleteCorporateDraftAccount = (accountId: string): UseMutation
 
   return useMutation({
     mutationFn: async () => {
-      const { completeCorporateDraftAccount } = await api.request<any>(completeCorporateDraftAccountMutation, { accountId });
+      const { completeCorporateDraftAccount } = await api.request(completeCorporateDraftAccountMutation, { accountId });
 
       return completeCorporateDraftAccount;
     },

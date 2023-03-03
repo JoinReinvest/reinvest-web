@@ -18,7 +18,7 @@ export const useGetListAccount = (): UseQueryResult<DraftAccount[]> => {
   return useQuery<DraftAccount[]>({
     queryKey: ['getAccountDrafts'],
     queryFn: async () => {
-      const { listAccountDrafts } = await api.request<any>(accountDraftsQuery);
+      const { listAccountDrafts } = await api.request(accountDraftsQuery);
 
       return listAccountDrafts;
     },

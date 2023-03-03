@@ -32,7 +32,7 @@ export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutati
 
   return useMutation({
     mutationFn: async () => {
-      const { completeProfileDetails } = await api.request<any>(completeProfileDetailsMutation, { input });
+      const { completeProfileDetails } = await api.request(completeProfileDetailsMutation, { input });
 
       return completeProfileDetails;
     },

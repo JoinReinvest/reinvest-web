@@ -17,7 +17,7 @@ export const useGetCorporateDraftAccount = (accountId: string): UseQueryResult<C
   return useQuery<CorporateDraftAccount>({
     queryKey: ['getCorporateDraftAccount', accountId],
     queryFn: async () => {
-      const { getCorporateDraftAccount } = await api.request<any>(getCorporateDraftAccountQuery, { accountId });
+      const { getCorporateDraftAccount } = await api.request(getCorporateDraftAccountQuery, { accountId });
 
       return getCorporateDraftAccount;
     },

@@ -17,7 +17,7 @@ export const useGetTrustDraftAccount = (accountId: string): UseQueryResult<Trust
   return useQuery<TrustDraftAccount>({
     queryKey: ['getTrustDraftAccount', accountId],
     queryFn: async () => {
-      const { getTrustDraftAccount } = await api.request<any>(getTrustDraftAccountQuery, { accountId });
+      const { getTrustDraftAccount } = await api.request(getTrustDraftAccountQuery, { accountId });
 
       return getTrustDraftAccount;
     },

@@ -13,7 +13,7 @@ export const useSetPhoneNumber = (countryCode: string, phoneNumber: string): Use
 
   return useMutation({
     mutationFn: async () => {
-      const { setPhoneNumber } = await api.request<any>(setPhoneNumberMutation, { countryCode, phoneNumber });
+      const { setPhoneNumber } = await api.request(setPhoneNumberMutation, { countryCode, phoneNumber });
 
       return setPhoneNumber;
     },
