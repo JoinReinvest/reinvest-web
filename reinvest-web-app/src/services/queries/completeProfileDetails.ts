@@ -3,26 +3,30 @@ import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
 import { Mutation, ProfileDetailsInput } from 'types/graphql';
 
-import { CompletionStatusFragment } from './fragments/completionStatus';
 import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 const completeProfileDetailsMutation = gql`
   ${ProfileDetailsFragment}
-  ${CompletionStatusFragment}
   mutation completeProfileDetails($input: ProfileDetailsInput) {
     completeProfileDetails(input: $input) {
       externalId
       label
-      avatarUrl
-      accounts {
+      avatar {
         id
+        url
       }
+      isCompleted
       details {
         ...ProfileDetailsFragment
       }
-      completionStatus {
-        ...CompletionStatusFn
-        buiragment
+      accounts {
+        id
+        type
+        avatar {
+          id
+          url
+        }
+        positionTotal
       }
     }
   }
