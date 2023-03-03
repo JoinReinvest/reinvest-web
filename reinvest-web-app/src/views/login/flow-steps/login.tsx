@@ -31,6 +31,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
+      setError('');
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
       const { email, password } = fields;
