@@ -1,3 +1,4 @@
+import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ErrorMessage } from 'components/ErrorMessage';
@@ -10,7 +11,6 @@ import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { Auth } from '@aws-amplify/auth';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
@@ -50,7 +50,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
       setIsLoading(true);
 
       try {
-        await Auth.forgotPasswordSubmit(storeFields.email, storeFields.authenticationCode, fields.password)
+        await Auth.forgotPasswordSubmit(storeFields.email, storeFields.authenticationCode, fields.password);
 
         moveToNextStep();
       } catch (err) {

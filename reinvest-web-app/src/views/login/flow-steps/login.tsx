@@ -1,6 +1,6 @@
+import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ChallengeName, useAuth } from 'components/AuthProvider';
-import { CognitoUser } from '@aws-amplify/auth';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';

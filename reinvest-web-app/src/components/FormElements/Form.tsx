@@ -1,5 +1,5 @@
-import { FormEventHandler, PropsWithChildren } from 'react';
 import cx from 'classnames';
+import { FormEventHandler, PropsWithChildren } from 'react';
 
 interface FormProps extends PropsWithChildren {
   className?: string;

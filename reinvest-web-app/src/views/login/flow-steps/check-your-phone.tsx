@@ -17,7 +17,7 @@ import { LoginFormFields } from '../form-fields';
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
-    const context = useAuth()
+    const context = useAuth();
     const schema: Schema<LoginFormFields> = zod.object({
       email: formValidationRules.email,
       password: formValidationRules.password,

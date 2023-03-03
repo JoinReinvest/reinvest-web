@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 export enum ChallengeName {
-  SMS_MFA = 'SMS_MFA'
+  SMS_MFA = 'SMS_MFA',
 }
 
 interface AuthContextInterface {

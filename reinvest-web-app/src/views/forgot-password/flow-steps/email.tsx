@@ -1,3 +1,4 @@
+import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ErrorMessage } from 'components/ErrorMessage';
@@ -9,7 +10,6 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
-import { Auth } from '@aws-amplify/auth';
 
 import { ForgotPasswordFormFields } from '../form-fields';
 
