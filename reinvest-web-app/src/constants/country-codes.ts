@@ -5,7 +5,7 @@ interface CountryWithCallingCode {
   country: string;
 }
 
-const countries = getCountries();
+export const COUNTRIES = getCountries();
 
 const sortCountriesByCallingCode = (currentCountry: CountryWithCallingCode, nextCountry: CountryWithCallingCode) => {
   const currentCountryCallingCode = parseInt(currentCountry.callingCode);
@@ -17,9 +17,7 @@ const sortCountriesByCallingCode = (currentCountry: CountryWithCallingCode, next
 const filterCountriesWithUniqueCallingCodes = (country: CountryWithCallingCode, index: number, countries: CountryWithCallingCode[]) => {
   const indexInCountries = countries.findIndex(({ callingCode }) => callingCode === country.callingCode);
 
-  const doIndexMatch = indexInCountries === index;
-
-  return doIndexMatch;
+  return indexInCountries === index;
 };
 
 const mapCountriesWithCallingCodes = (country: CountryCode) => ({
@@ -27,7 +25,7 @@ const mapCountriesWithCallingCodes = (country: CountryCode) => ({
   callingCode: getCountryCallingCode(country),
 });
 
-export const COUNTRIES_WITH_CALLING_CODES = countries
+export const COUNTRIES_WITH_CALLING_CODES = COUNTRIES
   .map(mapCountriesWithCallingCodes)
   .filter(filterCountriesWithUniqueCallingCodes)
   .sort(sortCountriesByCallingCode);
