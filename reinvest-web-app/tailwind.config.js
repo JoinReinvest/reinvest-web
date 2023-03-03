@@ -261,6 +261,12 @@ module.exports = {
           'animation-delay': '800ms',
         },
       });
+
+      addUtilities({
+        '.translate-z-0': {
+          'transform': 'translateZ(0)',
+        }
+      })
     }),
   ],
 };
