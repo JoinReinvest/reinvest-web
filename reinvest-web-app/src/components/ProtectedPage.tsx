@@ -1,3 +1,4 @@
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { useRouter } from 'next/router';
 import { useContext, useEffect } from 'react';
 
@@ -18,12 +19,8 @@ export const ProtectedPage = ({ children }: ProtectedPageProps) => {
     }
   }, [loading, user, router]);
 
-  if (loading) {
-    return <div>loading</div>;
-  }
-
-  if (!user) {
-    return <div>redirect</div>;
+  if (loading || !user) {
+    return <IconSpinner />;
   }
 
   return children;
