@@ -20,7 +20,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   },
 
   Component: ({ storeFields }: StepComponentProps<RegisterFormFields>) => {
-    const authContext = useAuth()
+    const authContext = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
 

@@ -1,9 +1,10 @@
+import cx from 'classnames';
+
 import { Typography } from './Typography';
-import cx from 'classnames'
 
 enum MessageVariant {
   error = 'error',
-  info = 'info'
+  info = 'info',
 }
 
 type MessageVariants = keyof typeof MessageVariant;

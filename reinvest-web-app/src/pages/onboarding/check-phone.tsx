@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { GetHelpLink } from '../../components/Links/GetHelp';
-import { ResendCodeLink } from '../../components/Links/ResendCodeLink';
 
 const CheckPhonePage: NextPage = () => {
   const { control } = useForm<{ authenticationCode: string }>();

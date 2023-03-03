@@ -17,7 +17,7 @@ import zod, { Schema } from 'zod';
 import { LoginFormFields } from '../form-fields';
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
+  Component: ({ storeFields }: StepComponentProps<LoginFormFields>) => {
     const context = useAuth();
     const schema: Schema<LoginFormFields> = zod.object({
       email: formValidationRules.email,
@@ -44,12 +44,12 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
 
     const resendCodeOnClick = async () => {
       try {
-        await Auth.signIn(storeFields.email, storeFields.password)
-        setInfoMessage('Code has been sent')
+        await Auth.signIn(storeFields.email, storeFields.password);
+        setInfoMessage('Code has been sent');
       } catch (err) {
-        setError((err as Error).message)
+        setError((err as Error).message);
       }
-    }
+    };
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -59,7 +59,12 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
         />
 
         {error && <Message message={error} />}
-        {infoMessage && <Message message={infoMessage} variant="info" />}
+        {infoMessage && (
+          <Message
+            message={infoMessage}
+            variant="info"
+          />
+        )}
 
         <InputAuthenticationCode
           name="authenticationCode"
