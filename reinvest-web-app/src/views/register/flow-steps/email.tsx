@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { InputEmail } from 'components/FormElements/InputEmail';
+import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
@@ -9,12 +10,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { Link } from '../../../components/Link';
 import { RegisterFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 type Fields = Pick<RegisterFormFields, 'email'>;
 
 export const StepEmail: StepParams<RegisterFormFields> = {
+  identifier: Identifiers.EMAIL,
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [isValidatingEmail, setIsValidatingEmail] = useState(false);
 
