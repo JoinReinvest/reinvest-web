@@ -1,8 +1,7 @@
 import { useQuery, UseQueryResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
+import { getApiClient } from 'services/getApiClient';
 import { CorporateDraftAccount } from 'types/graphql';
-
-import { useApiClient } from '../useApiClient';
 
 const getCorporateDraftAccountQuery = gql`
   query getCorporateDraftAccount($accountId: ID) {
@@ -13,7 +12,7 @@ const getCorporateDraftAccountQuery = gql`
 `;
 
 export const useGetCorporateDraftAccount = (accountId: string): UseQueryResult<CorporateDraftAccount> => {
-  const api = useApiClient();
+  const api = getApiClient();
 
   return useQuery<CorporateDraftAccount>({
     queryKey: ['getCorporateDraftAccount', accountId],

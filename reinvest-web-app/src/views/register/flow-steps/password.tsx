@@ -1,6 +1,7 @@
+import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { ErrorMessage } from 'components/ErrorMessage';
+import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
@@ -10,7 +11,6 @@ import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { signup } from 'services/auth/signup';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
@@ -42,14 +42,30 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       updateStoreFields(fields);
+      try {
+        await Auth.signUp({
+          username: storeFields.email,
+          password: fields.password,
+          attributes: {
+            'custom:incentive_token': storeFields.referralCode || '',
+          },
+          autoSignIn: {
+            enabled: true,
+          },
+        });
 
-      await signup({ email: storeFields.email, password: fields.password, referralCode: storeFields.referralCode }, result => {
-        if (result === storeFields.email) {
+        return moveToNextStep();
+      } catch (err) {
+        const error = err as Error;
+
+        if (error.name === 'UsernameExistsException') {
+          await Auth.resendSignUp(storeFields.email);
+
           return moveToNextStep();
         }
 
-        return setError((result as Error).message);
-      });
+        setError(error.message);
+      }
     };
 
     const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
@@ -68,7 +84,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           />
         )}
 
-        {error && <ErrorMessage message={error} />}
+        {error && <Message message={error} />}
 
         <InputPassword
           name="password"

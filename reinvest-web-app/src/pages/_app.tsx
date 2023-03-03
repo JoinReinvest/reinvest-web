@@ -1,13 +1,20 @@
 import '../styles/global.scss';
 
+import { Amplify } from '@aws-amplify/core';
 import { Hydrate, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { AuthProvider } from 'components/AuthProvider';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
-import { SessionProvider } from 'next-auth/react';
 
 import { env } from '../env';
 import { queryClient } from '../services/queryClient';
+
+Amplify.configure({
+  aws_cognito_region: env.aws.cognito.region,
+  aws_user_pools_id: env.aws.cognito.userPoolId,
+  aws_user_pools_web_client_id: env.aws.cognito.clientId,
+});
 
 const App = ({ Component, pageProps }: AppProps) => {
   return (
@@ -45,14 +52,14 @@ const App = ({ Component, pageProps }: AppProps) => {
           href="/manifest.json"
         />
       </Head>
-      <SessionProvider session={pageProps.session}>
+      <AuthProvider>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />
             {!env.isProduction && <ReactQueryDevtools initialIsOpen={false} />}
           </Hydrate>
         </QueryClientProvider>
-      </SessionProvider>
+      </AuthProvider>
     </>
   );
 };

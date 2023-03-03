@@ -1,7 +1,6 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
-
-import { useApiClient } from '../useApiClient';
+import { getApiClient } from 'services/getApiClient';
 
 const verifyPhoneNumberMutation = gql`
   mutation verifyPhoneNumber($countryCode: String, phoneNumber: String, authCode: String) {
@@ -10,7 +9,7 @@ const verifyPhoneNumberMutation = gql`
 `;
 
 export const useVerifyPhoneNumber = (countryCode: string, phoneNumber: string, authCode: string): UseMutationResult<boolean> => {
-  const api = useApiClient();
+  const api = getApiClient();
 
   return useMutation({
     mutationFn: async () => {

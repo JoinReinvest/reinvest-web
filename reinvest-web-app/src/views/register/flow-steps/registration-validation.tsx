@@ -1,11 +1,11 @@
+import { Auth } from '@aws-amplify/auth';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
+import { useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
 import { Title } from 'components/Title';
-import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { confirmEmail } from 'services/auth/confirmEmail';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
@@ -20,7 +20,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   },
 
   Component: ({ storeFields }: StepComponentProps<RegisterFormFields>) => {
-    const router = useRouter();
+    const authContext = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
 
@@ -32,20 +32,28 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
       return 'Your login credentials were successfully created';
     }, [isLoading]);
 
-    const onButtonClick = () => {
-      router.push('/');
+    const onButtonClick = async () => {
+      setIsLoading(true);
+      try {
+        await authContext.actions.signIn(storeFields.email, storeFields.password);
+      } catch (err) {
+        setError((err as Error).message);
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     useEffect(() => {
-      confirmEmail(storeFields.email, storeFields.authenticationCode, result => {
-        if (result === 'SUCCESS') {
-          setError('');
-
-          return setIsLoading(false);
+      const confirmEmail = async () => {
+        try {
+          await Auth.confirmSignUp(storeFields.email, storeFields.authenticationCode);
+        } catch (err) {
+          setError((err as Error).message);
+        } finally {
+          setIsLoading(false);
         }
-
-        setError(result);
-      });
+      };
+      confirmEmail();
     }, [storeFields.authenticationCode, storeFields.email]);
 
     return (

@@ -1,15 +1,17 @@
+import { Auth, CognitoUser } from '@aws-amplify/auth';
 import { env } from 'env';
-import { GraphQLError } from 'graphql';
 import { GraphQLClient } from 'graphql-request';
 
-export const getApiClient = (token: string | undefined) => {
-  if (!token) {
-    throw new GraphQLError('Empty token');
-  }
-
+export const getApiClient = () => {
   return new GraphQLClient(env.apiUrl, {
-    headers: {
-      Authorization: `Bearer ${token}`,
+    requestMiddleware: async request => {
+      const currentUser: CognitoUser = await Auth.currentAuthenticatedUser();
+      const token = currentUser.getSignInUserSession()?.getAccessToken().getJwtToken();
+
+      return {
+        ...request,
+        headers: { ...request.headers, Authorization: `Bearer ${token}` },
+      };
     },
   });
 };
