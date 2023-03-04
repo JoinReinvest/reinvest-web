@@ -1,8 +1,8 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
@@ -69,23 +69,18 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           subtitle="Your new password must be different from previous used passwords."
         />
 
-        {isWhyRequiredOpen && (
-          <WhyRequiredBlackModal
-            isOpen={isWhyRequiredOpen}
-            onOpenChange={openWhyReqiredOnClick}
-          />
-        )}
-
-        {error && <Message message={error} />}
+        {error && <FormMessage message={error} />}
 
         <InputPassword
           name="password"
           control={control}
+          required
         />
 
         <InputPassword
           name="passwordConfirmation"
           control={control}
+          required
         />
 
         <WhyRequiredLink onClick={openWhyReqiredOnClick} />
@@ -101,6 +96,13 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           disabled={shouldButtonBeDisabled}
           loading={isLoading}
         />
+
+        {isWhyRequiredOpen && (
+          <WhyRequiredBlackModal
+            isOpen={isWhyRequiredOpen}
+            onOpenChange={openWhyReqiredOnClick}
+          />
+        )}
       </Form>
     );
   },

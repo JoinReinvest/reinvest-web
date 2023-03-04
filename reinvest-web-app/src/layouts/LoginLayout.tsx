@@ -22,6 +22,7 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
       </video>
 
       <LogoIcon className="z-30 fill-green-frost-01" />
+
       {children}
     </div>
   );

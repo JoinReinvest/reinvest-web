@@ -1,8 +1,8 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { Title } from 'components/Title';
 import { useMemo, useState } from 'react';
@@ -32,15 +32,10 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const [infoMessage, setInfoMessage] = useState('');
-
     const [error, setError] = useState('');
     const subtitleMessage = useMemo(() => `Enter the email authentication code sent to your email ${storeFields.email}.`, [storeFields.email]);
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      // TO-DO: Validate that the authentication code the one we
-      //    expect - if so call `updateStoreFields(fields)`, and then
-      //    invoke `moveToNextStep()`, otherwise add an error to the input
-      //    saying that they wrote the wrong authentication code.
       updateStoreFields(fields);
       moveToNextStep();
     };
@@ -48,6 +43,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
     const resendCodeOnClick = async () => {
       try {
         await Auth.signIn(storeFields.email, storeFields.password);
+
         setInfoMessage('Code has been sent');
       } catch (err) {
         setError((err as Error).message);
@@ -61,10 +57,10 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
           subtitle={subtitleMessage}
         />
 
-        {error && <Message message={error} />}
+        {error && <FormMessage message={error} />}
 
         {infoMessage && (
-          <Message
+          <FormMessage
             message={infoMessage}
             variant="info"
           />

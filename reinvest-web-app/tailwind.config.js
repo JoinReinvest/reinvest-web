@@ -85,11 +85,11 @@ module.exports = {
       ],
 
       h5: [
-        '2.0rem',
+        '2.2rem',
         {
           lineHeight: '1.1em',
           letterSpacing: '-0.05em',
-          fontWeight: '500',
+          fontWeight: '400',
         },
       ],
 
@@ -115,14 +115,14 @@ module.exports = {
       ],
 
       link: [
-        '1.2rem',
+        '1.4rem',
         {
-          fontWeight: '500',
+          fontWeight: '400',
         },
       ],
 
       'paragraph-large': [
-        '1.4rem',
+        '1.6rem',
         {
           fontWeight: '400',
         },

@@ -1,5 +1,5 @@
 import { Auth, CognitoUser } from '@aws-amplify/auth';
-import { useRouter } from 'next/router';
+import { redirect } from 'next/navigation';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 export enum ChallengeName {
@@ -33,7 +33,6 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
-  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
 
@@ -42,7 +41,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
-        router.push('/');
+        redirect('/');
       }
 
       setUser(user);
@@ -57,9 +56,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
 
     setUser(confirmedUser);
-    router.push('/');
-
-    return confirmedUser;
+    redirect('/');
   };
 
   const ctx = useMemo(() => {
@@ -78,6 +75,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         setUser(null);
       }
     };
+
     currentUser();
   }, []);
 

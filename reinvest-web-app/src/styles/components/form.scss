@@ -20,7 +20,7 @@
 
 .hkek-input-text-control,
 .hkek-input-masked-control {
-  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color;
+  @apply w-full relative flex items-center gap-x-10 p-14 transition-transform-color;
   @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {

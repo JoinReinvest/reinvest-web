@@ -15,7 +15,5 @@ export const Avatar = ({ src, alt }: Props) => (
         alt={alt}
       />
     }
-    altText={alt}
-    rounded
   />
 );

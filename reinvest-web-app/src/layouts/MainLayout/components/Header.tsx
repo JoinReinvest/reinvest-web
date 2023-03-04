@@ -1,8 +1,9 @@
 import { IconBell } from 'assets/icons/IconBell';
 import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import { Avatar } from 'components/Avatar';
-import { ComponentProps, Dispatch, SetStateAction } from 'react';
+import { ComponentProps, useState } from 'react';
 
+import { useGetUserProfile } from '../../../services/queries/getProfile';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderNavigation } from './HeaderNavigation';
 
@@ -12,26 +13,27 @@ const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
     href: '/',
   },
   {
-    label: 'Community REIT',
-    href: '/',
+    label: 'Education page',
+    href: '/education',
   },
   {
-    label: 'Education',
-    href: '/',
+    label: 'FAQ',
+    href: '/education/faq',
+  },
+  {
+    label: 'Glossary',
+    href: '/education/glossary',
   },
 ];
 
-interface Props {
-  isMenuOpen: boolean;
-  setIsMenuOpen: Dispatch<SetStateAction<boolean>>;
-}
-
-export const Header = ({ isMenuOpen, setIsMenuOpen }: Props) => {
+export const Header = () => {
+  const { data } = useGetUserProfile();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
 
   return (
-    <header className="flex items-center justify-between">
+    <header className="container mx-auto flex items-center justify-between py-20">
       <div className="flex items-center gap-40">
         <HeaderIcon
           isMenuOpen={isMenuOpen}
@@ -45,13 +47,15 @@ export const Header = ({ isMenuOpen, setIsMenuOpen }: Props) => {
         />
       </div>
 
-      <div className="flex gap-16 max-lg:relative max-lg:z-20 lg:gap-24">
+      <div className="flex gap-16 lg:gap-24">
         <IconBell className="h-28 w-28 lg:h-44 lg:w-44" />
 
-        <Avatar
-          src={placeholderPicture}
-          alt="profile picture"
-        />
+        {data && (
+          <Avatar
+            src={data?.avatar?.url || placeholderPicture}
+            alt={`${data?.details?.firstName} ${data?.details?.lastName}`}
+          />
+        )}
       </div>
     </header>
   );

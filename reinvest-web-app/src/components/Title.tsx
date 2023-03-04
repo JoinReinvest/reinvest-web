@@ -6,10 +6,10 @@ interface Props {
 }
 
 export const Title = ({ title, subtitle }: Props) => (
-  <div className="mb-60 text-left md:text-center">
+  <div className="text-left md:text-center">
     <Typography
       variant="h5"
-      className="mb-8"
+      className="mb-36"
     >
       {title}
     </Typography>

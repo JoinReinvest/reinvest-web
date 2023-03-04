@@ -14,13 +14,10 @@ interface Props {
 }
 
 export const HeaderNavigation = ({ isMenuOpen, navigationItems }: Props) => {
-  const navigationClassNames = cx(
-    ['lg:flex lg:items-center lg:gap-40', 'max-lg:absolute max-lg:top-0 max-lg:pt-180 max-lg:w-full max-lg:h-full max-lg:bg-white'],
-    {
-      'max-lg:flex max-lg:flex-col max-lg:gap-12': isMenuOpen,
-      'max-lg:hidden': !isMenuOpen,
-    },
-  );
+  const navigationClassNames = cx(['lg:flex lg:items-center lg:gap-40', 'lg:absolute lg:top-0 lg:pt-180 lg:w-full lg:h-full lg:bg-white'], {
+    'lg:flex lg:flex-col lg:gap-12': isMenuOpen,
+    hidden: !isMenuOpen,
+  });
 
   return <nav className={navigationClassNames}>{navigationItems.map(generateNavigationItem)}</nav>;
 };

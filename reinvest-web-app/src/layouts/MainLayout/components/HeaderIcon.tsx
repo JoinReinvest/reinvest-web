@@ -12,13 +12,13 @@ interface Props {
 export const HeaderIcon = ({ isMenuOpen, openMenu, closeMenu }: Props) => {
   const mobileIconBaseClassnames = 'fill-black h-28 w-28 lg:hidden cursor-pointer';
 
-  const iconMenuOpenClassnames = cx(mobileIconBaseClassnames, { 'max-lg:hidden': isMenuOpen, 'max-lg:block': !isMenuOpen });
+  const iconMenuOpenClassnames = cx(mobileIconBaseClassnames, { 'lg:hidden': isMenuOpen, 'lg:block': !isMenuOpen });
 
-  const iconMenuClosedClassnames = cx(mobileIconBaseClassnames, { 'max-lg:block': isMenuOpen, 'max-lg:hidden': !isMenuOpen });
+  const iconMenuClosedClassnames = cx(mobileIconBaseClassnames, { 'lg:block': isMenuOpen, 'lg:hidden': !isMenuOpen });
 
   return (
-    <div className="max-lg:relative max-lg:z-20">
-      <LogoIcon className="lg:fill-black max-lg:hidden lg:h-38 lg:w-38" />
+    <div className="z-20">
+      <LogoIcon className="lg:fill-black lg:h-38 lg:w-38" />
 
       <IconMenu
         className={iconMenuOpenClassnames}

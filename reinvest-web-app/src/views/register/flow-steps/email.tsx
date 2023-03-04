@@ -26,13 +26,9 @@ export const StepEmail: StepParams<RegisterFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      // TO-DO: Validate that the e-mail is not being used
-      //    by another user - if so, display an error on the input
-      //    otherwise, call `moveToNextStep()`.
       try {
         setIsValidatingEmail(true);
         updateStoreFields(fields);
-        await new Promise(resolve => setTimeout(resolve, 2000));
         setIsValidatingEmail(false);
         moveToNextStep();
       } catch (error) {
@@ -56,7 +52,6 @@ export const StepEmail: StepParams<RegisterFormFields> = {
 
         <Link
           href={URL.login}
-          className="typo-paragraph-large"
           title="Log in"
         >
           Already have an account?
@@ -65,7 +60,6 @@ export const StepEmail: StepParams<RegisterFormFields> = {
         <Button
           type="submit"
           label="Sign Up"
-          variant="default"
           disabled={shouldButtonBeDisabled}
           loading={isValidatingEmail}
         />

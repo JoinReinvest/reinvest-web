@@ -1,18 +1,18 @@
 import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChallengeName, useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
-import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
+import { ChallengeName, useAuth } from 'providers/AuthProvider';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { FormMessage } from '../../../components/FormElements/FormMessage';
 import { URL } from '../../../constants/urls';
 import { LoginFormFields } from '../form-fields';
 
@@ -34,52 +34,48 @@ export const StepLogin: StepParams<LoginFormFields> = {
       setError('');
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
+
       const { email, password } = fields;
-      const result = await authContext.actions.signIn(email, password);
 
-      if (result instanceof Error) {
-        setError(result.message);
+      try {
+        const result = await authContext.actions.signIn(email, password);
+
+        const cognitoUser = result as CognitoUser;
+
+        if (cognitoUser.challengeName === ChallengeName.SMS_MFA) {
+          moveToNextStep();
+        }
+
+        setIsValidatingCredentials(false);
+      } catch (err) {
+        setError((err as Error).message);
       }
-
-      const cognitoUser = result as CognitoUser;
-
-      if (cognitoUser.challengeName === ChallengeName.SMS_MFA) {
-        moveToNextStep();
-      }
-
-      setIsValidatingCredentials(false);
     };
 
     return (
-      <Form
+      <form
         onSubmit={handleSubmit(onSubmit)}
-        className="login-form z-30 flex max-w-330 flex-col items-center justify-center gap-16"
+        className="login-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
       >
         <Typography variant="h2">Sign in</Typography>
         <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
 
-        {error && (
-          <Typography
-            variant="paragraph-large"
-            className="text-tertiary-error"
-          >
-            {error}
-          </Typography>
-        )}
+        {error && <FormMessage message={error} />}
 
         <InputEmail
           name="email"
           control={control}
+          required
         />
 
         <InputPassword
           name="password"
           control={control}
+          required
         />
 
         <Link
           href={URL.forgot_password}
-          className="typo-paragraph-large"
           title="Forgot Password"
         >
           Forgot password?
@@ -87,7 +83,6 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
         <Link
           href={URL.register}
-          className="typo-paragraph-large"
           title="Don't have an account?"
         >
           Don’t have an account?
@@ -99,7 +94,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
           disabled={shouldButtonBeDisabled}
           loading={isValidatingCredentials}
         />
-      </Form>
+      </form>
     );
   },
 };
