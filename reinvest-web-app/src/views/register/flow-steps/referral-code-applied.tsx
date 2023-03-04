@@ -4,8 +4,10 @@ import { Title } from 'components/Title';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
+  identifier: Identifiers.REFERRAL_CODE_VERIFICATION,
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {

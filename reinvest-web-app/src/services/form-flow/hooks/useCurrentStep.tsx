@@ -24,6 +24,8 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
           storeFields={getFields()}
           updateStoreFields={updateFields}
           moveToNextStep={moveToNextValidStep}
+          moveToPreviousStep={moveToPreviousValidStep}
+          moveToStepByIdentifier={moveToStepByIdentifier}
         />
       );
     }
@@ -53,11 +55,18 @@ export function useCurrentStep<FormFields>({ flowStore, getFields, updateFields,
     setCurrentStep(previousStep);
   };
 
+  const moveToStepByIdentifier = (identifier: string) => {
+    const step = flowStore.getStepByIdentifier(identifier);
+
+    setCurrentStep(step);
+  };
+
   return {
     currentStep,
     meta,
     CurrentStepView,
     moveToNextValidStep,
     moveToPreviousValidStep,
+    moveToStepByIdentifier,
   };
 }

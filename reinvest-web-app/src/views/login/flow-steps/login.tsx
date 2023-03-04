@@ -5,6 +5,7 @@ import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
+import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
 import { ChallengeName, useAuth } from 'providers/AuthProvider';
 import { useState } from 'react';
@@ -13,12 +14,14 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { FormMessage } from '../../../components/FormElements/FormMessage';
-import { URL } from '../../../constants/urls';
 import { LoginFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 type Fields = Omit<LoginFormFields, 'authenticationCode'>;
 
 export const StepLogin: StepParams<LoginFormFields> = {
+  identifier: Identifiers.CREDENTIALS,
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,

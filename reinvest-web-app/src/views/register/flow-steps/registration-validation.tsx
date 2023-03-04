@@ -9,8 +9,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
+  identifier: Identifiers.FLOW_COMPLETION,
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {

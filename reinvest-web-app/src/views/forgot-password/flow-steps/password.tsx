@@ -15,12 +15,15 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'service
 import zod, { Schema } from 'zod';
 
 import { ForgotPasswordFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 interface Fields extends Pick<ForgotPasswordFormFields, 'password'> {
   passwordConfirmation: string;
 }
 
 export const StepPassword: StepParams<ForgotPasswordFormFields> = {
+  identifier: Identifiers.PASSWORD,
+
   doesMeetConditionFields: fields => {
     const requiredFields = [fields.email, fields.authenticationCode];
 

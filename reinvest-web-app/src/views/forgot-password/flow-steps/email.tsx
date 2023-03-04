@@ -12,10 +12,13 @@ import zod, { Schema } from 'zod';
 
 import { FormMessage } from '../../../components/FormElements/FormMessage';
 import { ForgotPasswordFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 type Fields = Pick<ForgotPasswordFormFields, 'email'>;
 
 export const StepEmail: StepParams<ForgotPasswordFormFields> = {
+  identifier: Identifiers.EMAIL,
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,

@@ -27,8 +27,14 @@
     @apply flex-1;
   }
 
+  &-content-input-container:not(:only-child) {
+    .hkek-input-text-control-content-input, .hkek-input-masked-control-content-input {
+      @apply top-6 relative;
+    }
+  }
+
   &-content-input {
-    @apply w-full flex top-6 relative;
+    @apply w-full flex;
   }
 
   &-placeholder {

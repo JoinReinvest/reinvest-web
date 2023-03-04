@@ -5,8 +5,11 @@ import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
 
 import { Link } from '../../../components/Link';
 import { ForgotPasswordFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
+  identifier: Identifiers.VALIDATION_COMPLETION,
+
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {

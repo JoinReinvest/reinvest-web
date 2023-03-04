@@ -10,10 +10,12 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 type Fields = Pick<RegisterFormFields, 'referralCode'>;
 
 export const StepReferralCode: StepParams<RegisterFormFields> = {
+  identifier: Identifiers.REFERRAL_CODE,
   doesMeetConditionFields: fields => !!fields.email,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
