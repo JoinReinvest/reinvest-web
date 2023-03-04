@@ -4,12 +4,15 @@ import { FlowStep } from './flow-step';
 
 export interface StepComponentProps<FormFields> {
   moveToNextStep: () => void;
+  moveToPreviousStep: () => void;
+  moveToStepByIdentifier: (identifier: string) => void;
   storeFields: FormFields;
   updateStoreFields: (fields: Partial<FormFields>) => void;
 }
 
 export interface FlowStepParams<FormFields> {
   Component: FC<StepComponentProps<FormFields>>;
+  identifier: string;
   index: number;
   nextStep: FlowStep<FormFields> | null;
   previousStep: FlowStep<FormFields> | null;
@@ -18,13 +21,19 @@ export interface FlowStepParams<FormFields> {
   willBePartOfTheFlow?: (fields: FormFields) => boolean;
 }
 
-export type StepParams<FormFields> = Pick<FlowStepParams<FormFields>, 'Component' | 'isAValidationView' | 'doesMeetConditionFields' | 'willBePartOfTheFlow'>;
+export type StepParams<FormFields> = Pick<
+  FlowStepParams<FormFields>,
+  'Component' | 'isAValidationView' | 'doesMeetConditionFields' | 'willBePartOfTheFlow' | 'identifier'
+>;
 
 export type Steps<FormFields> = StepParams<FormFields>[];
 
 export interface ContextStateMeta {
+  currentStepIdentifier: string | null;
   isFirstStep: boolean;
   isLastStep: boolean;
+  nextStepIdentifier: string | null;
+  previousStepIdentifier: string | null;
 }
 
 export interface ContextState {

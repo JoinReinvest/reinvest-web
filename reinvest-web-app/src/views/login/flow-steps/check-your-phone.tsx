@@ -15,8 +15,11 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
+  identifier: Identifiers.PHONE_AUTHENTICATION,
+
   Component: ({ storeFields }: StepComponentProps<LoginFormFields>) => {
     const context = useAuth();
     const schema: Schema<LoginFormFields> = zod.object({

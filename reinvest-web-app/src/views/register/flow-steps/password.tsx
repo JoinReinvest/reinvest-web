@@ -15,12 +15,15 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 interface Fields extends Pick<RegisterFormFields, 'password'> {
   passwordConfirmation: string;
 }
 
 export const StepPassword: StepParams<RegisterFormFields> = {
+  identifier: Identifiers.PASSWORD,
+
   doesMeetConditionFields: fields => !!fields.email,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {

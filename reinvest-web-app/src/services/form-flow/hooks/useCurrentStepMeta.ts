@@ -10,16 +10,20 @@ interface Params<FormFields> {
 }
 
 export const useCurrentStepMeta = <FormFields>({ flowStore, currentStep }: Params<FormFields>) => {
-  const { isFirstStep, isLastStep } = useMemo<ContextStateMeta>(() => {
+  const meta = useMemo<ContextStateMeta>(() => {
     const flowHead: FlowStep<FormFields> | null = flowStore.getHead();
     const flowTail: FlowStep<FormFields> | null = flowStore.getTail();
 
     const isFirstStep = currentStep?.index === flowHead?.index;
     const isLastStep = currentStep?.index === flowTail?.index;
 
-    return { isFirstStep, isLastStep };
+    const previousStepIdentifier = currentStep?.previousStep?.identifier ?? null;
+    const currentStepIdentifier = currentStep?.identifier ?? null;
+    const nextStepIdentifier = currentStep?.nextStep?.identifier ?? null;
+
+    return { isFirstStep, isLastStep, previousStepIdentifier, currentStepIdentifier, nextStepIdentifier };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
 
-  return { isFirstStep, isLastStep };
+  return meta;
 };

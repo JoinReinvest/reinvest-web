@@ -4,6 +4,7 @@ import { FlowStepParams, StepComponentProps } from './interfaces';
 
 export class FlowStep<FormFields> {
   public index: number;
+  public identifier: string;
   public previousStep: FlowStep<FormFields> | null;
   public nextStep: FlowStep<FormFields> | null;
   public Component: FC<StepComponentProps<FormFields>>;
@@ -32,8 +33,18 @@ export class FlowStep<FormFields> {
    */
   public willBePartOfTheFlow: (fields: FormFields) => boolean;
 
-  constructor({ isAValidationView, previousStep, nextStep, doesMeetConditionFields, Component, index, willBePartOfTheFlow }: FlowStepParams<FormFields>) {
+  constructor({
+    isAValidationView,
+    previousStep,
+    nextStep,
+    doesMeetConditionFields,
+    Component,
+    index,
+    identifier,
+    willBePartOfTheFlow,
+  }: FlowStepParams<FormFields>) {
     this.index = index;
+    this.identifier = identifier;
     this.Component = Component;
     this.isAValidationView = !!isAValidationView;
     this.previousStep = previousStep;
