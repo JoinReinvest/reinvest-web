@@ -7,13 +7,13 @@ export interface SelectOption {
   value: string;
 }
 
-type PrimitiveProps = Omit<PrimitiveSelectProps<SelectOption>, 'defaultOpen' | 'onBlur' | 'getSelectedOption' | 'dropdownIcon'>;
+type PrimitiveProps = Omit<PrimitiveSelectProps<SelectOption>, 'defaultOpen' | 'getSelectedOption' | 'dropdownIcon' | 'formatOptionLabel'>;
 
 interface Props extends PrimitiveProps {
   icon?: 'arrow' | 'search';
 }
 
-export const Select = ({ name, value, options, disabled = false, error, onChange, placeholder, required = false, icon = 'arrow' }: Props) => (
+export const Select = ({ name, value, options, disabled = false, error, onChange, onBlur, placeholder, required = false, icon = 'arrow' }: Props) => (
   <PrimitiveSelect
     name={name}
     value={value}
@@ -23,6 +23,7 @@ export const Select = ({ name, value, options, disabled = false, error, onChange
     error={error}
     required={required}
     onChange={onChange}
+    onBlur={onBlur}
     getSelectedOption={(options, value) => options.filter(option => option.value === value)}
     dropdownIcon={generateIcon(icon)}
   />
