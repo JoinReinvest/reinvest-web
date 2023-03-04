@@ -12,7 +12,7 @@ const completeCorporateDraftAccountMutation = gql`
 `;
 
 export const useCompleteCorporateDraftAccount = (accountId: string): UseMutationResult<Mutation['completeCorporateDraftAccount']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useMutation({
     mutationFn: async () => {

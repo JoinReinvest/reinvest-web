@@ -34,7 +34,7 @@ export const Header = () => {
 
   return (
     <header className="container mx-auto flex items-center justify-between py-20">
-      <div className="flex items-center gap-40">
+      <div className="flex grow items-center gap-40">
         <HeaderIcon
           isMenuOpen={isMenuOpen}
           openMenu={openMenu}

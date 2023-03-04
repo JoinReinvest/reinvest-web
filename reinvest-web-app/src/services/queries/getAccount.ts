@@ -18,7 +18,7 @@ const getAccountQuery = gql`
 `;
 
 export const useGetAccount = (accountId: string): UseQueryResult<Query['getAccount']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useQuery<Query['getAccount']>({
     queryKey: ['getAccount', accountId],

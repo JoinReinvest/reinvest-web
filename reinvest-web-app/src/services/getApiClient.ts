@@ -2,9 +2,9 @@ import { Auth, CognitoUser } from '@aws-amplify/auth';
 import { env } from 'env';
 import { GraphQLClient } from 'graphql-request';
 
-export const getApiClient = () => {
-  return new GraphQLClient(env.apiUrl, {
-    requestMiddleware: async request => {
+export const getApiClient = new GraphQLClient(env.apiUrl, {
+  requestMiddleware: async request => {
+    try {
       const currentUser: CognitoUser = await Auth.currentAuthenticatedUser();
       const token = currentUser.getSignInUserSession()?.getAccessToken().getJwtToken();
 
@@ -12,6 +12,10 @@ export const getApiClient = () => {
         ...request,
         headers: { ...request.headers, Authorization: `Bearer ${token}` },
       };
-    },
-  });
-};
+    } catch (e) {
+      await Auth.signOut();
+
+      return request;
+    }
+  },
+});

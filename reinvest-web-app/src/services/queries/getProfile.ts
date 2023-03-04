@@ -33,7 +33,7 @@ export const getProfileQuery = gql`
 `;
 
 export const useGetUserProfile = (): UseQueryResult<Query['getProfile']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useQuery<Query['getProfile']>({
     queryKey: ['getProfile'],

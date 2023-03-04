@@ -1,5 +1,5 @@
 import { Auth, CognitoUser } from '@aws-amplify/auth';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
 export enum ChallengeName {
@@ -33,6 +33,7 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
 
@@ -41,7 +42,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
-        redirect('/');
+        await router.push('/');
       }
 
       setUser(user);
@@ -56,20 +57,20 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
 
     setUser(confirmedUser);
-    redirect('/');
+
+    return router.push('/');
   };
 
   const ctx = useMemo(() => {
-    return { loading, user, actions: { signIn, confirmSignIn } };
+    return { user, loading, actions: { signIn, confirmSignIn } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
   useEffect(() => {
     const currentUser = async () => {
       try {
-        const user: CognitoUser = await Auth.currentAuthenticatedUser();
         setLoading(false);
-        setUser(user);
+        setUser(await Auth.currentAuthenticatedUser());
       } catch (err) {
         setLoading(false);
         setUser(null);

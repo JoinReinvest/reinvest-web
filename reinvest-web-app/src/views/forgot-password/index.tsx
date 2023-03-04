@@ -1,10 +1,11 @@
 import { BlackModal } from 'components/BlackModal';
 import { URL } from 'constants/urls';
-import { redirect } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useFormFlowContext } from 'services/form-flow';
 
 export const ForgotPasswordFlow = () => {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
@@ -19,7 +20,7 @@ export const ForgotPasswordFlow = () => {
 
   const onModalClickBack = () => {
     if (isFirstStep) {
-      redirect(URL.login);
+      router.push(URL.login);
     } else {
       moveToPreviousValidStep();
     }

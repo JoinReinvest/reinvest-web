@@ -1,7 +1,8 @@
 import cx from 'classnames';
 import { LinkProps } from 'next/link';
 
-import { HeaderNavigationItem } from './HeaderNavigationItem';
+import { IconArrowRight } from '../../../assets/icons/IconArrowRight';
+import { Link } from '../../../components/Link';
 
 interface NavigationItem {
   href: LinkProps['href'];
@@ -14,19 +15,27 @@ interface Props {
 }
 
 export const HeaderNavigation = ({ isMenuOpen, navigationItems }: Props) => {
-  const navigationClassNames = cx(['lg:flex lg:items-center lg:gap-40', 'lg:absolute lg:top-0 lg:pt-180 lg:w-full lg:h-full lg:bg-white'], {
-    'lg:flex lg:flex-col lg:gap-12': isMenuOpen,
-    hidden: !isMenuOpen,
+  const navigationClassNames = cx('flex-col w-full lg:flex-row lg:items-center lg:gap-40 gap-12', {
+    flex: !isMenuOpen,
+    hidden: isMenuOpen,
   });
 
-  return <nav className={navigationClassNames}>{navigationItems.map(generateNavigationItem)}</nav>;
+  return (
+    <nav>
+      <ul className={navigationClassNames}>{navigationItems.map(generateNavigationItem)}</ul>
+    </nav>
+  );
 };
 
 const generateNavigationItem = ({ label, href }: NavigationItem) => (
-  <HeaderNavigationItem
-    key={label.toLowerCase().replace(' ', '-')}
-    href={href}
-  >
-    {label}
-  </HeaderNavigationItem>
+  <li key={label}>
+    <Link
+      href={href}
+      title={label}
+      className="typo-link text-black flex items-center justify-between no-underline hover:underline"
+    >
+      <span>{label}</span>
+      <IconArrowRight className="stroke-black h-32 w-32 lg:hidden" />
+    </Link>
+  </li>
 );

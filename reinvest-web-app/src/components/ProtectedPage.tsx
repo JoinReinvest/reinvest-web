@@ -1,5 +1,4 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { redirect } from 'next/navigation';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
@@ -17,7 +16,7 @@ export const ProtectedPage = ({ children }: ProtectedPageProps) => {
 
   useEffect(() => {
     if (!loading && !user) {
-      redirect(URL.login);
+      router.push(URL.login);
     }
   }, [loading, user, router]);
 

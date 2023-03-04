@@ -1,10 +1,10 @@
-import { IconFileUpload } from 'assets/icons/IconFileUpload'
-import { BYTES_IN_MEGABYTE } from 'constants/conversions'
-import { ChangeEventHandler, useMemo, useState } from 'react'
-import { Typography } from '../../Typography'
+import { IconFileUpload } from 'assets/icons/IconFileUpload';
+import { BYTES_IN_MEGABYTE } from 'constants/conversions';
+import { ChangeEventHandler, useMemo, useState } from 'react';
 
-import { FormMessage } from '../FormMessage'
-import { UploadedFile } from './UploadedFile'
+import { Typography } from '../../Typography';
+import { FormMessage } from '../FormMessage';
+import { UploadedFile } from './UploadedFile';
 
 export interface InputFileProps {
   label: string;
@@ -17,23 +17,23 @@ export interface InputFileProps {
 }
 
 export const InputFile = ({ label, name, placeholder, accepts = '*', file, onChange, sizeLimitInByMegaBytes = 5 }: InputFileProps) => {
-  const sizeLimitInBytes = useMemo(() => sizeLimitInByMegaBytes * BYTES_IN_MEGABYTE, [sizeLimitInByMegaBytes])
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
-  const clearFiles = () => onChange(null)
-  const hasFile = !!file
-  const hasError = !!errorMessage
+  const sizeLimitInBytes = useMemo(() => sizeLimitInByMegaBytes * BYTES_IN_MEGABYTE, [sizeLimitInByMegaBytes]);
+  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+  const clearFiles = () => onChange(null);
+  const hasFile = !!file;
+  const hasError = !!errorMessage;
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
-    const newFile = target.files?.item(0)
-    const newFileSize = newFile?.size || 0
+    const newFile = target.files?.item(0);
+    const newFileSize = newFile?.size || 0;
 
     if (newFileSize <= sizeLimitInBytes) {
-      setErrorMessage(undefined)
-      onChange(newFile || null)
+      setErrorMessage(undefined);
+      onChange(newFile || null);
     } else {
-      setErrorMessage(`File must be smaller than ${sizeLimitInByMegaBytes}mb`)
+      setErrorMessage(`File must be smaller than ${sizeLimitInByMegaBytes}mb`);
     }
-  }
+  };
 
   return (
     <div className="flex flex-col items-stretch gap-8">
@@ -73,5 +73,5 @@ export const InputFile = ({ label, name, placeholder, accepts = '*', file, onCha
 
       {hasError && <FormMessage message={errorMessage} />}
     </div>
-  )
-}
+  );
+};

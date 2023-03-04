@@ -8,6 +8,11 @@ module.exports = {
   mode: 'jit',
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
+    container: {
+      padding: {
+        DEFAULT: '2rem',
+      },
+    },
     fontFamily: {
       sans: ['GT-America', ...defaultTheme.fontFamily.sans],
     },

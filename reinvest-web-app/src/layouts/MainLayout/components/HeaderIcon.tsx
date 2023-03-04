@@ -12,13 +12,12 @@ interface Props {
 export const HeaderIcon = ({ isMenuOpen, openMenu, closeMenu }: Props) => {
   const mobileIconBaseClassnames = 'fill-black h-28 w-28 lg:hidden cursor-pointer';
 
-  const iconMenuOpenClassnames = cx(mobileIconBaseClassnames, { 'lg:hidden': isMenuOpen, 'lg:block': !isMenuOpen });
-
-  const iconMenuClosedClassnames = cx(mobileIconBaseClassnames, { 'lg:block': isMenuOpen, 'lg:hidden': !isMenuOpen });
+  const iconMenuOpenClassnames = cx(mobileIconBaseClassnames, { hidden: isMenuOpen, block: !isMenuOpen });
+  const iconMenuClosedClassnames = cx(mobileIconBaseClassnames, { block: isMenuOpen, hidden: !isMenuOpen });
 
   return (
-    <div className="z-20">
-      <LogoIcon className="lg:fill-black lg:h-38 lg:w-38" />
+    <div className="relative">
+      <LogoIcon className="fill-black hidden h-38 w-38 lg:block" />
 
       <IconMenu
         className={iconMenuOpenClassnames}
