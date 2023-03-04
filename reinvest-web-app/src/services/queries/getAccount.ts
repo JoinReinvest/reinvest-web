@@ -8,6 +8,11 @@ const getAccountQuery = gql`
     getAccount(accountId: $accountId) {
       id
       type
+      avatar {
+        id
+        url
+      }
+      positionTotal
     }
   }
 `;

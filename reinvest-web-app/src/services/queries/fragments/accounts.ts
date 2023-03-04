@@ -4,7 +4,10 @@ export const AccountsFragment = gql`
   fragment AccountsFragment on AccountOverview {
     id
     type
-    avatarUrl
+    avatar {
+      id
+      url
+    }
     positionTotal
   }
 `;
