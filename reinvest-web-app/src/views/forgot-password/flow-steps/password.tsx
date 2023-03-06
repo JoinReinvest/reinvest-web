@@ -12,8 +12,8 @@ import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow'
 import zod, { Schema } from 'zod'
-import { OpenModalLink } from '../../../components/Links/OpenModalLink'
 
+import { OpenModalLink } from '../../../components/Links/OpenModalLink'
 import { ForgotPasswordFormFields } from '../form-fields'
 import { Identifiers } from '../identifiers'
 
@@ -25,45 +25,45 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
   identifier: Identifiers.PASSWORD,
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.email, fields.authenticationCode]
+    const requiredFields = [fields.email, fields.authenticationCode];
 
-    return allRequiredFieldsExists(requiredFields)
+    return allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,
-    })
-    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
-    const [error, setError] = useState('')
+    });
+    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const { handleSubmit, control, watch, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) })
+    const { handleSubmit, control, watch, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const fields = {
       password: watch('password'),
       passwordConfirmation: watch('passwordConfirmation'),
-    }
+    };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      updateStoreFields(fields)
-      setIsLoading(true)
+      updateStoreFields(fields);
+      setIsLoading(true);
 
       try {
-        await Auth.forgotPasswordSubmit(storeFields.email, storeFields.authenticationCode, fields.password)
+        await Auth.forgotPasswordSubmit(storeFields.email, storeFields.authenticationCode, fields.password);
 
-        moveToNextStep()
+        moveToNextStep();
       } catch (err) {
-        setError((err as Error).message)
+        setError((err as Error).message);
       } finally {
-        setIsLoading(false)
+        setIsLoading(false);
       }
-    }
+    };
 
-    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen)
+    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -86,8 +86,9 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           required
         />
 
-        <OpenModalLink label="Required. Why?" onClick={() => {
-        }} />
+        <OpenModalLink
+label="Required. Why?" onClick={() => {
+        />
 
         <PasswordChecklist
           password={fields.password}
@@ -108,6 +109,6 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
           />
         )}
       </Form>
-    )
+    );
   },
-}
+};

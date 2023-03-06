@@ -6,15 +6,16 @@ import { MainLayout } from 'layouts/MainLayout'
 import { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
+
 import { OpenModalLink } from '../../components/Links/OpenModalLink'
 
 const OnboardingPhoneNumberPage: NextPage = () => {
-  const form = useForm<{ countryCode: string; phone: string }>()
-  const [isOpen, setIsOpen] = useState(false)
+  const form = useForm<{ countryCode: string; phone: string }>();
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    setIsOpen(true)
-  }, [])
+    setIsOpen(true);
+  }, []);
 
   return (
     <MainLayout>
@@ -41,11 +42,12 @@ const OnboardingPhoneNumberPage: NextPage = () => {
           </div>
         </div>
 
-        <OpenModalLink label="Required. Why?" onClick={() => {
-        }} />
+        <OpenModalLink
+label="Required. Why?" onClick={() => {
+        />
       </BlackModal>
     </MainLayout>
-  )
-}
+  );
+};
 
-export default OnboardingPhoneNumberPage
+export default OnboardingPhoneNumberPage;

@@ -12,8 +12,8 @@ import { useState } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form'
 import { StepComponentProps, StepParams } from 'services/form-flow'
 import zod, { Schema } from 'zod'
-import { OpenModalLink } from '../../../components/Links/OpenModalLink'
 
+import { OpenModalLink } from '../../../components/Links/OpenModalLink'
 import { RegisterFormFields } from '../form-fields'
 import { Identifiers } from '../identifiers'
 
@@ -27,24 +27,24 @@ export const StepPassword: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => !!fields.email,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
-    const [error, setError] = useState<string | undefined>('')
-    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false)
+    const [error, setError] = useState<string | undefined>('');
+    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
     const schema: Schema<Fields> = zod.object({
       password: formValidationRules.password,
       passwordConfirmation: formValidationRules.confirm_password,
-    })
+    });
 
-    const { handleSubmit, control, watch, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) })
+    const { handleSubmit, control, watch, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const fields = {
       password: watch('password'),
       passwordConfirmation: watch('passwordConfirmation'),
-    }
+    };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      updateStoreFields(fields)
+      updateStoreFields(fields);
       try {
         await Auth.signUp({
           username: storeFields.email,
@@ -55,23 +55,23 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           autoSignIn: {
             enabled: true,
           },
-        })
+        });
 
-        return moveToNextStep()
+        return moveToNextStep();
       } catch (err) {
-        const error = err as Error
+        const error = err as Error;
 
         if (error.name === 'UsernameExistsException') {
-          await Auth.resendSignUp(storeFields.email)
+          await Auth.resendSignUp(storeFields.email);
 
-          return moveToNextStep()
+          return moveToNextStep();
         }
 
-        setError(error.message)
+        setError(error.message);
       }
-    }
+    };
 
-    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen)
+    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -101,8 +101,9 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           required
         />
 
-        <OpenModalLink label="Required. Why?" onClick={() => {
-        }} />
+        <OpenModalLink
+label="Required. Why?" onClick={() => {
+        />
 
         <PasswordChecklist
           password={fields.password}
@@ -115,6 +116,6 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           disabled={shouldButtonBeDisabled}
         />
       </Form>
-    )
+    );
   },
-}
+};

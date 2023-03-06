@@ -15,7 +15,7 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { FormMessage } from '../../../components/FormElements/FormMessage';
-import { ChallengeName, useAuth } from '../../../providers/AuthProvider'
+import { ChallengeName, useAuth } from '../../../providers/AuthProvider';
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 

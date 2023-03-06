@@ -4,6 +4,7 @@ import { Title } from 'components/Title'
 import { MainLayout } from 'layouts/MainLayout'
 import { NextPage } from 'next'
 import { ComponentProps, useEffect, useState } from 'react'
+
 import { OpenModalLink } from '../../components/Links/OpenModalLink'
 
 const NET_OPTIONS: ComponentProps<typeof Select>['options'] = [
@@ -59,7 +60,8 @@ const CheckPhonePage: NextPage = () => {
             required
           />
 
-          <OpenModalLink label="Required. Why?" onClick={() => {
+          <OpenModalLink
+            label="Required. Why?" onClick={() => {
           }} />
         </div>
       </BlackModal>
