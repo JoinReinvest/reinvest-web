@@ -1,5 +1,6 @@
 import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
@@ -7,13 +8,14 @@ import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
-import { ChallengeName, useAuth } from 'providers/AuthProvider';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { FormMessage } from '../../../components/FormElements/FormMessage';
+import { ChallengeName, useAuth } from '../../../providers/AuthProvider'
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -29,9 +31,10 @@ export const StepLogin: StepParams<LoginFormFields> = {
     });
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
     const [error, setError] = useState<string>('');
-    const authContext = useAuth();
+    const { actions, loading, user } = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const router = useRouter();
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setError('');
@@ -41,7 +44,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
       const { email, password } = fields;
 
       try {
-        const result = await authContext.actions.signIn(email, password);
+        const result = await actions.signIn(email, password, router.query.redirectUrl);
 
         const cognitoUser = result as CognitoUser;
 
@@ -54,6 +57,10 @@ export const StepLogin: StepParams<LoginFormFields> = {
         setError((err as Error).message);
       }
     };
+
+    if (loading && !user) {
+      return <IconSpinner />;
+    }
 
     return (
       <form
