@@ -1,8 +1,8 @@
 import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { ChallengeName, useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
-import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
@@ -30,7 +30,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     });
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
     const [error, setError] = useState<string>('');
-    const authContext = useAuth();
+    const { actions, loading, user } = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const router = useRouter();
@@ -40,8 +40,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
       const { email, password } = fields;
-
-      const result = await authContext.actions.signIn(email, password, router.query.redirectUrl as string);
+      const result = await actions.signIn(email, password, router.query.redirectUrl as string);
 
       if (result instanceof Error) {
         setError(result.message);
@@ -56,10 +55,14 @@ export const StepLogin: StepParams<LoginFormFields> = {
       setIsValidatingCredentials(false);
     };
 
+    if (loading && !user) {
+      return <IconSpinner />;
+    }
+
     return (
-      <Form
+      <form
         onSubmit={handleSubmit(onSubmit)}
-        className="login-form max-w-330 z-30 flex flex-col items-center justify-center gap-16"
+        className="login-form max-w-330 z-30 flex w-full flex-col items-center justify-center gap-16"
       >
         <Typography variant="h2">Sign in</Typography>
         <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
@@ -105,7 +108,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
           disabled={shouldButtonBeDisabled}
           loading={isValidatingCredentials}
         />
-      </Form>
+      </form>
     );
   },
 };

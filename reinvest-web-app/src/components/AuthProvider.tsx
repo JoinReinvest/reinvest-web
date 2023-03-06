@@ -72,19 +72,24 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   useEffect(() => {
     const currentUser = async () => {
-      const pathWithoutQuery = [URL.login, URL.logout, URL.register];
+      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password];
+      const pathWithoutQuery = [URL.logout, ...notProtectedUrls];
 
       try {
         await Auth.currentSession();
         const user: CognitoUser = await Auth.currentAuthenticatedUser();
         setLoading(false);
         setUser(user);
+
+        if (user && notProtectedUrls.includes(router.pathname)) {
+          router.push('/');
+        }
       } catch (err) {
         setLoading(false);
         setUser(null);
 
         if (pathWithoutQuery.includes(router.pathname)) {
-          return router.push(URL.login);
+          return router.push(router.pathname);
         }
 
         return router.push({ pathname: URL.login, query: { from: router.pathname } });
