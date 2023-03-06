@@ -61,7 +61,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
     setUser(confirmedUser);
 
-    return router.push('/');
+    await router.push('/');
+
+    return null;
   };
 
   const ctx = useMemo(() => {

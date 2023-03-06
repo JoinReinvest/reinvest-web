@@ -44,7 +44,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
       const { email, password } = fields;
 
       try {
-        const result = await actions.signIn(email, password, router.query.redirectUrl);
+        const result = await actions.signIn(email, password, router.query.redirectUrl as string);
 
         const cognitoUser = result as CognitoUser;
 
