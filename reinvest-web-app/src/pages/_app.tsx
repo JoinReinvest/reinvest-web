@@ -52,7 +52,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           href="/manifest.json"
         />
       </Head>
-      <AuthProvider>
+      <AuthProvider isProtectedPage={pageProps.protected}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />

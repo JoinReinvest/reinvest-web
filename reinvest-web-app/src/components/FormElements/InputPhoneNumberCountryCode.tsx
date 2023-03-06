@@ -2,7 +2,7 @@ import { Select, SelectOption } from 'components/Select';
 import { COUNTRIES_WITH_CALLING_CODES } from 'constants/country-codes';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
-const OPTIONS: SelectOption[] = COUNTRIES_WITH_CALLING_CODES.map(({ callingCode }) => ({
+const OPTIONS: SelectOption[] = COUNTRIES_WITH_CALLING_CODES.map(({ callingCode }: { callingCode: string }) => ({
   label: `+${callingCode}`,
   value: callingCode,
 }));
