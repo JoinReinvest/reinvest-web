@@ -1,5 +1,4 @@
-import { PrivacyPolicyLink } from 'components/Links/PrivacyPolicyLink';
-import { TermsAndConditionsLink } from 'components/Links/TermsAndConditionsLink';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { PrivacyPolicyBlackModal } from 'components/PrivacyPolicyBlackModal';
 import { TermsAndConditioncBlackModal } from 'components/TermsAndConditioncBlackModal';
 import { Typography } from 'components/Typography';
@@ -30,7 +29,16 @@ export const Footer = () => {
       <Typography variant="paragraph">
         By continuing, you agree to the REINVEST
         <br />
-        <TermsAndConditionsLink onClick={onChangeTermsAndConditions} /> and <PrivacyPolicyLink onClick={onChangePrivacyPolicy} />.
+        <OpenModalLink
+          onClick={onChangeTermsAndConditions}
+          label="Terms of Conditions"
+        />{' '}
+        and{' '}
+        <OpenModalLink
+          onClick={onChangePrivacyPolicy}
+          label="Privacy Policy"
+        />
+        .
       </Typography>
     </footer>
   );
