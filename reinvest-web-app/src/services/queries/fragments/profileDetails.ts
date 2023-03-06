@@ -1,6 +1,13 @@
 import { gql } from 'graphql-request';
 
+import { AddressFragment } from './address';
+import { DomicileFragment } from './domicile';
+import { StatementFragment } from './statement';
+
 export const ProfileDetailsFragment = gql`
+  ${AddressFragment}
+  ${DomicileFragment}
+  ${StatementFragment}
   fragment ProfileDetailsFragment on ProfileDetails {
     firstName
     middleName
@@ -8,25 +15,16 @@ export const ProfileDetailsFragment = gql`
     dateOfBirth
     ssn
     domicile {
-      type
-      birthCountry
-      citizenshipCountry
-      visaType
+      ...DomicileFragment
     }
     address {
-      addressLine1
-      addressLine2
-      city
-      zip
-      country
-      state
+      ...AddressFragment
     }
     idScan {
       id
     }
     statements {
-      type
-      details
+      ...StatementFragment
     }
   }
 `;
