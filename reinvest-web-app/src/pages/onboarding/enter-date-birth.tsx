@@ -1,12 +1,12 @@
-import { BlackModal } from 'components/BlackModal'
-import { InputBirthDate } from 'components/FormElements/InputBirthDate'
-import { Title } from 'components/Title'
-import { MainLayout } from 'layouts/MainLayout'
-import { NextPage } from 'next'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { BlackModal } from 'components/BlackModal';
+import { InputBirthDate } from 'components/FormElements/InputBirthDate';
+import { Title } from 'components/Title';
+import { MainLayout } from 'layouts/MainLayout';
+import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { OpenModalLink } from '../../components/Links/OpenModalLink'
+import { OpenModalLink } from '../../components/Links/OpenModalLink';
 
 const EnterDateBirthPage: NextPage = () => {
   const form = useForm<{ date: Date }>();
@@ -26,7 +26,10 @@ const EnterDateBirthPage: NextPage = () => {
           control={form.control}
         />
 
-        <OpenModalLink label="Required. Why?" onClick={() => {}}/>
+        <OpenModalLink
+          label="Required. Why?"
+          onClick={() => {}}
+        />
       </BlackModal>
     </MainLayout>
   );
