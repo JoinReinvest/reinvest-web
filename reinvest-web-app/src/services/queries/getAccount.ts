@@ -3,14 +3,16 @@ import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
 import { Query } from 'types/graphql';
 
+import { AvatarFragment } from './fragments/avatar';
+
 const getAccountQuery = gql`
+  ${AvatarFragment}
   query getAccount($accountId: String) {
     getAccount(accountId: $accountId) {
       id
       type
       avatar {
-        id
-        url
+        ...AvatarFragment
       }
       positionTotal
     }

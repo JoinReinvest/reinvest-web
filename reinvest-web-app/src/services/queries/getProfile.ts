@@ -3,17 +3,18 @@ import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
 import { Query } from 'types/graphql';
 
+import { AvatarFragment } from './fragments/avatar';
 import { ProfileDetailsFragment } from './fragments/profileDetails';
 
 export const getProfileQuery = gql`
   ${ProfileDetailsFragment}
+  ${AvatarFragment}
   query getProfile {
     getProfile {
       externalId
       label
       avatar {
-        id
-        url
+        ...AvatarFragment
       }
       isCompleted
       details {
@@ -21,12 +22,6 @@ export const getProfileQuery = gql`
       }
       accounts {
         id
-        type
-        avatar {
-          id
-          url
-        }
-        positionTotal
       }
     }
   }
