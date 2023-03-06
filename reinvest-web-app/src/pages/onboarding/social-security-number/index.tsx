@@ -1,19 +1,19 @@
-import { BlackModal } from 'components/BlackModal';
-import { Typography } from 'components/Typography';
-import { MainLayout } from 'layouts/MainLayout';
-import { NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import { BlackModal } from 'components/BlackModal'
+import { Typography } from 'components/Typography'
+import { MainLayout } from 'layouts/MainLayout'
+import { NextPage } from 'next'
+import { useEffect, useState } from 'react'
 
-import { SSNInput } from '../../../components/FormElements/SSNInput';
-import { WhyRequiredLink } from '../../../components/Links/WhyRequiredLink';
-import { Title } from '../../../components/Title';
+import { SSNInput } from '../../../components/FormElements/SSNInput'
+import { OpenModalLink } from '../../../components/Links/OpenModalLink'
+import { Title } from '../../../components/Title'
 
 const OnboardingSocialSecurityNumberPage: NextPage = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
-    setIsOpen(true);
-  }, []);
+    setIsOpen(true)
+  }, [])
 
   return (
     <MainLayout>
@@ -30,10 +30,11 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
 
         <SSNInput />
 
-        <WhyRequiredLink />
+        <OpenModalLink label="Required. Why?" onClick={() => {
+        }} />
       </BlackModal>
     </MainLayout>
-  );
-};
+  )
+}
 
-export default OnboardingSocialSecurityNumberPage;
+export default OnboardingSocialSecurityNumberPage

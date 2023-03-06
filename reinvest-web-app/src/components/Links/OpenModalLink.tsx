@@ -5,7 +5,7 @@ interface OpenModalLinkProps {
 
 export const OpenModalLink = ({ onClick, label }: OpenModalLinkProps) => (
   <span
-    className="typo-link text-green-frost-01"
+    className="typo-link"
     onKeyDown={onClick}
     onClick={onClick}
     role="button"
