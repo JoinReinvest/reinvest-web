@@ -1,4 +1,5 @@
 import { Auth, CognitoUser } from '@aws-amplify/auth';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 
@@ -30,9 +31,10 @@ export const AuthContext = createContext<AuthContextInterface>({
 
 interface AuthProviderProps {
   children: ReactNode;
+  isProtectedPage: boolean;
 }
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
@@ -76,10 +78,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       } catch (err) {
         setLoading(false);
         setUser(null);
+        router.push('/login');
       }
     };
+
     currentUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  if (isProtectedPage && !user) {
+    return <IconSpinner />;
+  }
 
   return <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>;
 };
