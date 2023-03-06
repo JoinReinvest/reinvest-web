@@ -12,10 +12,13 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { ForgotPasswordFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 type Fields = Pick<ForgotPasswordFormFields, 'email'>;
 
 export const StepEmail: StepParams<ForgotPasswordFormFields> = {
+  identifier: Identifiers.EMAIL,
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,
@@ -27,9 +30,6 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      // TO-DO: Validate that the email pertains to an user
-      //    - if so proceed to the next step by calling
-      //    `moveToNextStep()`, otherwise display an error
       setIsLoading(true);
       updateStoreFields(fields);
 

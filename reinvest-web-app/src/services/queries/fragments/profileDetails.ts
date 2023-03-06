@@ -7,5 +7,26 @@ export const ProfileDetailsFragment = gql`
     lastName
     dateOfBirth
     ssn
+    domicile {
+      type
+      birthCountry
+      citizenshipCountry
+      visaType
+    }
+    address {
+      addressLine1
+      addressLine2
+      city
+      zip
+      country
+      state
+    }
+    idScan {
+      id
+    }
+    statements {
+      type
+      details
+    }
   }
 `;
