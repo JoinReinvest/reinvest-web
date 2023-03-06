@@ -12,7 +12,7 @@ const getTrustDraftAccountQuery = gql`
 `;
 
 export const useGetTrustDraftAccount = (accountId: string): UseQueryResult => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useQuery<Maybe<TrustDraftAccount> | undefined>({
     queryKey: ['getTrustDraftAccount', accountId],

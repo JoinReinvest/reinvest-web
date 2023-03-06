@@ -1,13 +1,10 @@
-import { Link as PrimitiveLink } from '@hookooekoo/ui-link';
+import { Link as PrimitiveLink, LinkProps } from '@hookooekoo/ui-link';
 import cx from 'classnames';
-import { ComponentProps } from 'react';
 
-type Props = ComponentProps<typeof PrimitiveLink>;
-
-export const Link = ({ className, children, ...props }: Props) => (
+export const Link = ({ className, children, ...props }: LinkProps) => (
   <PrimitiveLink
     {...props}
-    className={cx('typo-link text-green-frost-01', className)}
+    className={cx({ 'typo-link text-green-frost-01': !className }, className)}
   >
     {children}
   </PrimitiveLink>

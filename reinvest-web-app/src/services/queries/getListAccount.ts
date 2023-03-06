@@ -13,7 +13,7 @@ const accountDraftsQuery = gql`
 `;
 
 export const useGetListAccount = (): UseQueryResult<Query['listAccountDrafts']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useQuery<Query['listAccountDrafts']>({
     queryKey: ['getAccountDrafts'],

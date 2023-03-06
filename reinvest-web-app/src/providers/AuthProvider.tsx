@@ -60,13 +60,14 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
 
     setUser(confirmedUser);
+
     router.push('/');
 
     return confirmedUser;
   };
 
   const ctx = useMemo(() => {
-    return { loading, user, actions: { signIn, confirmSignIn } };
+    return { user, loading, actions: { signIn, confirmSignIn } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
@@ -77,12 +78,14 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
       try {
         await Auth.currentSession();
+
         const user: CognitoUser = await Auth.currentAuthenticatedUser();
+
         setLoading(false);
         setUser(user);
 
         if (user && notProtectedUrls.includes(router.pathname)) {
-          router.push('/');
+          return router.push('/');
         }
       } catch (err) {
         setLoading(false);
@@ -94,6 +97,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
         return router.push({ pathname: URL.login, query: { from: router.pathname } });
       }
+
+      return router.push('/');
     };
 
     currentUser();

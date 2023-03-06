@@ -30,7 +30,7 @@ export const useCompleteIndividualDraftAccount = (
   accountId: string,
   input: IndividualAccountInput,
 ): UseMutationResult<Mutation['completeIndividualDraftAccount']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useMutation({
     mutationFn: async () => {

@@ -10,7 +10,7 @@ export const Form = ({ onSubmit, children, className }: FormProps) => {
   return (
     <form
       onSubmit={onSubmit}
-      className={cx('relative flex h-full flex-col md:justify-center', className)}
+      className={cx('relative flex h-full flex-col gap-24 md:justify-center', className)}
     >
       {children}
     </form>
