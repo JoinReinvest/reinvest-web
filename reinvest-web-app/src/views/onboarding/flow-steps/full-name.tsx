@@ -3,6 +3,7 @@ import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
+import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
@@ -13,9 +14,9 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'firstName' | 'middleName' | 'lastName'>;
 
 const schema = z.object({
-  firstName: z.string().min(1),
-  middleName: z.string().optional(),
-  lastName: z.string().min(1),
+  firstName: formValidationRules.firstName,
+  middleName: formValidationRules.middleName,
+  lastName: formValidationRules.lastName,
 });
 
 export const StepFullName: StepParams<OnboardingFormFields> = {
