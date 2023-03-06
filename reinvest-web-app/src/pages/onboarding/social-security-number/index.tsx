@@ -31,7 +31,8 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
         <SSNInput />
 
         <OpenModalLink
-label="Required. Why?" onClick={() => {
+          label="Required. Why?"
+          onClick={() => {}}
         />
       </BlackModal>
     </MainLayout>

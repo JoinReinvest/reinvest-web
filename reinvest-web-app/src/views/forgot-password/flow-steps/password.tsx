@@ -1,21 +1,21 @@
-import { Auth } from '@aws-amplify/auth'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { Button } from 'components/Button'
-import { Form } from 'components/FormElements/Form'
-import { FormMessage } from 'components/FormElements/FormMessage'
-import { InputPassword } from 'components/FormElements/InputPassword'
-import { PasswordChecklist } from 'components/PasswordChecklist'
-import { Title } from 'components/Title'
-import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal'
-import { formValidationRules } from 'formValidationRules'
-import { useState } from 'react'
-import { SubmitHandler, useForm } from 'react-hook-form'
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow'
-import zod, { Schema } from 'zod'
+import { Auth } from '@aws-amplify/auth';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Button } from 'components/Button';
+import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
+import { InputPassword } from 'components/FormElements/InputPassword';
+import { PasswordChecklist } from 'components/PasswordChecklist';
+import { Title } from 'components/Title';
+import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
+import { formValidationRules } from 'formValidationRules';
+import { useState } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import zod, { Schema } from 'zod';
 
-import { OpenModalLink } from '../../../components/Links/OpenModalLink'
-import { ForgotPasswordFormFields } from '../form-fields'
-import { Identifiers } from '../identifiers'
+import { OpenModalLink } from '../../../components/Links/OpenModalLink';
+import { ForgotPasswordFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 interface Fields extends Pick<ForgotPasswordFormFields, 'password'> {
   passwordConfirmation: string;
@@ -87,7 +87,8 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
         />
 
         <OpenModalLink
-label="Required. Why?" onClick={() => {
+          label="Required. Why?"
+          onClick={openWhyReqiredOnClick}
         />
 
         <PasswordChecklist

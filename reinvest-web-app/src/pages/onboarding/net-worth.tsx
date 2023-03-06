@@ -62,7 +62,7 @@ const CheckPhonePage: NextPage = () => {
 
           <OpenModalLink
             label="Required. Why?"
-            onClick={() => {
+            onClick={() => {}}
           />
         </div>
       </BlackModal>

@@ -1,13 +1,13 @@
-import { BlackModal } from 'components/BlackModal'
-import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber'
-import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode'
-import { Title } from 'components/Title'
-import { MainLayout } from 'layouts/MainLayout'
-import { NextPage } from 'next'
-import { useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { BlackModal } from 'components/BlackModal';
+import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
+import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
+import { Title } from 'components/Title';
+import { MainLayout } from 'layouts/MainLayout';
+import { NextPage } from 'next';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { OpenModalLink } from '../../components/Links/OpenModalLink'
+import { OpenModalLink } from '../../components/Links/OpenModalLink';
 
 const OnboardingPhoneNumberPage: NextPage = () => {
   const form = useForm<{ countryCode: string; phone: string }>();
@@ -43,7 +43,8 @@ const OnboardingPhoneNumberPage: NextPage = () => {
         </div>
 
         <OpenModalLink
-label="Required. Why?" onClick={() => {
+          label="Required. Why?"
+          onClick={() => {}}
         />
       </BlackModal>
     </MainLayout>
