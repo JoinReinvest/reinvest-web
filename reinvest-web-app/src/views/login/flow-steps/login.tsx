@@ -9,6 +9,7 @@ import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -32,13 +33,15 @@ export const StepLogin: StepParams<LoginFormFields> = {
     const authContext = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const router = useRouter();
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setError('');
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
       const { email, password } = fields;
-      const result = await authContext.actions.signIn(email, password);
+
+      const result = await authContext.actions.signIn(email, password, router.query.redirectUrl as string);
 
       if (result instanceof Error) {
         setError(result.message);
@@ -56,7 +59,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     return (
       <Form
         onSubmit={handleSubmit(onSubmit)}
-        className="login-form z-30 flex max-w-330 flex-col items-center justify-center gap-16"
+        className="login-form max-w-330 z-30 flex flex-col items-center justify-center gap-16"
       >
         <Typography variant="h2">Sign in</Typography>
         <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
