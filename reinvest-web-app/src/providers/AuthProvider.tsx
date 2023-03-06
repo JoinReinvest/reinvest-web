@@ -45,7 +45,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
-        await router.push(redirectTo || '/');
+        router.push(redirectTo || '/');
       }
 
       setUser(user);
@@ -61,9 +61,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
     setUser(confirmedUser);
 
-    await router.push('/');
+    router.push('/');
 
-    return null;
+    return confirmedUser;
   };
 
   const ctx = useMemo(() => {
