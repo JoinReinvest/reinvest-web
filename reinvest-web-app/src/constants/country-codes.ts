@@ -25,7 +25,6 @@ const mapCountriesWithCallingCodes = (country: CountryCode) => ({
   callingCode: getCountryCallingCode(country),
 });
 
-export const COUNTRIES_WITH_CALLING_CODES = COUNTRIES
-  .map(mapCountriesWithCallingCodes)
+export const COUNTRIES_WITH_CALLING_CODES = COUNTRIES.map(mapCountriesWithCallingCodes)
   .filter(filterCountriesWithUniqueCallingCodes)
   .sort(sortCountriesByCallingCode);
