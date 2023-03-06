@@ -1,12 +1,18 @@
-import { BlackModal } from 'components/BlackModal';
-import { Title } from 'components/Title';
-import { Typography } from 'components/Typography';
-import { NextPage } from 'next';
+import { DialogProps } from '@hookooekoo/ui-dialog';
 
-const TermsAndConditionsPage: NextPage = () => {
+import { BlackModalDialog } from './BlackModal/BlackModalDialog';
+import { Title } from './Title';
+import { Typography } from './Typography';
+
+type PrivacyPolicyBlackModalProps = Omit<DialogProps, 'children'>;
+
+export const PrivacyPolicyBlackModal = ({ isOpen, onOpenChange }: PrivacyPolicyBlackModalProps) => {
   return (
-    <BlackModal isOpen={true}>
-      <Title title="Terms and Conditions" />
+    <BlackModalDialog
+      isOpen={isOpen}
+      onOpenChange={onOpenChange}
+    >
+      <Title title="Privacy Policy" />
       <Typography variant="paragraph-large">
         As a condition to exercising the rights to the Licensed Program. The Recipient may select either this Agreement and does not already Covered Code as
         defined in the absence of any other entity based on the Program, and can be in a reasonable attempt to trace the Current Maintainer under Clause 2
@@ -23,8 +29,6 @@ const TermsAndConditionsPage: NextPage = () => {
         devices. Contributor Grant. Subject to the absence of any character arising as a component of an unequivocal list it might be impossible for You to the
         author/donor to decide if he or she is willing to receive error reports for the Work.
       </Typography>
-    </BlackModal>
+    </BlackModalDialog>
   );
 };
-
-export default TermsAndConditionsPage;
