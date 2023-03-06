@@ -2,8 +2,8 @@ import { IconFileUpload } from 'assets/icons/IconFileUpload';
 import { BYTES_IN_MEGABYTE } from 'constants/conversions';
 import { ChangeEventHandler, useMemo, useState } from 'react';
 
-import { ErrorMessage } from '../../BlackModal/ErrorMessage';
 import { Typography } from '../../Typography';
+import { FormMessage } from '../FormMessage';
 import { UploadedFile } from './UploadedFile';
 
 export interface InputFileProps {
@@ -71,7 +71,7 @@ export const InputFile = ({ label, name, placeholder, accepts = '*', file, onCha
         />
       )}
 
-      {hasError && <ErrorMessage message={errorMessage} />}
+      {hasError && <FormMessage message={errorMessage} />}
     </div>
   );
 };

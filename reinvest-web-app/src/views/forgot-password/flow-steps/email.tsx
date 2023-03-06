@@ -1,7 +1,6 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { Title } from 'components/Title';
@@ -11,6 +10,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { FormMessage } from '../../../components/FormElements/FormMessage';
 import { ForgotPasswordFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -51,7 +51,7 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
           subtitle="Enter the email associated with your account and we’ll send an email with instructions to reset your password."
         />
 
-        {error && <Message message={error} />}
+        {error && <FormMessage message={error} />}
 
         <InputEmail
           control={control}

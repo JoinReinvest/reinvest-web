@@ -13,7 +13,7 @@ const createDraftAccountMutatuion = gql`
 `;
 
 export const useCreateDraftAccount = (type: AccountType): UseMutationResult<Mutation['createDraftAccount']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useMutation({
     mutationFn: async () => {

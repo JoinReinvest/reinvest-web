@@ -12,7 +12,7 @@ const getIndividualDraftAccountQuery = gql`
 `;
 
 export const useGetIndividualDraftAccount = (accountId: string): UseQueryResult<Query['getIndividualDraftAccount']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useQuery<Query['getIndividualDraftAccount']>({
     queryKey: ['getIndividualDraftAccount', accountId],

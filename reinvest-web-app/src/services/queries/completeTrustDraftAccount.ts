@@ -12,7 +12,7 @@ const completeTrustDraftAccountMutation = gql`
 `;
 
 export const useCompleteTrustDraftAccount = (accountId: string): UseMutationResult<Mutation['completeTrustDraftAccount']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useMutation({
     mutationFn: async () => {

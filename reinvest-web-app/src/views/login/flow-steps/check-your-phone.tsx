@@ -1,19 +1,19 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
-import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
-import { ResendCodeLink } from 'components/Links/ResendCodeLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
+import { useAuth } from 'providers/AuthProvider';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { OpenModalLink } from '../../../components/Links/OpenModalLink';
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -36,6 +36,7 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
 
     const onSubmit: SubmitHandler<LoginFormFields> = async fields => {
       setIsValidatingCredentials(true);
+
       try {
         await context.actions.confirmSignIn(fields.authenticationCode);
       } catch (err) {
@@ -48,6 +49,7 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
     const resendCodeOnClick = async () => {
       try {
         await Auth.signIn(storeFields.email, storeFields.password);
+
         setInfoMessage('Code has been sent');
       } catch (err) {
         setError((err as Error).message);
@@ -61,9 +63,10 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
         />
 
-        {error && <Message message={error} />}
+        {error && <FormMessage message={error} />}
+
         {infoMessage && (
-          <Message
+          <FormMessage
             message={infoMessage}
             variant="info"
           />
@@ -75,15 +78,17 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
           required
         />
 
-        <div className="my-20 flex justify-between">
-          <ResendCodeLink onClick={resendCodeOnClick} />
+        <div className="flex justify-between">
+          <OpenModalLink
+            label="Resend code"
+            onClick={resendCodeOnClick}
+          />
           <GetHelpLink />
         </div>
 
         <Button
           type="submit"
           label="Sign Up"
-          variant="default"
           disabled={shouldButtonBeDisabled}
           loading={isValidatingCredentials}
         />
