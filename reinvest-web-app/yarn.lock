@@ -1767,10 +1767,10 @@
   resolved "https://registry.yarnpkg.com/@hookooekoo/ui-link/-/ui-link-0.0.8.tgz#94acd83040751c7a8c7851368f1064c142f23445"
   integrity sha512-+xfOn+fE5HQKjeOSH7l4f5aXRPXg0XJu3HhysqpF8aLh+5FOKFFDODHmXlK0JBxLbHw8dbWnEMx9MPhxg/6Evw==
 
-"@hookooekoo/ui-radio-group@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-radio-group/-/ui-radio-group-1.0.0.tgz#99e25715c4b886d92fc19f8df1d06278dd9dba3e"
-  integrity sha512-YWbNjTAiSJLv44q/+ov/fBMcJ4TpvgpOa4zWfcNoymnhUBOnHNIWM1TfL92t3lVpiPly8kLVCsyqNqzL/x69sA==
+"@hookooekoo/ui-radio-group@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-radio-group/-/ui-radio-group-1.1.0.tgz#b916ec5e80db21d23f48f283ac9292281b0fa56b"
+  integrity sha512-jC5K8+8ezDw62zlacauRlk2gMSXn8qPQ6+J+7xVKN12xw+ubFJsrPcPBVKw0JWtiFQor9ho+m98jQIA+aIMbug==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
     "@radix-ui/react-radio-group" "^1.1.1"
