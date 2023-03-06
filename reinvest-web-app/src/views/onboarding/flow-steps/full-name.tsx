@@ -40,23 +40,23 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <Title title="Enter your first and last name as it appears on your ID" />
 
-        <div className="flex flex-col gap-16">
-          <Input
-            name="firstName"
-            control={form.control}
-            placeholder="First Name"
-          />
-          <Input
-            name="middleName"
-            control={form.control}
-            placeholder="Middle Name (Optional)"
-          />
-          <Input
-            name="lastName"
-            control={form.control}
-            placeholder="Last Name"
-          />
-        </div>
+        <Input
+          name="firstName"
+          control={form.control}
+          placeholder="First Name"
+        />
+
+        <Input
+          name="middleName"
+          control={form.control}
+          placeholder="Middle Name (Optional)"
+        />
+
+        <Input
+          name="lastName"
+          control={form.control}
+          placeholder="Last Name"
+        />
 
         <Button
           type="submit"
