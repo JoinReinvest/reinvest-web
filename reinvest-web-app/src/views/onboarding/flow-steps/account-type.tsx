@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { ButtonLink } from 'components/ButtonLink';
 import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { InformationModal } from 'components/InformationModal';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { useState } from 'react';
@@ -73,11 +73,11 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
             name="accountType"
             control={control}
             options={ACCOUNT_TYPES}
-            className="mb-30 flex items-stretch justify-center gap-24 flex-col"
+            className="mb-30 flex flex-col items-stretch justify-center gap-24"
             orientation="vertical"
           />
 
-          <ButtonLink
+          <OpenModalLink
             label="Not sure which is best for you?"
             onClick={onLinkClick}
           />
