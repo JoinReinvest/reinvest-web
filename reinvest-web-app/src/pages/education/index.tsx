@@ -35,31 +35,37 @@ const blogCards: BlogCardProps[] = [
     imageSrc: image1,
     subtitle: 'with Brandon Rule',
     title: 'Real Estate Investment 101',
+    href: '/',
   },
   {
     imageSrc: image2,
     subtitle: 'with Brandon Rule',
     title: 'Getting Started with REINVEST',
+    href: '/',
   },
   {
     imageSrc: image3,
     subtitle: 'with Brandon Rule',
     title: 'Getting Started with REINVEST',
+    href: '/',
   },
   {
     imageSrc: image4,
     subtitle: 'April 3th, 2022',
     title: 'Project update lorem ipsum dolor sit amet',
+    href: '/',
   },
   {
     imageSrc: image5,
     subtitle: 'April 3th, 2022',
     title: 'Project update lorem ipsum dolor sit amet',
+    href: '/',
   },
   {
     imageSrc: image5,
     subtitle: 'April 3th, 2022',
     title: 'Project update lorem ipsum dolor sit amet',
+    href: '/',
   },
 ];
 
