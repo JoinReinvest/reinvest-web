@@ -17,8 +17,6 @@ export const getApiClient = async () => {
       },
     });
   } catch (err) {
-    console.log('1111111111111111111', err);
-
-    return null;
+    return undefined;
   }
 };
