@@ -4,6 +4,7 @@ import { Title } from 'components/Title';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { OpenModalLink } from '../../components/Links/OpenModalLink';
 
@@ -19,18 +20,14 @@ const NET_OPTIONS: ComponentProps<typeof Select>['options'] = [
 
 const CheckPhonePage: NextPage = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [formFields, setFormFields] = useState({
-    netIncome: '',
-    netWorth: '',
-  });
+  const { control } = useForm<{
+    netIncome: string;
+    netWorth: string;
+  }>();
 
   useEffect(() => {
     setIsOpen(true);
   }, []);
-
-  const updateField = (fields: Partial<typeof formFields>) => {
-    setFormFields({ ...formFields, ...fields });
-  };
 
   return (
     <MainLayout>
@@ -39,22 +36,16 @@ const CheckPhonePage: NextPage = () => {
 
         <div className="flex flex-col gap-24">
           <Select
-            name="net-income"
-            value={formFields.netIncome}
-            onChange={option => {
-              updateField({ netIncome: option?.value });
-            }}
+            name="netIncome"
+            control={control}
             options={NET_OPTIONS}
             placeholder="Net Income"
             required
           />
 
           <Select
-            name="net-worth"
-            value={formFields.netWorth}
-            onChange={option => {
-              updateField({ netWorth: option?.value });
-            }}
+            name="netWorth"
+            control={control}
             options={NET_OPTIONS}
             placeholder="Net Worth"
             required

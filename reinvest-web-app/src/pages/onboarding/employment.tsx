@@ -49,10 +49,6 @@ const OnboardingEmploymentLocationPage: NextPage = () => {
 
           <Select
             name="employment-industry"
-            value={formFields.industry}
-            onChange={option => {
-              updateField({ industry: option?.value });
-            }}
             placeholder="Industry"
             options={INDUSTRIES}
           />
