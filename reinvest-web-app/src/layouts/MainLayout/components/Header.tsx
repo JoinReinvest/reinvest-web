@@ -43,28 +43,38 @@ export const Header = () => {
 
   return (
     <header className={headerStyles}>
-      <div className="gap-84 flex grow flex-col lg:flex-row lg:items-center lg:gap-40">
-        <HeaderIcon
-          isMenuOpen={isMenuOpen}
-          openMenu={openMenu}
-          closeMenu={closeMenu}
-        />
+      <div className="gap-100 flex w-full flex-col">
+        <div className="flex w-full justify-between">
+          <div className="gap-84 flex grow flex-col lg:flex-row lg:items-center lg:gap-40">
+            <HeaderIcon
+              isMenuOpen={isMenuOpen}
+              openMenu={openMenu}
+              closeMenu={closeMenu}
+            />
 
+            <HeaderNavigation
+              isMenuOpen={isMenuOpen}
+              navigationItems={MENU_ITEMS}
+              className="hidden lg:block"
+            />
+          </div>
+
+          <div className="flex gap-16 lg:gap-24">
+            <IconBell className="h-28 w-28 lg:h-44 lg:w-44" />
+
+            {data && (
+              <Avatar
+                src={data?.avatar?.url || placeholderPicture}
+                alt={`${data?.details?.firstName} ${data?.details?.lastName}`}
+              />
+            )}
+          </div>
+        </div>
         <HeaderNavigation
           isMenuOpen={isMenuOpen}
           navigationItems={MENU_ITEMS}
+          className="lg:hidden"
         />
-      </div>
-
-      <div className="flex gap-16 lg:gap-24">
-        <IconBell className="h-28 w-28 lg:h-44 lg:w-44" />
-
-        {data && (
-          <Avatar
-            src={data?.avatar?.url || placeholderPicture}
-            alt={`${data?.details?.firstName} ${data?.details?.lastName}`}
-          />
-        )}
       </div>
     </header>
   );
