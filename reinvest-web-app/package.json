@@ -22,9 +22,9 @@
     "check-types": "tsc --pretty"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "^3.2.1",
-    "@graphql-codegen/client-preset": "^2.1.0",
-    "@graphql-codegen/typescript": "^3.0.1",
+    "@graphql-codegen/cli": "^3.2.2",
+    "@graphql-codegen/client-preset": "^2.1.1",
+    "@graphql-codegen/typescript": "^3.0.2",
     "@next/bundle-analyzer": "13.2.3",
     "@tanstack/eslint-plugin-query": "^4.26.2",
     "@tanstack/react-query-devtools": "^4.26.1",

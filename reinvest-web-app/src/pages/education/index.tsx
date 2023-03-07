@@ -7,6 +7,7 @@ import image4 from 'assets/images/education/image4.png';
 import image5 from 'assets/images/education/image5.png';
 import hero from 'assets/images/education-hero-phone.png';
 import { BlogCard, BlogCardProps } from 'components/Education/BlogCard';
+import hero from 'assets/images/education-hero.png';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
@@ -86,7 +87,7 @@ const Index = () => {
           Education
         </Typography>
         <Image
-          alt="education-hero"
+          alt="Education"
           src={hero}
           className="w-full object-cover object-top"
         />
