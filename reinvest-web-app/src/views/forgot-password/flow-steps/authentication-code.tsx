@@ -45,8 +45,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
 
     const resendCodeOnClick = async () => {
       try {
-        await Auth.signIn(storeFields.email, storeFields.password);
-
+        await Auth.forgotPassword(storeFields.email);
         setInfoMessage('Code has been sent');
       } catch (err) {
         setError((err as Error).message);
