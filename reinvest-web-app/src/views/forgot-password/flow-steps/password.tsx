@@ -88,6 +88,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
 
         <OpenModalLink
           label="Required. Why?"
+          green
           onClick={openWhyReqiredOnClick}
         />
 

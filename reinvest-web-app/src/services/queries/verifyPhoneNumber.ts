@@ -11,7 +11,7 @@ const verifyPhoneNumberMutation = gql`
 `;
 
 export const useVerifyPhoneNumber = (countryCode: string, phoneNumber: string, authCode: string): UseMutationResult<Mutation['verifyPhoneNumber']> => {
-  const api = getApiClient;
+  const api = getApiClient();
 
   return useMutation({
     mutationFn: async () => {

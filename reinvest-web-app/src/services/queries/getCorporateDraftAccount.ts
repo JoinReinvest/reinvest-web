@@ -12,7 +12,7 @@ const getCorporateDraftAccountQuery = gql`
 `;
 
 export const useGetCorporateDraftAccount = (accountId: string): UseQueryResult<Query['getCorporateDraftAccount']> => {
-  const api = getApiClient;
+  const api = getApiClient();
 
   return useQuery<Query['getCorporateDraftAccount']>({
     queryKey: ['getCorporateDraftAccount', accountId],

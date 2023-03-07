@@ -14,7 +14,7 @@ const getTemplateQuery = gql`
 `;
 
 export const useGetTemplate = (): UseQueryResult<Query['getTemplate']> => {
-  const api = getApiClient;
+  const api = getApiClient();
 
   return useQuery<Query['getTemplate']>({
     queryKey: ['getTemplate'],

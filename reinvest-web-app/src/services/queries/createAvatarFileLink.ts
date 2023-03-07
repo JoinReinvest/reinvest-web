@@ -13,7 +13,7 @@ const createAvatarFileLinkMutation = gql`
 `;
 
 export const useCreateAvatarFileLink = (): UseMutationResult<Mutation['createAvatarFileLink']> => {
-  const api = getApiClient;
+  const api = getApiClient();
 
   return useMutation({
     mutationFn: async () => {

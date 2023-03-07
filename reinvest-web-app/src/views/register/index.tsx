@@ -1,20 +1,19 @@
-import { BlackModal } from 'components/BlackModal';
-import { useIsMounted } from 'hooks/is-mounted';
-import { LoginLayout } from 'layouts/LoginLayout';
-import { MainLayout } from 'layouts/MainLayout';
-import { useFormFlowContext } from 'services/form-flow';
+import { BlackModal } from 'components/BlackModal'
+import { useIsMounted } from 'hooks/is-mounted'
+import { LoginLayout } from 'layouts/LoginLayout'
+import { useFormFlowContext } from 'services/form-flow'
 
 export const RegistrationView = () => {
-  const isMounted = useIsMounted();
+  const isMounted = useIsMounted()
 
   const {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
-  } = useFormFlowContext();
+  } = useFormFlowContext()
 
-  const shouldDisplayFirstStep = isMounted() && isFirstStep;
-  const shouldDisplayRestOfSteps = isMounted() && !isFirstStep;
+  const shouldDisplayFirstStep = isMounted() && isFirstStep
+  const shouldDisplayRestOfSteps = isMounted() && !isFirstStep
 
   return (
     <>
@@ -25,15 +24,13 @@ export const RegistrationView = () => {
       )}
 
       {shouldDisplayRestOfSteps && (
-        <MainLayout>
-          <BlackModal
-            isOpen={!isFirstStep}
-            onOpenChange={moveToPreviousValidStep}
-          >
-            <CurrentStepView />
-          </BlackModal>
-        </MainLayout>
+        <BlackModal
+          isOpen={!isFirstStep}
+          onOpenChange={moveToPreviousValidStep}
+        >
+          <CurrentStepView />
+        </BlackModal>
       )}
     </>
-  );
-};
+  )
+}

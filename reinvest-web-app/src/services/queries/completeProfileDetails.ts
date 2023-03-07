@@ -30,7 +30,7 @@ const completeProfileDetailsMutation = gql`
 `;
 
 export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutationResult<Mutation['completeProfileDetails']> => {
-  const api = getApiClient;
+  const api = getApiClient();
 
   return useMutation({
     mutationFn: async () => {

@@ -11,7 +11,7 @@ const removeDraftAccountMutatuion = gql`
 `;
 
 export const useRemoveDraftAccount = (id: string): UseMutationResult<Mutation['removeDraftAccount']> => {
-  const api = getApiClient;
+  const api = getApiClient();
 
   return useMutation({
     mutationFn: async () => {

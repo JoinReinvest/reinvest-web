@@ -24,6 +24,10 @@ const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
     label: 'Glossary',
     href: '/education/glossary',
   },
+  {
+    label: 'Calculator',
+    href: '/education/calculator',
+  },
 ];
 
 export const Header = () => {

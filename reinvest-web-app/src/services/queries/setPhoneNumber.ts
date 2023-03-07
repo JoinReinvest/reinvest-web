@@ -11,7 +11,7 @@ const setPhoneNumberMutation = gql`
 `;
 
 export const useSetPhoneNumber = (countryCode: string, phoneNumber: string): UseMutationResult<Mutation['setPhoneNumber']> => {
-  const api = getApiClient;
+  const api = getApiClient();
 
   return useMutation({
     mutationFn: async () => {

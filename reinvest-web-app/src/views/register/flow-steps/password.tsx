@@ -103,6 +103,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
         <OpenModalLink
           label="Required. Why?"
+          green
           onClick={openWhyReqiredOnClick}
         />
 
