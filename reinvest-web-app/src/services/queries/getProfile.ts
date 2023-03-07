@@ -27,15 +27,19 @@ export const getProfileQuery = gql`
   }
 `;
 
-export const useGetUserProfile = (): UseQueryResult<Query['getProfile']> => {
-  const api = getApiClient();
+export const useGetUserProfile = async (): Promise<UseQueryResult<Query['getProfile']>> => {
+  const api = await getApiClient();
 
   return useQuery<Query['getProfile']>({
     queryKey: ['getProfile'],
     queryFn: async () => {
-      const { getProfile } = await api.request<Query>(getProfileQuery);
+      if (api) {
+        const { getProfile } = await api.request<Query>(getProfileQuery);
 
-      return getProfile;
+        return getProfile;
+      }
+
+      return null;
     },
   });
 };
