@@ -7,7 +7,7 @@ const Calculator: NextPage = () => {
   return (
     <MainLayout>
       <iframe
-        src={`${env.site.url}/calculators?iframe=true`}
+        src={`${env.site.url}/calculator?iframe=true`}
         className="h-screen w-full"
         title="Calculator page"
       />

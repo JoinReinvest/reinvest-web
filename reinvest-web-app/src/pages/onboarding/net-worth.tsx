@@ -1,7 +1,6 @@
 import { BlackModal } from 'components/BlackModal';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
 
@@ -33,41 +32,39 @@ const CheckPhonePage: NextPage = () => {
   };
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="What is approximate net worth and income?" />
+    <BlackModal isOpen={isOpen}>
+      <Title title="What is approximate net worth and income?" />
 
-        <div className="flex flex-col gap-24">
-          <Select
-            name="net-income"
-            value={formFields.netIncome}
-            onChange={option => {
-              updateField({ netIncome: option?.value });
-            }}
-            options={NET_OPTIONS}
-            placeholder="Net Income"
-            required
-          />
+      <div className="flex flex-col gap-24">
+        <Select
+          name="net-income"
+          value={formFields.netIncome}
+          onChange={option => {
+            updateField({ netIncome: option?.value });
+          }}
+          options={NET_OPTIONS}
+          placeholder="Net Income"
+          required
+        />
 
-          <Select
-            name="net-worth"
-            value={formFields.netWorth}
-            onChange={option => {
-              updateField({ netWorth: option?.value });
-            }}
-            options={NET_OPTIONS}
-            placeholder="Net Worth"
-            required
-          />
+        <Select
+          name="net-worth"
+          value={formFields.netWorth}
+          onChange={option => {
+            updateField({ netWorth: option?.value });
+          }}
+          options={NET_OPTIONS}
+          placeholder="Net Worth"
+          required
+        />
 
-          <OpenModalLink
-            label="Required. Why?"
-            // eslint-disable-next-line @typescript-eslint/no-empty-function
-            onClick={() => {}}
-          />
-        </div>
-      </BlackModal>
-    </MainLayout>
+        <OpenModalLink
+          label="Required. Why?"
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onClick={() => {}}
+        />
+      </div>
+    </BlackModal>
   );
 };
 
