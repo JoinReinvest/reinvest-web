@@ -32,7 +32,8 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
 
         <OpenModalLink
           label="Required. Why?"
-          onClick={() => {}}
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          onClick={() => {}} //
         />
       </BlackModal>
     </MainLayout>

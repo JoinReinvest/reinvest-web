@@ -1,4 +1,4 @@
-import cx from 'classnames'
+import cx from 'classnames';
 
 interface OpenModalLinkProps {
   label: string;
@@ -8,17 +8,19 @@ interface OpenModalLinkProps {
 
 export const OpenModalLink = ({ onClick, label, green = false }: OpenModalLinkProps) => {
   const classes = cx({
-    "typo-link": true,
-    "text-green-frost-01": green,
-  })
+    'typo-link': true,
+    'text-green-frost-01': green,
+  });
 
-  return <span
-    className={classes}
-    onKeyDown={onClick}
-    onClick={onClick}
-    role="button"
-    tabIndex={0}
-  >
-    {label}
-  </span>
-}
+  return (
+    <span
+      className={classes}
+      onKeyDown={onClick}
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+    >
+      {label}
+    </span>
+  );
+};

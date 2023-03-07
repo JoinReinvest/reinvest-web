@@ -44,6 +44,7 @@ const OnboardingPhoneNumberPage: NextPage = () => {
 
         <OpenModalLink
           label="Required. Why?"
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
           onClick={() => {}}
         />
       </BlackModal>

@@ -62,6 +62,7 @@ const CheckPhonePage: NextPage = () => {
 
           <OpenModalLink
             label="Required. Why?"
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
             onClick={() => {}}
           />
         </div>

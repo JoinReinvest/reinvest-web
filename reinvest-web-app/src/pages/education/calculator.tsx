@@ -1,7 +1,7 @@
-import { NextPage } from 'next'
+import { NextPage } from 'next';
 
-import { env } from '../../env'
-import { MainLayout } from '../../layouts/MainLayout'
+import { env } from '../../env';
+import { MainLayout } from '../../layouts/MainLayout';
 
 const Calculator: NextPage = () => {
   return (
@@ -12,15 +12,15 @@ const Calculator: NextPage = () => {
         title="Calculator page"
       />
     </MainLayout>
-  )
-}
+  );
+};
 
-export async function getStaticProps () {
+export async function getStaticProps() {
   return {
     props: {
       protected: true,
     },
-  }
+  };
 }
 
-export default Calculator
+export default Calculator;
