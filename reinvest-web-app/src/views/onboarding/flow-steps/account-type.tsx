@@ -66,17 +66,14 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     return (
       <>
-        <Form
-          onSubmit={handleSubmit(onSubmit)}
-          expandsOnLargerScreen
-        >
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Title title="Which type of account would you like to open?" />
 
           <SelectionCards
             name="accountType"
             control={control}
             options={ACCOUNT_TYPES}
-            className="mb-30 flex items-stretch justify-center gap-24 max-lg:flex-col"
+            className="mb-30 flex items-stretch justify-center gap-24 flex-col"
             orientation="vertical"
           />
 
