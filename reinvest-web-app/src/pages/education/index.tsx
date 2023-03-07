@@ -19,12 +19,14 @@ const educationCards: EducationCardProps[] = [
     subtitle: 'Calculate your underwriting income in a few easy steps',
     icon: <IconHome />,
     buttonText: 'View Calculator',
+    href: '/',
   },
   {
     title: 'Real Estate 101 Glossary',
     subtitle: 'Equip yourself with the language of the industry',
     icon: <IconChart />,
     buttonText: 'View Glossary',
+    href: '/',
   },
 ];
 
