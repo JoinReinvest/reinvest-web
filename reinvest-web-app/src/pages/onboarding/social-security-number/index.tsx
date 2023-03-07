@@ -1,6 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
 import { Typography } from 'components/Typography';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
@@ -16,27 +15,25 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="What's your social security number?" />
+    <BlackModal isOpen={isOpen}>
+      <Title title="What's your social security number?" />
 
-        <Typography variant="paragraph-emphasized">*REINVEST is required by law to collect your social security number.</Typography>
-        <Typography
-          variant="paragraph"
-          className="mt-10 mb-20 text-white/50"
-        >
-          We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
-        </Typography>
+      <Typography variant="paragraph-emphasized">*REINVEST is required by law to collect your social security number.</Typography>
+      <Typography
+        variant="paragraph"
+        className="mt-10 mb-20 text-white/50"
+      >
+        We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
+      </Typography>
 
-        <SSNInput />
+      <SSNInput />
 
-        <OpenModalLink
-          label="Required. Why?"
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onClick={() => {}} //
-        />
-      </BlackModal>
-    </MainLayout>
+      <OpenModalLink
+        label="Required. Why?"
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onClick={() => {}} //
+      />
+    </BlackModal>
   );
 };
 

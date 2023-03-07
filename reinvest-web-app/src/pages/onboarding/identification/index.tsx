@@ -1,6 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
 import { InputFile } from 'components/FormElements/InputFile';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
@@ -15,18 +14,16 @@ const OnboardingIdentificationPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="Please upload your Driver's License or Passport for further verification" />
-        <InputFile
-          label="Document 1"
-          name="identification_document"
-          placeholder="Upload File"
-          onChange={setDocument}
-          accepts="image/*,.pdf"
-        />
-      </BlackModal>
-    </MainLayout>
+    <BlackModal isOpen={isOpen}>
+      <Title title="Please upload your Driver's License or Passport for further verification" />
+      <InputFile
+        label="Document 1"
+        name="identification_document"
+        placeholder="Upload File"
+        onChange={setDocument}
+        accepts="image/*,.pdf"
+      />
+    </BlackModal>
   );
 };
 
