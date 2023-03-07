@@ -38,10 +38,10 @@ const generateNavigationItem = ({ label, href }: NavigationItem) => (
     <Link
       href={href}
       title={label}
-      className="typo-paragraph-large flex items-center justify-between text-black no-underline hover:underline"
+      className="typo-paragraph-large text-black flex items-center justify-between no-underline hover:underline"
     >
       <span>{label}</span>
-      <IconArrowRight className="h-32 w-32 stroke-black lg:hidden" />
+      <IconArrowRight className="stroke-black h-32 w-32 lg:hidden" />
     </Link>
   </li>
 );
