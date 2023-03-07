@@ -40,19 +40,19 @@
   dependencies:
     node-fetch "^2.6.1"
 
-"@aws-amplify/auth@^5.1.10":
-  version "5.1.10"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/auth/-/auth-5.1.10.tgz#b1ee7bf2dcc2a4b273743d8e3767cd526d26ab3c"
-  integrity sha512-UK5kqDehxKrMaWaLV6LkshQd+KwPF7AqFpWy44RJ30DcoetfcT4M/1qlZXWPKEKznSgdj/FHF89+rZuZR0ktWQ==
+"@aws-amplify/auth@^5.1.11":
+  version "5.1.11"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/auth/-/auth-5.1.11.tgz#484369e34d836145bf0b5bd40284b96e68f5ee82"
+  integrity sha512-/rQK5DtqkvkjgxzM7j03tXDQpp6EfyTYUaeDRDCYc9INk/P9oxzBGs/2cifwBpCZ7pKCnAHKQwsZerrONS9hvw==
   dependencies:
-    "@aws-amplify/core" "5.0.16"
+    "@aws-amplify/core" "5.1.0"
     amazon-cognito-identity-js "6.1.2"
     tslib "^1.8.0"
 
-"@aws-amplify/core@5.0.16", "@aws-amplify/core@^5.0.16":
-  version "5.0.16"
-  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-5.0.16.tgz#ef1ac7a84cb3bc00fd311ab863b5bd9a6759c3ec"
-  integrity sha512-EVlKeKoq9hKaJB/Vj5lIElpvcJx34np/3UsLGr+uiFBiTn+mEh8oNCMddsT5d26fqRyyrk2rGQh6OmtbjlgUnw==
+"@aws-amplify/core@5.1.0", "@aws-amplify/core@^5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@aws-amplify/core/-/core-5.1.0.tgz#05dde02d93e00b339f95784efe2a16c9b7fad074"
+  integrity sha512-4JVRn3sQaRNEALEItrAeuuN++wdCicOUcu3LfQdPZ8jg24raz5TRxUJ5n7eRUbbMGwmp/pMQW6ND5d50003cig==
   dependencies:
     "@aws-crypto/sha256-js" "1.2.2"
     "@aws-sdk/client-cloudwatch-logs" "3.6.1"
@@ -1762,10 +1762,10 @@
     "@hookooekoo/hooks-forwarded-ref" "*"
     "@hookooekoo/ui-input-control" "*"
 
-"@hookooekoo/ui-link@^0.0.8":
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-link/-/ui-link-0.0.8.tgz#94acd83040751c7a8c7851368f1064c142f23445"
-  integrity sha512-+xfOn+fE5HQKjeOSH7l4f5aXRPXg0XJu3HhysqpF8aLh+5FOKFFDODHmXlK0JBxLbHw8dbWnEMx9MPhxg/6Evw==
+"@hookooekoo/ui-link@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-link/-/ui-link-0.1.0.tgz#cd9bc9bda2a93c89144b3a184cf37647bbc7ea3b"
+  integrity sha512-xANQ53LY+YFb0EDIr7IrZKlF9MkwcNdYfJngUJtP1P+TdutVkiX/kJoaJv9ck/P6yzXcXrkwE+K5QvnLPEc+KQ==
 
 "@hookooekoo/ui-radio-group@^1.1.0":
   version "1.1.0"
@@ -8066,7 +8066,7 @@ zen-observable@^0.8.0:
   resolved "https://registry.yarnpkg.com/zen-observable/-/zen-observable-0.8.15.tgz#96415c512d8e3ffd920afd3889604e30b9eaac15"
   integrity sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
 
-zod@3.21.2:
-  version "3.21.2"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.21.2.tgz#a25425916d63b74d5ddd0b2a1bf733ecc093964b"
-  integrity sha512-0Ygy2/IZNIxHterZdHjE5Vb8hp1fUHJD/BGvSHj8QJx+UipEVNvo9WLchoyBpz5JIaN6KmdGDGYdloGzpFK98g==
+zod@3.21.4:
+  version "3.21.4"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.21.4.tgz#10882231d992519f0a10b5dd58a38c9dabbb64db"
+  integrity sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==

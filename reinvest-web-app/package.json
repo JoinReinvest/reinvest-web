@@ -36,8 +36,8 @@
     "tailwindcss": "3.2.7"
   },
   "dependencies": {
-    "@aws-amplify/auth": "^5.1.10",
-    "@aws-amplify/core": "^5.0.16",
+    "@aws-amplify/auth": "^5.1.11",
+    "@aws-amplify/core": "^5.1.0",
     "@hookform/resolvers": "^2.9.11",
     "@hookooekoo/configs-postcss": "^0.1.2",
     "@hookooekoo/configs-stylelint": "^0.1.4",
@@ -50,7 +50,7 @@
     "@hookooekoo/ui-icon": "^0.0.12",
     "@hookooekoo/ui-input-masked": "^0.5.0",
     "@hookooekoo/ui-input-text": "^0.4.0",
-    "@hookooekoo/ui-link": "^0.0.8",
+    "@hookooekoo/ui-link": "^0.1.0",
     "@hookooekoo/ui-radio-group": "^1.1.0",
     "@hookooekoo/ui-select": "^0.3.5",
     "@hookooekoo/ui-stepper": "^0.1.5",
@@ -75,7 +75,7 @@
     "recharts": "^2.4.3",
     "tailwindcss-text-fill": "^0.2.0",
     "typescript": "4.9.5",
-    "zod": "3.21.2"
+    "zod": "3.21.4"
   },
   "eslintConfig": {
     "extends": [

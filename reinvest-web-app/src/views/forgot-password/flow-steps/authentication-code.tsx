@@ -78,6 +78,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
         <div className="flex justify-between">
           <OpenModalLink
             label="Resend code"
+            green
             onClick={resendCodeOnClick}
           />
           <GetHelpLink />
