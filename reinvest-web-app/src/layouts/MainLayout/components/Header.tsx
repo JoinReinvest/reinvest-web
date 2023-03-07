@@ -38,7 +38,7 @@ export const Header = () => {
   const closeMenu = () => setIsMenuOpen(false);
   const headerStyles = cx({
     'container mx-auto flex justify-between py-20': true,
-    'max-lg:absolute max-lg:h-screen w-full z-10 bg-white left-0 right-0': isMenuOpen,
+    'absolute lg:relative h-screen lg:h-auto w-full z-10 bg-white left-0 right-0': isMenuOpen,
   });
 
   return (
