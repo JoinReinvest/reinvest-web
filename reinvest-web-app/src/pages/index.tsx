@@ -1,5 +1,5 @@
 import { Typography } from 'components/Typography';
-import { NextPage } from 'next'
+import { NextPage } from 'next';
 import { useGetUserProfile } from 'services/queries/getProfile';
 
 import { Link } from '../components/Link';

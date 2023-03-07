@@ -13,7 +13,7 @@ export const BlogCard = ({ imageSrc, title, subtitle }: BlogCardProps) => (
       src={imageSrc}
       alt="education1"
     />
-    <div className="border-gray-04 border-x border-b py-12 px-16">
+    <div className="border-x border-b border-gray-04 py-12 px-16">
       <Typography variant="bonus-heading">{title}</Typography>
       <Typography
         variant="paragraph"
