@@ -2,7 +2,6 @@ import { BlackModal } from 'components/BlackModal';
 import { WarningMessage } from 'components/BlackModal/WarningMessage';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
@@ -51,26 +50,24 @@ const GreenCardDetailsPage: NextPage = () => {
   ];
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="Please enter your US Green Card details." />
-        <WarningMessage message="US Residents Only" />
-        <Select
-          name="citizenship_country"
-          options={options}
-          placeholder="Citizenship Country"
-          onChange={citizenCountry => setCitizenshipCountry(citizenCountry?.value)}
-          value={citizenshipCountry}
-        />
-        <Select
-          name="birth_country"
-          options={options}
-          placeholder="Birth Country"
-          onChange={birthCountry => setBirthCountry(birthCountry?.value)}
-          value={birthCountry}
-        />
-      </BlackModal>
-    </MainLayout>
+    <BlackModal isOpen={isOpen}>
+      <Title title="Please enter your US Green Card details." />
+      <WarningMessage message="US Residents Only" />
+      <Select
+        name="citizenship_country"
+        options={options}
+        placeholder="Citizenship Country"
+        onChange={citizenCountry => setCitizenshipCountry(citizenCountry?.value)}
+        value={citizenshipCountry}
+      />
+      <Select
+        name="birth_country"
+        options={options}
+        placeholder="Birth Country"
+        onChange={birthCountry => setBirthCountry(birthCountry?.value)}
+        value={birthCountry}
+      />
+    </BlackModal>
   );
 };
 

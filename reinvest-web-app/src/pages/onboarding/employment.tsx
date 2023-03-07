@@ -1,6 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
 import { Select } from 'components/Select';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
 
@@ -30,35 +29,33 @@ const OnboardingEmploymentLocationPage: NextPage = () => {
   };
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="Where are you employed?" />
+    <BlackModal isOpen={isOpen}>
+      <Title title="Where are you employed?" />
 
-        <form className="flex flex-col gap-16">
-          <Input
-            name="employment-employer"
-            placeholder="Name of Employer"
-            required
-          />
+      <form className="flex flex-col gap-16">
+        <Input
+          name="employment-employer"
+          placeholder="Name of Employer"
+          required
+        />
 
-          <Input
-            name="employment-title"
-            placeholder="Title"
-            required
-          />
+        <Input
+          name="employment-title"
+          placeholder="Title"
+          required
+        />
 
-          <Select
-            name="employment-industry"
-            value={formFields.industry}
-            onChange={option => {
-              updateField({ industry: option?.value });
-            }}
-            placeholder="Industry"
-            options={INDUSTRIES}
-          />
-        </form>
-      </BlackModal>
-    </MainLayout>
+        <Select
+          name="employment-industry"
+          value={formFields.industry}
+          onChange={option => {
+            updateField({ industry: option?.value });
+          }}
+          placeholder="Industry"
+          options={INDUSTRIES}
+        />
+      </form>
+    </BlackModal>
   );
 };
 

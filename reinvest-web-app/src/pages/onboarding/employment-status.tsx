@@ -1,6 +1,5 @@
 import { BlackModal } from 'components/BlackModal';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -35,20 +34,18 @@ const OnboardingEmploymentStatusPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="Are you currently employed?" />
+    <BlackModal isOpen={isOpen}>
+      <Title title="Are you currently employed?" />
 
-        <SelectionCards
-          name="selection"
-          control={form.control}
-          options={EMPLOYMENT_STATUS}
-          required={false}
-          orientation="vertical"
-          className="flex flex-col items-stretch gap-22"
-        />
-      </BlackModal>
-    </MainLayout>
+      <SelectionCards
+        name="selection"
+        control={form.control}
+        options={EMPLOYMENT_STATUS}
+        required={false}
+        orientation="vertical"
+        className="flex flex-col items-stretch gap-22"
+      />
+    </BlackModal>
   );
 };
 

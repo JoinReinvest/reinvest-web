@@ -2,7 +2,6 @@ import { BlackModal } from 'components/BlackModal';
 import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
 import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
 import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -18,37 +17,35 @@ const OnboardingPhoneNumberPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title
-          title="Enter your phone number"
-          subtitle="We’ll text you a confirmation code within 10 minutes."
-        />
+    <BlackModal isOpen={isOpen}>
+      <Title
+        title="Enter your phone number"
+        subtitle="We’ll text you a confirmation code within 10 minutes."
+      />
 
-        <div className="flex">
-          <div className="contents child:basis-2/5">
-            <InputPhoneNumberCountryCode
-              name="countryCode"
-              control={form.control}
-              defaultValue="1"
-            />
-          </div>
-
-          <div className="contents">
-            <InputPhoneNumber
-              name="phone"
-              control={form.control}
-            />
-          </div>
+      <div className="flex">
+        <div className="contents child:basis-2/5">
+          <InputPhoneNumberCountryCode
+            name="countryCode"
+            control={form.control}
+            defaultValue="1"
+          />
         </div>
 
-        <OpenModalLink
-          label="Required. Why?"
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onClick={() => {}}
-        />
-      </BlackModal>
-    </MainLayout>
+        <div className="contents">
+          <InputPhoneNumber
+            name="phone"
+            control={form.control}
+          />
+        </div>
+      </div>
+
+      <OpenModalLink
+        label="Required. Why?"
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onClick={() => {}}
+      />
+    </BlackModal>
   );
 };
 
