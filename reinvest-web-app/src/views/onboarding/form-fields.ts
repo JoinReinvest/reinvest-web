@@ -21,10 +21,9 @@ export interface OnboardingFormFields {
   citizenshipCountry?: string;
   dateOfBirth?: Date;
 
-  documentForVerification?: string;
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-  finraInstitution?: string;
 
+  finraInstitution?: string;
   firstName?: string;
 
   household?: {
@@ -34,6 +33,11 @@ export interface OnboardingFormFields {
     isAssociatedWithPubliclyTradedCompany?: boolean;
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
+  };
+
+  identificationDocument?: {
+    back: string;
+    front: string;
   };
   lastName?: string;
   middleName?: string;
