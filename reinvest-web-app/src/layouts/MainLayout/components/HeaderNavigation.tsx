@@ -15,7 +15,7 @@ interface Props {
 }
 
 export const HeaderNavigation = ({ isMenuOpen, navigationItems }: Props) => {
-  const navigationClassNames = cx('flex-col w-max lg:w-full lg:flex-row lg:items-center lg:gap-40 gap-12', {
+  const navigationClassNames = cx('flex-col w-full lg:flex-row lg:items-center lg:gap-40 gap-12', {
     'lg:flex': true,
     flex: isMenuOpen,
   });
@@ -36,7 +36,7 @@ const generateNavigationItem = ({ label, href }: NavigationItem) => (
     <Link
       href={href}
       title={label}
-      className="typo-link flex items-center justify-between text-black no-underline hover:underline"
+      className="typo-paragraph-large flex items-center justify-between text-black no-underline hover:underline"
     >
       <span>{label}</span>
       <IconArrowRight className="h-32 w-32 stroke-black lg:hidden" />
