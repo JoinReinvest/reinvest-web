@@ -1,6 +1,6 @@
 import { IconChart } from 'assets/icons/Education/IconChart';
 import { IconHome } from 'assets/icons/Education/IconHome';
-import hero from 'assets/images/education-hero-phone.png';
+import hero from 'assets/images/education-hero.png';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
@@ -40,7 +40,7 @@ const Index = () => {
           Education
         </Typography>
         <Image
-          alt="education-hero"
+          alt="Education"
           src={hero}
           className="w-full object-cover object-top"
         />
