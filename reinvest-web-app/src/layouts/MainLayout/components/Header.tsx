@@ -1,5 +1,6 @@
 import { IconBell } from 'assets/icons/IconBell';
 import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
+import cx from 'classnames';
 import { Avatar } from 'components/Avatar';
 import { ComponentProps, useState } from 'react';
 
@@ -35,10 +36,14 @@ export const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
+  const headerStyles = cx({
+    'container mx-auto flex justify-between py-20': true,
+    'absolute lg:relative h-screen lg:h-auto w-full z-10 bg-white left-0 right-0': isMenuOpen,
+  });
 
   return (
-    <header className="container mx-auto flex items-center justify-between py-20">
-      <div className="flex grow items-center gap-40">
+    <header className={headerStyles}>
+      <div className="gap-84 flex grow flex-col lg:flex-row lg:items-center lg:gap-40">
         <HeaderIcon
           isMenuOpen={isMenuOpen}
           openMenu={openMenu}
