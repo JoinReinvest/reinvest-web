@@ -32,13 +32,15 @@ export const EducationCard = ({ title, subtitle, icon, buttonText, href }: Educa
           </Typography>
         </div>
         <div className="bg-green-frost-01 flex aspect-square h-36 w-36 cursor-pointer items-center justify-center rounded-full lg:w-auto lg:pl-16">
-          <Link
-            href={href}
-            title={title}
-            className="typo-bonus-heading font-stretch-normal"
-          >
-            {buttonText && <span className="hidden whitespace-nowrap lg:block">{buttonText}</span>}
-          </Link>
+          {buttonText && (
+            <Link
+              href={href}
+              title={title}
+              className="typo-bonus-heading font-stretch-normal hidden whitespace-nowrap lg:block"
+            >
+              <span>{buttonText}</span>
+            </Link>
+          )}
           <IconArrowRight />
         </div>
       </div>
