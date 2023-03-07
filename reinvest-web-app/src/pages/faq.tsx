@@ -15,4 +15,12 @@ const Faq: NextPage = () => {
   );
 };
 
+export async function getStaticProps() {
+  return {
+    props: {
+      protected: true,
+    },
+  };
+}
+
 export default Faq;

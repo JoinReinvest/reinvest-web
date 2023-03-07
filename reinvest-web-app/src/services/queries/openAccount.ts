@@ -11,7 +11,7 @@ const openAccountMutation = gql`
 `;
 
 export const useOpenAccount = (draftAccountId: string): UseMutationResult<Mutation['openAccount']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useMutation({
     mutationFn: async () => {

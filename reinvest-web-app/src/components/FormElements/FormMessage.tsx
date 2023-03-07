@@ -1,6 +1,6 @@
 import cx from 'classnames';
 
-import { Typography } from './Typography';
+import { Typography } from '../Typography';
 
 enum MessageVariant {
   error = 'error',
@@ -14,7 +14,7 @@ interface MessageProps {
   variant?: MessageVariants;
 }
 
-export const Message = ({ message, variant = MessageVariant.error }: MessageProps) => {
+export const FormMessage = ({ message, variant = MessageVariant.error }: MessageProps) => {
   const styles = cx({
     'mb-12': true,
     'text-tertiary-error': variant === MessageVariant.error,

@@ -3,16 +3,20 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 
+import { URL } from '../constants/urls';
+
 const Logout: NextPage = () => {
   const router = useRouter();
+
   useEffect(() => {
     const signOut = async () => {
       try {
         await Auth.signOut();
       } finally {
-        router.push('/login');
+        router.push(URL.login);
       }
     };
+
     signOut();
   });
 

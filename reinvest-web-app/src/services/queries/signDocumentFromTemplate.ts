@@ -17,7 +17,7 @@ export const useSignDocumentFromTemplate = (
   fields: GenericFieldInput[],
   signature: string,
 ): UseMutationResult<Mutation['signDocumentFromTemplate']> => {
-  const api = getApiClient();
+  const api = getApiClient;
 
   return useMutation({
     mutationFn: async () => {

@@ -5,7 +5,7 @@ import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ComponentProps, useEffect, useState } from 'react';
 
-import { WhyRequiredLink } from '../../components/Links/WhyRequiredLink';
+import { OpenModalLink } from '../../components/Links/OpenModalLink';
 
 const NET_OPTIONS: ComponentProps<typeof Select>['options'] = [
   '$25,000 - $50,000',
@@ -60,7 +60,10 @@ const CheckPhonePage: NextPage = () => {
             required
           />
 
-          <WhyRequiredLink />
+          <OpenModalLink
+            label="Required. Why?"
+            onClick={() => {}}
+          />
         </div>
       </BlackModal>
     </MainLayout>

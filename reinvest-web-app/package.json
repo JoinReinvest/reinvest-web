@@ -26,12 +26,12 @@
     "@graphql-codegen/client-preset": "^2.1.0",
     "@graphql-codegen/typescript": "^3.0.1",
     "@next/bundle-analyzer": "13.2.3",
-    "@tanstack/eslint-plugin-query": "^4.24.11",
-    "@tanstack/react-query-devtools": "^4.24.12",
+    "@tanstack/eslint-plugin-query": "^4.26.2",
+    "@tanstack/react-query-devtools": "^4.26.1",
     "classnames": "^2.3.2",
     "cross-env": "7.0.3",
     "dayjs": "^1.11.7",
-    "rimraf": "4.2.0",
+    "rimraf": "4.3.1",
     "sass": "^1.58.3",
     "tailwindcss": "3.2.7"
   },
@@ -58,8 +58,8 @@
     "@hookooekoo/ui-table": "^0.0.15",
     "@hookooekoo/ui-typography": "^0.1.5",
     "@tailwindcss/line-clamp": "^0.4.2",
-    "@tanstack/react-query": "^4.24.10",
-    "@types/node": "18.14.5",
+    "@tanstack/react-query": "^4.26.1",
+    "@types/node": "18.14.6",
     "@types/react": "18.0.28",
     "autoprefixer": "10.4.13",
     "class-variance-authority": "^0.4.0",
@@ -71,11 +71,11 @@
     "postcss-scss": "^4.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-hook-form": "^7.43.3",
+    "react-hook-form": "^7.43.5",
     "recharts": "^2.4.3",
     "tailwindcss-text-fill": "^0.2.0",
     "typescript": "4.9.5",
-    "zod": "3.20.6"
+    "zod": "3.21.2"
   },
   "eslintConfig": {
     "extends": [

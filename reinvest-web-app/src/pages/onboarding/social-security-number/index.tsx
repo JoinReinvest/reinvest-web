@@ -5,7 +5,7 @@ import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 
 import { SSNInput } from '../../../components/FormElements/SSNInput';
-import { WhyRequiredLink } from '../../../components/Links/WhyRequiredLink';
+import { OpenModalLink } from '../../../components/Links/OpenModalLink';
 import { Title } from '../../../components/Title';
 
 const OnboardingSocialSecurityNumberPage: NextPage = () => {
@@ -30,7 +30,10 @@ const OnboardingSocialSecurityNumberPage: NextPage = () => {
 
         <SSNInput />
 
-        <WhyRequiredLink />
+        <OpenModalLink
+          label="Required. Why?"
+          onClick={() => {}}
+        />
       </BlackModal>
     </MainLayout>
   );
