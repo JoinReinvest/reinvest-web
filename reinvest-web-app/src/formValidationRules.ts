@@ -17,4 +17,5 @@ export const formValidationRules = {
   middleName: zod.string().optional(),
   referralCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid referral code' }),
   authenticationCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
+  socialSecurityNumber: zod.string().regex(/^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$/, { message: 'Invalid Social Security Number' }),
 };
