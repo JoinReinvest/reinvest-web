@@ -10,14 +10,17 @@ const removeDraftAccountMutatuion = gql`
   }
 `;
 
-export const useRemoveDraftAccount = (id: string): UseMutationResult<Mutation['removeDraftAccount']> => {
-  const api = getApiClient;
-
-  return useMutation({
+export const useRemoveDraftAccount = (id: string): UseMutationResult<Mutation['removeDraftAccount']> =>
+  useMutation({
     mutationFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { removeDraftAccount } = await api.request<Mutation>(removeDraftAccountMutatuion, { id });
 
       return removeDraftAccount;
     },
   });
-};

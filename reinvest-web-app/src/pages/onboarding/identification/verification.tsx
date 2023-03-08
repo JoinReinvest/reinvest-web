@@ -3,7 +3,6 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { BlackModal } from 'components/BlackModal';
 import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
 import { useEffect, useState } from 'react';
 
 export const OnboardingIdentificationSuccessPage = () => {
@@ -42,15 +41,13 @@ export const OnboardingIdentificationSuccessPage = () => {
   };
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <div className="flex flex-col items-center gap-36">
-          <Title title={titleGenerator()} />
+    <BlackModal isOpen={isOpen}>
+      <div className="flex flex-col items-center gap-36">
+        <Title title={titleGenerator()} />
 
-          {iconGenerator()}
-        </div>
-      </BlackModal>
-    </MainLayout>
+        {iconGenerator()}
+      </div>
+    </BlackModal>
   );
 };
 

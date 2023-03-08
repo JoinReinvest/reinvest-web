@@ -13,15 +13,18 @@ const getTemplateQuery = gql`
   }
 `;
 
-export const useGetTemplate = (): UseQueryResult<Query['getTemplate']> => {
-  const api = getApiClient;
-
-  return useQuery<Query['getTemplate']>({
+export const useGetTemplate = (): UseQueryResult<Query['getTemplate']> =>
+  useQuery<Query['getTemplate']>({
     queryKey: ['getTemplate'],
     queryFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { getTemplate } = await api.request<Query>(getTemplateQuery);
 
       return getTemplate;
     },
   });
-};
