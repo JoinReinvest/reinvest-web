@@ -16,14 +16,17 @@ export const useSignDocumentFromTemplate = (
   templateId: TemplateName,
   fields: GenericFieldInput[],
   signature: string,
-): UseMutationResult<Mutation['signDocumentFromTemplate']> => {
-  const api = getApiClient;
-
-  return useMutation({
+): UseMutationResult<Mutation['signDocumentFromTemplate']> =>
+  useMutation({
     mutationFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { signDocumentFromTemplate } = await api.request<Mutation>(signDocumentFromTemplateMutation, { templateId, fields, signature });
 
       return signDocumentFromTemplate;
     },
   });
-};

@@ -2,7 +2,6 @@ import { BlackModal } from 'components/BlackModal';
 import { WarningMessage } from 'components/BlackModal/WarningMessage';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -31,20 +30,18 @@ const ResidencyStatusPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title
-          title="Residency Status"
-          subtitle="Please select your US residency status."
-        />
-        <WarningMessage message="REINVEST does not accept non-US residents at this time." />
-        <RadioGroupOptions
-          name="selected"
-          control={form.control}
-          options={citizens}
-        />
-      </BlackModal>
-    </MainLayout>
+    <BlackModal isOpen={isOpen}>
+      <Title
+        title="Residency Status"
+        subtitle="Please select your US residency status."
+      />
+      <WarningMessage message="REINVEST does not accept non-US residents at this time." />
+      <RadioGroupOptions
+        name="selected"
+        control={form.control}
+        options={citizens}
+      />
+    </BlackModal>
   );
 };
 

@@ -1,11 +1,12 @@
 import { Typography } from 'components/Typography';
+import { NextPage } from 'next';
 import { useGetUserProfile } from 'services/queries/getProfile';
 
 import { Link } from '../components/Link';
 import { URL } from '../constants/urls';
 import { MainLayout } from '../layouts/MainLayout';
 
-const Index = () => {
+const Index: NextPage = () => {
   const { data } = useGetUserProfile();
 
   return (
