@@ -190,7 +190,9 @@ module.exports = {
         375: '37.5rem',
         720: '72.0rem',
       },
-
+      minHeight: {
+        180: '18rem',
+      },
       transitionProperty: {
         'height-width': 'height, width',
         'transform-color': 'transform, color',

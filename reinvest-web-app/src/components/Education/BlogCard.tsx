@@ -2,16 +2,25 @@ import { Typography } from 'components/Typography';
 import Image from 'next/image';
 
 export interface BlogCardProps {
-  imageSrc: string;
-  subtitle: string;
-  title: string;
+  title: string
+  data: string
+  slug: string
+  image: {
+    width: number
+    height: number
+    src: string
+    alt: string
+    name: string
+  }
 }
 
-export const BlogCard = ({ imageSrc, title, subtitle }: BlogCardProps) => (
+export const BlogCard = ({ image, title, data }: BlogCardProps) => (
   <div>
     <Image
-      src={imageSrc}
-      alt="education1"
+      src={image.src}
+      alt={title}
+      width={image.width}
+      height={image.height}
     />
     <div className="border-gray-04 border-x border-b py-12 px-16">
       <Typography variant="bonus-heading">{title}</Typography>
@@ -19,7 +28,7 @@ export const BlogCard = ({ imageSrc, title, subtitle }: BlogCardProps) => (
         variant="paragraph"
         className="text-gray-02"
       >
-        {subtitle}
+        {data}
       </Typography>
     </div>
   </div>

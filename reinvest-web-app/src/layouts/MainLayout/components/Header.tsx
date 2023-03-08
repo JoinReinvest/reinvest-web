@@ -3,6 +3,7 @@ import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import cx from 'classnames';
 import { Avatar } from 'components/Avatar';
 import { ComponentProps, useState } from 'react';
+import { URL } from '../../../constants/urls'
 
 import { useGetUserProfile } from '../../../services/queries/getProfile';
 import { HeaderIcon } from './HeaderIcon';
@@ -15,19 +16,7 @@ const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
   },
   {
     label: 'Education page',
-    href: '/education',
-  },
-  {
-    label: 'FAQ',
-    href: '/education/faq',
-  },
-  {
-    label: 'Glossary',
-    href: '/education/glossary',
-  },
-  {
-    label: 'Calculator',
-    href: '/education/calculator',
+    href: URL.education,
   },
 ];
 
