@@ -3,8 +3,11 @@ import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
 import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
-import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
+import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
+import { CALLING_CODES } from 'constants/country-codes';
+import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
@@ -18,14 +21,16 @@ interface Fields {
 }
 
 const schema = z.object({
-  countryCode: z.string(),
+  countryCode: z.enum(CALLING_CODES),
 });
 
 export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PHONE_NUMBER,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { countryCode, phone } = getPhoneNumberAndCountryCode(storeFields.phoneNumber);
+    const phoneNumber = storeFields.phoneNumber;
+    const { countryCode, phone } = useMemo(() => getPhoneNumberAndCountryCode(phoneNumber), [phoneNumber]);
+    const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const form = useForm<Fields>({
       mode: 'all',
@@ -35,6 +40,10 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
 
+    const onMoreInformationClick = () => {
+      setIsInformationModalOpen(true);
+    };
+
     const onSubmit: SubmitHandler<Fields> = ({ countryCode, phone }) => {
       const phoneNumber = `${countryCode}${phone}`;
       updateStoreFields({ phoneNumber });
@@ -42,43 +51,54 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     };
 
     return (
-      <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Title
-          title="Enter your phone number"
-          subtitle="We’ll text you a confirmation code within 10 minutes."
-        />
+      <>
+        <Form onSubmit={form.handleSubmit(onSubmit)}>
+          <Title
+            title="Enter your phone number"
+            subtitle="We’ll text you a confirmation code within 10 minutes."
+          />
 
-        <div className="flex">
-          <div className="contents child:basis-2/5">
-            <InputPhoneNumberCountryCode
-              name="countryCode"
-              control={form.control}
-              defaultValue="1"
-            />
+          <div className="flex">
+            <div className="contents child:basis-2/5">
+              <InputPhoneNumberCountryCode
+                name="countryCode"
+                control={form.control}
+                defaultValue="1"
+              />
+            </div>
+
+            <div className="contents">
+              <InputPhoneNumber
+                name="phone"
+                control={form.control}
+              />
+            </div>
           </div>
 
-          <div className="contents">
-            <InputPhoneNumber
-              name="phone"
-              control={form.control}
-            />
-          </div>
-        </div>
+          <OpenModalLink
+            label="Required. Why?"
+            onClick={onMoreInformationClick}
+            green
+          />
 
-        <WhyRequiredLink />
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </Form>
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
+        <WhyRequiredBlackModal
+          isOpen={isInformationModalOpen}
+          onOpenChange={setIsInformationModalOpen}
         />
-      </Form>
+      </>
     );
   },
 };
 
 const getPhoneNumberAndCountryCode = (phoneNumber: string | undefined) => {
-  if (!!phoneNumber) {
+  if (phoneNumber) {
     const phoneNumberDigits = /\d{10}$/.exec(phoneNumber);
 
     if (phoneNumberDigits) {
