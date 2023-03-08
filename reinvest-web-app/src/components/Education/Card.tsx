@@ -15,7 +15,7 @@ export interface EducationCardProps {
 
 export const EducationCard = ({ title, subtitle, icon, buttonText, href }: EducationCardProps) => {
   return (
-    <div className="bg-green-frost-01/30 flex w-full px-24 py-20 lg:p-40">
+    <div className="flex w-full bg-green-frost-01/30 px-24 py-20 lg:p-40">
       <div className="flex w-full items-center justify-between  lg:w-1/2 lg:flex-col lg:items-start lg:justify-center lg:gap-16">
         <div className="mr-16">
           <Typography
@@ -31,12 +31,12 @@ export const EducationCard = ({ title, subtitle, icon, buttonText, href }: Educa
             {subtitle}
           </Typography>
         </div>
-        <div className="bg-green-frost-01 flex aspect-square h-36 w-36 cursor-pointer items-center justify-center rounded-full lg:w-auto lg:pl-16">
+        <div className="flex aspect-square h-36 w-36 cursor-pointer items-center justify-center rounded-full bg-green-frost-01 lg:w-auto lg:pl-16">
           {buttonText && (
             <Link
               href={href}
               title={title}
-              className="typo-bonus-heading font-stretch-normal hidden whitespace-nowrap lg:block"
+              className="typo-bonus-heading hidden whitespace-nowrap font-stretch-normal lg:block"
             >
               <span>{buttonText}</span>
             </Link>
