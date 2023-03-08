@@ -12,6 +12,7 @@ interface AuthContextInterface {
   actions: {
     confirmSignIn: (authenticationCode: string) => Promise<CognitoUser | Error | null>;
     signIn: (email: string, password: string, redirectTo?: string) => Promise<CognitoUser | Error | null>;
+    signOut: () => Promise<void>;
   };
   loading: boolean;
   user: CognitoUser | null;
@@ -27,6 +28,8 @@ export const AuthContext = createContext<AuthContextInterface>({
     confirmSignIn: async () => {
       return null;
     },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    signOut: async () => {},
   },
 });
 
@@ -42,6 +45,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
     try {
+      setLoading(true);
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
@@ -53,6 +57,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       return user;
     } catch (error) {
       return error as Error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -66,8 +72,17 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     return confirmedUser;
   };
 
+  const signOut = async () => {
+    try {
+      await Auth.signOut();
+      setUser(null);
+    } finally {
+      router.push(URL.login);
+    }
+  };
+
   const ctx = useMemo(() => {
-    return { user, loading, actions: { signIn, confirmSignIn } };
+    return { user, loading, actions: { signIn, confirmSignIn, signOut } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
