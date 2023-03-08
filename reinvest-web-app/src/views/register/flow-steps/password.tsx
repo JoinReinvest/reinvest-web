@@ -44,6 +44,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
+      setError(undefined);
       updateStoreFields(fields);
       try {
         await Auth.signUp({
@@ -65,6 +66,10 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           await Auth.resendSignUp(storeFields.email);
 
           return moveToNextStep();
+        }
+
+        if (error.message.includes('WRONG_REFERRAL_CODE')) {
+          error.message = 'Invalid referral code';
         }
 
         setError(error.message);
