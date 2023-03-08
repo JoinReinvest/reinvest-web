@@ -2,6 +2,7 @@ import { IconBell } from 'assets/icons/IconBell';
 import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import cx from 'classnames';
 import { Avatar } from 'components/Avatar';
+import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
 
 import { useGetUserProfile } from '../../../services/queries/getProfile';
@@ -11,7 +12,7 @@ import { HeaderNavigation } from './HeaderNavigation';
 const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
   {
     label: 'Dashboard',
-    href: '/',
+    href: URL.index,
   },
   {
     label: 'Education page',

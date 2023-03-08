@@ -49,7 +49,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
-        router.push(redirectTo || '/');
+        router.push(redirectTo || URL.index);
       }
 
       setUser(user);
@@ -67,7 +67,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
     setUser(confirmedUser);
 
-    router.push('/');
+    router.push(URL.index);
 
     return confirmedUser;
   };
@@ -100,7 +100,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         setUser(user);
 
         if (user && notProtectedUrls.includes(router.pathname)) {
-          return router.push('/');
+          return router.push(URL.index);
         }
       } catch (err) {
         setLoading(false);
