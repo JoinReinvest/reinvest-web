@@ -22,7 +22,7 @@ export const BlogCard = ({ imageSrc, title, subtitle, href }: BlogCardProps) => 
         alt="education1"
       />
     </Link>
-    <div className="border-gray-04 border-x border-b py-12 px-16">
+    <div className="border-x border-b border-gray-04 py-12 px-16">
       <Link
         title={title}
         href={href}
