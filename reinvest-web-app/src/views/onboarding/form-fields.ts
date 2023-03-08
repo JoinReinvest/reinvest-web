@@ -1,6 +1,6 @@
 export interface OnboardingFormFields {
   accountType: string;
-  employment: {
+  employmentDetails?: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
     industry?: string;
@@ -57,6 +57,5 @@ export interface OnboardingFormFields {
 
 export const DEFAULT_VALUES: OnboardingFormFields = {
   accountType: '',
-  employment: {},
   residency: undefined,
 };
