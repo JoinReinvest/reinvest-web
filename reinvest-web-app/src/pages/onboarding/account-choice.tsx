@@ -6,7 +6,6 @@ import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { BlackModal } from '../../components/BlackModal';
-import { MainLayout } from '../../layouts/MainLayout';
 
 const accountTypes = [
   {
@@ -35,24 +34,22 @@ const AccountChoicesPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="Which type of account would you like to open?" />
-        <SelectionCards
-          name="selection"
-          control={form.control}
-          options={accountTypes}
-          className="mb-30 flex flex-col items-stretch gap-24"
-          orientation="vertical"
-        />
-        <Link
-          href="/onboarding/accounts-descriptions"
-          title="Not sure which is best for you?"
-        >
-          Not sure which is best for you?
-        </Link>
-      </BlackModal>
-    </MainLayout>
+    <BlackModal isOpen={isOpen}>
+      <Title title="Which type of account would you like to open?" />
+      <SelectionCards
+        name="selection"
+        control={form.control}
+        options={accountTypes}
+        className="mb-30 flex flex-col items-stretch gap-24"
+        orientation="vertical"
+      />
+      <Link
+        href="/onboarding/accounts-descriptions"
+        title="Not sure which is best for you?"
+      >
+        Not sure which is best for you?
+      </Link>
+    </BlackModal>
   );
 };
 

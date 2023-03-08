@@ -1,9 +1,7 @@
-import { NextPage } from 'next';
+import { env } from 'env';
+import { MainLayout } from 'layouts/MainLayout';
 
-import { env } from '../env';
-import { MainLayout } from '../layouts/MainLayout';
-
-const Glossary: NextPage = () => {
+const Glossary = () => {
   return (
     <MainLayout>
       <iframe
@@ -14,5 +12,13 @@ const Glossary: NextPage = () => {
     </MainLayout>
   );
 };
+
+export async function getStaticProps() {
+  return {
+    props: {
+      protected: true,
+    },
+  };
+}
 
 export default Glossary;

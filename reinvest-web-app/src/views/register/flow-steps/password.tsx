@@ -1,10 +1,9 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
-import { Message } from 'components/ErrorMessage';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPassword } from 'components/FormElements/InputPassword';
-import { WhyRequiredLink } from 'components/Links/WhyRequiredLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
@@ -14,6 +13,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { OpenModalLink } from '../../../components/Links/OpenModalLink';
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -44,6 +44,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
+      setError(undefined);
       updateStoreFields(fields);
       try {
         await Auth.signUp({
@@ -67,6 +68,10 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           return moveToNextStep();
         }
 
+        if (error.message.includes('WRONG_REFERRAL_CODE')) {
+          error.message = 'Invalid referral code';
+        }
+
         setError(error.message);
       }
     };
@@ -87,19 +92,25 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           />
         )}
 
-        {error && <Message message={error} />}
+        {error && <FormMessage message={error} />}
 
         <InputPassword
           name="password"
           control={control}
+          required
         />
 
         <InputPassword
           name="passwordConfirmation"
           control={control}
+          required
         />
 
-        <WhyRequiredLink onClick={openWhyReqiredOnClick} />
+        <OpenModalLink
+          label="Required. Why?"
+          green
+          onClick={openWhyReqiredOnClick}
+        />
 
         <PasswordChecklist
           password={fields.password}

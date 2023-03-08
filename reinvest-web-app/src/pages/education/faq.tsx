@@ -1,7 +1,7 @@
 import { NextPage } from 'next';
 
-import { env } from '../env';
-import { MainLayout } from '../layouts/MainLayout';
+import { env } from '../../env';
+import { MainLayout } from '../../layouts/MainLayout';
 
 const Faq: NextPage = () => {
   return (
@@ -14,5 +14,13 @@ const Faq: NextPage = () => {
     </MainLayout>
   );
 };
+
+export async function getStaticProps() {
+  return {
+    props: {
+      protected: true,
+    },
+  };
+}
 
 export default Faq;

@@ -1,7 +1,7 @@
 import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
 import cx from 'classnames';
-import { ErrorMessage } from 'components/BlackModal/ErrorMessage';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import Image from 'next/image';
 import { ChangeEventHandler, useMemo, useState } from 'react';
 
@@ -64,7 +64,7 @@ export const EditableAvatar = ({ name, onChange, image, altText, className, maxS
         />
       </label>
 
-      {hasError && <ErrorMessage message={error} />}
+      {hasError && <FormMessage message={error} />}
     </div>
   );
 };

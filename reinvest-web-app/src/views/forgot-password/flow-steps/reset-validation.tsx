@@ -1,8 +1,7 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
-import { Button } from 'components/Button';
+import { LinkButton } from 'components/LinkButton';
 import { Title } from 'components/Title';
 import { URL } from 'constants/urls';
-import { useRouter } from 'next/router';
 import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
 
 import { ForgotPasswordFormFields } from '../form-fields';
@@ -20,21 +19,18 @@ export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
   },
 
   Component: () => {
-    const router = useRouter();
-
-    const onButtonClick = () => {
-      router.push(URL.login);
-    };
-
     return (
       <div className="relative flex h-full flex-col items-center justify-center">
-        <IconCheckCircle className="mx-auto mb-24" />
-        <Title title="Your Password Has Been Reset" />
-
-        <Button
+        <div>
+          <IconCheckCircle className="mx-auto mb-24" />
+          <Title
+            title="Your Password Has Been Reset"
+            className="text-center"
+          />
+        </div>
+        <LinkButton
+          href={URL.login}
           label="Continue"
-          onClick={onButtonClick}
-          className="absolute bottom-0 w-full md:relative md:bottom-auto"
         />
       </div>
     );

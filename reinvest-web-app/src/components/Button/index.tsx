@@ -24,7 +24,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
 
     const className = cx(variants({ variant, size, disabled, className: passedClassName }), {
       'flex justify-center items-center gap-x-8': !!loading,
-      'py-8 px-16 flex justify-center items-center gap-x-8': willShowIcon || loading,
+      'px-16 flex justify-center items-center gap-x-8': willShowIcon || loading,
       'flex-row-reverse': showIconToTheLeft,
     });
 

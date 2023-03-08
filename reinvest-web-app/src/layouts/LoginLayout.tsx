@@ -7,7 +7,7 @@ export interface LoginLayoutProps {
 
 export const LoginLayout = ({ children }: LoginLayoutProps) => {
   return (
-    <div className="gap-84 flex h-screen flex-col items-center justify-center text-center text-white">
+    <div className="flex h-screen flex-col items-center justify-center gap-84 text-center text-white">
       <video
         autoPlay
         loop
@@ -21,7 +21,8 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
         Your browser does not support the video tag.
       </video>
 
-      <LogoIcon className="relative z-30 mx-auto" />
+      <LogoIcon className="z-30 fill-green-frost-01" />
+
       {children}
     </div>
   );

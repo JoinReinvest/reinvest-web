@@ -12,6 +12,7 @@ interface AuthContextInterface {
   actions: {
     confirmSignIn: (authenticationCode: string) => Promise<CognitoUser | Error | null>;
     signIn: (email: string, password: string, redirectTo?: string) => Promise<CognitoUser | Error | null>;
+    signOut: () => Promise<void>;
   };
   loading: boolean;
   user: CognitoUser | null;
@@ -27,6 +28,8 @@ export const AuthContext = createContext<AuthContextInterface>({
     confirmSignIn: async () => {
       return null;
     },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    signOut: async () => {},
   },
 });
 
@@ -42,10 +45,11 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
     try {
+      setLoading(true);
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
-        router.push(redirectTo || '/');
+        router.push(redirectTo || URL.index);
       }
 
       setUser(user);
@@ -53,6 +57,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       return user;
     } catch (error) {
       return error as Error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,29 +66,41 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
 
     setUser(confirmedUser);
-    router.push('/');
+
+    router.push(URL.index);
 
     return confirmedUser;
   };
 
+  const signOut = async () => {
+    try {
+      await Auth.signOut();
+      setUser(null);
+    } finally {
+      router.push(URL.login);
+    }
+  };
+
   const ctx = useMemo(() => {
-    return { loading, user, actions: { signIn, confirmSignIn } };
+    return { user, loading, actions: { signIn, confirmSignIn, signOut } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
   useEffect(() => {
     const currentUser = async () => {
-      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password];
+      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, '/404', '/500'];
       const pathWithoutQuery = [URL.logout, ...notProtectedUrls];
 
       try {
         await Auth.currentSession();
+
         const user: CognitoUser = await Auth.currentAuthenticatedUser();
+
         setLoading(false);
         setUser(user);
 
         if (user && notProtectedUrls.includes(router.pathname)) {
-          router.push('/');
+          return router.push(URL.index);
         }
       } catch (err) {
         setLoading(false);
@@ -92,8 +110,10 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
           return router.push(router.pathname);
         }
 
-        return router.push({ pathname: URL.login, query: { from: router.pathname } });
+        return router.push({ pathname: URL.login, query: { redirectUrl: router.pathname } });
       }
+
+      return null;
     };
 
     currentUser();

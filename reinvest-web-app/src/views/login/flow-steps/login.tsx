@@ -1,7 +1,6 @@
 import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { ChallengeName, useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
@@ -15,6 +14,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
+import { FormMessage } from '../../../components/FormElements/FormMessage';
+import { ChallengeName, useAuth } from '../../../providers/AuthProvider';
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -32,14 +33,16 @@ export const StepLogin: StepParams<LoginFormFields> = {
     const [error, setError] = useState<string>('');
     const { actions, loading, user } = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || (!loading && !!user);
     const router = useRouter();
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setError('');
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
+
       const { email, password } = fields;
+
       const result = await actions.signIn(email, password, router.query.redirectUrl as string);
 
       if (result instanceof Error) {
@@ -55,10 +58,6 @@ export const StepLogin: StepParams<LoginFormFields> = {
       setIsValidatingCredentials(false);
     };
 
-    if (loading && !user) {
-      return <IconSpinner />;
-    }
-
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -67,28 +66,22 @@ export const StepLogin: StepParams<LoginFormFields> = {
         <Typography variant="h2">Sign in</Typography>
         <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
 
-        {error && (
-          <Typography
-            variant="paragraph-large"
-            className="text-tertiary-error"
-          >
-            {error}
-          </Typography>
-        )}
+        {error && <FormMessage message={error} />}
 
         <InputEmail
           name="email"
           control={control}
+          required
         />
 
         <InputPassword
           name="password"
           control={control}
+          required
         />
 
         <Link
           href={URL.forgot_password}
-          className="typo-paragraph-large"
           title="Forgot Password"
         >
           Forgot password?
@@ -96,7 +89,6 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
         <Link
           href={URL.register}
-          className="typo-paragraph-large"
           title="Don't have an account?"
         >
           Don’t have an account?
@@ -106,7 +98,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
           type="submit"
           label="Sign In"
           disabled={shouldButtonBeDisabled}
-          loading={isValidatingCredentials}
+          loading={isValidatingCredentials || (!loading && !!user)}
         />
       </form>
     );

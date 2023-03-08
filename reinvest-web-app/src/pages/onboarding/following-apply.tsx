@@ -1,7 +1,6 @@
 import { BlackModal } from 'components/BlackModal';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -36,17 +35,15 @@ const FollowingApplyPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="Do any of the following apply to you?" />
-        <RadioGroupOptions
-          name="selected"
-          control={form.control}
-          options={followingApplies}
-          className="following-apply"
-        />
-      </BlackModal>
-    </MainLayout>
+    <BlackModal isOpen={isOpen}>
+      <Title title="Do any of the following apply to you?" />
+      <RadioGroupOptions
+        name="selected"
+        control={form.control}
+        options={followingApplies}
+        className="following-apply"
+      />
+    </BlackModal>
   );
 };
 

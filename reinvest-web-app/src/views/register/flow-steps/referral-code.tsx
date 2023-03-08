@@ -30,22 +30,15 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      // TO-DO: Check if the referral code actually pertains to another
-      //    user - if so, proceed call `updateStoreFields(fields)` so that
-      //    the next step will be the confirmation message once
-      //    `moveToNextStep()` is invoked.
       try {
         setIsValidatingReferralCode(true);
         updateStoreFields(fields);
-        await new Promise(resolve => setTimeout(resolve, 2000));
         setIsValidatingReferralCode(false);
+
         moveToNextStep();
       } catch (error) {
         setIsValidatingReferralCode(false);
       }
-
-      updateStoreFields(fields);
-      moveToNextStep();
     };
 
     const onSkip = () => {
