@@ -3,6 +3,7 @@ import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { Title } from 'components/Title';
 import { Input } from 'components/FormElements/Input';
+import { INDUESTRIES_AS_OPTIONS } from 'constants/industries';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
@@ -64,7 +65,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
         <Select
           name="employmentDetails.industry"
           control={control}
-          options={[]}
+          options={INDUESTRIES_AS_OPTIONS}
           placeholder="Industry"
           required
         />
