@@ -33,7 +33,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     const [error, setError] = useState<string>('');
     const { actions, loading, user } = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || (!loading && !!user);
     const router = useRouter();
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
@@ -102,7 +102,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
           type="submit"
           label="Sign In"
           disabled={shouldButtonBeDisabled}
-          loading={isValidatingCredentials}
+          loading={isValidatingCredentials || (!loading && !!user)}
         />
       </form>
     );
