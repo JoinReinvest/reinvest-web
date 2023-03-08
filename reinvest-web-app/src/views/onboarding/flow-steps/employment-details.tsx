@@ -22,7 +22,7 @@ const schema = z.object({
 });
 
 export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.EMPLOYMENT_STATUS,
+  identifier: Identifiers.EMPLOYMENT_DETAILS,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
