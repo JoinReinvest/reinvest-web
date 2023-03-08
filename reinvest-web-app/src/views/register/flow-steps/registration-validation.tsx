@@ -1,16 +1,18 @@
 import { Auth } from '@aws-amplify/auth';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
-import { useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
 import { Title } from 'components/Title';
+import { useAuth } from 'providers/AuthProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
+  identifier: Identifiers.FLOW_COMPLETION,
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
@@ -34,6 +36,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
 
     const onButtonClick = async () => {
       setIsLoading(true);
+
       try {
         await authContext.actions.signIn(storeFields.email, storeFields.password);
       } catch (err) {
@@ -58,12 +61,12 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     }, [storeFields.authenticationCode, storeFields.email]);
 
     return (
-      <div className="relative flex h-full flex-col items-center justify-center">
+      <div className="flex h-full flex-col gap-24 text-center md:justify-center">
         {isLoading && !error && <IconSpinner />}
-        {error && <IconXCircle />}
         {!isLoading && !error && <CircleSuccess />}
+        {error && <IconXCircle />}
 
-        <Title title={error ? error : title} />
+        <Title title={error || title} />
 
         <Button
           onClick={onButtonClick}

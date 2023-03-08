@@ -8,6 +8,11 @@ module.exports = {
   mode: 'jit',
   content: ['./src/**/*.{ts,tsx}'],
   theme: {
+    container: {
+      padding: {
+        DEFAULT: '2rem',
+      },
+    },
     fontFamily: {
       sans: ['GT-America', ...defaultTheme.fontFamily.sans],
     },
@@ -32,7 +37,9 @@ module.exports = {
       28: '2.8rem',
       30: '3.0rem',
       32: '3.2rem',
+      34: '3.4rem',
       36: '3.6rem',
+      38: '3.8rem',
       40: '4.0rem',
       44: '4.4rem',
       48: '4.8rem',
@@ -83,11 +90,11 @@ module.exports = {
       ],
 
       h5: [
-        '2.0rem',
+        '2.2rem',
         {
           lineHeight: '1.1em',
           letterSpacing: '-0.05em',
-          fontWeight: '500',
+          fontWeight: '400',
         },
       ],
 
@@ -113,14 +120,14 @@ module.exports = {
       ],
 
       link: [
-        '1.2rem',
+        '1.4rem',
         {
-          fontWeight: '500',
+          fontWeight: '400',
         },
       ],
 
       'paragraph-large': [
-        '1.4rem',
+        '1.6rem',
         {
           fontWeight: '400',
         },

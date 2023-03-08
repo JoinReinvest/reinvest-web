@@ -10,14 +10,17 @@ const verifyPhoneNumberMutation = gql`
   }
 `;
 
-export const useVerifyPhoneNumber = (countryCode: string, phoneNumber: string, authCode: string): UseMutationResult<Mutation['verifyPhoneNumber']> => {
-  const api = getApiClient();
-
-  return useMutation({
+export const useVerifyPhoneNumber = (countryCode: string, phoneNumber: string, authCode: string): UseMutationResult<Mutation['verifyPhoneNumber']> =>
+  useMutation({
     mutationFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { verifyPhoneNumber } = await api.request<Mutation>(verifyPhoneNumberMutation, { countryCode, phoneNumber, authCode });
 
       return verifyPhoneNumber;
     },
   });
-};

@@ -1,27 +1,47 @@
-import { Link } from 'components/Link';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
+import { PrivacyPolicyBlackModal } from 'components/PrivacyPolicyBlackModal';
+import { TermsAndConditioncBlackModal } from 'components/TermsAndConditioncBlackModal';
 import { Typography } from 'components/Typography';
+import { useState } from 'react';
 
-import { URL } from '../../constants/urls';
+export const Footer = () => {
+  const [isTermsAndConditionsOpen, setIsTermsAndConditionsOpen] = useState(false);
+  const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
 
-export const Footer = () => (
-  <footer className="w-330 mx-auto text-center">
-    <Typography variant="paragraph">
-      By continuing, you agree to the REINVEST
-      <br />
-      <Link
-        title="Terms of Conditions"
-        href={URL.terms_conditions}
-      >
-        Terms of Conditions
-      </Link>{' '}
-      and{' '}
-      <Link
-        title="Privacy Policy page"
-        href={URL.privacy_policy}
-      >
-        Privacy Policy
-      </Link>
-      .
-    </Typography>
-  </footer>
-);
+  const onChangeTermsAndConditions = () => {
+    setIsTermsAndConditionsOpen(!isTermsAndConditionsOpen);
+  };
+
+  const onChangePrivacyPolicy = () => {
+    setIsPrivacyPolicyOpen(!isPrivacyPolicyOpen);
+  };
+
+  return (
+    <footer className="w-330 mx-auto text-center">
+      <TermsAndConditioncBlackModal
+        isOpen={isTermsAndConditionsOpen}
+        onOpenChange={onChangeTermsAndConditions}
+      />
+      <PrivacyPolicyBlackModal
+        isOpen={isPrivacyPolicyOpen}
+        onOpenChange={onChangePrivacyPolicy}
+      />
+      <Typography variant="paragraph">
+        By continuing, you agree to the REINVEST
+        <br />
+        <OpenModalLink
+          onClick={onChangeTermsAndConditions}
+          green
+          label="Terms of Conditions"
+        />{' '}
+        and{' '}
+        <OpenModalLink
+          onClick={onChangePrivacyPolicy}
+          green
+          label="Privacy Policy"
+        />
+        .
+      </Typography>
+    </footer>
+  );
+};

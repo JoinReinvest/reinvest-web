@@ -19,8 +19,10 @@ export class FlowStore<FormFields> {
     this.initializeSteps(steps);
   }
 
+  /** Retrieves the first element of the flow */
   public getHead = () => this.head;
 
+  /** Retrieves the last element of the flow */
   public getTail = () => this.tail;
 
   /**
@@ -147,6 +149,27 @@ export class FlowStore<FormFields> {
     }
 
     return lastValidStep;
+  };
+
+  /**
+   * Searches a step by it's identifier - the lookup will performed from
+   * head to tail.
+   *
+   * It won't validate if the step can be part of the flow.
+   * @param {string} identifier - The identifier of the step
+   */
+  public getStepByIdentifier = (identifier: string): FlowStep<FormFields> | null => {
+    let step = this.head;
+
+    for (let iteration = 0; iteration < this.length; iteration++) {
+      if (step?.identifier === identifier) {
+        return step;
+      }
+
+      step = step?.nextStep || null;
+    }
+
+    return null;
   };
 
   /**

@@ -1,4 +1,3 @@
-import { ProtectedPage } from 'components/ProtectedPage';
 import { Typography } from 'components/Typography';
 import { NextPage } from 'next';
 import { useGetUserProfile } from 'services/queries/getProfile';
@@ -7,7 +6,7 @@ import { Link } from '../components/Link';
 import { URL } from '../constants/urls';
 import { MainLayout } from '../layouts/MainLayout';
 
-const Dashboard = () => {
+const Index: NextPage = () => {
   const { data } = useGetUserProfile();
 
   return (
@@ -25,12 +24,12 @@ const Dashboard = () => {
   );
 };
 
-const Index: NextPage = () => {
-  return (
-    <ProtectedPage>
-      <Dashboard />
-    </ProtectedPage>
-  );
-};
+export async function getStaticProps() {
+  return {
+    props: {
+      protected: true,
+    },
+  };
+}
 
 export default Index;

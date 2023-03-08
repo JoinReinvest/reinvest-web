@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { useFormFlowContext } from 'services/form-flow';
 
 export const OnboardingFlow = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     CurrentStepView,

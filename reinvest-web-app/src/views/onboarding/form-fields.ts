@@ -1,12 +1,12 @@
 export interface OnboardingFormFields {
-  accountType: 'individual';
+  accountType: string;
   employment: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
     industry?: string;
     occupation?: string;
   };
-  residency: 'us' | 'green-card' | 'visa';
+  residency: 'us' | 'green-card' | 'visa' | undefined;
   // Are we displaying this as an URL or a file upload?
   address?: {
     city?: string;
@@ -54,3 +54,9 @@ export interface OnboardingFormFields {
 
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4'; // Are we displaying this as an URL or a file upload?
 }
+
+export const DEFAULT_VALUES: OnboardingFormFields = {
+  accountType: '',
+  employment: {},
+  residency: undefined,
+};
