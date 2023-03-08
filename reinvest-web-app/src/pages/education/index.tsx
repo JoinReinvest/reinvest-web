@@ -1,11 +1,15 @@
-import { IconChart } from 'assets/icons/Education/IconChart'
-import { IconHome } from 'assets/icons/Education/IconHome'
-import hero from 'assets/images/education-hero.png'
-import { BlogCard, BlogCardProps } from 'components/Education/BlogCard'
-import { EducationCard, EducationCardProps } from 'components/Education/Card'
-import { Typography } from 'components/Typography'
-import Image from 'next/image'
-import { env } from '../../env'
+import { IconChart } from 'assets/icons/Education/IconChart';
+import { IconHome } from 'assets/icons/Education/IconHome';
+import image1 from 'assets/images/education/image1.png';
+import image2 from 'assets/images/education/image2.png';
+import image3 from 'assets/images/education/image3.png';
+import image4 from 'assets/images/education/image4.png';
+import image5 from 'assets/images/education/image5.png';
+import hero from 'assets/images/education-hero.png';
+import { BlogCard, BlogCardProps } from 'components/Education/BlogCard';
+import { EducationCard, EducationCardProps } from 'components/Education/Card';
+import { Typography } from 'components/Typography';
+import Image from 'next/image';
 
 import { MainLayout } from '../../layouts/MainLayout'
 
@@ -18,15 +22,57 @@ const educationCards: EducationCardProps[] = [
     title: 'Commercial Real Estate Underwriting Calculator',
     subtitle: 'Calculate your underwriting income in a few easy steps',
     icon: <IconHome />,
-    buttonText: 'View Glossary',
+    buttonText: 'View Calculator',
+    href: '/',
   },
   {
     title: 'Real Estate 101 Glossary',
     subtitle: 'Equip yourself with the language of the industry',
     icon: <IconChart />,
     buttonText: 'View Glossary',
+    href: '/',
   },
-]
+];
+
+const blogCards: BlogCardProps[] = [
+  {
+    imageSrc: image1,
+    subtitle: 'with Brandon Rule',
+    title: 'Real Estate Investment 101',
+    href: '/',
+  },
+  {
+    imageSrc: image2,
+    subtitle: 'with Brandon Rule',
+    title: 'Getting Started with REINVEST',
+    href: '/',
+  },
+  {
+    imageSrc: image3,
+    subtitle: 'with Brandon Rule',
+    title: 'Getting Started with REINVEST',
+    href: '/',
+  },
+  {
+    imageSrc: image4,
+    subtitle: 'April 3th, 2022',
+    title: 'Project update lorem ipsum dolor sit amet',
+    href: '/',
+  },
+  {
+    imageSrc: image5,
+    subtitle: 'April 3th, 2022',
+    title: 'Project update lorem ipsum dolor sit amet',
+    href: '/',
+  },
+  {
+    imageSrc: image5,
+    subtitle: 'April 3th, 2022',
+    title: 'Project update lorem ipsum dolor sit amet',
+    href: '/',
+  },
+];
+
 const renderCard = (card: EducationCardProps) => (
   <EducationCard
     key={card.title}

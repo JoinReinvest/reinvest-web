@@ -1,29 +1,35 @@
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
+import { LinkProps } from 'next/link';
+
+import { Link } from '../../components/Link';
 
 export interface BlogCardProps {
-  title: string
-  data: string
-  slug: string
-  image: {
-    width: number
-    height: number
-    src: string
-    alt: string
-    name: string
-  }
+  href: LinkProps['href'];
+  imageSrc: string;
+  subtitle: string;
+  title: string;
 }
 
-export const BlogCard = ({ image, title, data }: BlogCardProps) => (
+export const BlogCard = ({ imageSrc, title, subtitle, href }: BlogCardProps) => (
   <div>
-    <Image
-      src={image.src}
-      alt={title}
-      width={image.width}
-      height={image.height}
-    />
-    <div className="border-gray-04 border-x border-b py-12 px-16">
-      <Typography variant="bonus-heading">{title}</Typography>
+    <Link
+      title={title}
+      href={href}
+    >
+      <Image
+        src={imageSrc}
+        alt="education1"
+      />
+    </Link>
+    <div className="border-x border-b border-gray-04 py-12 px-16">
+      <Link
+        title={title}
+        href={href}
+        className="typo-bonus-heading"
+      >
+        <span>{title}</span>
+      </Link>
       <Typography
         variant="paragraph"
         className="text-gray-02"

@@ -9,4 +9,5 @@ export const URL = {
   faq: '/education/faq',
   glossary: '/education/glossary',
   calculator: '/education/calculator',
-}
+  index: '/education',
+};
