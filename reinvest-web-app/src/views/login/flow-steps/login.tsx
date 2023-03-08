@@ -58,14 +58,10 @@ export const StepLogin: StepParams<LoginFormFields> = {
       setIsValidatingCredentials(false);
     };
 
-    if (loading && !user) {
-      return <IconSpinner />;
-    }
-
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="login-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
+        className="login-form max-w-330 z-30 flex w-full flex-col items-center justify-center gap-16"
       >
         <Typography variant="h2">Sign in</Typography>
         <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
