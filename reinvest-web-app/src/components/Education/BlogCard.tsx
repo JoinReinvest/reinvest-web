@@ -1,41 +1,41 @@
-import { Typography } from 'components/Typography';
 import Image from 'next/image';
-import { LinkProps } from 'next/link';
 
-import { Link } from '../../components/Link';
+import { BlogPostInterface, generateBlogPostUrl } from '../../services/blogPostsService';
+import { Link } from '../Link';
+import { Typography } from '../Typography';
 
-export interface BlogCardProps {
-  href: LinkProps['href'];
-  imageSrc: string;
-  subtitle: string;
-  title: string;
-}
+export const BlogCard = ({ slug, title, data, image }: BlogPostInterface) => {
+  const blogPostUrl = generateBlogPostUrl(slug);
 
-export const BlogCard = ({ imageSrc, title, subtitle, href }: BlogCardProps) => (
-  <div>
+  return (
     <Link
       title={title}
-      href={href}
+      href={blogPostUrl}
+      className="text-link font-stretch-expanded"
     >
-      <Image
-        src={imageSrc}
-        alt="education1"
-      />
+      {image && (
+        <Image
+          src={image.src}
+          alt={image.alt}
+          width={image.width}
+          height={image.height}
+          className="h-120 w-full object-cover lg:h-210"
+        />
+      )}
+      <div className="border-x border-b border-gray-04 py-12 px-16">
+        <Typography
+          variant="h6"
+          className="hover:underline"
+        >
+          {title}
+        </Typography>
+        <Typography
+          variant="paragraph"
+          className="text-gray-02"
+        >
+          {data}
+        </Typography>
+      </div>
     </Link>
-    <div className="border-x border-b border-gray-04 py-12 px-16">
-      <Link
-        title={title}
-        href={href}
-        className="typo-bonus-heading"
-      >
-        <span>{title}</span>
-      </Link>
-      <Typography
-        variant="paragraph"
-        className="text-gray-02"
-      >
-        {data}
-      </Typography>
-    </div>
-  </div>
-);
+  );
+};

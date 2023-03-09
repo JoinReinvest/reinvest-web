@@ -4,7 +4,6 @@ import cx from 'classnames';
 import { Avatar } from 'components/Avatar';
 import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
-import { URL } from '../../../constants/urls'
 
 import { useGetUserProfile } from '../../../services/queries/getProfile';
 import { HeaderIcon } from './HeaderIcon';

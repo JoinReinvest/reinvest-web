@@ -1,20 +1,18 @@
 import { IconChart } from 'assets/icons/Education/IconChart';
 import { IconHome } from 'assets/icons/Education/IconHome';
-import image1 from 'assets/images/education/image1.png';
-import image2 from 'assets/images/education/image2.png';
-import image3 from 'assets/images/education/image3.png';
-import image4 from 'assets/images/education/image4.png';
-import image5 from 'assets/images/education/image5.png';
 import hero from 'assets/images/education-hero.png';
-import { BlogCard, BlogCardProps } from 'components/Education/BlogCard';
+import { BlogCard } from 'components/Education/BlogCard';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
+import { Suspense } from 'react';
 
-import { MainLayout } from '../../layouts/MainLayout'
+import { URL } from '../../constants/urls';
+import { MainLayout } from '../../layouts/MainLayout';
+import { BlogPostInterface, getLatestBlogPosts } from '../../services/blogPostsService';
 
 interface EducationPageProps {
-  posts: BlogCardProps[]
+  posts: BlogPostInterface[];
 }
 
 const educationCards: EducationCardProps[] = [
@@ -23,53 +21,14 @@ const educationCards: EducationCardProps[] = [
     subtitle: 'Calculate your underwriting income in a few easy steps',
     icon: <IconHome />,
     buttonText: 'View Calculator',
-    href: '/',
+    href: URL.calculator,
   },
   {
     title: 'Real Estate 101 Glossary',
     subtitle: 'Equip yourself with the language of the industry',
     icon: <IconChart />,
     buttonText: 'View Glossary',
-    href: '/',
-  },
-];
-
-const blogCards: BlogCardProps[] = [
-  {
-    imageSrc: image1,
-    subtitle: 'with Brandon Rule',
-    title: 'Real Estate Investment 101',
-    href: '/',
-  },
-  {
-    imageSrc: image2,
-    subtitle: 'with Brandon Rule',
-    title: 'Getting Started with REINVEST',
-    href: '/',
-  },
-  {
-    imageSrc: image3,
-    subtitle: 'with Brandon Rule',
-    title: 'Getting Started with REINVEST',
-    href: '/',
-  },
-  {
-    imageSrc: image4,
-    subtitle: 'April 3th, 2022',
-    title: 'Project update lorem ipsum dolor sit amet',
-    href: '/',
-  },
-  {
-    imageSrc: image5,
-    subtitle: 'April 3th, 2022',
-    title: 'Project update lorem ipsum dolor sit amet',
-    href: '/',
-  },
-  {
-    imageSrc: image5,
-    subtitle: 'April 3th, 2022',
-    title: 'Project update lorem ipsum dolor sit amet',
-    href: '/',
+    href: URL.glossary,
   },
 ];
 
@@ -78,19 +37,21 @@ const renderCard = (card: EducationCardProps) => (
     key={card.title}
     {...card}
   />
-)
+);
 
-const renderBlogCard = (card: BlogCardProps) => (
-  <BlogCard
-    key={card.title}
-    {...card}
-  />
-)
+const renderBlogCard = (card: BlogPostInterface) => (
+  <Suspense fallback={<div>Loading ...</div>}>
+    <BlogCard
+      key={card.title}
+      {...card}
+    />
+  </Suspense>
+);
 
 const EducationPage = ({ posts }: EducationPageProps) => {
   return (
     <MainLayout>
-      <div className="relative flex w-full text-white min-h-180">
+      <div className="relative flex min-h-180 w-full text-white">
         <Typography
           variant="h3"
           className="absolute bottom-24 left-24 lg:bottom-32 lg:left-32"
@@ -121,23 +82,16 @@ const EducationPage = ({ posts }: EducationPageProps) => {
         <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>
       </section>
     </MainLayout>
-  )
-}
+  );
+};
 
-export async function getStaticProps () {
-  try {
-    const data = await fetch(`${env.site.url}/api/posts`)
-    const posts = await data.json()
-  } catch (e) {
-    console.log(e)
-  }
-
+export async function getStaticProps() {
   return {
     props: {
       protected: true,
-      posts: posts.data,
+      posts: await getLatestBlogPosts(),
     },
-  }
+  };
 }
 
-export default EducationPage
+export default EducationPage;
