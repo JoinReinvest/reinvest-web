@@ -1,4 +1,5 @@
 export enum Identifiers {
   FULL_NAME = 'FULL_NAME',
   COMPLIANCES = 'COMPLIANCES',
+  FINRA_INSTITUTION = 'FINRA_INSTITUTION',
 }
