@@ -1,7 +1,6 @@
 import { BlackModal } from 'components/BlackModal';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { Title } from 'components/Title';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -17,21 +16,20 @@ const EnterDateBirthPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <Title title="Enter your date of birth" />
+    <BlackModal isOpen={isOpen}>
+      <Title title="Enter your date of birth" />
 
-        <InputBirthDate
-          name="date"
-          control={form.control}
-        />
+      <InputBirthDate
+        name="date"
+        control={form.control}
+      />
 
-        <OpenModalLink
-          label="Required. Why?"
-          onClick={() => {}}
-        />
-      </BlackModal>
-    </MainLayout>
+      <OpenModalLink
+        label="Required. Why?"
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        onClick={() => {}}
+      />
+    </BlackModal>
   );
 };
 

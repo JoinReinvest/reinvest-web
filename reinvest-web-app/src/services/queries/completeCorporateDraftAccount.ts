@@ -11,14 +11,17 @@ const completeCorporateDraftAccountMutation = gql`
   }
 `;
 
-export const useCompleteCorporateDraftAccount = (accountId: string): UseMutationResult<Mutation['completeCorporateDraftAccount']> => {
-  const api = getApiClient;
-
-  return useMutation({
+export const useCompleteCorporateDraftAccount = (accountId: string): UseMutationResult<Mutation['completeCorporateDraftAccount']> =>
+  useMutation({
     mutationFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { completeCorporateDraftAccount } = await api.request<Mutation>(completeCorporateDraftAccountMutation, { accountId });
 
       return completeCorporateDraftAccount;
     },
   });
-};
