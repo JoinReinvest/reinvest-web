@@ -19,15 +19,18 @@ const getAccountQuery = gql`
   }
 `;
 
-export const useGetAccount = (accountId: string): UseQueryResult<Query['getAccount']> => {
-  const api = getApiClient;
-
-  return useQuery<Query['getAccount']>({
+export const useGetAccount = (accountId: string): UseQueryResult<Query['getAccount']> =>
+  useQuery<Query['getAccount']>({
     queryKey: ['getAccount', accountId],
     queryFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { getAccount } = await api.request<Query>(getAccountQuery, { accountId });
 
       return getAccount;
     },
   });
-};

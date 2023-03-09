@@ -11,15 +11,18 @@ const getIndividualDraftAccountQuery = gql`
   }
 `;
 
-export const useGetIndividualDraftAccount = (accountId: string): UseQueryResult<Query['getIndividualDraftAccount']> => {
-  const api = getApiClient;
-
-  return useQuery<Query['getIndividualDraftAccount']>({
+export const useGetIndividualDraftAccount = (accountId: string): UseQueryResult<Query['getIndividualDraftAccount']> =>
+  useQuery<Query['getIndividualDraftAccount']>({
     queryKey: ['getIndividualDraftAccount', accountId],
     queryFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { getIndividualDraftAccount } = await api.request<Query>(getIndividualDraftAccountQuery, { accountId });
 
       return getIndividualDraftAccount;
     },
   });
-};

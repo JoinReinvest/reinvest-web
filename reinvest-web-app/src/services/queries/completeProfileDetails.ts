@@ -29,14 +29,17 @@ const completeProfileDetailsMutation = gql`
   }
 `;
 
-export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutationResult<Mutation['completeProfileDetails']> => {
-  const api = getApiClient;
-
-  return useMutation({
+export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutationResult<Mutation['completeProfileDetails']> =>
+  useMutation({
     mutationFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { completeProfileDetails } = await api.request<Mutation>(completeProfileDetailsMutation, { input });
 
       return completeProfileDetails;
     },
   });
-};

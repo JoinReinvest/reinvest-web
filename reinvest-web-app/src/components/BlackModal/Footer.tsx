@@ -31,11 +31,13 @@ export const Footer = () => {
         <br />
         <OpenModalLink
           onClick={onChangeTermsAndConditions}
+          green
           label="Terms of Conditions"
         />{' '}
         and{' '}
         <OpenModalLink
           onClick={onChangePrivacyPolicy}
+          green
           label="Privacy Policy"
         />
         .
