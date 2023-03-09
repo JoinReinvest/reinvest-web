@@ -1,7 +1,7 @@
-import { ComponentProps, PropsWithChildren } from 'react';
 import { Checkbox } from 'components/FormElements/Checkbox';
-import { FieldValues } from 'react-hook-form';
 import { Typography } from 'components/Typography';
+import { ComponentProps, PropsWithChildren } from 'react';
+import { FieldValues } from 'react-hook-form';
 
 type PrimitiveProps<FormFields extends FieldValues> = ComponentProps<typeof Checkbox<FormFields>>;
 
@@ -11,13 +11,21 @@ export function CheckboxLabeled<FormFields extends FieldValues>({ children, ...p
   return (
     <label
       htmlFor={props.name}
-      className="flex gap-16 items-start first:flex-none"
+      className="flex items-start gap-16 first:flex-none"
     >
-      <div className='pt-2'>
-        <Checkbox {...props} shouldUnregister />
+      <div className="pt-2">
+        <Checkbox
+          {...props}
+          shouldUnregister
+        />
       </div>
 
-      <Typography className='contents' variant="paragraph-large">{children}</Typography>
+      <Typography
+        className="contents"
+        variant="paragraph-large"
+      >
+        {children}
+      </Typography>
     </label>
   );
 }
