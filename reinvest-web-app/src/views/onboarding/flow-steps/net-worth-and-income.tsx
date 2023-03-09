@@ -5,19 +5,21 @@ import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { NET_WORTHS_AS_OPTIONS } from 'constants/net-worths';
 import { formValidationRules } from 'formValidationRules';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { OpenModalLink } from '../../../components/Links/OpenModalLink';
+import { WhyRequiredNetWorthModal } from '../../../components/WhyRequiredModals/WhyRequiredNetWorthModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'netIncome' | 'netWorth'>;
 
 const schema = z.object({
-  firstName: formValidationRules.firstName,
-  middleName: formValidationRules.middleName,
-  lastName: formValidationRules.lastName,
+  netIncome: formValidationRules.netIncome,
+  netWorth: formValidationRules.netWorth,
 });
 
 export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
@@ -30,6 +32,8 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
+    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
+
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
@@ -37,9 +41,18 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
+    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title title="What is approximate net worth and income?" />
+
+        {isWhyRequiredOpen && (
+          <WhyRequiredNetWorthModal
+            isOpen={isWhyRequiredOpen}
+            onOpenChange={openWhyReqiredOnClick}
+          />
+        )}
 
         <Select
           name="netIncome"
@@ -53,6 +66,11 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
           control={control}
           options={NET_WORTHS_AS_OPTIONS}
           placeholder="Net Worth"
+        />
+
+        <OpenModalLink
+          label="Required. Why?"
+          onClick={openWhyReqiredOnClick}
         />
 
         <Button
