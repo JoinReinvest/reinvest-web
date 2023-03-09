@@ -1,34 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
-import { ComponentProps } from 'react';
-import { SelectionCards } from 'components/FormElements/SelectionCards';
 
+import { EMPLOYMENT_STATUSES } from '../../../constants/employment_statuses';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-
-const EMPLOYMENT_STATUS: ComponentProps<typeof SelectionCards>['options'] = [
-  {
-    title: 'Employed',
-    value: 'employed',
-  },
-  {
-    title: 'Unemployed',
-    value: 'unemployed',
-  },
-  {
-    title: 'Retired',
-    value: 'retired',
-  },
-  {
-    title: 'Student',
-    value: 'student',
-  },
-];
 
 type Fields = Pick<OnboardingFormFields, 'employmentStatus'>;
 
@@ -65,7 +46,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
         <SelectionCards
           name="employmentStatus"
           control={form.control}
-          options={EMPLOYMENT_STATUS}
+          options={EMPLOYMENT_STATUSES}
           required={false}
           orientation="vertical"
           className="flex flex-col items-stretch gap-22"

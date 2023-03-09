@@ -59,6 +59,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
           control={control}
           options={NET_WORTHS_AS_OPTIONS}
           placeholder="Net Income"
+          required
         />
 
         <Select
@@ -66,6 +67,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
           control={control}
           options={NET_WORTHS_AS_OPTIONS}
           placeholder="Net Worth"
+          required
         />
 
         <OpenModalLink

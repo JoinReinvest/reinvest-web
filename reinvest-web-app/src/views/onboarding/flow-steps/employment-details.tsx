@@ -1,14 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
-import { Title } from 'components/Title';
 import { Input } from 'components/FormElements/Input';
+import { Select } from 'components/Select';
+import { Title } from 'components/Title';
 import { INDUESTRIES_AS_OPTIONS } from 'constants/industries';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
-import { Select } from 'components/Select';
 
+import { formValidationRules } from '../../../formValidationRules';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -16,9 +17,9 @@ type Fields = Pick<OnboardingFormFields, 'employmentDetails'>;
 
 const schema = z.object({
   employmentDetails: z.object({
-    employerName: z.string().min(1),
-    occupation: z.string().min(1),
-    industry: z.string().min(1),
+    employerName: formValidationRules.employerName,
+    occupation: formValidationRules.occupation,
+    industry: formValidationRules.industry,
   }),
 });
 
