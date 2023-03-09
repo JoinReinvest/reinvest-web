@@ -98,7 +98,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         return router.push({ pathname: URL.login, query: { redirectUrl: router.pathname } });
       }
 
-      return router.push('/');
+      return null;
     };
 
     currentUser();

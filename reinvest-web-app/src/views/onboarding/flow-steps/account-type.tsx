@@ -41,7 +41,7 @@ const schema = z.object({
   accountType: z.enum(['individual', 'corporation', 'trust']),
 });
 
-export const StepFullName: StepParams<OnboardingFormFields> = {
+export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
