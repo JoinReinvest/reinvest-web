@@ -57,12 +57,12 @@ const OnboardingAddressPage: NextPage = () => {
             placeholder="City"
           />
 
-            <Select
-              name="state"
-              control={form.control}
-              options={STATES_AS_SELECT_OPTION}
-              placeholder="State"
-            />
+          <Select
+            name="state"
+            control={form.control}
+            options={STATES_AS_SELECT_OPTION}
+            placeholder="State"
+          />
 
           <ZipCodeInput />
         </div>

@@ -2,29 +2,15 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { WarningMessage } from 'components/BlackModal/WarningMessage';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
-import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
+import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { RESIDENCY_STATUS } from '../../../constants/residenty-status';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-
-const RESIDENCY_STATUS: RadioGroupOptionItem[] = [
-  {
-    value: 'us',
-    title: 'US Citizen',
-  },
-  {
-    value: 'green-card',
-    title: 'Green Card',
-  },
-  {
-    value: 'visa',
-    title: 'Visa',
-  },
-];
 
 type Fields = Pick<OnboardingFormFields, 'residency'>;
 

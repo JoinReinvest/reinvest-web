@@ -3,7 +3,7 @@ import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { Title } from 'components/Title';
-import { EXPERIENCES_AS_OPTIONS } from 'constants/experience';
+import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';

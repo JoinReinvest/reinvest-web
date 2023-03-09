@@ -5,20 +5,21 @@ import { Form } from 'components/FormElements/Form';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
-import { VISAS, VISAS_AS_OPTIONS } from 'constants/visas';
+import { VISAS_AS_OPTIONS } from 'constants/visas';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { formValidationRules } from '../../../formValidationRules';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'birthCountry' | 'citizenshipCountry' | 'visaType'>;
 
 const schema = z.object({
-  birthCountry: z.string(),
-  citizenshipCountry: z.string(),
-  visaType: z.string().refine((value: string) => VISAS.includes(value)),
+  birthCountry: formValidationRules.birthCountry,
+  citizenshipCountry: formValidationRules.citizenshipCountry,
+  visaType: formValidationRules.visaType,
 });
 
 export const StepResidencyVisa: StepParams<OnboardingFormFields> = {

@@ -9,14 +9,15 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { formValidationRules } from '../../../formValidationRules';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'birthCountry' | 'citizenshipCountry'>;
 
 const schema = z.object({
-  birthCountry: z.string(),
-  citizenshipCountry: z.string(),
+  birthCountry: formValidationRules.birthCountry,
+  citizenshipCountry: formValidationRules.citizenshipCountry,
 });
 
 export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
