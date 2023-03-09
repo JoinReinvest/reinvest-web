@@ -11,15 +11,18 @@ const getCorporateDraftAccountQuery = gql`
   }
 `;
 
-export const useGetCorporateDraftAccount = (accountId: string): UseQueryResult<Query['getCorporateDraftAccount']> => {
-  const api = getApiClient;
-
-  return useQuery<Query['getCorporateDraftAccount']>({
+export const useGetCorporateDraftAccount = (accountId: string): UseQueryResult<Query['getCorporateDraftAccount']> =>
+  useQuery<Query['getCorporateDraftAccount']>({
     queryKey: ['getCorporateDraftAccount', accountId],
     queryFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { getCorporateDraftAccount } = await api.request<Query>(getCorporateDraftAccountQuery, { accountId });
 
       return getCorporateDraftAccount;
     },
   });
-};

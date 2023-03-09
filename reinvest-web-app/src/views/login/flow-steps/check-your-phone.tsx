@@ -81,6 +81,7 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
         <div className="flex justify-between">
           <OpenModalLink
             label="Resend code"
+            green
             onClick={resendCodeOnClick}
           />
           <GetHelpLink />

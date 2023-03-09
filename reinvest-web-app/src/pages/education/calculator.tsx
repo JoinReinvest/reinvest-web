@@ -1,15 +1,15 @@
 import { NextPage } from 'next';
 
-import { env } from '../env';
-import { MainLayout } from '../layouts/MainLayout';
+import { env } from '../../env';
+import { MainLayout } from '../../layouts/MainLayout';
 
-const Faq: NextPage = () => {
+const Calculator: NextPage = () => {
   return (
     <MainLayout>
       <iframe
-        src={`${env.site.url}/faq?iframe=true`}
+        src={`${env.site.url}/calculator?iframe=true`}
         className="h-screen w-full"
-        title="FAQ page"
+        title="Calculator page"
       />
     </MainLayout>
   );
@@ -23,4 +23,4 @@ export async function getStaticProps() {
   };
 }
 
-export default Faq;
+export default Calculator;

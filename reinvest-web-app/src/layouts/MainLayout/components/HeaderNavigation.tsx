@@ -12,17 +12,23 @@ interface NavigationItem {
 interface Props {
   isMenuOpen: boolean;
   navigationItems: NavigationItem[];
+  className?: string;
 }
 
-export const HeaderNavigation = ({ isMenuOpen, navigationItems }: Props) => {
-  const navigationClassNames = cx('flex-col w-full lg:flex-row lg:items-center lg:gap-40 gap-12', {
-    flex: !isMenuOpen,
-    hidden: isMenuOpen,
+export const HeaderNavigation = ({ isMenuOpen, navigationItems, className = '' }: Props) => {
+  const listClassNames = cx('flex-col w-full lg:flex-row lg:items-center lg:gap-40 gap-12', {
+    'lg:flex': true,
+    flex: isMenuOpen,
+  });
+
+  const navClassName = cx({
+    'hidden lg:block': !isMenuOpen,
+    [className]: true,
   });
 
   return (
-    <nav>
-      <ul className={navigationClassNames}>{navigationItems.map(generateNavigationItem)}</ul>
+    <nav className={navClassName}>
+      <ul className={listClassNames}>{navigationItems.map(generateNavigationItem)}</ul>
     </nav>
   );
 };
@@ -32,7 +38,7 @@ const generateNavigationItem = ({ label, href }: NavigationItem) => (
     <Link
       href={href}
       title={label}
-      className="typo-link text-black flex items-center justify-between no-underline hover:underline"
+      className="typo-paragraph-large text-black flex items-center justify-between no-underline hover:underline"
     >
       <span>{label}</span>
       <IconArrowRight className="stroke-black h-32 w-32 lg:hidden" />

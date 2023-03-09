@@ -77,6 +77,7 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
         <div className="flex justify-between">
           <OpenModalLink
             label="Resend code"
+            green
             onClick={resendCodeOnClick}
           />
           <GetHelpLink />

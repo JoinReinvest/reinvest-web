@@ -12,15 +12,18 @@ const accountDraftsQuery = gql`
   }
 `;
 
-export const useGetListAccount = (): UseQueryResult<Query['listAccountDrafts']> => {
-  const api = getApiClient;
-
-  return useQuery<Query['listAccountDrafts']>({
+export const useGetListAccount = (): UseQueryResult<Query['listAccountDrafts']> =>
+  useQuery<Query['listAccountDrafts']>({
     queryKey: ['getAccountDrafts'],
     queryFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { listAccountDrafts } = await api.request<Query>(accountDraftsQuery);
 
       return listAccountDrafts;
     },
   });
-};

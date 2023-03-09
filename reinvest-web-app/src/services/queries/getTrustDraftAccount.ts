@@ -11,15 +11,18 @@ const getTrustDraftAccountQuery = gql`
   }
 `;
 
-export const useGetTrustDraftAccount = (accountId: string): UseQueryResult => {
-  const api = getApiClient;
-
-  return useQuery<Maybe<TrustDraftAccount> | undefined>({
+export const useGetTrustDraftAccount = (accountId: string): UseQueryResult =>
+  useQuery<Maybe<TrustDraftAccount> | undefined>({
     queryKey: ['getTrustDraftAccount', accountId],
     queryFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { getTrustDraftAccount } = await api.request<Query>(getTrustDraftAccountQuery, { accountId });
 
       return getTrustDraftAccount;
     },
   });
-};
