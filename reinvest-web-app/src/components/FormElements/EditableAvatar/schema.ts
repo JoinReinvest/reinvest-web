@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const getValidationsSchema = (maxFileSizeInMegaBytes: number) => {
   const maxFileSizeInBytes = maxFileSizeInMegaBytes * BYTES_IN_MEGABYTE;
 
-  const schema = z
+  return z
     .object({
       fileType: z.string(),
       sizeInBytes: z.number().lte(maxFileSizeInBytes, `File must be smaller than ${maxFileSizeInMegaBytes}mb`),
@@ -19,6 +19,4 @@ export const getValidationsSchema = (maxFileSizeInMegaBytes: number) => {
         });
       }
     });
-
-  return schema;
 };

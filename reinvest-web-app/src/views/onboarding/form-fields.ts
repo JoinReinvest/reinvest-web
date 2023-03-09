@@ -1,11 +1,5 @@
 export interface OnboardingFormFields {
   accountType: string;
-  employment: {
-    // Only required if `employmentStatus` is 'employed'
-    employerName?: string;
-    industry?: string;
-    occupation?: string;
-  };
   residency: 'us' | 'green-card' | 'visa' | undefined;
   // Are we displaying this as an URL or a file upload?
   address?: {
@@ -21,11 +15,18 @@ export interface OnboardingFormFields {
   citizenshipCountry?: string;
   dateOfBirth?: Date;
 
+  employmentDetails?: {
+    // Only required if `employmentStatus` is 'employed'
+    employerName?: string;
+    industry?: string;
+    occupation?: string;
+  };
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+  // Are we displaying this as an URL or a file upload?
+  experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
 
   finraInstitution?: string;
   firstName?: string;
-
   household?: {
     // Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
@@ -42,6 +43,7 @@ export interface OnboardingFormFields {
   lastName?: string;
   middleName?: string;
   netIncome?: string;
+
   netWorth?: string;
 
   phoneNumber?: string;
@@ -50,17 +52,16 @@ export interface OnboardingFormFields {
 
   // If `household.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
-
   // If `household.isSeniorPoliticalFigure` is true
   socialSecurityNumber?: string;
+
   // If `household.isAssociatedWithFinra` is true
   tickerSymbols?: string[];
 
-  visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4'; // Are we displaying this as an URL or a file upload?
+  visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
 export const DEFAULT_VALUES: OnboardingFormFields = {
   accountType: '',
-  employment: {},
   residency: undefined,
 };
