@@ -18,7 +18,9 @@ module.exports = withVideos(
     poweredByHeader: false,
     trailingSlash: true,
     reactStrictMode: true,
-    images: {},
+    images: {
+      domains: ['images.ctfassets.net'],
+    },
     env: {
       SITE_NAME: process.env.SITE_NAME,
       REINVEST_SITE_URL: process.env.REINVEST_SITE_URL,

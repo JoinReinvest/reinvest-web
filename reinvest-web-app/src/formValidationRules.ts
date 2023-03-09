@@ -14,7 +14,9 @@ export const formValidationRules = {
   confirm_password: passwordSchema,
   firstName: zod.string({ required_error: requiredError }),
   lastName: zod.string({ required_error: requiredError }),
+  netWorth: zod.string({ required_error: requiredError }),
+  netIncome: zod.string({ required_error: requiredError }),
   middleName: zod.string().optional(),
   referralCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid referral code' }),
-  authenticationCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
+  authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
 };
