@@ -7,7 +7,7 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
     <>
       <Header />
 
-      <main className="container mx-auto">{children}</main>
+      <main className="container mx-auto pb-20">{children}</main>
     </>
   );
 };
