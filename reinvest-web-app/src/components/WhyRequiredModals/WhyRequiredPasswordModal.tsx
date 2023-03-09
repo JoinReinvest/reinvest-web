@@ -1,12 +1,12 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
 
-import { BlackModalDialog } from './BlackModal/BlackModalDialog';
-import { Title } from './Title';
-import { Typography } from './Typography';
+import { BlackModalDialog } from '../BlackModal/BlackModalDialog';
+import { Title } from '../Title';
+import { Typography } from '../Typography';
 
-type WhyRequiredBlackModalDialogProps = Omit<DialogProps, 'children'>;
+type WhyRequiredPasswordModalProps = Omit<DialogProps, 'children'>;
 
-export const WhyRequiredBlackModal = ({ isOpen, onOpenChange }: WhyRequiredBlackModalDialogProps) => {
+export const WhyRequiredPasswordModal = ({ isOpen, onOpenChange }: WhyRequiredPasswordModalProps) => {
   return (
     <BlackModalDialog
       isOpen={isOpen}

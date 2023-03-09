@@ -4,13 +4,13 @@ import { Form } from 'components/FormElements/Form';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { WhyRequiredDateBirthModal } from '../../../components/WhyRequiredModals/WhyRequiredDateBirthModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -46,7 +46,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Enter your first and last name as it appears on your ID" />
+          <Title title="Enter your date of birth" />
 
           <InputBirthDate
             name="dateOfBirth"
@@ -66,7 +66,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
           />
         </Form>
 
-        <WhyRequiredBlackModal
+        <WhyRequiredDateBirthModal
           isOpen={isInformationModalOpen}
           onOpenChange={setIsInformationModalOpen}
         />

@@ -3,14 +3,14 @@ import { Typography } from 'components/Typography';
 import { LinkProps } from 'next/link';
 import { ReactNode } from 'react';
 
-import { Link } from '../../components/Link';
+import { Link } from '../Link';
 
 export interface EducationCardProps {
+  buttonText: string;
   href: LinkProps['href'];
   icon: ReactNode;
   subtitle: string;
   title: string;
-  buttonText?: string;
 }
 
 export const EducationCard = ({ title, subtitle, icon, buttonText, href }: EducationCardProps) => {
@@ -31,20 +31,16 @@ export const EducationCard = ({ title, subtitle, icon, buttonText, href }: Educa
             {subtitle}
           </Typography>
         </div>
-        <div className="flex aspect-square h-36 w-36 cursor-pointer items-center justify-center rounded-full bg-green-frost-01 lg:w-auto lg:pl-16">
-          {buttonText && (
-            <Link
-              href={href}
-              title={title}
-              className="typo-bonus-heading hidden whitespace-nowrap font-stretch-normal lg:block"
-            >
-              <span>{buttonText}</span>
-            </Link>
-          )}
+        <Link
+          href={href}
+          title={title}
+          className="typo-bonus-heading flex aspect-square h-36 w-36 cursor-pointer items-center justify-center whitespace-nowrap rounded-full bg-green-frost-01 font-stretch-normal lg:w-auto lg:pl-16"
+        >
+          <span className="hidden lg:inline">{buttonText}</span>
           <IconArrowRight />
-        </div>
+        </Link>
       </div>
-      {icon && <div className="hidden w-1/2 lg:flex lg:justify-end">{icon}</div>}
+      <div className="hidden w-1/2 lg:flex lg:justify-end">{icon}</div>
     </div>
   );
 };
