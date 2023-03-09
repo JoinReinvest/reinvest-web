@@ -12,6 +12,7 @@ interface AuthContextInterface {
   actions: {
     confirmSignIn: (authenticationCode: string) => Promise<CognitoUser | Error | null>;
     signIn: (email: string, password: string, redirectTo?: string) => Promise<CognitoUser | Error | null>;
+    signOut: () => Promise<void>;
   };
   loading: boolean;
   user: CognitoUser | null;
@@ -27,6 +28,8 @@ export const AuthContext = createContext<AuthContextInterface>({
     confirmSignIn: async () => {
       return null;
     },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    signOut: async () => {},
   },
 });
 
@@ -42,10 +45,11 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
     try {
+      setLoading(true);
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
-        router.push(redirectTo || '/');
+        router.push(redirectTo || URL.index);
       }
 
       setUser(user);
@@ -53,6 +57,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       return user;
     } catch (error) {
       return error as Error;
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,13 +67,22 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
     setUser(confirmedUser);
 
-    router.push('/');
+    router.push(URL.index);
 
     return confirmedUser;
   };
 
+  const signOut = async () => {
+    try {
+      await Auth.signOut();
+      setUser(null);
+    } finally {
+      router.push(URL.login);
+    }
+  };
+
   const ctx = useMemo(() => {
-    return { user, loading, actions: { signIn, confirmSignIn } };
+    return { user, loading, actions: { signIn, confirmSignIn, signOut } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
@@ -85,7 +100,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         setUser(user);
 
         if (user && notProtectedUrls.includes(router.pathname)) {
-          return router.push('/');
+          return router.push(URL.index);
         }
       } catch (err) {
         setLoading(false);

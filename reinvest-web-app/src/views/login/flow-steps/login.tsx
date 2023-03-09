@@ -1,6 +1,5 @@
 import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
@@ -33,7 +32,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     const [error, setError] = useState<string>('');
     const { actions, loading, user } = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || (!loading && !!user);
     const router = useRouter();
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
@@ -57,10 +56,6 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
       setIsValidatingCredentials(false);
     };
-
-    if (loading && !user) {
-      return <IconSpinner />;
-    }
 
     return (
       <form
@@ -102,7 +97,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
           type="submit"
           label="Sign In"
           disabled={shouldButtonBeDisabled}
-          loading={isValidatingCredentials}
+          loading={isValidatingCredentials || (!loading && !!user)}
         />
       </form>
     );

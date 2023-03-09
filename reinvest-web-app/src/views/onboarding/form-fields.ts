@@ -1,11 +1,5 @@
 export interface OnboardingFormFields {
   accountType: string;
-  employment: {
-    // Only required if `employmentStatus` is 'employed'
-    employerName?: string;
-    industry?: string;
-    occupation?: string;
-  };
   // Are we displaying this as an URL or a file upload?
   meta: {
     isSocialSecurityNumberAlreadyAssigned: boolean;
@@ -27,7 +21,16 @@ export interface OnboardingFormFields {
 
   dateOfBirth?: Date;
   documentForVerification?: string;
+
+  employmentDetails?: {
+    // Only required if `employmentStatus` is 'employed'
+    employerName?: string;
+    industry?: string;
+    occupation?: string;
+  };
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+  // Are we displaying this as an URL or a file upload?
+  experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
 
   finraInstitution?: string;
 
@@ -63,7 +66,6 @@ export interface OnboardingFormFields {
 
 export const DEFAULT_VALUES: OnboardingFormFields = {
   accountType: '',
-  employment: {},
   residency: undefined,
   meta: {
     isSocialSecurityNumberValid: false,

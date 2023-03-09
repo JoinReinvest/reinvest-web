@@ -44,6 +44,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
           name="firstName"
           control={form.control}
           placeholder="First Name"
+          required
         />
 
         <Input
@@ -56,6 +57,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
           name="lastName"
           control={form.control}
           placeholder="Last Name"
+          required
         />
 
         <Button
