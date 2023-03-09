@@ -40,7 +40,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Enter your first and last name as it appears on your ID" />
+        <Title title="What is your experience with real estate investment?" />
 
         <SelectionCards
           name="experience"
