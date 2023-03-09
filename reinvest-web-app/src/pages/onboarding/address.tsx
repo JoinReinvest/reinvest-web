@@ -40,6 +40,7 @@ const OnboardingAddressPage: NextPage = () => {
           <Select
             name="street"
             options={[]}
+            control={form.control}
             placeholder="Street Address or P.O. Box"
             icon="search"
           />
@@ -58,10 +59,7 @@ const OnboardingAddressPage: NextPage = () => {
 
           <Select
             name="state"
-            value={''}
-            onChange={option => {
-              form.setValue('state', option?.value);
-            }}
+            control={form.control}
             options={STATES_AS_SELECT_OPTION}
             placeholder="State"
           />

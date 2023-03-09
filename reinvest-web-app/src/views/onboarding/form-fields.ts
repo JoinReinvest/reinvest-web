@@ -1,11 +1,5 @@
 export interface OnboardingFormFields {
   accountType: string;
-  employment: {
-    // Only required if `employmentStatus` is 'employed'
-    employerName?: string;
-    industry?: string;
-    occupation?: string;
-  };
   residency: 'us' | 'green-card' | 'visa' | undefined;
   // Are we displaying this as an URL or a file upload?
   address?: {
@@ -20,8 +14,14 @@ export interface OnboardingFormFields {
   // These fields are only required if residency is 'green-card' or 'visa'
   citizenshipCountry?: string;
   dateOfBirth?: Date;
-
   documentForVerification?: string;
+
+  employmentDetails?: {
+    // Only required if `employmentStatus` is 'employed'
+    employerName?: string;
+    industry?: string;
+    occupation?: string;
+  };
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
   // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
@@ -60,6 +60,5 @@ export interface OnboardingFormFields {
 
 export const DEFAULT_VALUES: OnboardingFormFields = {
   accountType: '',
-  employment: {},
   residency: undefined,
 };
