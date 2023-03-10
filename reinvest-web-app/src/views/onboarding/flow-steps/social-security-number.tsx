@@ -1,11 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
+import { WhyRequiredSocialSecurityNumberModal } from 'components/WhyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { formValidationRules } from 'formValidationRules';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
@@ -29,48 +32,75 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
+    const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = ({ socialSecurityNumber }) => {
-      //  TO-DO: Begin verifying if the social security number is valid
-      //      and assigned to another account
-      const isSocialSecurityNumberValid = true;
-      const isSocialSecurityNumberAlreadyAssigned = false;
-      const updatedMeta = { ...storeFields.meta, isSocialSecurityNumberValid, isSocialSecurityNumberAlreadyAssigned };
-      updateStoreFields({ socialSecurityNumber, meta: updatedMeta });
-      moveToNextStep();
+    const onMoreInformationClick = () => {
+      setIsInformationModalOpen(true);
+    };
+
+    const onSubmit: SubmitHandler<Fields> = async ({ socialSecurityNumber }) => {
+      try {
+        setIsLoading(true);
+
+        //  TO-DO: Verify if the social security number is not banned
+        //      or assigned to another account - set `_isSocialSecurityNumberBanned`
+        //      and `_isSocialSecurityNumberAlreadyAssigned` accordingly.
+
+        updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+        moveToNextStep();
+      } catch (error) {
+        setIsLoading(false);
+      }
     };
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Enter your first and last name as it appears on your ID" />
+      <>
+        {!isLoading ? (
+          <Form onSubmit={handleSubmit(onSubmit)}>
+            <Title title="What’s your social security number?" />
 
-        <InputSocialSecurityNumber
-          name="socialSecurityNumber"
-          control={control}
+            <InputSocialSecurityNumber
+              name="socialSecurityNumber"
+              control={control}
+            />
+
+            <OpenModalLink
+              label="Required. Why?"
+              onClick={onMoreInformationClick}
+              green
+            />
+
+            <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
+
+            <Typography
+              variant="paragraph"
+              className="text-gray-02"
+            >
+              We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
+            </Typography>
+
+            <Button
+              type="submit"
+              label="Continue"
+              disabled={shouldButtonBeDisabled}
+            />
+          </Form>
+        ) : (
+          <div className="flex flex-col items-center gap-32">
+            <IconSpinner />
+
+            <Title title="Validating yout Social Security Number" />
+          </div>
+        )}
+
+        <WhyRequiredSocialSecurityNumberModal
+          isOpen={isInformationModalOpen}
+          onOpenChange={setIsInformationModalOpen}
         />
-
-        <OpenModalLink
-          label="Required. Why?"
-          // eslint-disable-next-line @typescript-eslint/no-empty-function
-          onClick={() => {}} //
-        />
-
-        <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
-
-        <Typography
-          variant="paragraph"
-          className="text-gray-02"
-        >
-          We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
-        </Typography>
-
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
-      </Form>
+      </>
     );
   },
 };

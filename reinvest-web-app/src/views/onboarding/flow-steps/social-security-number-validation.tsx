@@ -10,8 +10,8 @@ import { Identifiers } from '../identifiers';
 
 export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields> = {
   // TO-DO: This step will be skipped if the social security number
-  //      valid - use the fields `meta.isSocialSecurityNumberValid` and
-  //      `meta.isSocialSecurityNumberAlreadyUsed` to determine the
+  //      valid - use the fields `_isSocialSecurityNumberBanned` and
+  //      `_isSocialSecurityNumberAlreadyAssigned` to determine the
   //      error that will be displayed.
 
   isAValidationView: true,

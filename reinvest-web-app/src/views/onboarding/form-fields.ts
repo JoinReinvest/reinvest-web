@@ -1,11 +1,9 @@
 export interface OnboardingFormFields {
   accountType: string;
-  // Are we displaying this as an URL or a file upload?
-  meta: {
-    isSocialSecurityNumberAlreadyAssigned: boolean;
-    isSocialSecurityNumberValid: boolean;
-  };
   residency: 'us' | 'green-card' | 'visa' | undefined;
+  _isSocialSecurityNumberAlreadyAssigned?: boolean;
+
+  _isSocialSecurityNumberBanned?: boolean;
   // Are we displaying this as an URL or a file upload?
   address?: {
     city?: string;
@@ -67,8 +65,4 @@ export interface OnboardingFormFields {
 export const DEFAULT_VALUES: OnboardingFormFields = {
   accountType: '',
   residency: undefined,
-  meta: {
-    isSocialSecurityNumberValid: false,
-    isSocialSecurityNumberAlreadyAssigned: false,
-  },
 };

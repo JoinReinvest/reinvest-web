@@ -5,7 +5,7 @@ import { Typography } from 'components/Typography';
 
 type Props = Omit<DialogProps, 'children'>;
 
-export const WhyRequiredPhoneNumberModal = ({ isOpen, onOpenChange }: Props) => (
+export const WhyRequiredSocialSecurityNumberModal = ({ isOpen, onOpenChange }: Props) => (
   <BlackModalDialog
     isOpen={isOpen}
     onOpenChange={onOpenChange}
