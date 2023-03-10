@@ -12,19 +12,19 @@ interface Props<FormFields extends FieldValues> extends UseControllerProps<FormF
   label: string;
   placeholder: string;
   accepts?: PartialMimeTypeKeys;
-  sizeLimitInByMegaBytes?: number;
+  sizeLimitInMegaBytes?: number;
 }
 
 export function InputFile<FormFields extends FieldValues>({
   label,
   placeholder,
   accepts = ['jpeg', 'jpg', 'pdf', 'png'],
-  sizeLimitInByMegaBytes = 5,
+  sizeLimitInMegaBytes = 5,
   ...controllerProps
 }: Props<FormFields>) {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const { field } = useController(controllerProps);
-  const schema = generateFileSchema(accepts, sizeLimitInByMegaBytes);
+  const schema = generateFileSchema(accepts, sizeLimitInMegaBytes);
 
   const clearFile = () => field.onChange(null);
   const hasFile = !!field.value;
