@@ -1,5 +1,16 @@
 export interface OnboardingFormFields {
   accountType: string;
+  employment: {
+    // Only required if `employmentStatus` is 'employed'
+    employerName?: string;
+    industry?: string;
+    occupation?: string;
+  };
+  name: {
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+  };
   residency: 'us' | 'green-card' | 'visa' | undefined;
   // Are we displaying this as an URL or a file upload?
   address?: {

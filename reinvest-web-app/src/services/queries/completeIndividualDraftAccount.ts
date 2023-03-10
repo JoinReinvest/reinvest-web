@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
-import { IndividualAccountInput, Mutation } from 'types/graphql';
+import { Mutation } from 'types/graphql';
 
 import { EmployerFragment } from './fragments/employer';
 import { NetRangeFragment } from './fragments/netRange';
@@ -26,19 +26,16 @@ const completeIndividualDraftAccountMutation = gql`
   }
 `;
 
-export const useCompleteIndividualDraftAccount = (
-  accountId: string,
-  input: IndividualAccountInput,
-): UseMutationResult<Mutation['completeIndividualDraftAccount']> =>
+export const useCompleteIndividualDraftAccount = (): UseMutationResult<Mutation['completeIndividualDraftAccount']> =>
   useMutation({
-    mutationFn: async () => {
+    mutationFn: async input => {
       const api = await getApiClient();
 
       if (!api) {
         return null;
       }
 
-      const { completeIndividualDraftAccount } = await api.request<Mutation>(completeIndividualDraftAccountMutation, { accountId, input });
+      const { completeIndividualDraftAccount } = await api.request<Mutation>(completeIndividualDraftAccountMutation, { input });
 
       return completeIndividualDraftAccount;
     },

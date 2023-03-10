@@ -4,19 +4,23 @@ import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useSendData';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'firstName' | 'middleName' | 'lastName'>;
+type Fields = Pick<OnboardingFormFields, 'name'>;
 
 const schema = z.object({
-  firstName: formValidationRules.firstName,
-  middleName: formValidationRules.middleName,
-  lastName: formValidationRules.lastName,
+  name: z.object({
+    firstName: formValidationRules.firstName,
+    middleName: formValidationRules.middleName,
+    lastName: formValidationRules.lastName,
+  }),
 });
 
 export const StepFullName: StepParams<OnboardingFormFields> = {
@@ -26,35 +30,47 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: { firstName: '', middleName: '', lastName: '', ...storeFields },
+      defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
+    const { data, error, isLoading, updateData } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
+
+    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
-      moveToNextStep();
+      updateStoreFields({ ...fields, dateOfBirth: new Date('11/08/1971') });
+      updateData();
     };
+
+    useEffect(() => {
+      if (data) {
+        console.log('data exist', data);
+      }
+
+      if (!data) {
+        console.log('data not exist', data);
+      }
+    }, [data]);
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <Title title="Enter your first and last name as it appears on your ID" />
 
         <Input
-          name="firstName"
+          name="name.firstName"
           control={form.control}
           placeholder="First Name"
           required
         />
 
         <Input
-          name="middleName"
+          name="name.middleName"
           control={form.control}
           placeholder="Middle Name (Optional)"
         />
 
         <Input
-          name="lastName"
+          name="name.lastName"
           control={form.control}
           placeholder="Last Name"
           required
@@ -64,6 +80,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
           type="submit"
           label="Continue"
           disabled={shouldButtonBeDisabled}
+          loading={isLoading}
         />
       </Form>
     );

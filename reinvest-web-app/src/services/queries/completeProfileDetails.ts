@@ -1,7 +1,7 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
 import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
-import { Mutation, ProfileDetailsInput } from 'types/graphql';
+import { Mutation } from 'types/graphql';
 
 import { AccountsFragment } from './fragments/accounts';
 import { AvatarFragment } from './fragments/avatar';
@@ -29,9 +29,9 @@ const completeProfileDetailsMutation = gql`
   }
 `;
 
-export const useCompleteProfileDetails = (input: ProfileDetailsInput): UseMutationResult<Mutation['completeProfileDetails']> =>
+export const useCompleteProfileDetails = (): UseMutationResult<Mutation['completeProfileDetails']> =>
   useMutation({
-    mutationFn: async () => {
+    mutationFn: async input => {
       const api = await getApiClient();
 
       if (!api) {
