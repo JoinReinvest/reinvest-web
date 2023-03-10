@@ -1,11 +1,5 @@
 export interface OnboardingFormFields {
   accountType: string;
-  employment: {
-    // Only required if `employmentStatus` is 'employed'
-    employerName?: string;
-    industry?: string;
-    occupation?: string;
-  };
   residency: 'us' | 'green-card' | 'visa' | undefined;
   // Are we displaying this as an URL or a file upload?
   address?: {
@@ -33,7 +27,16 @@ export interface OnboardingFormFields {
   dateOfBirth?: Date;
   documentForVerification?: string;
 
+  employmentDetails?: {
+    // Only required if `employmentStatus` is 'employed'
+    employerName?: string;
+    industry?: string;
+    occupation?: string;
+  };
+
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+
+  experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
 
   finraInstitution?: string;
 
@@ -53,7 +56,7 @@ export interface OnboardingFormFields {
   // If `compliances.isSeniorPoliticalFigure` is true
   socialSecurityNumber?: string;
 
-  visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4'; // Are we displaying this as an URL or a file upload?
+  visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
 export interface CompanyTickerSymbol {
@@ -62,6 +65,5 @@ export interface CompanyTickerSymbol {
 
 export const DEFAULT_VALUES: OnboardingFormFields = {
   accountType: '',
-  employment: {},
   residency: undefined,
 };

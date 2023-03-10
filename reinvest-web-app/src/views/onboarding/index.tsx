@@ -12,6 +12,7 @@ export const OnboardingFlow = () => {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
+    progressPercentage,
   } = useFormFlowContext();
 
   useEffect(() => {
@@ -30,6 +31,7 @@ export const OnboardingFlow = () => {
     <BlackModal
       isOpen={isModalOpen}
       onOpenChange={onModalClickBack}
+      progressBarValue={progressPercentage}
     >
       <CurrentStepView />
     </BlackModal>

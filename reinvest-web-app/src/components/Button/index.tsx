@@ -45,7 +45,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       <button
         type={type}
         className={className}
-        disabled={!!disabled || !!loading}
+        disabled={disabled || loading}
         tabIndex={tabIndex}
         onClick={onClick}
         ref={ref}
