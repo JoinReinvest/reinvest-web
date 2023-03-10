@@ -19,6 +19,9 @@ export interface OnboardingFormFields {
   birthCountry?: string;
   // These fields are only required if residency is 'green-card' or 'visa'
   citizenshipCountry?: string;
+  // If `compliances.isAssociatedWithFinra` is true
+  companyTickerSymbols?: CompanyTickerSymbol[];
+
   compliances?: {
     // Are you or anyone in your immediate compliances, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
@@ -27,18 +30,18 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   dateOfBirth?: Date;
   documentForVerification?: string;
+
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
 
   finraInstitution?: string;
 
   firstName?: string;
-
   lastName?: string;
   middleName?: string;
   netIncome?: string;
+
   netWorth?: string;
 
   phoneNumber?: string;
@@ -47,13 +50,14 @@ export interface OnboardingFormFields {
 
   // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
-
   // If `compliances.isSeniorPoliticalFigure` is true
   socialSecurityNumber?: string;
-  // If `compliances.isAssociatedWithFinra` is true
-  tickerSymbols?: string[];
 
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4'; // Are we displaying this as an URL or a file upload?
+}
+
+export interface CompanyTickerSymbol {
+  symbol: string;
 }
 
 export const DEFAULT_VALUES: OnboardingFormFields = {
