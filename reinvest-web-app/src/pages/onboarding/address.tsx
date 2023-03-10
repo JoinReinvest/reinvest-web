@@ -4,7 +4,6 @@ import { ZipCodeInput } from 'components/FormElements/ZipCodeInput';
 import { Select } from 'components/Select';
 import { Typography } from 'components/Typography';
 import { STATES_AS_SELECT_OPTION } from 'constants/states';
-import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -29,50 +28,46 @@ const OnboardingAddressPage: NextPage = () => {
   }, []);
 
   return (
-    <MainLayout>
-      <BlackModal isOpen={isOpen}>
-        <div className="flex flex-col gap-36">
-          <div className="flex flex-col gap-16">
-            <Typography variant="h5">Enter your permanent address</Typography>
+    <BlackModal isOpen={isOpen}>
+      <div className="flex flex-col gap-36">
+        <div className="flex flex-col gap-16">
+          <Typography variant="h5">Enter your permanent address</Typography>
 
-            <WarningMessage message="US Residents Only" />
-          </div>
-
-          <div className="flex flex-col gap-16">
-            <Select
-              name="street"
-              options={[]}
-              placeholder="Street Address or P.O. Box"
-              icon="search"
-            />
-
-            <Input
-              name="street2"
-              control={form.control}
-              placeholder="Apt, suite, unit, building, floor, etc"
-            />
-
-            <Input
-              name="city"
-              control={form.control}
-              placeholder="City"
-            />
-
-            <Select
-              name="state"
-              value={''}
-              onChange={option => {
-                form.setValue('state', option?.value);
-              }}
-              options={STATES_AS_SELECT_OPTION}
-              placeholder="State"
-            />
-
-            <ZipCodeInput />
-          </div>
+          <WarningMessage message="US Residents Only" />
         </div>
-      </BlackModal>
-    </MainLayout>
+
+        <div className="flex flex-col gap-16">
+          <Select
+            name="street"
+            options={[]}
+            control={form.control}
+            placeholder="Street Address or P.O. Box"
+            icon="search"
+          />
+
+          <Input
+            name="street2"
+            control={form.control}
+            placeholder="Apt, suite, unit, building, floor, etc"
+          />
+
+          <Input
+            name="city"
+            control={form.control}
+            placeholder="City"
+          />
+
+          <Select
+            name="state"
+            control={form.control}
+            options={STATES_AS_SELECT_OPTION}
+            placeholder="State"
+          />
+
+          <ZipCodeInput />
+        </div>
+      </div>
+    </BlackModal>
   );
 };
 

@@ -20,15 +20,21 @@
 
 .hkek-input-text-control,
 .hkek-input-masked-control {
-  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color;
+  @apply w-full relative flex items-center gap-x-10 p-14 transition-transform-color;
   @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {
     @apply flex-1;
   }
 
+  &-content-input-container:not(:only-child) {
+    .hkek-input-text-control-content-input, .hkek-input-masked-control-content-input {
+      @apply top-6 relative;
+    }
+  }
+
   &-content-input {
-    @apply w-full flex top-6 relative;
+    @apply w-full flex;
   }
 
   &-placeholder {

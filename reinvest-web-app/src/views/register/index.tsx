@@ -1,7 +1,6 @@
 import { BlackModal } from 'components/BlackModal';
 import { useIsMounted } from 'hooks/is-mounted';
 import { LoginLayout } from 'layouts/LoginLayout';
-import { MainLayout } from 'layouts/MainLayout';
 import { useFormFlowContext } from 'services/form-flow';
 
 export const RegistrationView = () => {
@@ -11,6 +10,7 @@ export const RegistrationView = () => {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
+    progressPercentage,
   } = useFormFlowContext();
 
   const shouldDisplayFirstStep = isMounted() && isFirstStep;
@@ -25,14 +25,13 @@ export const RegistrationView = () => {
       )}
 
       {shouldDisplayRestOfSteps && (
-        <MainLayout>
-          <BlackModal
-            isOpen={!isFirstStep}
-            onOpenChange={moveToPreviousValidStep}
-          >
-            <CurrentStepView />
-          </BlackModal>
-        </MainLayout>
+        <BlackModal
+          isOpen={!isFirstStep}
+          onOpenChange={moveToPreviousValidStep}
+          progressBarValue={progressPercentage}
+        >
+          <CurrentStepView />
+        </BlackModal>
       )}
     </>
   );

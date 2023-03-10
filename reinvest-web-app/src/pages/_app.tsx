@@ -3,9 +3,9 @@ import '../styles/global.scss';
 import { Amplify } from '@aws-amplify/core';
 import { Hydrate, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { AuthProvider } from 'components/AuthProvider';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
+import { AuthProvider } from 'providers/AuthProvider';
 
 import { env } from '../env';
 import { queryClient } from '../services/queryClient';
@@ -52,7 +52,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           href="/manifest.json"
         />
       </Head>
-      <AuthProvider>
+      <AuthProvider isProtectedPage={pageProps.protected}>
         <QueryClientProvider client={queryClient}>
           <Hydrate state={pageProps.dehydratedState}>
             <Component {...pageProps} />

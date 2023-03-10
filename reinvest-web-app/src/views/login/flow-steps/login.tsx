@@ -1,24 +1,28 @@
 import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ChallengeName, useAuth } from 'components/AuthProvider';
 import { Button } from 'components/Button';
-import { Form } from 'components/FormElements/Form';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
+import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { URL } from '../../../constants/urls';
+import { FormMessage } from '../../../components/FormElements/FormMessage';
+import { ChallengeName, useAuth } from '../../../providers/AuthProvider';
 import { LoginFormFields } from '../form-fields';
+import { Identifiers } from '../identifiers';
 
 type Fields = Omit<LoginFormFields, 'authenticationCode'>;
 
 export const StepLogin: StepParams<LoginFormFields> = {
+  identifier: Identifiers.CREDENTIALS,
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<LoginFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,
@@ -26,16 +30,19 @@ export const StepLogin: StepParams<LoginFormFields> = {
     });
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
     const [error, setError] = useState<string>('');
-    const authContext = useAuth();
+    const { actions, loading, user } = useAuth();
     const { handleSubmit, control, formState } = useForm<LoginFormFields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || (!loading && !!user);
+    const router = useRouter();
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setError('');
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
+
       const { email, password } = fields;
-      const result = await authContext.actions.signIn(email, password);
+
+      const result = await actions.signIn(email, password, router.query.redirectUrl as string);
 
       if (result instanceof Error) {
         setError(result.message);
@@ -51,35 +58,29 @@ export const StepLogin: StepParams<LoginFormFields> = {
     };
 
     return (
-      <Form
+      <form
         onSubmit={handleSubmit(onSubmit)}
-        className="login-form z-30 flex max-w-330 flex-col items-center justify-center gap-16"
+        className="login-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
       >
         <Typography variant="h2">Sign in</Typography>
         <Typography variant="paragraph-large">Building your wealth while rebuilding our communities.</Typography>
 
-        {error && (
-          <Typography
-            variant="paragraph-large"
-            className="text-tertiary-error"
-          >
-            {error}
-          </Typography>
-        )}
+        {error && <FormMessage message={error} />}
 
         <InputEmail
           name="email"
           control={control}
+          required
         />
 
         <InputPassword
           name="password"
           control={control}
+          required
         />
 
         <Link
           href={URL.forgot_password}
-          className="typo-paragraph-large"
           title="Forgot Password"
         >
           Forgot password?
@@ -87,7 +88,6 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
         <Link
           href={URL.register}
-          className="typo-paragraph-large"
           title="Don't have an account?"
         >
           Don’t have an account?
@@ -97,9 +97,9 @@ export const StepLogin: StepParams<LoginFormFields> = {
           type="submit"
           label="Sign In"
           disabled={shouldButtonBeDisabled}
-          loading={isValidatingCredentials}
+          loading={isValidatingCredentials || (!loading && !!user)}
         />
-      </Form>
+      </form>
     );
   },
 };

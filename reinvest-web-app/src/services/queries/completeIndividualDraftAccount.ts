@@ -29,14 +29,17 @@ const completeIndividualDraftAccountMutation = gql`
 export const useCompleteIndividualDraftAccount = (
   accountId: string,
   input: IndividualAccountInput,
-): UseMutationResult<Mutation['completeIndividualDraftAccount']> => {
-  const api = getApiClient();
-
-  return useMutation({
+): UseMutationResult<Mutation['completeIndividualDraftAccount']> =>
+  useMutation({
     mutationFn: async () => {
+      const api = await getApiClient();
+
+      if (!api) {
+        return null;
+      }
+
       const { completeIndividualDraftAccount } = await api.request<Mutation>(completeIndividualDraftAccountMutation, { accountId, input });
 
       return completeIndividualDraftAccount;
     },
   });
-};

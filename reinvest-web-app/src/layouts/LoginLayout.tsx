@@ -21,7 +21,8 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
         Your browser does not support the video tag.
       </video>
 
-      <LogoIcon className="z-30" />
+      <LogoIcon className="z-30 fill-green-frost-01" />
+
       {children}
     </div>
   );
