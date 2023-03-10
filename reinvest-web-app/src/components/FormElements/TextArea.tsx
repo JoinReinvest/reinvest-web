@@ -21,7 +21,7 @@ export function TextArea<FormFields extends FieldValues>({ disabled = false, req
     const numberOfCharactersLeft = maxCharacters - numberOfCharacters;
 
     return `${numberOfCharactersLeft} Characters`;
-  }, [numberOfCharacters]);
+  }, [numberOfCharacters, maxCharacters]);
 
   const isDirty = focused || field.value;
   const onFocusHandler = () => setFocused(true);
