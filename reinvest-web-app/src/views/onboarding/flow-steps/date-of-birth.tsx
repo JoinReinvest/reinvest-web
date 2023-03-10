@@ -4,6 +4,7 @@ import { Form } from 'components/FormElements/Form';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
+import dayjs from 'dayjs';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -16,9 +17,27 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'dateOfBirth'>;
 
-const schema = z.object({
-  dateOfBirth: formValidationRules.date,
-});
+const schema = z
+  .object({
+    dateOfBirth: formValidationRules.date,
+  })
+  .superRefine(({ dateOfBirth }, context) => {
+    const dates = {
+      today: dayjs(),
+      dateOfBirth: dayjs(dateOfBirth),
+    };
+
+    const dateAgo = dates.today.subtract(18, 'year');
+    const isDateOlderThanEighteenYears = dates.dateOfBirth.isBefore(dateAgo);
+
+    if (!isDateOlderThanEighteenYears) {
+      context.addIssue({
+        code: 'invalid_date',
+        message: 'You must be at least 18 years old to use this service.',
+        path: ['dateOfBirth'],
+      });
+    }
+  });
 
 export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DATE_OF_BIRTH,
@@ -27,7 +46,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const { formState, control, handleSubmit } = useForm<Fields>({
-      mode: 'all',
+      mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
