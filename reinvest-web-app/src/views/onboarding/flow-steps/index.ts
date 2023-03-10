@@ -5,4 +5,3 @@ import { StepResidencyStatus } from './residency-status';
 import { StepResidencyVisa } from './residency-visa';
 
 export const FLOW_STEPS = [StepAccountType, StepFullName, StepResidencyStatus, StepResidencyGreenCard, StepResidencyVisa];
-

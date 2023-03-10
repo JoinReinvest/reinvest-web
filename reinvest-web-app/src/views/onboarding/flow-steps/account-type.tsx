@@ -4,35 +4,15 @@ import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { WhyRequiredAccountTypeModal } from '../../../components/WhyRequiredModals/WhyRequiredAccountTypeModal';
+import { ACCOUNT_TYPES } from '../../../constants/account-types';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-
-const ACCOUNT_TYPES = [
-  {
-    title: 'For Individuals',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consel.',
-    value: 'individual',
-  },
-  {
-    title: 'For Corporations',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consel.',
-    value: 'corporation',
-  },
-  {
-    title: 'For Trust',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consel.',
-    value: 'trust',
-  },
-];
 
 type Fields = Pick<OnboardingFormFields, 'accountType'>;
 
@@ -88,7 +68,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           />
         </Form>
 
-        <WhyRequiredBlackModal
+        <WhyRequiredAccountTypeModal
           isOpen={isInformationModalOpen}
           onOpenChange={setIsInformationModalOpen}
         />
