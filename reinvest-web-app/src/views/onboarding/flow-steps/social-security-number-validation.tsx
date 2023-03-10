@@ -1,8 +1,9 @@
 import { IconXCircle } from 'assets/icons/IconXCircle';
-import { Link } from 'components/Link';
 import { LinkButton } from 'components/LinkButton';
+import { GetHelpLink } from 'components/Links/GetHelp';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
+import { EMAILS } from 'constants/urls';
 import { StepParams } from 'services/form-flow';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -25,19 +26,13 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
 
         <div className="text-center">
           <Typography variant="paragraph-large">
-            Please reach out to{' '}
-            <Link
-              href="mailto:support@reinvestcommunity.com"
-              title="Support email"
-            >
-              support@reinvestcommunity.com
-            </Link>
+            Please reach out to <GetHelpLink label={EMAILS.support} />
           </Typography>
 
           <IconXCircle className="mx-auto mt-40" />
 
           <LinkButton
-            href="mailto:support@reinvestcommunity.com"
+            href={EMAILS.supportHref}
             label="Contact"
           />
         </div>
