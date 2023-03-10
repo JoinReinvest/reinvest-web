@@ -1,5 +1,4 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
-
 import { BlackModalDialog } from 'components/BlackModal/BlackModalDialog';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';

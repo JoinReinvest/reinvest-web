@@ -4,40 +4,21 @@ import { Form } from 'components/FormElements/Form';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import dayjs from 'dayjs';
-import { formValidationRules } from 'formValidationRules';
+import { WhyRequiredDateBirthModal } from 'components/WhyRequiredModals/WhyRequiredDateBirthModal';
+import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
-import { WhyRequiredDateBirthModal } from '../../../components/WhyRequiredModals/WhyRequiredDateBirthModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'dateOfBirth'>;
 
-const schema = z
-  .object({
-    dateOfBirth: formValidationRules.date,
-  })
-  .superRefine(({ dateOfBirth }, context) => {
-    const dates = {
-      today: dayjs(),
-      dateOfBirth: dayjs(dateOfBirth),
-    };
-
-    const dateAgo = dates.today.subtract(18, 'year');
-    const isDateOlderThanEighteenYears = dates.dateOfBirth.isBefore(dateAgo);
-
-    if (!isDateOlderThanEighteenYears) {
-      context.addIssue({
-        code: 'invalid_date',
-        message: 'You must be at least 18 years old to use this service.',
-        path: ['dateOfBirth'],
-      });
-    }
-  });
+const schema = z.object({
+  dateOfBirth: dateOlderThanEighteenYearsSchema,
+});
 
 export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DATE_OF_BIRTH,

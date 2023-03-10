@@ -1,3 +1,4 @@
+import dayjs from 'dayjs';
 import zod from 'zod';
 
 const requiredError = 'This field is required';
@@ -29,3 +30,21 @@ export const formValidationRules = {
   phoneNumber: zod.string().regex(/^\d{10}$/, { message: 'Invalid phone number' }),
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
 };
+
+export const dateOlderThanEighteenYearsSchema = formValidationRules.date.superRefine((value, context) => {
+  const dates = {
+    today: dayjs(),
+    dateOfBirth: dayjs(value),
+  };
+
+  const dateAgo = dates.today.subtract(18, 'year');
+  const isDateOlderThanEighteenYears = dates.dateOfBirth.isBefore(dateAgo);
+
+  if (!isDateOlderThanEighteenYears) {
+    context.addIssue({
+      code: 'invalid_date',
+      message: 'You must be at least 18 years old to use this service.',
+      path: ['dateOfBirth'],
+    });
+  }
+});
