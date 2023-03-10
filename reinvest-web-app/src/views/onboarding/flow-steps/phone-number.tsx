@@ -5,7 +5,7 @@ import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
 import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { WhyRequiredBlackModal } from 'components/WhyRequiredBlackModal';
+import { WhyRequiredPhoneNumberModal } from 'components/WhyRequiredModals/WhyRequiredPhoneNumberModal';
 import { CALLING_CODES } from 'constants/country-codes';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -88,7 +88,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
           />
         </Form>
 
-        <WhyRequiredBlackModal
+        <WhyRequiredPhoneNumberModal
           isOpen={isInformationModalOpen}
           onOpenChange={setIsInformationModalOpen}
         />
