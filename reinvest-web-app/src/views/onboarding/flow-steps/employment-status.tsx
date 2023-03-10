@@ -1,32 +1,30 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
-import { Input } from 'components/FormElements/Input';
+import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { Title } from 'components/Title';
-import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { EMPLOYMENT_STATUSES } from '../../../constants/employment_statuses';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'firstName' | 'middleName' | 'lastName'>;
+type Fields = Pick<OnboardingFormFields, 'employmentStatus'>;
 
 const schema = z.object({
-  firstName: formValidationRules.firstName,
-  middleName: formValidationRules.middleName,
-  lastName: formValidationRules.lastName,
+  employmentStatus: z.enum(['employed', 'unemployed', 'retired', 'student']),
 });
 
-export const StepFullName: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.FULL_NAME,
+export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.EMPLOYMENT_STATUS,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: { firstName: '', middleName: '', lastName: '', ...storeFields },
+      defaultValues: storeFields,
     });
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
@@ -36,34 +34,34 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
+    const onSkip = () => {
+      updateStoreFields({ employmentStatus: undefined });
+      moveToNextStep();
+    };
+
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Title title="Enter your first and last name as it appears on your ID" />
+        <Title title="Are you currently employed?" />
 
-        <Input
-          name="firstName"
+        <SelectionCards
+          name="employmentStatus"
           control={form.control}
-          placeholder="First Name"
-          required
-        />
-
-        <Input
-          name="middleName"
-          control={form.control}
-          placeholder="Middle Name (Optional)"
-        />
-
-        <Input
-          name="lastName"
-          control={form.control}
-          placeholder="Last Name"
-          required
+          options={EMPLOYMENT_STATUSES}
+          required={false}
+          orientation="vertical"
+          className="flex flex-col items-stretch gap-22"
         />
 
         <Button
           type="submit"
           label="Continue"
           disabled={shouldButtonBeDisabled}
+        />
+
+        <Button
+          label="Skip"
+          variant="outlined"
+          onClick={onSkip}
         />
       </Form>
     );

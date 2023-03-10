@@ -120,7 +120,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (isProtectedPage && !user) {
+  if ((isProtectedPage && !user) || (!isProtectedPage && user)) {
     return <IconSpinner />;
   }
 

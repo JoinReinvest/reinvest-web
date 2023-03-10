@@ -1,32 +1,31 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { WarningMessage } from 'components/BlackModal/WarningMessage';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
-import { Input } from 'components/FormElements/Input';
+import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
-import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
+import { RESIDENCY_STATUS } from '../../../constants/residenty-status';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'firstName' | 'middleName' | 'lastName'>;
+type Fields = Pick<OnboardingFormFields, 'residency'>;
 
 const schema = z.object({
-  firstName: formValidationRules.firstName,
-  middleName: formValidationRules.middleName,
-  lastName: formValidationRules.lastName,
+  residency: z.enum(['us', 'green-card', 'visa']),
 });
 
-export const StepFullName: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.FULL_NAME,
+export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.RESIDENCY_STATUS,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: { firstName: '', middleName: '', lastName: '', ...storeFields },
+      defaultValues: storeFields,
     });
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
@@ -38,26 +37,16 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Title title="Enter your first and last name as it appears on your ID" />
-
-        <Input
-          name="firstName"
-          control={form.control}
-          placeholder="First Name"
-          required
+        <Title
+          title="Residency Status"
+          subtitle="Please select your US residency status."
         />
+        <WarningMessage message="REINVEST does not accept non-US residents at this time." />
 
-        <Input
-          name="middleName"
+        <RadioGroupOptions
+          name="residency"
           control={form.control}
-          placeholder="Middle Name (Optional)"
-        />
-
-        <Input
-          name="lastName"
-          control={form.control}
-          placeholder="Last Name"
-          required
+          options={RESIDENCY_STATUS}
         />
 
         <Button

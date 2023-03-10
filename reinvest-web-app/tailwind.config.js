@@ -48,7 +48,9 @@ module.exports = {
       84: '8.4rem',
       96: '9.6rem',
       100: '10.0rem',
+      120: '12.0rem',
       180: '18.0rem',
+      210: '21.0rem',
     },
     fontSize: {
       base: '10px',
@@ -190,7 +192,9 @@ module.exports = {
         375: '37.5rem',
         720: '72.0rem',
       },
-
+      minHeight: {
+        180: '18rem',
+      },
       transitionProperty: {
         'height-width': 'height, width',
         'transform-color': 'transform, color',
@@ -268,6 +272,12 @@ module.exports = {
           'animation-delay': '800ms',
         },
       });
+
+      addUtilities({
+        '.translate-z-0': {
+          'transform': 'translateZ(0)',
+        }
+      })
     }),
   ],
 };
