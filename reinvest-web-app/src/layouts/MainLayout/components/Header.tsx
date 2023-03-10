@@ -32,9 +32,9 @@ export const Header = () => {
 
   return (
     <header className={headerStyles}>
-      <div className="gap-100 flex w-full flex-col">
+      <div className="flex w-full flex-col gap-100">
         <div className="flex w-full justify-between">
-          <div className="gap-84 flex grow flex-col lg:flex-row lg:items-center lg:gap-40">
+          <div className="flex grow flex-col gap-84 lg:flex-row lg:items-center lg:gap-40">
             <HeaderIcon
               isMenuOpen={isMenuOpen}
               openMenu={openMenu}
