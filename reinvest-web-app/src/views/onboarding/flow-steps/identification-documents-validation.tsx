@@ -1,5 +1,4 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
-import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { Title } from 'components/Title';
@@ -13,37 +12,30 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
 
   identifier: Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
 
-  Component: ({ moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const isLoading = false;
-    const hasSucceded = true;
-    const succededAndLoaded = !isLoading && hasSucceded;
-    const notSuccededAndLoaded = !isLoading && hasSucceded;
+  Component: ({ storeFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    // TO-DO: If the documents were not valid, the text and
+    //      action for the button may be different.
+    //      https://www.figma.com/file/cNXTaZ5MhSXw4i34QJF4lv?node-id=507:85955#390094223
+
+    const hasSucceded = !!storeFields._didDocumentIdentificationValidationSucceed;
 
     const titleGenerator = () => {
-      if (succededAndLoaded) {
+      if (hasSucceded) {
         return 'Account Information Verified!';
       }
 
-      if (notSuccededAndLoaded) {
-        return 'We cannot approve your account at this time';
-      }
-
-      return 'Verifying Account Information';
+      return 'We cannot approve your account at this time';
     };
 
     const iconGenerator = () => {
-      if (succededAndLoaded) {
+      if (hasSucceded) {
         return <IconCheckCircle />;
       }
 
-      if (notSuccededAndLoaded) {
-        return <IconXCircle />;
-      }
-
-      return <IconSpinner />;
+      return <IconXCircle />;
     };
 
-    const onButtonClick = () => {
+    const onContinueButtonClick = () => {
       moveToNextStep();
     };
 
@@ -55,9 +47,7 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
 
         <Button
           label="Continue"
-          onClick={onButtonClick}
-          disabled={isLoading}
-          loading={isLoading}
+          onClick={onContinueButtonClick}
         />
       </div>
     );

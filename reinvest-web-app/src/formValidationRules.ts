@@ -1,3 +1,5 @@
+import { BYTES_IN_MEGABYTE } from 'constants/conversions';
+import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
 import zod from 'zod';
 
 const requiredError = 'This field is required';
@@ -27,4 +29,20 @@ export const formValidationRules = {
   referralCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid referral code' }),
   phoneNumber: zod.string().regex(/^\d{10}$/, { message: 'Invalid phone number' }),
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
+};
+
+export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
+  const sizeLimitInBytes = sizeLimitInMegaBytes * BYTES_IN_MEGABYTE;
+
+  return zod
+    .custom<File>()
+    .refine(file => !!file, 'The field is required')
+    .refine(file => file?.size <= sizeLimitInBytes, `File size must be smaller than ${sizeLimitInMegaBytes}MB`)
+    .refine(file => {
+      const acceptedTypes = mapToMimeType(accepts);
+      const fileType = file?.type;
+      const isFileTypeAccepted = acceptedTypes.includes(fileType);
+
+      return isFileTypeAccepted;
+    }, 'File type not supported');
 };

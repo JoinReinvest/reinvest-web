@@ -1,6 +1,7 @@
 export interface OnboardingFormFields {
   accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
+  _didDocumentIdentificationValidationSucceed?: boolean;
   // Are we displaying this as an URL or a file upload?
   address?: {
     city?: string;
@@ -13,8 +14,8 @@ export interface OnboardingFormFields {
   birthCountry?: string;
   // These fields are only required if residency is 'green-card' or 'visa'
   citizenshipCountry?: string;
-  dateOfBirth?: Date;
 
+  dateOfBirth?: Date;
   employmentDetails?: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
@@ -22,11 +23,12 @@ export interface OnboardingFormFields {
     occupation?: string;
   };
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+
   // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
-
   finraInstitution?: string;
   firstName?: string;
+
   household?: {
     // Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
@@ -37,11 +39,12 @@ export interface OnboardingFormFields {
   };
 
   identificationDocument?: {
-    back: string;
-    front: string;
+    back: File | null;
+    front: File | null;
   };
   lastName?: string;
   middleName?: string;
+
   netIncome?: string;
 
   netWorth?: string;
@@ -49,9 +52,9 @@ export interface OnboardingFormFields {
   phoneNumber?: string;
 
   profilePicture?: string;
-
   // If `household.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
+
   // If `household.isSeniorPoliticalFigure` is true
   socialSecurityNumber?: string;
 

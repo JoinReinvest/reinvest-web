@@ -1,55 +1,36 @@
 import { IconFileUpload } from 'assets/icons/IconFileUpload';
-import { BYTES_IN_MEGABYTE } from 'constants/conversions';
+import { Typography } from 'components/Typography';
+import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
+import { generateFileSchema } from 'formValidationRules';
 import { ChangeEventHandler, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
-import { z } from 'zod';
 
-import { Typography } from '../../Typography';
 import { FormMessage } from '../FormMessage';
 import { UploadedFile } from './UploadedFile';
 
 interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
   label: string;
   placeholder: string;
-  accepts?: string;
+  accepts?: PartialMimeTypeKeys;
   sizeLimitInByMegaBytes?: number;
 }
-
-const getSchema = (accepts: string, sizeLimitInByMegaBytes: number) => {
-  const sizeLimitInBytes = sizeLimitInByMegaBytes * BYTES_IN_MEGABYTE;
-
-  return z
-    .custom<File>()
-    .refine(file => !!file, 'The field is required')
-    .refine(file => file?.size <= sizeLimitInBytes, `File size must be smaller than ${sizeLimitInByMegaBytes}MB`)
-    .refine(file => {
-      const doesAcceptAnyType = accepts === '*';
-
-      if (doesAcceptAnyType) {
-        return true;
-      }
-
-      const fileType = file?.type;
-      const doesFileTypeMatchAccepts = !!fileType?.match(accepts);
-
-      return doesFileTypeMatchAccepts;
-    }, 'File type not supported');
-};
 
 export function InputFile<FormFields extends FieldValues>({
   label,
   placeholder,
-  accepts = '*',
+  accepts = ['jpeg', 'jpg', 'pdf', 'png'],
   sizeLimitInByMegaBytes = 5,
   ...controllerProps
 }: Props<FormFields>) {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const { field } = useController(controllerProps);
-  const schema = getSchema(accepts, sizeLimitInByMegaBytes);
+  const schema = generateFileSchema(accepts, sizeLimitInByMegaBytes);
 
   const clearFile = () => field.onChange(null);
   const hasFile = !!field.value;
   const hasErrorMessage = !!errorMessage;
+
+  const acceptMimeTypes = mapToMimeType(accepts).join(',');
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const file = target.files?.item(0);
@@ -77,7 +58,7 @@ export function InputFile<FormFields extends FieldValues>({
           name={field.name}
           onChange={handleChange}
           className="peer hidden"
-          accept={accepts}
+          accept={acceptMimeTypes}
           disabled={hasFile}
         />
 
