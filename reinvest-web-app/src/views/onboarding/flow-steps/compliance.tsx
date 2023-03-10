@@ -1,16 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Title } from 'components/Title';
-import { SubmitHandler, useForm, FieldPath } from 'react-hook-form';
+import { ChangeEvent } from 'react';
+import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
-import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ChangeEvent } from 'react';
-import { FormMessage } from 'components/FormElements/FormMessage';
 
 type Fields = OnboardingFormFields['compliances'] & {
   doNoneApply: boolean;
