@@ -13,7 +13,7 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { OpenModalLink } from '../../../components/Links/OpenModalLink';
-import { WhyRequiredPasswordModal } from '../../../components/WhyRequiredModals/WhyRequiredPasswordModal';
+import { WhyRequiredPasswordModal } from '../../whyRequiredModals/WhyRequiredPasswordModal';
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 

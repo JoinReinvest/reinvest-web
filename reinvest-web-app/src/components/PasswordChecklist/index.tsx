@@ -10,11 +10,11 @@ interface Props {
 const generateCheckListItem = (label: string, state: boolean) => <CheckItem isChecked={state}>{label}</CheckItem>;
 
 export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: Props) => {
-  const hasLowerCaseLetter = useMemo(() => password.toUpperCase() != password, [password]);
-  const hasUpperCaseLetter = useMemo(() => password.toLowerCase() != password, [password]);
-  const hasNumber = useMemo(() => /\d/.test(password), [password]);
-  const hasMinumumLength = useMemo(() => password.length >= 8, [password]);
-  const passwordsMatch = useMemo(() => !!password.length && password === passwordConfirmation, [password, passwordConfirmation]);
+  const hasLowerCaseLetter = password.toUpperCase() != password;
+  const hasUpperCaseLetter = password.toLowerCase() != password;
+  const hasNumber = /\d/.test(password);
+  const hasMinumumLength = password.length >= 8;
+  const passwordsMatch = password.length > 0 && password === passwordConfirmation;
 
   const checks = useMemo<[string, boolean][]>(
     () => [

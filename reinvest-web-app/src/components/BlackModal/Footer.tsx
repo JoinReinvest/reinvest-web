@@ -1,8 +1,8 @@
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { PrivacyPolicyBlackModal } from 'components/PrivacyPolicyBlackModal';
-import { TermsAndConditioncBlackModal } from 'components/TermsAndConditioncBlackModal';
 import { Typography } from 'components/Typography';
 import { useState } from 'react';
+import { PrivacyPolicyBlackModal } from 'views/PrivacyPolicyBlackModal';
+import { TermsAndConditioncBlackModal } from 'views/TermsAndConditioncBlackModal';
 
 export const Footer = () => {
   const [isTermsAndConditionsOpen, setIsTermsAndConditionsOpen] = useState(false);

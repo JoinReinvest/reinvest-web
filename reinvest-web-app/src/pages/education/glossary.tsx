@@ -1,15 +1,16 @@
 import { env } from 'env';
-import { MainLayout } from 'layouts/MainLayout';
+
+import { FullWidthContentLayout } from '../../layouts/FullWidthContentLayout';
 
 const Glossary = () => {
   return (
-    <MainLayout>
+    <FullWidthContentLayout>
       <iframe
         src={`${env.site.url}/glossary?iframe=true`}
         className="h-screen w-full"
         title="Glossary page"
       />
-    </MainLayout>
+    </FullWidthContentLayout>
   );
 };
 

@@ -1,17 +1,17 @@
 import { NextPage } from 'next';
 
 import { env } from '../../env';
-import { MainLayout } from '../../layouts/MainLayout';
+import { FullWidthContentLayout } from '../../layouts/FullWidthContentLayout';
 
 const Calculator: NextPage = () => {
   return (
-    <MainLayout>
+    <FullWidthContentLayout>
       <iframe
         src={`${env.site.url}/calculator?iframe=true`}
         className="h-screen w-full"
         title="Calculator page"
       />
-    </MainLayout>
+    </FullWidthContentLayout>
   );
 };
 

@@ -1,7 +1,7 @@
 import '../styles/global.scss';
 
 import { Amplify } from '@aws-amplify/core';
-import { Hydrate, QueryClientProvider } from '@tanstack/react-query';
+import { QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
@@ -54,10 +54,8 @@ const App = ({ Component, pageProps }: AppProps) => {
       </Head>
       <AuthProvider isProtectedPage={pageProps.protected}>
         <QueryClientProvider client={queryClient}>
-          <Hydrate state={pageProps.dehydratedState}>
-            <Component {...pageProps} />
-            {!env.isProduction && <ReactQueryDevtools initialIsOpen={false} />}
-          </Hydrate>
+          <Component {...pageProps} />
+          {!env.isProduction && <ReactQueryDevtools initialIsOpen={false} />}
         </QueryClientProvider>
       </AuthProvider>
     </>
