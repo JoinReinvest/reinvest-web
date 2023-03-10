@@ -2,7 +2,7 @@ export interface OnboardingFormFields {
   accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
   _didDocumentIdentificationValidationSucceed?: boolean;
-  // Are we displaying this as an URL or a file upload?
+
   address?: {
     city?: string;
     state?: string;
@@ -42,6 +42,7 @@ export interface OnboardingFormFields {
     back: File | null;
     front: File | null;
   };
+
   lastName?: string;
   middleName?: string;
 
@@ -51,7 +52,7 @@ export interface OnboardingFormFields {
 
   phoneNumber?: string;
 
-  profilePicture?: string;
+  profilePicture?: File | null;
   // If `household.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
 
