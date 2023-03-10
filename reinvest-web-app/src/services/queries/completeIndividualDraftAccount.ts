@@ -3,24 +3,35 @@ import { gql } from 'graphql-request';
 import { getApiClient } from 'services/getApiClient';
 import { Mutation } from 'types/graphql';
 
+import { AvatarFragment } from './fragments/avatar';
 import { EmployerFragment } from './fragments/employer';
 import { NetRangeFragment } from './fragments/netRange';
 
 const completeIndividualDraftAccountMutation = gql`
   ${EmployerFragment}
   ${NetRangeFragment}
+  ${AvatarFragment}
   mutation completeIndividualDraftAccount($accountId: ID, $input: IndividualAccountInput) {
     completeIndividualDraftAccount(accountId: $accountId, input: $input) {
       id
-      employmentStatus
-      employer {
-        ...EmployerFragment
+      state
+      avatar {
+        ...AvatarFragment
       }
-      netWorth {
-        ...NetRangeFragment
-      }
-      netIncome {
-        ...NetRangeFragment
+      isCompleted
+      details {
+        employer {
+          ...EmployerFragment
+        }
+        netWorth {
+          ...NetRangeFragment
+        }
+        netIncome {
+          ...NetRangeFragment
+        }
+        employmentStatus {
+          status
+        }
       }
     }
   }
