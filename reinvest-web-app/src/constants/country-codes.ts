@@ -1,6 +1,6 @@
 interface CountryWithCallingCode {
-  callingCode: string;
-  country: string;
+  readonly callingCode: string;
+  readonly country: string;
 }
 
 const sortCountriesByCallingCode = (currentCountry: CountryWithCallingCode, nextCountry: CountryWithCallingCode) => {
@@ -10,13 +10,13 @@ const sortCountriesByCallingCode = (currentCountry: CountryWithCallingCode, next
   return currentCountryCallingCode - nextCountryCallingCode;
 };
 
-const filterCountriesWithUniqueCallingCodes = (country: CountryWithCallingCode, index: number, countries: CountryWithCallingCode[]) => {
+const filterCountriesWithUniqueCallingCodes = (country: CountryWithCallingCode, index: number, countries: typeof COUNTRIES_WITH_CALLING_CODES) => {
   const indexInCountries = countries.findIndex(({ callingCode }) => callingCode === country.callingCode);
 
   return indexInCountries === index;
 };
 
-export const COUNTRIES_WITH_CALLING_CODES: CountryWithCallingCode[] = [
+export const COUNTRIES_WITH_CALLING_CODES = [
   {
     country: 'AG',
     callingCode: '1',
@@ -997,7 +997,16 @@ export const COUNTRIES_WITH_CALLING_CODES: CountryWithCallingCode[] = [
     country: 'UZ',
     callingCode: '998',
   },
+] as const;
+
+type CallingCode = (typeof COUNTRIES_WITH_CALLING_CODES)[number]['callingCode'];
+
+export const CALLING_CODES: [CallingCode, ...CallingCode[]] = [
+  COUNTRIES_WITH_CALLING_CODES[0].callingCode,
+  ...COUNTRIES_WITH_CALLING_CODES.slice(1).map(({ callingCode }) => callingCode),
 ];
 
-export const UNIQUE_COUNTRIES_CALLING_CODES = COUNTRIES_WITH_CALLING_CODES.filter(filterCountriesWithUniqueCallingCodes);
+export const UNIQUE_COUNTRIES_CALLING_CODES = COUNTRIES_WITH_CALLING_CODES.filter((country, index) =>
+  filterCountriesWithUniqueCallingCodes(country, index, COUNTRIES_WITH_CALLING_CODES),
+);
 export const SORTED_COUNTRIES_CALLING_CODES = UNIQUE_COUNTRIES_CALLING_CODES.sort(sortCountriesByCallingCode);
