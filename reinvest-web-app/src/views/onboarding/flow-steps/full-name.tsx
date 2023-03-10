@@ -7,7 +7,7 @@ import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { useUpdateDataIndividualOnboarding } from 'services/useSendData';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -33,7 +33,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { data, error, isLoading, updateData } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
+    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
@@ -43,14 +43,10 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (data) {
-        console.log('data exist', data);
+      if (isSuccess) {
+        moveToNextStep();
       }
-
-      if (!data) {
-        console.log('data not exist', data);
-      }
-    }, [data]);
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>

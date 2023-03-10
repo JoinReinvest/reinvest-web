@@ -7,6 +7,7 @@ import { Title } from 'components/Title';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
 import { WhyRequiredAccountTypeModal } from '../../../components/WhyRequiredModals/WhyRequiredAccountTypeModal';
@@ -26,11 +27,13 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { handleSubmit, formState, control } = useForm<Fields>({
+    const { handleSubmit, formState, control, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
+
+    const { data, error, isLoading, updateData } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
@@ -65,6 +68,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
             type="submit"
             disabled={shouldButtonBeDisabled}
             label="Continue"
+            loading={isLoading}
           />
         </Form>
 
