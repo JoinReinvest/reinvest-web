@@ -20,7 +20,11 @@ export const formValidationRules = {
   employerName: standardRequiredString,
   occupation: standardRequiredString,
   industry: standardRequiredString,
+  birthCountry: standardRequiredString,
+  citizenshipCountry: standardRequiredString,
+  visaType: standardRequiredString,
   middleName: zod.string().optional(),
   referralCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid referral code' }),
+  phoneNumber: zod.string().regex(/^\d{10}$/, { message: 'Invalid phone number' }),
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
 };

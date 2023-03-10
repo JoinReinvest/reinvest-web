@@ -7,6 +7,7 @@ export const Header = () => (
     <DialogClose>
       <IconArrowLeft className="stroke-white" />
     </DialogClose>
+
     <Logo className="fill-white" />
   </header>
 );
