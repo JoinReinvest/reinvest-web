@@ -22,25 +22,36 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
   Component: ({ storeFields }: StepComponentProps<OnboardingFormFields>) => {
     const { _isSocialSecurityNumberAlreadyAssigned, _isSocialSecurityNumberBanned } = storeFields;
 
-    const title = _isSocialSecurityNumberAlreadyAssigned
-      ? 'Your credentials are associated with an active REINVEST account'
-      : _isSocialSecurityNumberBanned
-      ? 'You are unable to create a REINVEST profile at this time.'
-      : '';
+    const getTitle = () => {
+      if (_isSocialSecurityNumberAlreadyAssigned) {
+        return 'Your credentials are associated with an active REINVEST account';
+      }
 
-    const issueDescription = _isSocialSecurityNumberAlreadyAssigned
-      ? 'Please login to your active account. If you believe this an error, '
-      : _isSocialSecurityNumberBanned
-      ? 'Please reach out to '
-      : '';
+      if (_isSocialSecurityNumberBanned) {
+        return 'You are unable to create a REINVEST profile at this time.';
+      }
+
+      return '';
+    };
+
+    const getValidationDescription = () => {
+      if (_isSocialSecurityNumberAlreadyAssigned) {
+        return 'Please login to your active account. If you believe this an error, ';
+      }
+
+      if (_isSocialSecurityNumberBanned) {
+        return 'Please reach out to ';
+      }
+      return '';
+    };
 
     return (
       <div>
-        <Title title={title} />
+        <Title title={getTitle()} />
 
         <div className="text-center">
           <Typography variant="paragraph-large">
-            {issueDescription}
+            {getValidationDescription()}
             <GetHelpLink label={EMAILS.support} />
           </Typography>
 
