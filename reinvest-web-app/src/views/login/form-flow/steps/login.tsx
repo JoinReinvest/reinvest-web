@@ -1,6 +1,7 @@
 import { CognitoUser } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
@@ -8,13 +9,12 @@ import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
 import { formValidationRules } from 'formValidationRules';
 import { useRouter } from 'next/router';
+import { ChallengeName, useAuth } from 'providers/AuthProvider';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { FormMessage } from '../../../components/FormElements/FormMessage';
-import { ChallengeName, useAuth } from '../../../providers/AuthProvider';
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 

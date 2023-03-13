@@ -5,6 +5,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useAuth } from 'providers/AuthProvider';
@@ -13,7 +14,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { OpenModalLink } from '../../../components/Links/OpenModalLink';
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
