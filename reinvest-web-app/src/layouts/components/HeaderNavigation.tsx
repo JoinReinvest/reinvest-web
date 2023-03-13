@@ -1,8 +1,8 @@
 import cx from 'classnames';
 import { LinkProps } from 'next/link';
 
-import { IconArrowRight } from '../../../assets/icons/IconArrowRight';
-import { Link } from '../../../components/Link';
+import { IconArrowRight } from '../../assets/icons/IconArrowRight';
+import { Link } from '../../components/Link';
 
 interface NavigationItem {
   href: LinkProps['href'];

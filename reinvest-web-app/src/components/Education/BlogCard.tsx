@@ -1,16 +1,25 @@
 import Image from 'next/image';
 
-import { BlogPostInterface, generateBlogPostUrl } from '../../services/blogPostsService';
 import { Link } from '../Link';
 import { Typography } from '../Typography';
 
-export const BlogCard = ({ slug, title, data, image }: BlogPostInterface) => {
-  const blogPostUrl = generateBlogPostUrl(slug);
+export interface BlogPostInterface {
+  data: string;
+  slug: string;
+  title: string;
+  image?: {
+    alt: string;
+    height: number;
+    src: string;
+    width: number;
+  };
+}
 
+export const BlogCard = ({ slug, title, data, image }: BlogPostInterface) => {
   return (
     <Link
       title={title}
-      href={blogPostUrl}
+      href={`/education/blog/${slug}`}
       className="text-link font-stretch-expanded"
     >
       {image && (

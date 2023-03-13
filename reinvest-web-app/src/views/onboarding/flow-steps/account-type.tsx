@@ -9,8 +9,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
-import { WhyRequiredAccountTypeModal } from '../../../components/WhyRequiredModals/WhyRequiredAccountTypeModal';
 import { ACCOUNT_TYPES } from '../../../constants/account-types';
+import { WhyRequiredAccountTypeModal } from '../../whyRequiredModals/WhyRequiredAccountTypeModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 

@@ -1,19 +1,15 @@
 import { IconChart } from 'assets/icons/Education/IconChart';
 import { IconHome } from 'assets/icons/Education/IconHome';
 import hero from 'assets/images/education-hero.png';
-import { BlogCard } from 'components/Education/BlogCard';
+import { BlogCard, BlogPostInterface } from 'components/Education/BlogCard';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
-import { Suspense } from 'react';
+import useSWR from 'swr';
 
 import { URL } from '../../constants/urls';
 import { MainLayout } from '../../layouts/MainLayout';
-import { BlogPostInterface, getLatestBlogPosts } from '../../services/blogPostsService';
-
-interface EducationPageProps {
-  posts: BlogPostInterface[];
-}
+import { fetcher } from '../../services/fetcher';
 
 const educationCards: EducationCardProps[] = [
   {
@@ -40,15 +36,15 @@ const renderCard = (card: EducationCardProps) => (
 );
 
 const renderBlogCard = (card: BlogPostInterface) => (
-  <Suspense fallback={<div>Loading ...</div>}>
-    <BlogCard
-      key={card.title}
-      {...card}
-    />
-  </Suspense>
+  <BlogCard
+    key={card.title}
+    {...card}
+  />
 );
 
-const EducationPage = ({ posts }: EducationPageProps) => {
+const EducationPage = () => {
+  const { data, isLoading } = useSWR<BlogPostInterface[]>(`/api/posts`, fetcher);
+
   return (
     <MainLayout>
       <div className="relative flex min-h-180 w-full text-white">
@@ -79,17 +75,24 @@ const EducationPage = ({ posts }: EducationPageProps) => {
         >
           Learn the basics
         </Typography>
-        <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>
+        {isLoading && (
+          <Typography
+            variant="h6"
+            className="text-center"
+          >
+            Loading...
+          </Typography>
+        )}
+        {data && !isLoading && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{data.map(renderBlogCard)}</div>}
       </section>
     </MainLayout>
   );
 };
 
-export async function getStaticProps() {
+export function getStaticProps() {
   return {
     props: {
       protected: true,
-      posts: await getLatestBlogPosts(),
     },
   };
 }

@@ -13,7 +13,7 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { OpenModalLink } from '../../../components/Links/OpenModalLink';
-import { WhyRequiredPasswordModal } from '../../../components/WhyRequiredModals/WhyRequiredPasswordModal';
+import { WhyRequiredPasswordModal } from '../../whyRequiredModals/WhyRequiredPasswordModal';
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -29,10 +29,12 @@ export const StepPassword: StepParams<RegisterFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [error, setError] = useState<string | undefined>('');
     const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
-    const schema: Schema<Fields> = zod.object({
-      password: formValidationRules.password,
-      passwordConfirmation: formValidationRules.confirm_password,
-    });
+    const schema: Schema<Fields> = zod
+      .object({
+        password: formValidationRules.password,
+        passwordConfirmation: formValidationRules.confirm_password,
+      })
+      .refine(data => data.password === data.passwordConfirmation, { message: 'Passwords do not match', path: ['passwordConfirmation'] });
 
     const { handleSubmit, control, watch, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
 
