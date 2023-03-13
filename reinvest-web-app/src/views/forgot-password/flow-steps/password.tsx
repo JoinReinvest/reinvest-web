@@ -13,7 +13,7 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'service
 import zod, { Schema } from 'zod';
 
 import { OpenModalLink } from '../../../components/Links/OpenModalLink';
-import { WhyRequiredPasswordModal } from '../../../components/WhyRequiredModals/WhyRequiredPasswordModal';
+import { WhyRequiredPasswordModal } from '../../whyRequiredModals/WhyRequiredPasswordModal';
 import { ForgotPasswordFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -31,10 +31,12 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
-    const schema: Schema<Fields> = zod.object({
-      password: formValidationRules.password,
-      passwordConfirmation: formValidationRules.confirm_password,
-    });
+    const schema: Schema<Fields> = zod
+      .object({
+        password: formValidationRules.password,
+        passwordConfirmation: formValidationRules.confirm_password,
+      })
+      .refine(data => data.password === data.passwordConfirmation, { message: 'Passwords do not match', path: ['passwordConfirmation'] });
     const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
@@ -99,7 +101,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
 
         <Button
           type="submit"
-          label="Sign Up"
+          label="Change password"
           disabled={shouldButtonBeDisabled}
           loading={isLoading}
         />

@@ -11,7 +11,7 @@ import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
 import { OpenModalLink } from '../../../components/Links/OpenModalLink';
-import { WhyRequiredNetWorthModal } from '../../../components/WhyRequiredModals/WhyRequiredNetWorthModal';
+import { WhyRequiredNetWorthModal } from '../../whyRequiredModals/WhyRequiredNetWorthModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -72,6 +72,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
 
         <OpenModalLink
           label="Required. Why?"
+          green
           onClick={openWhyReqiredOnClick}
         />
 

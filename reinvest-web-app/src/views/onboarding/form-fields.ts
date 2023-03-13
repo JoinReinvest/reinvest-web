@@ -12,6 +12,9 @@ export interface OnboardingFormFields {
     middleName?: string;
   };
   residency: 'us' | 'green-card' | 'visa' | undefined;
+  _isSocialSecurityNumberAlreadyAssigned?: boolean;
+
+  _isSocialSecurityNumberBanned?: boolean;
   // Are we displaying this as an URL or a file upload?
   address?: {
     city?: string;
@@ -24,6 +27,7 @@ export interface OnboardingFormFields {
   birthCountry?: string;
   // These fields are only required if residency is 'green-card' or 'visa'
   citizenshipCountry?: string;
+
   dateOfBirth?: Date;
   documentForVerification?: string;
 
