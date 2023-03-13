@@ -22,7 +22,7 @@ const ArticlePage = ({ slug }: ArticlePageProps) => {
 };
 
 export async function getStaticPaths() {
-  const data = await fetcher(`${env.appUrl}/api/posts`);
+  const data = await fetcher(`${env.site.url}/api/posts`);
 
   const paths = data ? data.data.map((article: BlogPostInterface) => ({ params: { slug: article.slug } })) : [];
 

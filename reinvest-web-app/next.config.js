@@ -28,7 +28,6 @@ module.exports = withVideos(
       AWS_COGNITO_CLIENT_ID: process.env.AWS_COGNITO_CLIENT_ID,
       AWS_COGNITO_REGION: process.env.AWS_COGNITO_REGION,
       API_URL: process.env.API_URL,
-      APP_URL: process.env.APP_URL,
     },
   }),
 );

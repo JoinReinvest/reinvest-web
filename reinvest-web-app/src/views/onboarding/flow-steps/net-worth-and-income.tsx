@@ -72,6 +72,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
 
         <OpenModalLink
           label="Required. Why?"
+          green
           onClick={openWhyReqiredOnClick}
         />
 
