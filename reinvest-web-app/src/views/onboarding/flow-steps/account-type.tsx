@@ -4,20 +4,20 @@ import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
+import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
-import { ACCOUNT_TYPES } from '../../../constants/account-types';
-import { WhyRequiredAccountTypeModal } from '../../whyRequiredModals/WhyRequiredAccountTypeModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'accountType'>;
 
 const schema = z.object({
-  accountType: z.enum(['individual', 'corporation', 'trust']),
+  accountType: z.enum(ACCOUNT_TYPES_VALUES),
 });
 
 export const StepAccountType: StepParams<OnboardingFormFields> = {
@@ -51,7 +51,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           <SelectionCards
             name="accountType"
             control={control}
-            options={ACCOUNT_TYPES}
+            options={ACCOUNT_TYPES_AS_OPTIONS}
             className="mb-30 flex flex-col items-stretch justify-center gap-24"
             orientation="vertical"
           />
