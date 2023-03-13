@@ -6,7 +6,7 @@ import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSe
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
-import { WhyRequiredSocialSecurityNumberModal } from 'components/WhyRequiredModals/WhyRequiredSocialSecurityNumber';
+import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';

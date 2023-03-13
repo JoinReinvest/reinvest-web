@@ -5,7 +5,7 @@ import { Avatar } from 'components/Avatar';
 import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
 
-import { useGetUserProfile } from '../../../services/queries/getProfile';
+import { useGetUserProfile } from '../../services/queries/getProfile';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderNavigation } from './HeaderNavigation';
 
@@ -17,6 +17,10 @@ const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
   {
     label: 'Education page',
     href: URL.education,
+  },
+  {
+    label: 'Logout',
+    href: URL.logout,
   },
 ];
 
