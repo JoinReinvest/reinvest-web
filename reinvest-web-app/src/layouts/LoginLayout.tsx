@@ -7,7 +7,7 @@ export interface LoginLayoutProps {
 
 export const LoginLayout = ({ children }: LoginLayoutProps) => {
   return (
-    <div className="flex h-screen flex-col items-center justify-around gap-40 text-center text-white lg:justify-center lg:gap-84">
+    <div className="from-black flex h-screen flex-col items-center justify-around gap-40 bg-gradient-to-b to-white/50 text-center text-white lg:justify-center lg:gap-84">
       <video
         autoPlay
         loop
