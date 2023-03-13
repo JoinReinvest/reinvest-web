@@ -4,11 +4,11 @@ import { Form } from 'components/FormElements/Form';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
