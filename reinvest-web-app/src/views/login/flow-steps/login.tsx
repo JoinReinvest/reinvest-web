@@ -60,7 +60,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="login-form z-30 flex w-full max-w-330 flex-col items-start justify-center gap-16 md:items-center"
+        className="login-form z-30 flex w-full max-w-330 flex-col items-start justify-center gap-16 lg:items-center"
       >
         <Typography variant="h2">Sign in</Typography>
         <Typography
