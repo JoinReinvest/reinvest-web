@@ -49,6 +49,7 @@ module.exports = {
       96: '9.6rem',
       100: '10.0rem',
       120: '12.0rem',
+      144: '14.4rem',
       180: '18.0rem',
       210: '21.0rem',
     },
@@ -65,9 +66,9 @@ module.exports = {
       ],
 
       h2: [
-        '3.6rem',
+        '5.4rem',
         {
-          lineHeight: '1.1em',
+          lineHeight: '0.9em',
           letterSpacing: '-0.05em',
           fontWeight: '400',
         },
@@ -108,9 +109,10 @@ module.exports = {
       ],
 
       'bonus-heading': [
-        '1.4rem',
+        '1.5rem',
         {
           fontWeight: '400',
+          lineHeight: '1.9rem',
         },
       ],
 
@@ -195,15 +197,16 @@ module.exports = {
       minHeight: {
         180: '18rem',
       },
+      lineHeight: {
+        13: '1.3rem',
+      },
       transitionProperty: {
         'height-width': 'height, width',
         'transform-color': 'transform, color',
       },
-
       animation: {
         spinner: 'fade-out 0.8s linear infinite',
       },
-
       keyframes: {
         'fade-in': {
           '0%': {
@@ -275,9 +278,9 @@ module.exports = {
 
       addUtilities({
         '.translate-z-0': {
-          'transform': 'translateZ(0)',
-        }
-      })
+          transform: 'translateZ(0)',
+        },
+      });
     }),
   ],
 };

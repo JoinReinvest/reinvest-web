@@ -1,19 +1,19 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
 
-import { BlackModalDialog } from './BlackModal/BlackModalDialog';
-import { Title } from './Title';
-import { Typography } from './Typography';
+import { BlackModalDialog } from '../components/BlackModal/BlackModalDialog';
+import { Title } from '../components/Title';
+import { Typography } from '../components/Typography';
 
-type TermsAndConditioncBlackModalProps = Omit<DialogProps, 'children'>;
+type PrivacyPolicyBlackModalProps = Omit<DialogProps, 'children'>;
 
-export const TermsAndConditioncBlackModal = ({ isOpen, onOpenChange }: TermsAndConditioncBlackModalProps) => {
+export const PrivacyPolicyBlackModal = ({ isOpen, onOpenChange }: PrivacyPolicyBlackModalProps) => {
   return (
     <BlackModalDialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
       <>
-        <Title title="Terms and Conditions" />
+        <Title title="Privacy Policy" />
         <Typography variant="paragraph-large">
           As a condition to exercising the rights to the Licensed Program. The Recipient may select either this Agreement and does not already Covered Code as
           defined in the absence of any other entity based on the Program, and can be in a reasonable attempt to trace the Current Maintainer under Clause 2

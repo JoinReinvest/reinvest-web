@@ -57,7 +57,7 @@
   &[data-is-dirty="true"] {
     .hkek-input-text-control-placeholder,
     .hkek-input-masked-control-placeholder {
-      @apply -z-10 text-base -translate-y-6 top-10;
+      @apply -z-10 text-base -translate-y-6 top-10 leading-13;
     }
   }
 
