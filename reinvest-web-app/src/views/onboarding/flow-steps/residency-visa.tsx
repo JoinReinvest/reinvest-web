@@ -36,7 +36,8 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      moveToNextStep();
+      // moveToNextStep();
+      console.log('fields', fields);
     };
 
     return (

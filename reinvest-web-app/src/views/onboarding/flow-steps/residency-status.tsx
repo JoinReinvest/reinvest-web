@@ -4,8 +4,10 @@ import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
 import { RESIDENCY_STATUS } from '../../../constants/residenty-status';
@@ -28,12 +30,20 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
+    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
+
+    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      moveToNextStep();
+      updateData();
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>

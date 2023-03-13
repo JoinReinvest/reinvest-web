@@ -38,7 +38,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields({ ...fields, dateOfBirth: new Date('11/08/1971') });
+      updateStoreFields(fields);
       updateData();
     };
 
