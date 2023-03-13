@@ -42,6 +42,7 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
       if (_isSocialSecurityNumberBanned) {
         return 'Please reach out to ';
       }
+
       return '';
     };
 

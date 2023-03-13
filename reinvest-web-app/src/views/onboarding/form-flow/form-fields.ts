@@ -61,8 +61,3 @@ export interface OnboardingFormFields {
 
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
-
-export const DEFAULT_VALUES: OnboardingFormFields = {
-  accountType: '',
-  residency: undefined,
-};

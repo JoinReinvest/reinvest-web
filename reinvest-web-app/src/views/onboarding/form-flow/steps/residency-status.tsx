@@ -1,24 +1,25 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { WarningMessage } from 'components/BlackModal/WarningMessage';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
-import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
+import { RESIDENCY_STATUS } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
-import { EMPLOYMENT_STATUSES } from '../../../constants/employment_statuses';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'employmentStatus'>;
+type Fields = Pick<OnboardingFormFields, 'residency'>;
 
 const schema = z.object({
-  employmentStatus: z.enum(['employed', 'unemployed', 'retired', 'student']),
+  residency: z.enum(['us', 'green-card', 'visa']),
 });
 
-export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.EMPLOYMENT_STATUS,
+export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.RESIDENCY_STATUS,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const form = useForm<Fields>({
@@ -34,34 +35,24 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
-    const onSkip = () => {
-      updateStoreFields({ employmentStatus: undefined });
-      moveToNextStep();
-    };
-
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Title title="Are you currently employed?" />
+        <Title
+          title="Residency Status"
+          subtitle="Please select your US residency status."
+        />
+        <WarningMessage message="REINVEST does not accept non-US residents at this time." />
 
-        <SelectionCards
-          name="employmentStatus"
+        <RadioGroupOptions
+          name="residency"
           control={form.control}
-          options={EMPLOYMENT_STATUSES}
-          required={false}
-          orientation="vertical"
-          className="flex flex-col items-stretch gap-22"
+          options={RESIDENCY_STATUS}
         />
 
         <Button
           type="submit"
           label="Continue"
           disabled={shouldButtonBeDisabled}
-        />
-
-        <Button
-          label="Skip"
-          variant="outlined"
-          onClick={onSkip}
         />
       </Form>
     );

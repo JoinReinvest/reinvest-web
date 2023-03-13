@@ -1,30 +1,29 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
-import { Input } from 'components/FormElements/Input';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
-import { INDUESTRIES_AS_OPTIONS } from 'constants/industries';
+import { NET_WORTHS_AS_OPTIONS } from 'constants/net-worths';
+import { formValidationRules } from 'formValidationRules';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { WhyRequiredNetWorthModal } from 'views/whyRequiredModals/WhyRequiredNetWorthModal';
 import { z } from 'zod';
 
-import { formValidationRules } from '../../../formValidationRules';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'employmentDetails'>;
+type Fields = Pick<OnboardingFormFields, 'netIncome' | 'netWorth'>;
 
 const schema = z.object({
-  employmentDetails: z.object({
-    employerName: formValidationRules.employerName,
-    occupation: formValidationRules.occupation,
-    industry: formValidationRules.industry,
-  }),
+  netIncome: formValidationRules.netIncome,
+  netWorth: formValidationRules.netWorth,
 });
 
-export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.EMPLOYMENT_DETAILS,
+export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.NET_WORTH_AND_INCOME,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -33,6 +32,8 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
+    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
+
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
@@ -40,47 +41,45 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
-    const onSkip = () => {
-      updateStoreFields({ employmentStatus: undefined });
-      moveToNextStep();
-    };
+    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Are you currently employed?" />
+        <Title title="What is approximate net worth and income?" />
 
-        <Input
-          name="employmentDetails.employerName"
-          control={control}
-          placeholder="Name of Employer"
-          required
-        />
+        {isWhyRequiredOpen && (
+          <WhyRequiredNetWorthModal
+            isOpen={isWhyRequiredOpen}
+            onOpenChange={openWhyReqiredOnClick}
+          />
+        )}
 
-        <Input
-          name="employmentDetails.occupation"
+        <Select
+          name="netIncome"
           control={control}
-          placeholder="Title"
+          options={NET_WORTHS_AS_OPTIONS}
+          placeholder="Net Income"
           required
         />
 
         <Select
-          name="employmentDetails.industry"
+          name="netWorth"
           control={control}
-          options={INDUESTRIES_AS_OPTIONS}
-          placeholder="Industry"
+          options={NET_WORTHS_AS_OPTIONS}
+          placeholder="Net Worth"
           required
+        />
+
+        <OpenModalLink
+          label="Required. Why?"
+          green
+          onClick={openWhyReqiredOnClick}
         />
 
         <Button
           type="submit"
           label="Continue"
           disabled={shouldButtonBeDisabled}
-        />
-
-        <Button
-          label="Skip"
-          variant="outlined"
-          onClick={onSkip}
         />
       </Form>
     );
