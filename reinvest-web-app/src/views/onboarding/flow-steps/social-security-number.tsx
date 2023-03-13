@@ -56,45 +56,47 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       }
     };
 
+    if (isLoading) {
+      return (
+        <div className="flex flex-col items-center gap-32">
+          <IconSpinner />
+
+          <Title title="Validating yout Social Security Number" />
+        </div>
+      );
+    }
+
     return (
       <>
-        {!isLoading ? (
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <Title title="What’s your social security number?" />
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Title title="What’s your social security number?" />
 
-            <InputSocialSecurityNumber
-              name="socialSecurityNumber"
-              control={control}
-            />
+          <InputSocialSecurityNumber
+            name="socialSecurityNumber"
+            control={control}
+          />
 
-            <OpenModalLink
-              label="Required. Why?"
-              onClick={onMoreInformationClick}
-              green
-            />
+          <OpenModalLink
+            label="Required. Why?"
+            onClick={onMoreInformationClick}
+            green
+          />
 
-            <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
+          <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
 
-            <Typography
-              variant="paragraph"
-              className="text-gray-02"
-            >
-              We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
-            </Typography>
+          <Typography
+            variant="paragraph"
+            className="text-gray-02"
+          >
+            We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
+          </Typography>
 
-            <Button
-              type="submit"
-              label="Continue"
-              disabled={shouldButtonBeDisabled}
-            />
-          </Form>
-        ) : (
-          <div className="flex flex-col items-center gap-32">
-            <IconSpinner />
-
-            <Title title="Validating yout Social Security Number" />
-          </div>
-        )}
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </Form>
 
         <WhyRequiredSocialSecurityNumberModal
           isOpen={isInformationModalOpen}
