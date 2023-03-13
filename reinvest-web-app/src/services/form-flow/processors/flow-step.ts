@@ -1,6 +1,6 @@
 import { FC } from 'react';
 
-import { FlowStepParams, StepComponentProps } from './interfaces';
+import { FlowStepParams, StepComponentProps } from '../interfaces';
 
 export class FlowStep<FormFields> {
   public index: number;

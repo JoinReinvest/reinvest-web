@@ -2,10 +2,10 @@ import { useRef } from 'react';
 
 import { ContextProviderProps } from '../interfaces';
 
-type Params<FormFields> = Pick<ContextProviderProps<FormFields>, 'formFieldsInitialState' | 'onFormFieldsUpdate'>;
+type Params<FormFields> = Pick<ContextProviderProps<FormFields>, 'initialStoreFields' | 'onStoreUpdate'>;
 
-export const useFields = <FormFields>({ formFieldsInitialState, onFormFieldsUpdate }: Params<FormFields>) => {
-  const fields = useRef<FormFields>(formFieldsInitialState);
+export const useFields = <FormFields>({ initialStoreFields, onStoreUpdate }: Params<FormFields>) => {
+  const fields = useRef<FormFields>(initialStoreFields);
 
   const getFields = () => fields.current;
 
@@ -15,8 +15,8 @@ export const useFields = <FormFields>({ formFieldsInitialState, onFormFieldsUpda
 
     fields.current = updatedFields;
 
-    if (onFormFieldsUpdate) {
-      await onFormFieldsUpdate(updatedFields);
+    if (onStoreUpdate) {
+      await onStoreUpdate(updatedFields);
     }
   };
 

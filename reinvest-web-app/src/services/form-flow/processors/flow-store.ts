@@ -1,5 +1,5 @@
+import { Steps } from '../interfaces';
 import { FlowStep } from './flow-step';
-import { Steps } from './interfaces';
 
 export class FlowStore<FormFields> {
   /** The first step. */
