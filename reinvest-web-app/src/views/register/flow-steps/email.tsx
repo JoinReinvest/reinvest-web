@@ -56,6 +56,7 @@ export const StepEmail: StepParams<RegisterFormFields> = {
         <Link
           href={URL.login}
           title="Log in"
+          className="typo-link text-white"
         >
           Already have an account?
         </Link>
