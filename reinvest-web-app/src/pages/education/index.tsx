@@ -91,7 +91,7 @@ const EducationPage = () => {
             Loading...
           </Typography>
         )}
-        {data && !isLoading && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
+        {posts.length > 0 && !isLoading && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
       </section>
     </MainLayout>
   );
