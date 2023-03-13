@@ -1,8 +1,8 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
 
-import { BlackModalDialog } from '../BlackModal/BlackModalDialog';
-import { Title } from '../Title';
-import { Typography } from '../Typography';
+import { BlackModalDialog } from '../../components/BlackModal/BlackModalDialog';
+import { Title } from '../../components/Title';
+import { Typography } from '../../components/Typography';
 
 type WhyRequiredPasswordModalProps = Omit<DialogProps, 'children'>;
 

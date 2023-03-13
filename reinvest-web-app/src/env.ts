@@ -4,6 +4,7 @@ type envInterface = z.infer<typeof envSchema>;
 
 const envSchema = z.object({
   apiUrl: z.string().url(),
+  appUrl: z.string().url(),
   analyze: z.boolean().default(false),
   site: z.object({
     name: z.string(),
@@ -34,4 +35,5 @@ export const env: envInterface = envSchema.parse({
     },
   },
   apiUrl: process.env.API_URL,
+  appUrl: process.env.APP_URL,
 });

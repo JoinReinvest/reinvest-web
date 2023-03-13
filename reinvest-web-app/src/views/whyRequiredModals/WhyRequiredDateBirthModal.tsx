@@ -1,12 +1,12 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
 
-import { BlackModalDialog } from '../BlackModal/BlackModalDialog';
-import { Title } from '../Title';
-import { Typography } from '../Typography';
+import { BlackModalDialog } from 'components/BlackModal/BlackModalDialog';
+import { Title } from 'components/Title';
+import { Typography } from 'components/Typography';
 
-type WhyRequiredNetWorthModalProps = Omit<DialogProps, 'children'>;
+type WhyRequiredDateBirthModalProps = Omit<DialogProps, 'children'>;
 
-export const WhyRequiredNetWorthModal = ({ isOpen, onOpenChange }: WhyRequiredNetWorthModalProps) => {
+export const WhyRequiredDateBirthModal = ({ isOpen, onOpenChange }: WhyRequiredDateBirthModalProps) => {
   return (
     <BlackModalDialog
       isOpen={isOpen}

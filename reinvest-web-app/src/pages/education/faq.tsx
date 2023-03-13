@@ -1,17 +1,17 @@
 import { NextPage } from 'next';
 
 import { env } from '../../env';
-import { MainLayout } from '../../layouts/MainLayout';
+import { FullWidthContentLayout } from '../../layouts/FullWidthContentLayout';
 
 const Faq: NextPage = () => {
   return (
-    <MainLayout>
+    <FullWidthContentLayout>
       <iframe
         src={`${env.site.url}/faq?iframe=true`}
         className="h-screen w-full"
         title="FAQ page"
       />
-    </MainLayout>
+    </FullWidthContentLayout>
   );
 };
 

@@ -55,6 +55,7 @@ jobs:
           SITE_NAME: ${{ secrets.SITE_NAME }}
           REINVEST_SITE_URL: ${{ secrets.REINVEST_SITE_URL }}
           API_URL: ${{ secrets[format('{0}_API_URL', env.ENVIRONMENT)] }}
+          APP_URL: ${{ secrets[format('{0}_APP_URL', env.ENVIRONMENT)] }}
           ANALYZE: ${{ secrets.ANALYZE }}
         run: |
           environment=${{env.ENVIRONMENT}}
