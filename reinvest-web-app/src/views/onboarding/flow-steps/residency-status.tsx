@@ -4,28 +4,29 @@ import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Title } from 'components/Title';
+import { RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS, RESIDENCY_STATUS_VALUES } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
-import { RESIDENCY_STATUS } from '../../../constants/residenty-status';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'residency'>;
 
 const schema = z.object({
-  residency: z.enum(['us', 'green-card', 'visa']),
+  residency: z.enum(RESIDENCY_STATUS_VALUES),
 });
 
 export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_STATUS,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { residency: storeFields.residency };
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues,
     });
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
@@ -46,7 +47,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
         <RadioGroupOptions
           name="residency"
           control={form.control}
-          options={RESIDENCY_STATUS}
+          options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
         />
 
         <Button
