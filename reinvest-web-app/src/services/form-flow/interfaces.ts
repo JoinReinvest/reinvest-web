@@ -7,7 +7,7 @@ export interface StepComponentProps<FormFields> {
   moveToPreviousStep: () => void;
   moveToStepByIdentifier: (identifier: string) => void;
   storeFields: FormFields;
-  updateStoreFields: (fields: Partial<FormFields>) => void;
+  updateStoreFields: (fields: Partial<FormFields>) => Promise<void>;
 }
 
 export interface FlowStepParams<FormFields> {

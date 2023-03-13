@@ -9,14 +9,14 @@ export const useFields = <FormFields>({ formFieldsInitialState, onFormFieldsUpda
 
   const getFields = () => fields.current;
 
-  const updateFields = (fieldsToUpdate: Partial<FormFields>) => {
+  const updateFields = async (fieldsToUpdate: Partial<FormFields>) => {
     const currentFields = getFields();
     const updatedFields = { ...currentFields, ...fieldsToUpdate };
 
     fields.current = updatedFields;
 
     if (onFormFieldsUpdate) {
-      onFormFieldsUpdate(updatedFields);
+      await onFormFieldsUpdate(updatedFields);
     }
   };
 
