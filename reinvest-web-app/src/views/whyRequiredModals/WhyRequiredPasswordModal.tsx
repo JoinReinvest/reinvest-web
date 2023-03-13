@@ -4,9 +4,9 @@ import { BlackModalDialog } from '../../components/BlackModal/BlackModalDialog';
 import { Title } from '../../components/Title';
 import { Typography } from '../../components/Typography';
 
-type WhyRequiredBlackModalDialogProps = Omit<DialogProps, 'children'>;
+type WhyRequiredPasswordModalProps = Omit<DialogProps, 'children'>;
 
-export const WhyRequiredPasswordModal = ({ isOpen, onOpenChange }: WhyRequiredBlackModalDialogProps) => {
+export const WhyRequiredPasswordModal = ({ isOpen, onOpenChange }: WhyRequiredPasswordModalProps) => {
   return (
     <BlackModalDialog
       isOpen={isOpen}

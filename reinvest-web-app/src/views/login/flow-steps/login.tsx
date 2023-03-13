@@ -87,6 +87,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
         <Link
           href={URL.forgot_password}
           title="Forgot Password"
+          className="typo-link text-white"
         >
           Forgot password?
         </Link>
@@ -94,6 +95,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
         <Link
           href={URL.register}
           title="Don't have an account?"
+          className="typo-link text-white"
         >
           Don’t have an account?
         </Link>
