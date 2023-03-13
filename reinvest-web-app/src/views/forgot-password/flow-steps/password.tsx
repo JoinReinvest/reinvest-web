@@ -101,7 +101,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
 
         <Button
           type="submit"
-          label="Sign Up"
+          label="Change password"
           disabled={shouldButtonBeDisabled}
           loading={isLoading}
         />
