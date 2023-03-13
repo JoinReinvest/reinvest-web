@@ -29,10 +29,12 @@ export const StepPassword: StepParams<RegisterFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [error, setError] = useState<string | undefined>('');
     const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
-    const schema: Schema<Fields> = zod.object({
-      password: formValidationRules.password,
-      passwordConfirmation: formValidationRules.confirm_password,
-    });
+    const schema: Schema<Fields> = zod
+      .object({
+        password: formValidationRules.password,
+        passwordConfirmation: formValidationRules.confirm_password,
+      })
+      .refine(data => data.password === data.passwordConfirmation, { message: 'Passwords do not match', path: ['passwordConfirmation'] });
 
     const { handleSubmit, control, watch, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
 
