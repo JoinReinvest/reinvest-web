@@ -11,3 +11,8 @@ export const URL = {
   calculator: '/education/calculator',
   index: '/education',
 };
+
+export const EMAILS = {
+  support: 'support@reinvestcommunity.com',
+  supportHref: 'mailto:support@reinvestcommunity.com',
+};
