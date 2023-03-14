@@ -1,6 +1,7 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
@@ -16,7 +17,6 @@ import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   identifier: Identifiers.PHONE_AUTHENTICATION,
@@ -64,28 +64,30 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
         />
 
-        {error && <FormMessage message={error} />}
+        <div className="flex w-full flex-col gap-32">
+          {error && <FormMessage message={error} />}
 
-        {infoMessage && (
-          <FormMessage
-            message={infoMessage}
-            variant="info"
+          {infoMessage && (
+            <FormMessage
+              message={infoMessage}
+              variant="info"
+            />
+          )}
+
+          <InputAuthenticationCode
+            name="authenticationCode"
+            control={control}
+            required
           />
-        )}
 
-        <InputAuthenticationCode
-          name="authenticationCode"
-          control={control}
-          required
-        />
-
-        <div className="flex justify-between">
-          <OpenModalLink
-            label="Resend code"
-            green
-            onClick={resendCodeOnClick}
-          />
-          <GetHelpLink />
+          <div className="flex justify-between">
+            <OpenModalLink
+              label="Resend code"
+              green
+              onClick={resendCodeOnClick}
+            />
+            <GetHelpLink />
+          </div>
         </div>
 
         <ButtonStack>

@@ -1,22 +1,20 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPassword } from 'components/FormElements/InputPassword';
-import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { WhyRequiredPasswordModal } from 'views/whyRequiredModals/WhyRequiredPasswordModal';
 import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 interface Fields extends Pick<RegisterFormFields, 'password'> {
   passwordConfirmation: string;
@@ -29,7 +27,6 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [error, setError] = useState<string | undefined>('');
-    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
     const schema: Schema<Fields> = zod
       .object({
         password: formValidationRules.password,
@@ -50,16 +47,16 @@ export const StepPassword: StepParams<RegisterFormFields> = {
       setError(undefined);
       updateStoreFields(fields);
       try {
-        await Auth.signUp({
-          username: storeFields.email,
-          password: fields.password,
-          attributes: {
-            'custom:incentive_token': storeFields.referralCode || '',
-          },
-          autoSignIn: {
-            enabled: true,
-          },
-        });
+        // await Auth.signUp({
+        //   username: storeFields.email,
+        //   password: fields.password,
+        //   attributes: {
+        //     'custom:incentive_token': storeFields.referralCode || '',
+        //   },
+        //   autoSignIn: {
+        //     enabled: true,
+        //   },
+        // });
 
         return moveToNextStep();
       } catch (err) {
@@ -79,46 +76,36 @@ export const StepPassword: StepParams<RegisterFormFields> = {
       }
     };
 
-    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
-
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form
+        onSubmit={handleSubmit(onSubmit)}
+        className="!gap-60"
+      >
         <Title
           title="Sign up to REINVEST"
           subtitle="Create a unique password for your account to continue."
         />
 
-        {isWhyRequiredOpen && (
-          <WhyRequiredPasswordModal
-            isOpen={isWhyRequiredOpen}
-            onOpenChange={openWhyReqiredOnClick}
-          />
-        )}
-
         {error && <FormMessage message={error} />}
 
-        <InputPassword
-          name="password"
-          control={control}
-          required
-        />
+        <div className="flex w-full flex-col gap-16 lg:gap-24">
+          <InputPassword
+            name="password"
+            control={control}
+            required
+          />
 
-        <InputPassword
-          name="passwordConfirmation"
-          control={control}
-          required
-        />
+          <InputPassword
+            name="passwordConfirmation"
+            control={control}
+            required
+          />
 
-        <OpenModalLink
-          label="Required. Why?"
-          green
-          onClick={openWhyReqiredOnClick}
-        />
-
-        <PasswordChecklist
-          password={fields.password}
-          passwordConfirmation={fields.passwordConfirmation}
-        />
+          <PasswordChecklist
+            password={fields.password}
+            passwordConfirmation={fields.passwordConfirmation}
+          />
+        </div>
 
         <ButtonStack>
           <Button

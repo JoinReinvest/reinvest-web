@@ -3,6 +3,7 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Title } from 'components/Title';
 import { useAuth } from 'providers/AuthProvider';
 import { useEffect, useMemo, useState } from 'react';
@@ -10,7 +11,6 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'service
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   identifier: Identifiers.FLOW_COMPLETION,
@@ -63,11 +63,13 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
 
     return (
       <div className="flex h-full flex-col gap-24 text-center md:justify-center">
-        {isLoading && !error && <IconSpinner />}
-        {!isLoading && !error && <CircleSuccess />}
-        {error && <IconXCircle />}
+        <div className="flex w-full flex-col items-center gap-32">
+          {isLoading && !error && <IconSpinner />}
+          {!isLoading && !error && <CircleSuccess />}
+          {error && <IconXCircle />}
 
-        <Title title={error || title} />
+          <Title title={error || title} />
+        </div>
 
         <ButtonStack>
           <Button

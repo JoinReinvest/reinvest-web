@@ -1,8 +1,8 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Title } from 'components/Title';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

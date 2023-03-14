@@ -17,7 +17,6 @@ import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 type Fields = Omit<LoginFormFields, 'authenticationCode'>;
 
@@ -63,12 +62,12 @@ export const StepLogin: StepParams<LoginFormFields> = {
         onSubmit={handleSubmit(onSubmit)}
         className="login-form z-30 flex w-full max-w-330 flex-col items-start justify-center gap-24 lg:items-center"
       >
-        <div className="w-full flex flex-col gap-16 items-start lg:items-center">
+        <div className="flex w-full flex-col items-start gap-16 lg:items-center">
           <Typography variant="h1">Sign in</Typography>
 
           <Typography
             variant="bonus-heading"
-            className="text-left lg:text-center lg:w-11/12"
+            className="text-left lg:w-11/12 lg:text-center"
           >
             Building your wealth while rebuilding our communities.
           </Typography>
@@ -76,7 +75,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
         {error && <FormMessage message={error} />}
 
-        <div className="w-full flex flex-col gap-12 items-start lg:items-center">
+        <div className="flex w-full flex-col items-start gap-12 lg:items-center">
           <InputEmail
             name="email"
             control={control}
@@ -106,14 +105,12 @@ export const StepLogin: StepParams<LoginFormFields> = {
           </Link>
         </div>
 
-        <ButtonStack>
-          <Button
-            type="submit"
-            label="Sign In"
-            disabled={shouldButtonBeDisabled}
-            loading={isValidatingCredentials || (!loading && !!user)}
-          />
-        </ButtonStack>
+        <Button
+          type="submit"
+          label="Sign In"
+          disabled={shouldButtonBeDisabled}
+          loading={isValidatingCredentials || (!loading && !!user)}
+        />
       </form>
     );
   },

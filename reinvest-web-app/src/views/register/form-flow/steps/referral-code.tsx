@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { InputReferralCode } from 'components/FormElements/InputReferralCode';
 import { Title } from 'components/Title';
@@ -8,7 +9,6 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

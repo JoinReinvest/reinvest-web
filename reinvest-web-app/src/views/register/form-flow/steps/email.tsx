@@ -44,17 +44,17 @@ export const StepEmail: StepParams<RegisterFormFields> = {
         onSubmit={handleSubmit(onSubmit)}
         className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-24"
       >
-        <div className="w-full flex flex-col gap-16 items-start lg:items-center">
+        <div className="flex w-full flex-col items-start gap-16 lg:items-center">
           <Typography variant="h1">Sign up</Typography>
           <Typography
             variant="paragraph-large"
-            className="text-left lg:text-center lg:w-11/12"
+            className="text-left lg:w-11/12 lg:text-center"
           >
             Enter your email below to get started.
           </Typography>
         </div>
 
-        <div className="w-full flex flex-col gap-16 items-start lg:items-center">
+        <div className="flex w-full flex-col items-start gap-16 lg:items-center">
           <InputEmail
             name="email"
             control={control}
