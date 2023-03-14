@@ -44,9 +44,8 @@ export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMega
     .refine(file => {
       const acceptedTypes = mapToMimeType(accepts);
       const fileType = file?.type;
-      const isFileTypeAccepted = acceptedTypes.includes(fileType);
 
-      return isFileTypeAccepted;
+      return acceptedTypes.includes(fileType);
     }, 'File type not supported');
 };
 
