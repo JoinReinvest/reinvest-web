@@ -1,20 +1,18 @@
 import { IconPencil } from 'assets/icons/IconPencil';
-import { ChangeEventHandler } from 'react';
+import { InputHTMLAttributes } from 'react';
 
-interface Props {
-  handleChange: ChangeEventHandler<HTMLInputElement>;
-  name: string;
-}
+type PrimitveProps = Pick<InputHTMLAttributes<HTMLInputElement>, 'name' | 'onChange' | 'accept'>;
+type Props = PrimitveProps;
 
-export const EditAvatarButton = ({ name, handleChange }: Props) => (
+export const EditAvatarButton = ({ name, onChange, accept }: Props) => (
   <>
     <input
       type="file"
       id={name}
       name={name}
       className="hidden"
-      accept="image/*"
-      onChange={handleChange}
+      accept={accept}
+      onChange={onChange}
     />
 
     <div className="grid h-32 w-32 place-items-center rounded-full bg-green-frost-01">
