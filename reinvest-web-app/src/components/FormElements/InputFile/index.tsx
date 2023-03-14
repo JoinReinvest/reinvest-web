@@ -1,37 +1,49 @@
 import { IconFileUpload } from 'assets/icons/IconFileUpload';
-import { BYTES_IN_MEGABYTE } from 'constants/conversions';
-import { ChangeEventHandler, useMemo, useState } from 'react';
+import { Typography } from 'components/Typography';
+import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
+import { generateFileSchema } from 'formValidationRules';
+import { ChangeEventHandler, useState } from 'react';
+import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
-import { Typography } from '../../Typography';
 import { FormMessage } from '../FormMessage';
 import { UploadedFile } from './UploadedFile';
 
-export interface InputFileProps {
+interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
   label: string;
-  name: string;
-  onChange: (file: File | null) => void;
   placeholder: string;
-  accepts?: string;
-  file?: File | null;
+  accepts?: PartialMimeTypeKeys;
   sizeLimitInByMegaBytes?: number;
 }
 
-export const InputFile = ({ label, name, placeholder, accepts = '*', file, onChange, sizeLimitInByMegaBytes = 5 }: InputFileProps) => {
-  const sizeLimitInBytes = useMemo(() => sizeLimitInByMegaBytes * BYTES_IN_MEGABYTE, [sizeLimitInByMegaBytes]);
+export function InputFile<FormFields extends FieldValues>({
+  label,
+  placeholder,
+  accepts = ['jpeg', 'jpg', 'pdf', 'png'],
+  sizeLimitInByMegaBytes = 5,
+  ...controllerProps
+}: Props<FormFields>) {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
-  const clearFiles = () => onChange(null);
-  const hasFile = !!file;
-  const hasError = !!errorMessage;
+  const { field } = useController(controllerProps);
+  const schema = generateFileSchema(accepts, sizeLimitInByMegaBytes);
+
+  const clearFile = () => field.onChange(null);
+  const hasFile = !!field.value;
+  const hasErrorMessage = !!errorMessage;
+
+  const acceptMimeTypes = mapToMimeType(accepts).join(',');
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
-    const newFile = target.files?.item(0);
-    const newFileSize = newFile?.size || 0;
+    const file = target.files?.item(0);
+    const validationSchema = schema.safeParse(file);
 
-    if (newFileSize <= sizeLimitInBytes) {
+    if (!validationSchema.success) {
+      const validationErrorMessage = validationSchema.error.message;
+      setErrorMessage(validationErrorMessage);
+    }
+
+    if (validationSchema.success) {
       setErrorMessage(undefined);
-      onChange(newFile || null);
-    } else {
-      setErrorMessage(`File must be smaller than ${sizeLimitInByMegaBytes}mb`);
+      field.onChange(file || null);
     }
   };
 
@@ -42,16 +54,16 @@ export const InputFile = ({ label, name, placeholder, accepts = '*', file, onCha
       <div>
         <input
           type="file"
-          id={name}
-          name={name}
+          id={field.name}
+          name={field.name}
           onChange={handleChange}
           className="peer hidden"
-          accept={accepts}
+          accept={acceptMimeTypes}
           disabled={hasFile}
         />
 
         <label
-          htmlFor={name}
+          htmlFor={field.name}
           className="flex cursor-pointer items-center justify-center gap-8 bg-green-frost-01 p-8 peer-disabled:bg-gray-04"
         >
           <IconFileUpload />
@@ -66,12 +78,12 @@ export const InputFile = ({ label, name, placeholder, accepts = '*', file, onCha
 
       {hasFile && (
         <UploadedFile
-          fileName={file.name}
-          onRemove={clearFiles}
+          fileName={field.value.name}
+          onRemove={clearFile}
         />
       )}
 
-      {hasError && <FormMessage message={errorMessage} />}
+      {hasErrorMessage && <FormMessage message={errorMessage} />}
     </div>
   );
-};
+}

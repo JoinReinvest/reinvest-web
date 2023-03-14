@@ -1,8 +1,8 @@
 export interface OnboardingFormFields {
   accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
+  _didDocumentIdentificationValidationSucceed?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
-
   _isSocialSecurityNumberBanned?: boolean;
   // Are we displaying this as an URL or a file upload?
   address?: {
@@ -29,8 +29,6 @@ export interface OnboardingFormFields {
   };
 
   dateOfBirth?: Date;
-  documentForVerification?: string;
-
   employmentDetails?: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
@@ -41,12 +39,11 @@ export interface OnboardingFormFields {
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
 
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
-
   finraInstitution?: string;
-
   firstName?: string;
   lastName?: string;
   middleName?: string;
+
   netIncome?: string;
 
   netWorth?: string;
@@ -57,7 +54,7 @@ export interface OnboardingFormFields {
 
   // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
-  // If `compliances.isSeniorPoliticalFigure` is true
+
   socialSecurityNumber?: string;
 
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
