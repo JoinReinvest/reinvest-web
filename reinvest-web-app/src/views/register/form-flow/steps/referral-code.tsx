@@ -42,6 +42,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
     };
 
     const onSkip = () => {
+      updateStoreFields({ referralCode: undefined });
       moveToNextStep();
     };
 
