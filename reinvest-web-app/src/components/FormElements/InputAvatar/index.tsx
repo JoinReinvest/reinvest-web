@@ -1,6 +1,6 @@
 import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
-import { Avatar } from 'components/Avatar';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
+import { Avatar } from 'components/Avatar';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
 import { generateFileSchema } from 'formValidationRules';
