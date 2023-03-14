@@ -1,10 +1,16 @@
+import { EMAILS } from 'constants/urls';
+
 import { Link } from '../Link';
 
-export const GetHelpLink = () => (
+interface Props {
+  label?: string;
+}
+
+export const GetHelpLink = ({ label = 'Get Help' }: Props) => (
   <Link
-    href="mailto:support@reinvestcommunity.com"
-    title="Get Help"
+    href={EMAILS.supportHref}
+    title={label}
   >
-    Get Help
+    {label}
   </Link>
 );

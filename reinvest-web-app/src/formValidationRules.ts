@@ -1,3 +1,5 @@
+import { BYTES_IN_MEGABYTE } from 'constants/conversions';
+import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
 import dayjs from 'dayjs';
 import zod from 'zod';
 
@@ -29,6 +31,22 @@ export const formValidationRules = {
   date: zod.string({ required_error: requiredError }).regex(/^(\d{2})\/(\d{2})\/(\d{4})$/),
   phoneNumber: zod.string().regex(/^\d{10}$/, { message: 'Invalid phone number' }),
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
+  socialSecurityNumber: zod.string().regex(/^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$/, { message: 'Invalid Social Security Number' }),
+};
+
+export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
+  const sizeLimitInBytes = sizeLimitInMegaBytes * BYTES_IN_MEGABYTE;
+
+  return zod
+    .custom<File>()
+    .refine(file => !!file, 'The field is required')
+    .refine(file => file?.size <= sizeLimitInBytes, `File size must be smaller than ${sizeLimitInMegaBytes}MB`)
+    .refine(file => {
+      const acceptedTypes = mapToMimeType(accepts);
+      const fileType = file?.type;
+
+      return acceptedTypes.includes(fileType);
+    }, 'File type not supported');
 };
 
 export const dateOlderThanEighteenYearsSchema = formValidationRules.date.superRefine((value, context) => {

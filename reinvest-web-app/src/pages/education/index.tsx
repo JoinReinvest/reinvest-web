@@ -5,6 +5,7 @@ import { BlogCard, BlogPostInterface } from 'components/Education/BlogCard';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import useSWR from 'swr';
 
 import { URL } from '../../constants/urls';
@@ -43,11 +44,18 @@ const renderBlogCard = (card: BlogPostInterface) => (
 );
 
 const EducationPage = () => {
+  const [posts, setPosts] = useState<BlogPostInterface[]>([]);
   const { data, isLoading } = useSWR<BlogPostInterface[]>(`/api/posts`, fetcher);
+
+  useEffect(() => {
+    if (data) {
+      setPosts(data);
+    }
+  }, [data]);
 
   return (
     <MainLayout>
-      <div className="relative flex min-h-180 w-full text-white">
+      <div className="relative flex min-h-180 -mx-20 lg:mx-0 lg:w-full text-white">
         <Typography
           variant="h3"
           className="absolute bottom-24 left-24 lg:bottom-32 lg:left-32"
@@ -83,7 +91,7 @@ const EducationPage = () => {
             Loading...
           </Typography>
         )}
-        {data && !isLoading && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{data.map(renderBlogCard)}</div>}
+        {posts.length > 0 && !isLoading && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
       </section>
     </MainLayout>
   );
