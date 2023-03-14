@@ -16,7 +16,7 @@ const OnboardingPage: NextPage = () => {
 export async function getStaticProps() {
   return {
     props: {
-      protected: true,
+      protected: false,
     },
   };
 }

@@ -1,9 +1,10 @@
 import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
+import { Avatar } from 'components/Avatar';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
 import { generateFileSchema } from 'formValidationRules';
-import Image from 'next/image';
+import { ImageProps } from 'next/image';
 import { ChangeEventHandler, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 
@@ -16,7 +17,7 @@ interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseContr
 
 export function InputAvatar<FormFields extends FieldValues>({ image, altText, sizeLimitInMegaBytes = 5.0, ...controllerProps }: Props<FormFields>) {
   const { field } = useController(controllerProps);
-  const [imageSrc, setImageSrc] = useState(image || placeholderImage);
+  const [imageSrc, setImageSrc] = useState<ImageProps['src']>(image || placeholderImage);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
 
   const accepts: PartialMimeTypeKeys = ['jpeg', 'jpg', 'png'];
@@ -51,11 +52,10 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
       >
         <PrimitiveAvatarWithButton
           avatar={
-            <Image
-              className="rounded-full"
-              src={imageSrc as string}
-              alt={altText || ''}
-              priority
+            <Avatar
+              src={imageSrc}
+              alt={altText || 'Profile picture for user'}
+              isSizeFixed
             />
           }
           button={
@@ -66,7 +66,7 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
             />
           }
           horizontalButtonPosition="right"
-          verticalButtonPosition="top"
+          verticalButtonPosition="bottom"
         />
       </label>
 

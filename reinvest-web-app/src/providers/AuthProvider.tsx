@@ -88,7 +88,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   useEffect(() => {
     const currentUser = async () => {
-      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, '/404', '/500'];
+      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, '/404', '/500', '/onboarding'];
       const pathWithoutQuery = [URL.logout, ...notProtectedUrls];
 
       try {

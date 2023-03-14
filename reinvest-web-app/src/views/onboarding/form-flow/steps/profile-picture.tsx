@@ -68,6 +68,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           label="Skip"
           variant="outlined"
           onClick={onSkip}
+          className='text-green-frost-01'
         />
       </Form>
     );
