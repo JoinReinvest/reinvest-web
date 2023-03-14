@@ -1,29 +1,30 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { Input } from 'components/FormElements/Input';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
-import { NET_WORTHS_AS_OPTIONS } from 'constants/net-worths';
+import { INDUESTRIES_AS_OPTIONS } from 'constants/industries';
 import { formValidationRules } from 'formValidationRules';
-import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
-import { OpenModalLink } from '../../../components/Links/OpenModalLink';
-import { WhyRequiredNetWorthModal } from '../../whyRequiredModals/WhyRequiredNetWorthModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'netIncome' | 'netWorth'>;
+type Fields = Pick<OnboardingFormFields, 'employmentDetails'>;
 
 const schema = z.object({
-  netIncome: formValidationRules.netIncome,
-  netWorth: formValidationRules.netWorth,
+  employmentDetails: z.object({
+    employerName: formValidationRules.employerName,
+    occupation: formValidationRules.occupation,
+    industry: formValidationRules.industry,
+  }),
 });
 
-export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.NET_WORTH_AND_INCOME,
+export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.EMPLOYMENT_DETAILS,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -32,8 +33,6 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
-
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
@@ -41,45 +40,47 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
-    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
+    const onSkip = () => {
+      updateStoreFields({ employmentStatus: undefined });
+      moveToNextStep();
+    };
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="What is approximate net worth and income?" />
+        <Title title="Are you currently employed?" />
 
-        {isWhyRequiredOpen && (
-          <WhyRequiredNetWorthModal
-            isOpen={isWhyRequiredOpen}
-            onOpenChange={openWhyReqiredOnClick}
-          />
-        )}
-
-        <Select
-          name="netIncome"
+        <Input
+          name="employmentDetails.employerName"
           control={control}
-          options={NET_WORTHS_AS_OPTIONS}
-          placeholder="Net Income"
+          placeholder="Name of Employer"
+          required
+        />
+
+        <Input
+          name="employmentDetails.occupation"
+          control={control}
+          placeholder="Title"
           required
         />
 
         <Select
-          name="netWorth"
+          name="employmentDetails.industry"
           control={control}
-          options={NET_WORTHS_AS_OPTIONS}
-          placeholder="Net Worth"
+          options={INDUESTRIES_AS_OPTIONS}
+          placeholder="Industry"
           required
-        />
-
-        <OpenModalLink
-          label="Required. Why?"
-          green
-          onClick={openWhyReqiredOnClick}
         />
 
         <Button
           type="submit"
           label="Continue"
           disabled={shouldButtonBeDisabled}
+        />
+
+        <Button
+          label="Skip"
+          variant="outlined"
+          onClick={onSkip}
         />
       </Form>
     );

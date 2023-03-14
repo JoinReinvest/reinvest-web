@@ -4,13 +4,13 @@ import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
+import { ACCOUNT_TYPES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
-import { ACCOUNT_TYPES } from '../../../constants/account-types';
-import { WhyRequiredAccountTypeModal } from '../../whyRequiredModals/WhyRequiredAccountTypeModal';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 

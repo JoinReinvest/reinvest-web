@@ -4,16 +4,16 @@ import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPassword } from 'components/FormElements/InputPassword';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { PasswordChecklist } from 'components/PasswordChecklist';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { WhyRequiredPasswordModal } from 'views/whyRequiredModals/WhyRequiredPasswordModal';
 import zod, { Schema } from 'zod';
 
-import { OpenModalLink } from '../../../components/Links/OpenModalLink';
-import { WhyRequiredPasswordModal } from '../../whyRequiredModals/WhyRequiredPasswordModal';
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 

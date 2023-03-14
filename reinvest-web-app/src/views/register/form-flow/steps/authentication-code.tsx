@@ -5,6 +5,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
+import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useMemo, useState } from 'react';
@@ -12,30 +13,30 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { OpenModalLink } from '../../../components/Links/OpenModalLink';
-import { ForgotPasswordFormFields } from '../form-fields';
+import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<ForgotPasswordFormFields, 'authenticationCode'>;
+type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
 
-export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
+export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
   identifier: Identifiers.AUTHENTICATION_CODE,
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.email];
+    const requiredFields = [fields.email, fields.password];
 
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<ForgotPasswordFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const schema: Schema<Fields> = zod.object({
       authenticationCode: formValidationRules.authenticationCode,
     });
+    const [error, setError] = useState<string | undefined>('');
+    const [infoMessage, setInfoMessage] = useState('');
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const [infoMessage, setInfoMessage] = useState('');
-    const [error, setError] = useState('');
+
     const subtitleMessage = useMemo(() => `Enter the email authentication code sent to your email ${storeFields.email}.`, [storeFields.email]);
 
     const onSubmit: SubmitHandler<Fields> = fields => {
@@ -45,7 +46,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
 
     const resendCodeOnClick = async () => {
       try {
-        await Auth.forgotPassword(storeFields.email);
+        await Auth.resendSignUp(storeFields.email);
         setInfoMessage('Code has been sent');
       } catch (err) {
         setError((err as Error).message);
@@ -60,7 +61,6 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
         />
 
         {error && <FormMessage message={error} />}
-
         {infoMessage && (
           <FormMessage
             message={infoMessage}
@@ -85,7 +85,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
 
         <Button
           type="submit"
-          label="Sign In"
+          label="Sign Up"
           disabled={shouldButtonBeDisabled}
         />
       </Form>

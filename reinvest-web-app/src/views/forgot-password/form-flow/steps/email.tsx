@@ -2,6 +2,7 @@ import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputEmail } from 'components/FormElements/InputEmail';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
@@ -10,7 +11,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
-import { FormMessage } from '../../../components/FormElements/FormMessage';
 import { ForgotPasswordFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
