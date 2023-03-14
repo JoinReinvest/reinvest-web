@@ -1,8 +1,8 @@
 import { useMemo } from 'react';
 
-import { FlowStep } from '../flow-step';
-import { FlowStore } from '../flow-store';
 import { ContextStateMeta, CurrentFormStep } from '../interfaces';
+import { FlowStep } from '../processors/flow-step';
+import { FlowStore } from '../processors/flow-store';
 
 interface Params<FormFields> {
   currentStep: CurrentFormStep<FormFields>;

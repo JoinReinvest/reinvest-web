@@ -1,13 +1,13 @@
-import { FC, ReactNode } from 'react';
+import { FC, PropsWithChildren } from 'react';
 
-import { FlowStep } from './flow-step';
+import { FlowStep } from './processors/flow-step';
 
 export interface StepComponentProps<FormFields> {
   moveToNextStep: () => void;
   moveToPreviousStep: () => void;
   moveToStepByIdentifier: (identifier: string) => void;
   storeFields: FormFields;
-  updateStoreFields: (fields: Partial<FormFields>) => void;
+  updateStoreFields: (fields: Partial<FormFields>) => Promise<void>;
 }
 
 export interface FlowStepParams<FormFields> {
@@ -36,20 +36,20 @@ export interface ContextStateMeta {
   previousStepIdentifier: string | null;
 }
 
-export interface ContextState {
+export interface ContextState<FormFields> {
   CurrentStepView: FC;
+  getStoreFields: () => FormFields | null;
   meta: ContextStateMeta;
   moveToNextValidStep: () => void;
   moveToPreviousValidStep: () => void;
   progressPercentage: number;
+  updateStoreFields: (fields: Partial<FormFields>) => Promise<void>;
 }
 
-export interface ContextProviderProps<FormFields> {
-  children: ReactNode;
-  formFieldsInitialState: FormFields;
-  steps: Steps<FormFields>;
+export interface ContextProviderProps<FormFields> extends PropsWithChildren {
+  initialStoreFields: FormFields;
   isResumable?: boolean;
-  onFormFieldsUpdate?: (fields: FormFields) => Promise<void>;
+  onStoreUpdate?: (fields: FormFields) => Promise<void>;
 }
 
 export type CurrentFormStep<FormFields> = FlowStep<FormFields> | null;
