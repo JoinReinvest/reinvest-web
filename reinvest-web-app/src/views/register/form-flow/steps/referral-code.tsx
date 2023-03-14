@@ -41,9 +41,6 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
         setIsValidatingReferralCode(false);
 
         if (fields.referralCode) {
-          const body = new FormData();
-          body.append('token', fields.referralCode);
-
           const response = await fetcher(
             `${env.apiUrl}/incentive-token`,
             'POST',
