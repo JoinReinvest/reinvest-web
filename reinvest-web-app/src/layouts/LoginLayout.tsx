@@ -23,7 +23,7 @@ export const LoginLayout = ({ children }: LoginLayoutProps) => {
         </video>
       </div>
 
-      <LogoIcon className="z-30 mt-[80px] h-144 w-144 fill-green-frost-01 lg:mt-0 lg:h-96 lg:w-96" />
+      <LogoIcon className="z-30 mt-80 h-144 w-144 fill-green-frost-01 lg:mt-0 lg:h-96 lg:w-96" />
 
       {children}
     </div>
