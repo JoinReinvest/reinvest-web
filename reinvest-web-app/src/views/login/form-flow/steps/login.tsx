@@ -62,12 +62,12 @@ export const StepLogin: StepParams<LoginFormFields> = {
         onSubmit={handleSubmit(onSubmit)}
         className="login-form z-30 flex w-full max-w-330 flex-col items-start justify-center gap-24 lg:items-center"
       >
-        <div className="w-full flex flex-col gap-16 items-start">
+        <div className="w-full flex flex-col gap-16 items-start lg:items-center">
           <Typography variant="h1">Sign in</Typography>
 
           <Typography
             variant="bonus-heading"
-            className="text-left md:text-center"
+            className="text-left lg:text-center lg:w-11/12"
           >
             Building your wealth while rebuilding our communities.
           </Typography>
@@ -75,7 +75,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
         {error && <FormMessage message={error} />}
 
-        <div className="w-full flex flex-col gap-12 items-start">
+        <div className="w-full flex flex-col gap-12 items-start lg:items-center">
           <InputEmail
             name="email"
             control={control}
