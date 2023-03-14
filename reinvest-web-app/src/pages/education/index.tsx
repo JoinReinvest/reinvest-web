@@ -1,17 +1,16 @@
 import { IconChart } from 'assets/icons/Education/IconChart';
 import { IconHome } from 'assets/icons/Education/IconHome';
-import image1 from 'assets/images/education/image1.png';
-import image2 from 'assets/images/education/image2.png';
-import image3 from 'assets/images/education/image3.png';
-import image4 from 'assets/images/education/image4.png';
-import image5 from 'assets/images/education/image5.png';
 import hero from 'assets/images/education-hero.png';
-import { BlogCard, BlogCardProps } from 'components/Education/BlogCard';
+import { BlogCard, BlogPostInterface } from 'components/Education/BlogCard';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
+import useSWR from 'swr';
 
+import { URL } from '../../constants/urls';
 import { MainLayout } from '../../layouts/MainLayout';
+import { fetcher } from '../../services/fetcher';
 
 const educationCards: EducationCardProps[] = [
   {
@@ -19,53 +18,14 @@ const educationCards: EducationCardProps[] = [
     subtitle: 'Calculate your underwriting income in a few easy steps',
     icon: <IconHome />,
     buttonText: 'View Calculator',
-    href: '/',
+    href: URL.calculator,
   },
   {
     title: 'Real Estate 101 Glossary',
     subtitle: 'Equip yourself with the language of the industry',
     icon: <IconChart />,
     buttonText: 'View Glossary',
-    href: '/',
-  },
-];
-
-const blogCards: BlogCardProps[] = [
-  {
-    imageSrc: image1,
-    subtitle: 'with Brandon Rule',
-    title: 'Real Estate Investment 101',
-    href: '/',
-  },
-  {
-    imageSrc: image2,
-    subtitle: 'with Brandon Rule',
-    title: 'Getting Started with REINVEST',
-    href: '/',
-  },
-  {
-    imageSrc: image3,
-    subtitle: 'with Brandon Rule',
-    title: 'Getting Started with REINVEST',
-    href: '/',
-  },
-  {
-    imageSrc: image4,
-    subtitle: 'April 3th, 2022',
-    title: 'Project update lorem ipsum dolor sit amet',
-    href: '/',
-  },
-  {
-    imageSrc: image5,
-    subtitle: 'April 3th, 2022',
-    title: 'Project update lorem ipsum dolor sit amet',
-    href: '/',
-  },
-  {
-    imageSrc: image5,
-    subtitle: 'April 3th, 2022',
-    title: 'Project update lorem ipsum dolor sit amet',
-    href: '/',
+    href: URL.glossary,
   },
 ];
 
@@ -76,17 +36,26 @@ const renderCard = (card: EducationCardProps) => (
   />
 );
 
-const renderBlogCard = (card: BlogCardProps) => (
+const renderBlogCard = (card: BlogPostInterface) => (
   <BlogCard
     key={card.title}
     {...card}
   />
 );
 
-const Index = () => {
+const EducationPage = () => {
+  const [posts, setPosts] = useState<BlogPostInterface[]>([]);
+  const { data, isLoading } = useSWR<BlogPostInterface[]>(`/api/posts`, fetcher);
+
+  useEffect(() => {
+    if (data) {
+      setPosts(data);
+    }
+  }, [data]);
+
   return (
     <MainLayout>
-      <div className="relative flex w-full text-white">
+      <div className="relative flex min-h-180 w-full text-white">
         <Typography
           variant="h3"
           className="absolute bottom-24 left-24 lg:bottom-32 lg:left-32"
@@ -102,26 +71,33 @@ const Index = () => {
       <section>
         <Typography
           variant="h5"
-          className="my-24"
+          className="my-32"
         >
           Learn About Real Estate Investing
         </Typography>
         <div className="flex flex-col gap-16 lg:flex-row">{educationCards.map(renderCard)}</div>
-      </section>
-      <section className="mb-24 lg:mb-44">
+
         <Typography
           variant="h5"
-          className="my-24"
+          className="my-32"
         >
           Learn the basics
         </Typography>
-        <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{blogCards.map(renderBlogCard)}</div>
+        {isLoading && (
+          <Typography
+            variant="h6"
+            className="text-center"
+          >
+            Loading...
+          </Typography>
+        )}
+        {posts.length > 0 && !isLoading && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
       </section>
     </MainLayout>
   );
 };
 
-export async function getStaticProps() {
+export function getStaticProps() {
   return {
     props: {
       protected: true,
@@ -129,4 +105,4 @@ export async function getStaticProps() {
   };
 }
 
-export default Index;
+export default EducationPage;

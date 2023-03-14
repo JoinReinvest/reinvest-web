@@ -2,7 +2,8 @@ import { BlackModal } from 'components/BlackModal';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useFormFlowContext } from 'services/form-flow';
+
+import { useOnboardingFormFlow } from './form-flow';
 
 export const OnboardingFlow = () => {
   const router = useRouter();
@@ -12,7 +13,8 @@ export const OnboardingFlow = () => {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
-  } = useFormFlowContext();
+    progressPercentage,
+  } = useOnboardingFormFlow();
 
   useEffect(() => {
     setIsModalOpen(true);
@@ -30,6 +32,7 @@ export const OnboardingFlow = () => {
     <BlackModal
       isOpen={isModalOpen}
       onOpenChange={onModalClickBack}
+      progressBarValue={progressPercentage}
     >
       <CurrentStepView />
     </BlackModal>

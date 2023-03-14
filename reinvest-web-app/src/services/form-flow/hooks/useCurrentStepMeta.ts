@@ -1,16 +1,16 @@
 import { useMemo } from 'react';
 
-import { FlowStep } from '../flow-step';
-import { FlowStore } from '../flow-store';
 import { ContextStateMeta, CurrentFormStep } from '../interfaces';
+import { FlowStep } from '../processors/flow-step';
+import { FlowStore } from '../processors/flow-store';
 
 interface Params<FormFields> {
   currentStep: CurrentFormStep<FormFields>;
   flowStore: FlowStore<FormFields>;
 }
 
-export const useCurrentStepMeta = <FormFields>({ flowStore, currentStep }: Params<FormFields>) => {
-  const meta = useMemo<ContextStateMeta>(() => {
+export const useCurrentStepMeta = <FormFields>({ flowStore, currentStep }: Params<FormFields>) =>
+  useMemo<ContextStateMeta>(() => {
     const flowHead: FlowStep<FormFields> | null = flowStore.getHead();
     const flowTail: FlowStep<FormFields> | null = flowStore.getTail();
 
@@ -24,6 +24,3 @@ export const useCurrentStepMeta = <FormFields>({ flowStore, currentStep }: Param
     return { isFirstStep, isLastStep, previousStepIdentifier, currentStepIdentifier, nextStepIdentifier };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentStep]);
-
-  return meta;
-};

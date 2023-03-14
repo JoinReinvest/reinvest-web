@@ -23,7 +23,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
     const showIconToTheLeft = showIcon === 'left';
 
     const className = cx(variants({ variant, size, disabled, className: passedClassName }), {
-      'flex justify-center items-center gap-x-8': !!loading,
+      'flex justify-center items-center gap-x-8': loading,
       'px-16 flex justify-center items-center gap-x-8': willShowIcon || loading,
       'flex-row-reverse': showIconToTheLeft,
     });
@@ -32,7 +32,7 @@ export const Button = forwardRef<HTMLButtonElement, Props>(
       <button
         type={type}
         className={className}
-        disabled={!!disabled || !!loading}
+        disabled={disabled || loading}
         tabIndex={tabIndex}
         onClick={onClick}
         ref={ref}

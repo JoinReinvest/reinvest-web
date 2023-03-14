@@ -1,7 +1,6 @@
 import { GetServerSidePropsContext, NextPage } from 'next';
-import { FormFlowProvider } from 'services/form-flow';
 import { RegistrationView } from 'views/register';
-import { FLOW_STEPS } from 'views/register/flow-steps';
+import { RegisterFormFlowProvider } from 'views/register/form-flow';
 
 interface RegisterPageProps {
   referralCode?: string;
@@ -9,12 +8,9 @@ interface RegisterPageProps {
 
 const RegisterPage: NextPage = ({ referralCode }: RegisterPageProps) => {
   return (
-    <FormFlowProvider
-      steps={FLOW_STEPS}
-      formFieldsInitialState={{ email: '', referralCode: referralCode, password: '', authenticationCode: '' }}
-    >
+    <RegisterFormFlowProvider initialStoreFields={{ email: '', referralCode: referralCode, password: '', authenticationCode: '' }}>
       <RegistrationView />
-    </FormFlowProvider>
+    </RegisterFormFlowProvider>
   );
 };
 
