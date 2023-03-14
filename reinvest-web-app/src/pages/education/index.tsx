@@ -55,7 +55,7 @@ const EducationPage = () => {
 
   return (
     <MainLayout>
-      <div className="relative flex min-h-180 w-full text-white">
+      <div className="relative flex min-h-180 -mx-20 lg:mx-0 lg:w-full text-white">
         <Typography
           variant="h3"
           className="absolute bottom-24 left-24 lg:bottom-32 lg:left-32"
