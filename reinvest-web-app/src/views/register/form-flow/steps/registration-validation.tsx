@@ -61,12 +61,14 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     }, [storeFields.authenticationCode, storeFields.email]);
 
     return (
-      <div className="flex h-full flex-col gap-24 text-center md:justify-center">
-        {isLoading && !error && <IconSpinner />}
-        {!isLoading && !error && <CircleSuccess />}
-        {error && <IconXCircle />}
+      <div className="flex h-full flex-col items-center justify-between gap-24 md:justify-center">
+        <div className="flex flex-col items-center">
+          {isLoading && !error && <IconSpinner />}
+          {!isLoading && !error && <CircleSuccess />}
+          {error && <IconXCircle />}
 
-        <Title title={error || title} />
+          <Title title={error || title} />
+        </div>
 
         <Button
           onClick={onButtonClick}
