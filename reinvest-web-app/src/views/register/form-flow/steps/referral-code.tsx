@@ -57,7 +57,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
           control={control}
         />
 
-        <div className="absolute bottom-0 w-full md:relative md:bottom-auto">
+        <div className="absolute bottom-0 w-full">
           <Button
             type="button"
             variant="outlined"

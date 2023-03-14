@@ -7,7 +7,7 @@ interface FormProps extends PrimitiveProps, PropsWithChildren {}
 export const Form = ({ onSubmit, children, className }: FormProps) => (
   <form
     onSubmit={onSubmit}
-    className={cx('relative flex h-full flex-col gap-24 md:justify-center', className)}
+    className={cx('relative flex h-full flex-col gap-24 lg:justify-center', className)}
   >
     {children}
   </form>
