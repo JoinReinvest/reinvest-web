@@ -1,17 +1,11 @@
 import { NextPage } from 'next';
-import { FormFlowProvider } from 'services/form-flow';
 import { ForgotPasswordFlow } from 'views/forgot-password';
-import { FLOW_STEPS } from 'views/forgot-password/flow-steps';
+import { ForgotPasswordFormFlowProvider } from 'views/forgot-password/form-flow';
 
-const ForgotPasswordPage: NextPage = () => {
-  return (
-    <FormFlowProvider
-      steps={FLOW_STEPS}
-      formFieldsInitialState={{ email: '', authenticationCode: '', password: '' }}
-    >
-      <ForgotPasswordFlow />
-    </FormFlowProvider>
-  );
-};
+const ForgotPasswordPage: NextPage = () => (
+  <ForgotPasswordFormFlowProvider initialStoreFields={{ email: '', authenticationCode: '', password: '' }}>
+    <ForgotPasswordFlow />
+  </ForgotPasswordFormFlowProvider>
+);
 
 export default ForgotPasswordPage;

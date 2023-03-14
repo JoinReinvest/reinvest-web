@@ -1,16 +1,12 @@
 import { NextPage } from 'next';
-import { FormFlowProvider } from 'services/form-flow';
 import { LoginView } from 'views/login';
-import { FLOW_STEPS } from 'views/login/flow-steps';
+import { LoginFormFlowProvider } from 'views/login/form-flow';
 
 const LoginPage: NextPage = () => {
   return (
-    <FormFlowProvider
-      steps={FLOW_STEPS}
-      formFieldsInitialState={{ email: '', password: '', authenticationCode: '' }}
-    >
+    <LoginFormFlowProvider initialStoreFields={{ email: '', password: '', authenticationCode: '' }}>
       <LoginView />
-    </FormFlowProvider>
+    </LoginFormFlowProvider>
   );
 };
 
