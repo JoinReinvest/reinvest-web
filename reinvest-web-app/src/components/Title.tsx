@@ -5,8 +5,8 @@ import { Typography } from './Typography';
 interface Props {
   title: string;
   className?: string;
-  subtitle?: string;
   isTitleCenteredOnMobile?: boolean;
+  subtitle?: string;
 }
 
 export const Title = ({ title, subtitle, className = '', isTitleCenteredOnMobile = false }: Props) => {
@@ -14,7 +14,7 @@ export const Title = ({ title, subtitle, className = '', isTitleCenteredOnMobile
 
   const containerClassName = cx(
     {
-      'w-full flex flex-col gap-36 items-start': hasSubtitle,
+      'w-full flex flex-col gap-8 lg:gap-36 items-start': hasSubtitle,
       'pb-36': !subtitle,
     },
     className,
