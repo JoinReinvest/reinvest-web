@@ -1,6 +1,7 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
@@ -68,26 +69,30 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
           />
         )}
 
-        <InputAuthenticationCode
-          name="authenticationCode"
-          control={control}
-          required
-        />
-
-        <div className="flex justify-between">
-          <OpenModalLink
-            label="Resend code"
-            green
-            onClick={resendCodeOnClick}
+        <div className="flex w-full flex-col gap-32">
+          <InputAuthenticationCode
+            name="authenticationCode"
+            control={control}
+            required
           />
-          <GetHelpLink />
+
+          <div className="flex justify-between">
+            <OpenModalLink
+              label="Resend code"
+              green
+              onClick={resendCodeOnClick}
+            />
+            <GetHelpLink />
+          </div>
         </div>
 
-        <Button
-          type="submit"
-          label="Sign Up"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Sign Up"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

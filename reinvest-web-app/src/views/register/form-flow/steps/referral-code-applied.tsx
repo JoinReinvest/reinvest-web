@@ -1,5 +1,6 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Title } from 'components/Title';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
@@ -22,10 +23,12 @@ export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
 
       <Title title="Referral code applied" />
 
-      <Button
-        label="Continue"
-        onClick={moveToNextStep}
-      />
+      <ButtonStack>
+        <Button
+          label="Continue"
+          onClick={moveToNextStep}
+        />
+      </ButtonStack>
     </div>
   ),
 };

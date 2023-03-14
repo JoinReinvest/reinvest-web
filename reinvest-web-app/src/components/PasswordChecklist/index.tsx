@@ -27,5 +27,5 @@ export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: 
     [hasLowerCaseLetter, hasUpperCaseLetter, hasNumber, hasMinumumLength, passwordsMatch],
   );
 
-  return <ul className="mt-20 flex flex-col gap-4">{checks.map(([label, isChecked]) => generateCheckListItem(label, isChecked))}</ul>;
+  return <ul className="flex flex-col gap-8">{checks.map(([label, isChecked]) => generateCheckListItem(label, isChecked))}</ul>;
 };

@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { InputReferralCode } from 'components/FormElements/InputReferralCode';
 import { Title } from 'components/Title';
@@ -57,13 +58,13 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
           control={control}
         />
 
-        <div className="absolute bottom-0 w-full md:relative md:bottom-auto">
+        <ButtonStack>
           <Button
             type="button"
             variant="outlined"
             label="Skip"
             onClick={onSkip}
-            className="mb-16 text-white"
+            className="text-white"
           />
 
           <Button
@@ -72,7 +73,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
             disabled={shouldButtonBeDisabled}
             loading={isValidatingReferralCode}
           />
-        </div>
+        </ButtonStack>
       </Form>
     );
   },

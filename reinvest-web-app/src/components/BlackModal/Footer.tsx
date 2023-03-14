@@ -26,7 +26,8 @@ export const Footer = () => {
         isOpen={isPrivacyPolicyOpen}
         onOpenChange={onChangePrivacyPolicy}
       />
-      <Typography variant="paragraph">
+
+      <Typography variant="paragraph" className='text-gray-04'>
         By continuing, you agree to the REINVEST
         <br />
         <OpenModalLink
