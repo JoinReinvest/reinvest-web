@@ -25,7 +25,7 @@ export const formValidationRules = {
   citizenshipCountry: standardRequiredString,
   visaType: standardRequiredString,
   middleName: zod.string().optional(),
-  referralCode: zod.string(),
+  referralCode: zod.string().regex(/^[a-zA-Z0-9]{6}$/, { message: 'Invalid referral code' }),
   date: zod.string({ required_error: requiredError }).regex(/^(\d{2})\/(\d{2})\/(\d{4})$/),
   phoneNumber: zod.string().regex(/^\d{10}$/, { message: 'Invalid phone number' }),
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
