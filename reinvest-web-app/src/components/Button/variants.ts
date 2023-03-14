@@ -2,7 +2,7 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 export type PrimitiveVariantProps = VariantProps<typeof variants>;
 
-export const variants = cva('text-15 font-medium w-full', {
+export const variants = cva('text-15 font-medium w-full h-48', {
   variants: {
     variant: {
       default: '',
@@ -29,7 +29,7 @@ export const variants = cva('text-15 font-medium w-full', {
     {
       disabled: true,
       variant: 'default',
-      className: 'bg-gray-04 text-gray-02',
+      className: 'bg-gray-04 text-gray-01',
     },
     {
       variant: 'default',
