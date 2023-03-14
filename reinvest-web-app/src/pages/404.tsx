@@ -1,5 +1,6 @@
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
+import { URL } from '../constants/urls'
 
 import { MainLayout } from '../layouts/MainLayout';
 
@@ -17,7 +18,7 @@ const ErrorPage = () => {
         </Typography>
         <Link
           title="Go to dashboard"
-          href="/"
+          href={URL.index}
         >
           Go to dashboard
         </Link>
