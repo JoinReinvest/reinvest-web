@@ -16,6 +16,7 @@ import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 interface Fields extends Pick<RegisterFormFields, 'password'> {
   passwordConfirmation: string;
@@ -119,11 +120,13 @@ export const StepPassword: StepParams<RegisterFormFields> = {
           passwordConfirmation={fields.passwordConfirmation}
         />
 
-        <Button
-          type="submit"
-          label="Sign Up"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Sign Up"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

@@ -17,6 +17,7 @@ import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 type Fields = Omit<LoginFormFields, 'authenticationCode'>;
 
@@ -105,12 +106,14 @@ export const StepLogin: StepParams<LoginFormFields> = {
           </Link>
         </div>
 
-        <Button
-          type="submit"
-          label="Sign In"
-          disabled={shouldButtonBeDisabled}
-          loading={isValidatingCredentials || (!loading && !!user)}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Sign In"
+            disabled={shouldButtonBeDisabled}
+            loading={isValidatingCredentials || (!loading && !!user)}
+          />
+        </ButtonStack>
       </form>
     );
   },

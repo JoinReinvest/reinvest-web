@@ -13,6 +13,7 @@ import zod, { Schema } from 'zod';
 
 import { ForgotPasswordFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 type Fields = Pick<ForgotPasswordFormFields, 'email'>;
 
@@ -59,12 +60,14 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
           required
         />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-          loading={isLoading}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
+        </ButtonStack>
       </Form>
     );
   },

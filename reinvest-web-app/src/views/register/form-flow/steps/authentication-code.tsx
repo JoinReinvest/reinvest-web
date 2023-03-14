@@ -15,6 +15,7 @@ import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 type Fields = Pick<RegisterFormFields, 'authenticationCode'>;
 
@@ -83,11 +84,13 @@ export const StepAuthenticationCode: StepParams<RegisterFormFields> = {
           <GetHelpLink />
         </div>
 
-        <Button
-          type="submit"
-          label="Sign Up"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Sign Up"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

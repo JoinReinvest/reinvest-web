@@ -15,6 +15,7 @@ import zod, { Schema } from 'zod';
 
 import { ForgotPasswordFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 type Fields = Pick<ForgotPasswordFormFields, 'authenticationCode'>;
 
@@ -83,11 +84,13 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
           <GetHelpLink />
         </div>
 
-        <Button
-          type="submit"
-          label="Sign In"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Sign In"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

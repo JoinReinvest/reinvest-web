@@ -10,6 +10,7 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'service
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   identifier: Identifiers.FLOW_COMPLETION,
@@ -68,11 +69,13 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
 
         <Title title={error || title} />
 
-        <Button
-          onClick={onButtonClick}
-          label="Continue"
-          disabled={isLoading || !!error}
-        />
+        <ButtonStack>
+          <Button
+            onClick={onButtonClick}
+            label="Continue"
+            disabled={isLoading || !!error}
+          />
+        </ButtonStack>
       </div>
     );
   },

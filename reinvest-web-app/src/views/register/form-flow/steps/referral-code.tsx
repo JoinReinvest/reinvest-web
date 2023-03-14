@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -57,13 +58,13 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
           control={control}
         />
 
-        <div className="absolute bottom-0 w-full">
+        <ButtonStack>
           <Button
             type="button"
             variant="outlined"
             label="Skip"
             onClick={onSkip}
-            className="mb-16 text-white"
+            className="text-white"
           />
 
           <Button
@@ -72,7 +73,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
             disabled={shouldButtonBeDisabled}
             loading={isValidatingReferralCode}
           />
-        </div>
+        </ButtonStack>
       </Form>
     );
   },

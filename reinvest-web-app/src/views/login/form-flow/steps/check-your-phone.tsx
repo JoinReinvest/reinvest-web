@@ -16,6 +16,7 @@ import zod, { Schema } from 'zod';
 
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   identifier: Identifiers.PHONE_AUTHENTICATION,
@@ -87,12 +88,14 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
           <GetHelpLink />
         </div>
 
-        <Button
-          type="submit"
-          label="Sign Up"
-          disabled={shouldButtonBeDisabled}
-          loading={isValidatingCredentials}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Sign Up"
+            disabled={shouldButtonBeDisabled}
+            loading={isValidatingCredentials}
+          />
+        </ButtonStack>
       </Form>
     );
   },

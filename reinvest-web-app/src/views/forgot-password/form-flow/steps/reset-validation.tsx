@@ -6,6 +6,7 @@ import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
 
 import { ForgotPasswordFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
   identifier: Identifiers.VALIDATION_COMPLETION,
@@ -28,10 +29,13 @@ export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
             className="text-center"
           />
         </div>
-        <LinkButton
-          href={URL.login}
-          label="Continue"
-        />
+
+        <ButtonStack>
+          <LinkButton
+            href={URL.login}
+            label="Continue"
+          />
+        </ButtonStack>
       </div>
     );
   },
