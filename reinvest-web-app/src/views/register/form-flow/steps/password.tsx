@@ -46,17 +46,18 @@ export const StepPassword: StepParams<RegisterFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setError(undefined);
       updateStoreFields(fields);
+
       try {
-        // await Auth.signUp({
-        //   username: storeFields.email,
-        //   password: fields.password,
-        //   attributes: {
-        //     'custom:incentive_token': storeFields.referralCode || '',
-        //   },
-        //   autoSignIn: {
-        //     enabled: true,
-        //   },
-        // });
+        await Auth.signUp({
+          username: storeFields.email,
+          password: fields.password,
+          attributes: {
+            'custom:incentive_token': storeFields.referralCode || '',
+          },
+          autoSignIn: {
+            enabled: true,
+          },
+        });
 
         return moveToNextStep();
       } catch (err) {
