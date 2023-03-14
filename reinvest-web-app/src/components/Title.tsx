@@ -22,7 +22,7 @@ export const Title = ({ title, subtitle, className = '', isTitleCenteredOnMobile
 
   const titleClassname = cx({
     'text-center': isTitleCenteredOnMobile,
-    'max-lg:text-left lg:text-center': !isTitleCenteredOnMobile,
+    'text-left lg:text-center': !isTitleCenteredOnMobile,
   });
 
   return (
