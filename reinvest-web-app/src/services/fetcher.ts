@@ -1,7 +1,6 @@
-import axios from 'axios';
+export const fetcher = (url: string) =>
+  fetch(url).then(async res => {
+    const result = await res.json();
 
-export const fetcher = async (url: string) => {
-  const response = await axios.get(url, { responseType: 'json' });
-
-  return JSON.parse(response.data);
-};
+    return typeof result === 'string' ? JSON.parse(result) : result;
+  });
