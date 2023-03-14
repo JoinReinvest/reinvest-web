@@ -58,40 +58,44 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       }
     };
 
-    return (
-      <>
-        {!isLoading ? (
-          <Form onSubmit={handleSubmit(onSubmit)}>
-            <Title title="Please upload your Driver’s License or Passport for further verification" />
+    if (isLoading) {
+      return (
+        <div className="flex items-center gap-32">
+          <IconSpinner />
 
-            <InputFile
-              name="identificationDocument.front"
-              control={control}
-              label="Upload ID Front"
-              placeholder="Upload File"
-            />
+          <Title title="Verifying Account Information" />
+        </div>
+      );
+    }
 
-            <InputFile
-              name="identificationDocument.back"
-              control={control}
-              label="Upload ID Back"
-              placeholder="Upload File"
-            />
+    if (!isLoading) {
+      return (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <Title title="Please upload your Driver’s License or Passport for further verification" />
 
-            <Button
-              type="submit"
-              label="Continue"
-              disabled={shouldButtonBeDisabled}
-            />
-          </Form>
-        ) : (
-          <div className="flex items-center gap-32">
-            <IconSpinner />
+          <InputFile
+            name="identificationDocument.front"
+            control={control}
+            label="Upload ID Front"
+            placeholder="Upload File"
+          />
 
-            <Title title="Verifying Account Information" />
-          </div>
-        )}
-      </>
-    );
+          <InputFile
+            name="identificationDocument.back"
+            control={control}
+            label="Upload ID Back"
+            placeholder="Upload File"
+          />
+
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </Form>
+      );
+    }
+
+    return null;
   },
 };
