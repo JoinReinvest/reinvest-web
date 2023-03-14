@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 
-import { FlowStore } from '../flow-store';
 import { CurrentFormStep } from '../interfaces';
+import { FlowStore } from '../processors/flow-store';
 import { useFields } from './useFields';
 
 type UseFieldsParams<FormFields> = Pick<ReturnType<typeof useFields<FormFields>>, 'getFields'>;
