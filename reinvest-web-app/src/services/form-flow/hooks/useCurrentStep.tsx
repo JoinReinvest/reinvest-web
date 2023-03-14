@@ -1,7 +1,7 @@
 import { FC, useEffect, useMemo, useState } from 'react';
 
-import { FlowStore } from '../flow-store';
 import { CurrentFormStep } from '../interfaces';
+import { FlowStore } from '../processors/flow-store';
 import { useCurrentStepMeta } from './useCurrentStepMeta';
 import { useFields } from './useFields';
 
