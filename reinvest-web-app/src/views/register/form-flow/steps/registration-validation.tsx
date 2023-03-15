@@ -4,14 +4,28 @@ import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
-import { LoginLink } from 'components/Links/Login';
+import { Link } from 'components/Link';
 import { Title } from 'components/Title';
+import { URL } from 'constants/urls';
 import { useAuth } from 'providers/AuthProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+
+const LoginLink = () => {
+  const label = 'Go to sign in';
+
+  return (
+    <Link
+      href={URL.login}
+      title={label}
+    >
+      {label}
+    </Link>
+  );
+};
 
 export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   identifier: Identifiers.FLOW_COMPLETION,
