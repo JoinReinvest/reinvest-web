@@ -3,7 +3,7 @@ import { createContext } from 'react';
 import { ContextState } from '../interfaces';
 
 export function generateContext<FormFields>() {
-  const context = createContext<ContextState<FormFields>>({
+  return createContext<ContextState<FormFields>>({
     getStoreFields: () => null,
     CurrentStepView: () => <></>,
     /* eslint-disable @typescript-eslint/no-empty-function */
@@ -20,6 +20,4 @@ export function generateContext<FormFields>() {
       isLastStep: false,
     },
   });
-
-  return context;
 }

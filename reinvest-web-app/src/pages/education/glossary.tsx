@@ -6,7 +6,7 @@ const Glossary = () => {
   return (
     <FullWidthContentLayout>
       <iframe
-        src={`${env.site.url}/glossary?iframe=true`}
+        src={`${env.site.url}/glossary-iframe`}
         className="h-screen w-full"
         title="Glossary page"
       />

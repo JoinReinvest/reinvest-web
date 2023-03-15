@@ -52,7 +52,7 @@ export function TextArea<FormFields extends FieldValues>({ disabled = false, req
         maxLength={maxCharacters}
         disabled={disabled}
         required={required}
-        data-is-dirty={!!isDirty}
+        data-is-dirty={isDirty}
         data-has-error={!!fieldState.error?.message}
       />
     </InputControl>
