@@ -6,6 +6,7 @@ import { FullWidthContentLayout } from '../../../layouts/FullWidthContentLayout'
 import { fetcher } from '../../../services/fetcher';
 
 export interface ArticlePageProps {
+  protected: boolean;
   slug: string;
 }
 
@@ -36,6 +37,7 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<{ 
   return {
     props: {
       slug: context.params?.slug as string,
+      protected: true,
     },
   };
 }
