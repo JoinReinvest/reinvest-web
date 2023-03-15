@@ -1,3 +1,6 @@
+import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
+import { Industry } from 'constants/industries';
+
 export interface OnboardingFormFields {
   accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
@@ -28,21 +31,24 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
 
+  corporationAnnualRevenue?: CorporationAnnualRevenue;
+  corporationIndustry?: Industry;
+
+  corporationNumberOfEmployees?: CorporationNumberOfEmployees;
+
   dateOfBirth?: Date;
   employmentDetails?: {
-    // Only required if `employmentStatus` is 'employed'
     employerName?: string;
-    industry?: string;
+    industry?: Industry;
     occupation?: string;
   };
-
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
 
-  // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
-  finraInstitution?: string;
-  firstName?: string;
 
+  finraInstitution?: string;
+
+  firstName?: string;
   household?: {
     // Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
@@ -58,20 +64,17 @@ export interface OnboardingFormFields {
   };
 
   lastName?: string;
+
   middleName?: string;
 
   netIncome?: string;
-
   netWorth?: string;
 
   phoneNumber?: string;
 
   profilePicture?: File | null;
-  // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
-
   socialSecurityNumber?: string;
-
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
