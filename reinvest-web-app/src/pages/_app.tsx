@@ -1,14 +1,14 @@
 import '../styles/global.scss';
 
 import { Amplify } from '@aws-amplify/core';
-import { QueryClientProvider } from '@tanstack/react-query';
+import { Hydrate, QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
 import Head from 'next/head';
 import { AuthProvider } from 'providers/AuthProvider';
+import { useState } from 'react';
 
 import { env } from '../env';
-import { queryClient } from '../services/queryClient';
 
 Amplify.configure({
   aws_cognito_region: env.aws.cognito.region,
@@ -17,6 +17,17 @@ Amplify.configure({
 });
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            suspense: true,
+          },
+        },
+      }),
+  );
+
   return (
     <>
       <Head>
@@ -52,12 +63,14 @@ const App = ({ Component, pageProps }: AppProps) => {
           href="/manifest.json"
         />
       </Head>
-      <AuthProvider isProtectedPage={pageProps.protected}>
-        <QueryClientProvider client={queryClient}>
-          <Component {...pageProps} />
-          {!env.isProduction && <ReactQueryDevtools initialIsOpen={false} />}
-        </QueryClientProvider>
-      </AuthProvider>
+      <QueryClientProvider client={queryClient}>
+        <Hydrate state={pageProps.dehydratedState}>
+          <AuthProvider isProtectedPage={pageProps.protected}>
+            <Component {...pageProps} />
+            {!env.isProduction && <ReactQueryDevtools initialIsOpen={false} />}
+          </AuthProvider>
+        </Hydrate>
+      </QueryClientProvider>
     </>
   );
 };

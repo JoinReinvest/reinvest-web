@@ -1,11 +1,11 @@
-import EducationPage from './education'
+import EducationPage from './education';
 
-export async function getStaticProps () {
+export async function getStaticProps() {
   return {
     props: {
       protected: true,
     },
-  }
+  };
 }
 
-export default EducationPage
+export default EducationPage;
