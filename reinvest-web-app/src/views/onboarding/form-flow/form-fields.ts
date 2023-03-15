@@ -1,3 +1,5 @@
+import { TrustTypeValue } from 'constants/account-types';
+
 export interface OnboardingFormFields {
   accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
@@ -72,6 +74,7 @@ export interface OnboardingFormFields {
 
   socialSecurityNumber?: string;
 
+  trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
