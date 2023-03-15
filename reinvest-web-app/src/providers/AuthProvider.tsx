@@ -49,10 +49,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
+        setUser(user);
         router.push(redirectTo || URL.index);
       }
-
-      setUser(user);
 
       return user;
     } catch (error) {
@@ -88,7 +87,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   useEffect(() => {
     const currentUser = async () => {
-      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, '/404', '/500'];
+      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, URL.not_found, URL.internal_server_error];
       const pathWithoutQuery = [URL.logout, ...notProtectedUrls];
 
       try {
@@ -120,7 +119,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if ((isProtectedPage && !user) || (!isProtectedPage && user)) {
+  if (((isProtectedPage && !user) || (!isProtectedPage && user)) && router.pathname !== URL.logout) {
     return <IconSpinner />;
   }
 
