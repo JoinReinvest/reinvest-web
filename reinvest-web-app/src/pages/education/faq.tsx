@@ -7,7 +7,7 @@ const Faq: NextPage = () => {
   return (
     <FullWidthContentLayout>
       <iframe
-        src={`${env.site.url}/faq?iframe=true`}
+        src={`${env.site.url}/faq-iframe`}
         className="h-screen w-full"
         title="FAQ page"
       />

@@ -1,4 +1,5 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { LinkButton } from 'components/LinkButton';
 import { Title } from 'components/Title';
 import { URL } from 'constants/urls';
@@ -28,10 +29,13 @@ export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
             className="text-center"
           />
         </div>
-        <LinkButton
-          href={URL.login}
-          label="Continue"
-        />
+
+        <ButtonStack>
+          <LinkButton
+            href={URL.login}
+            label="Continue"
+          />
+        </ButtonStack>
       </div>
     );
   },

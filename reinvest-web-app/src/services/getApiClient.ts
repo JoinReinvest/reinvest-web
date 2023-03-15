@@ -17,6 +17,9 @@ export const getApiClient = async () => {
       },
     });
   } catch (err) {
+    /* eslint-disable no-console */
+    console.error(err);
+
     return undefined;
   }
 };

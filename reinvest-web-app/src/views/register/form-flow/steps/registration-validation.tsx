@@ -3,6 +3,7 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Title } from 'components/Title';
 import { useAuth } from 'providers/AuthProvider';
 import { useEffect, useMemo, useState } from 'react';
@@ -61,7 +62,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     }, [storeFields.authenticationCode, storeFields.email]);
 
     return (
-      <div className="flex h-full flex-col items-center justify-between gap-24 md:justify-center">
+      <div className="relative flex h-full flex-col items-center justify-between gap-24 md:justify-center">
         <div className="flex flex-col items-center">
           {isLoading && !error && <IconSpinner />}
           {!isLoading && !error && <CircleSuccess />}
@@ -70,11 +71,13 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
           <Title title={error || title} />
         </div>
 
-        <Button
-          onClick={onButtonClick}
-          label="Continue"
-          disabled={isLoading || !!error}
-        />
+        <ButtonStack>
+          <Button
+            onClick={onButtonClick}
+            label="Continue"
+            disabled={isLoading || !!error}
+          />
+        </ButtonStack>
       </div>
     );
   },

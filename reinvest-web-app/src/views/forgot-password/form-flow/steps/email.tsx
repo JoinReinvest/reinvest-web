@@ -1,6 +1,7 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputEmail } from 'components/FormElements/InputEmail';
@@ -51,20 +52,24 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
           subtitle="Enter the email associated with your account and we’ll send an email with instructions to reset your password."
         />
 
-        {error && <FormMessage message={error} />}
+        <div className="flex w-full flex-col gap-16">
+          {error && <FormMessage message={error} />}
 
-        <InputEmail
-          control={control}
-          name="email"
-          required
-        />
+          <InputEmail
+            control={control}
+            name="email"
+            required
+          />
+        </div>
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-          loading={isLoading}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
+        </ButtonStack>
       </Form>
     );
   },

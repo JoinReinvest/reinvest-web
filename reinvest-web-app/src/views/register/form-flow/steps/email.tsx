@@ -42,24 +42,33 @@ export const StepEmail: StepParams<RegisterFormFields> = {
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-16"
+        className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-24"
       >
-        <Typography variant="h2">Sign up</Typography>
-        <Typography variant="paragraph-large">Enter your email below to get started.</Typography>
+        <div className="flex w-full flex-col items-start gap-16 lg:items-center">
+          <Typography variant="h1">Sign up</Typography>
+          <Typography
+            variant="paragraph-large"
+            className="text-left lg:w-11/12 lg:text-center"
+          >
+            Enter your email below to get started.
+          </Typography>
+        </div>
 
-        <InputEmail
-          name="email"
-          control={control}
-          required
-        />
+        <div className="flex w-full flex-col items-start gap-16 lg:items-center">
+          <InputEmail
+            name="email"
+            control={control}
+            required
+          />
 
-        <Link
-          href={URL.login}
-          title="Log in"
-          className="typo-link text-white"
-        >
-          Already have an account?
-        </Link>
+          <Link
+            href={URL.login}
+            title="Log in"
+            className="typo-link text-white"
+          >
+            Already have an account?
+          </Link>
+        </div>
 
         <Button
           type="submit"

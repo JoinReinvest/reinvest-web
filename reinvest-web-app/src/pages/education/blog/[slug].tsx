@@ -6,6 +6,7 @@ import { FullWidthContentLayout } from '../../../layouts/FullWidthContentLayout'
 import { fetcher } from '../../../services/fetcher';
 
 export interface ArticlePageProps {
+  protected: boolean;
   slug: string;
 }
 
@@ -13,7 +14,7 @@ const ArticlePage = ({ slug }: ArticlePageProps) => {
   return (
     <FullWidthContentLayout>
       <iframe
-        src={`${env.site.url}/blog/${slug}?iframe=true`}
+        src={`${env.site.url}/blog-iframe/${slug}`}
         className="h-screen w-full"
         title="Blog page"
       />
@@ -28,7 +29,7 @@ export async function getStaticPaths() {
 
   return {
     paths,
-    fallback: true,
+    fallback: 'blocking',
   };
 }
 
@@ -36,6 +37,7 @@ export async function getStaticProps(context: GetStaticPropsContext): Promise<{ 
   return {
     props: {
       slug: context.params?.slug as string,
+      protected: true,
     },
   };
 }

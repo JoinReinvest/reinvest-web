@@ -60,45 +60,50 @@ export const StepLogin: StepParams<LoginFormFields> = {
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="login-form z-30 flex w-full max-w-330 flex-col items-start justify-center gap-16 lg:items-center"
+        className="login-form z-30 flex w-full max-w-330 flex-col items-start justify-center gap-24 lg:items-center"
       >
-        <Typography variant="h2">Sign in</Typography>
-        <Typography
-          variant="paragraph-large"
-          className="text-left md:text-center"
-        >
-          Building your wealth while rebuilding our communities.
-        </Typography>
+        <div className="flex w-full flex-col items-start gap-16 lg:items-center">
+          <Typography variant="h1">Sign in</Typography>
+
+          <Typography
+            variant="bonus-heading"
+            className="text-left lg:w-11/12 lg:text-center"
+          >
+            Building your wealth while rebuilding our communities.
+          </Typography>
+        </div>
 
         {error && <FormMessage message={error} />}
 
-        <InputEmail
-          name="email"
-          control={control}
-          required
-        />
+        <div className="flex w-full flex-col items-start gap-12 lg:items-center">
+          <InputEmail
+            name="email"
+            control={control}
+            required
+          />
 
-        <InputPassword
-          name="password"
-          control={control}
-          required
-        />
+          <InputPassword
+            name="password"
+            control={control}
+            required
+          />
 
-        <Link
-          href={URL.forgot_password}
-          title="Forgot Password"
-          className="typo-link text-white"
-        >
-          Forgot password?
-        </Link>
+          <Link
+            href={URL.forgot_password}
+            title="Forgot Password"
+            className="typo-link text-white"
+          >
+            Forgot password?
+          </Link>
 
-        <Link
-          href={URL.register}
-          title="Don't have an account?"
-          className="typo-link text-white"
-        >
-          Don’t have an account?
-        </Link>
+          <Link
+            href={URL.register}
+            title="Don't have an account?"
+            className="typo-link text-white"
+          >
+            Don’t have an account?
+          </Link>
+        </div>
 
         <Button
           type="submit"

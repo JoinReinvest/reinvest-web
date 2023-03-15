@@ -2,7 +2,7 @@
   @apply placeholder:text-gray-02 text-white focus-visible:outline-none text-paragraph-large;
 
   &__menu {
-    @apply -left-[1.5rem] bg-green-frost-01 text-black-01;
+    @apply -left-15 bg-green-frost-01 text-black-01;
     /* stylelint-disable-next-line function-no-unknown */
     width: calc(100% + theme("spacing.28"));
   }
