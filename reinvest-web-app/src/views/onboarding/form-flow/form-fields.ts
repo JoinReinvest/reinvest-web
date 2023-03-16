@@ -1,3 +1,4 @@
+import { CorporationTypeValue } from 'constants/account-types';
 import { DomicileType } from 'types/graphql';
 
 export interface OnboardingFormFields {
@@ -54,6 +55,8 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
+  corporationType?: CorporationTypeValue;
+
   dateOfBirth?: string;
 
   employmentDetails?: {
@@ -62,11 +65,11 @@ export interface OnboardingFormFields {
     industry?: string;
     occupation?: string;
   };
-
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
   // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
   finraInstitution?: string;
+
   firstName?: string;
 
   household?: {
@@ -77,15 +80,13 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   identificationDocument?: {
     back: File | null;
     front: File | null;
   };
   lastName?: string;
-  middleName?: string;
 
-  netIncome?: string;
+  middleName?: string;
 
   netWorth?: string;
 
@@ -97,6 +98,7 @@ export interface OnboardingFormFields {
   socialSecurityNumber?: string;
 
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
+  netIncome?: string;
 }
 
 export interface CompanyTickerSymbol {
