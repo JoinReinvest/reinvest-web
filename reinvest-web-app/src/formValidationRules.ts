@@ -52,7 +52,8 @@ export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMega
 export const generateMultiFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
   const sizeLimitInBytes = sizeLimitInMegaBytes * BYTES_IN_MEGABYTE;
 
-  return zod.custom<File>()
+  return zod
+    .custom<File>()
     .array()
     .refine(files => files.every(file => file.size <= sizeLimitInBytes), `File size must be smaller than ${sizeLimitInMegaBytes}MB`)
     .refine(files => {
