@@ -1,6 +1,8 @@
 import { StepAccountType } from './account-type';
 import { StepCheckYourPhone } from './check-your-phone';
+import { StepCompliances } from './compliance';
 import { StepDateOfBirth } from './date-of-birth';
+import { StepFinraInstitution } from './finra-institution';
 import { StepFullName } from './full-name';
 import { StepPhoneNumber } from './phone-number';
 import { StepProfilePicture } from './profile-picture';
@@ -17,5 +19,7 @@ export const FLOW_STEPS = [
   StepResidencyStatus,
   StepResidencyGreenCard,
   StepResidencyVisa,
+  StepCompliances,
+  StepFinraInstitution,
   StepProfilePicture,
 ];

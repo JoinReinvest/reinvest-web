@@ -4,7 +4,7 @@ import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -18,6 +18,21 @@ const schema = z.object({
 
 export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.FINRA_INSTITUTION,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({

@@ -15,12 +15,10 @@ import { z } from 'zod';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'domicile'>;
+type Fields = Pick<OnboardingFormFields, 'residency'>;
 
 const schema = z.object({
-  domicile: z.object({
-    type: z.enum(RESIDENCY_STATUS_VALUES),
-  }),
+  residency: z.enum(RESIDENCY_STATUS_VALUES),
 });
 
 export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
@@ -40,8 +38,8 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { domicile: storeFields.domicile };
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { ...storeFields };
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
@@ -56,7 +54,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
 
-      if (getValues().domicile.type === DomicileType.Visa) {
+      if (getValues().residency === DomicileType.Visa) {
         moveToStepByIdentifier(Identifiers.RESIDENCY_VISA);
       } else {
         moveToStepByIdentifier(Identifiers.RESIDENCY_GREEN_CARD);
@@ -72,7 +70,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
         <WarningMessage message="REINVEST does not accept non-US residents at this time." />
 
         <RadioGroupOptions
-          name="domicile.type"
+          name="residency"
           control={form.control}
           options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
         />

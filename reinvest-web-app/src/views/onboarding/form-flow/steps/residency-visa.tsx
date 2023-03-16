@@ -32,10 +32,10 @@ const schema = z.object({
 export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_VISA,
   willBePartOfTheFlow(fields) {
-    return fields.domicile?.type === DomicileType.Visa;
+    return fields.residency === DomicileType.Visa;
   },
   doesMeetConditionFields(fields) {
-    return fields.domicile?.type === DomicileType.Visa;
+    return fields.residency === DomicileType.Visa;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -44,7 +44,12 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
-    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+
+    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+      ...storeFields,
+      ...getValues(),
+      domicile: { forVisa: getValues().domicile?.forVisa },
+    });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 

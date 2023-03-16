@@ -3,7 +3,6 @@ import { DomicileType } from 'types/graphql';
 export interface OnboardingFormFields {
   accountType: string;
   domicile: {
-    type: DomicileType;
     forGreenCard?: {
       birthCountry: string;
       citizenshipCountry: string;
@@ -91,6 +90,7 @@ export interface OnboardingFormFields {
   netWorth?: string;
 
   profilePicture?: File | null;
+  residency?: DomicileType;
   // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
 
