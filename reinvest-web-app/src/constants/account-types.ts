@@ -21,7 +21,7 @@ export const ACCOUNT_TYPES = [
   },
 ] as const;
 
-type AccountTypeValue = (typeof ACCOUNT_TYPES)[number]['value'];
+export type AccountTypeValue = (typeof ACCOUNT_TYPES)[number]['value'];
 
 export const ACCOUNT_TYPES_VALUES: [AccountTypeValue, ...AccountTypeValue[]] = [ACCOUNT_TYPES[0].value, ...ACCOUNT_TYPES.slice(1).map(({ value }) => value)];
 
