@@ -1,4 +1,4 @@
-import { TrustTypeValue } from 'constants/account-types';
+import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 
 export interface OnboardingFormFields {
   accountType: string;
@@ -30,7 +30,9 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
 
+  corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
+
   employmentDetails?: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
@@ -39,10 +41,10 @@ export interface OnboardingFormFields {
   };
 
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-
   // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
   finraInstitution?: string;
+
   firstName?: string;
 
   household?: {
@@ -58,9 +60,7 @@ export interface OnboardingFormFields {
     back: File | null;
     front: File | null;
   };
-
   lastName?: string;
-  middleName?: string;
 
   netIncome?: string;
 
@@ -76,6 +76,7 @@ export interface OnboardingFormFields {
 
   trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
+  middleName?: string;
 }
 
 export interface CompanyTickerSymbol {
