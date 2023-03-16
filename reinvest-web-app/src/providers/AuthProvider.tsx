@@ -89,7 +89,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     const currentUser = async () => {
       const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, URL.not_found, URL.internal_server_error];
       const pathWithoutQuery = [URL.logout, ...notProtectedUrls];
-
       try {
         await Auth.currentSession();
 
@@ -106,7 +105,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         setUser(null);
 
         if (pathWithoutQuery.includes(router.pathname)) {
-          return router.push(router.pathname);
+          return router.push(router.asPath);
         }
 
         return router.push({ pathname: URL.login, query: { redirectUrl: router.pathname } });
