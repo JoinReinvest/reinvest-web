@@ -6,7 +6,7 @@ import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
@@ -25,6 +25,12 @@ const schema = z.object({
 
 export const StepFullName: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.FULL_NAME,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [fields.accountType];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const form = useForm<Fields>({

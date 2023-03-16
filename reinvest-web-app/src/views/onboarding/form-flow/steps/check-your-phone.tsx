@@ -7,9 +7,9 @@ import { GetHelpLink } from 'components/Links/GetHelp';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import zod, { Schema } from 'zod';
 
@@ -20,6 +20,12 @@ type Fields = Pick<OnboardingFormFields, 'authCode'>;
 
 export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CHECK_YOUR_PHONE,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.phone?.number, fields.phone?.countryCode];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const schema: Schema<Fields> = zod.object({

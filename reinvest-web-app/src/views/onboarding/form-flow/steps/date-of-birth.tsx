@@ -8,7 +8,7 @@ import { Title } from 'components/Title';
 import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
@@ -24,6 +24,19 @@ const schema = z.object({
 
 export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DATE_OF_BIRTH,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+    ];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);

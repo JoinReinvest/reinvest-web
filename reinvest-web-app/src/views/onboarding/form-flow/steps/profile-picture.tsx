@@ -5,7 +5,8 @@ import { InputAvatar } from 'components/FormElements/InputAvatar';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -19,6 +20,24 @@ const schema = z.object({
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PROFILE_PICTURE,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      // fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.domicile?.type,
+      fields.socialSecurityNumber,
+      fields.identificationDocument,
+    ];
+
+    //TODO: More conditions for individual account type
+    return allRequiredFieldsExists(requiredFields) && fields.accountType === AccountType.Individual;
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { profilePicture } = storeFields;
