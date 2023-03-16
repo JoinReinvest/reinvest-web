@@ -56,7 +56,6 @@ export function InputMultiFile<FormFields extends FieldValues>({
 
     if (!validationSchema.success) {
       const validationErrorMessage = validationSchema.error.issues.at(0)?.message;
-      console.info(validationErrorMessage);
       setErrorMessage(validationErrorMessage);
     }
 
