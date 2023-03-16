@@ -33,6 +33,7 @@ export interface OnboardingFormFields {
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
 
+  documentsForCorporation?: File[];
   documentsForTrust?: File[];
 
   employmentDetails?: {
