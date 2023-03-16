@@ -57,6 +57,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
         <InputReferralCode
           name="referralCode"
           control={control}
+          defaultValue={storeFields.referralCode}
         />
 
         <ButtonStack>
