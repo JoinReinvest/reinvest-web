@@ -1,4 +1,4 @@
-import { CorporationTypeValue } from "constants/account-types";
+import { CorporationTypeValue } from 'constants/account-types';
 
 export interface OnboardingFormFields {
   accountType: string;
@@ -30,19 +30,23 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
 
+  corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
+
+  documentsForTrust?: File[];
+
   employmentDetails?: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
     industry?: string;
     occupation?: string;
   };
-
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-
   // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
+
   finraInstitution?: string;
+
   firstName?: string;
 
   household?: {
@@ -53,29 +57,26 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   identificationDocument?: {
     back: File | null;
     front: File | null;
   };
 
   lastName?: string;
+
   middleName?: string;
 
   netIncome?: string;
 
   netWorth?: string;
-
   phoneNumber?: string;
 
   profilePicture?: File | null;
+
   // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
-
   socialSecurityNumber?: string;
-
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
-  corporationType?: CorporationTypeValue;
 }
 
 export interface CompanyTickerSymbol {
