@@ -1,10 +1,11 @@
 import { individualDraftAccountFields, profileFields } from 'constants/individualOnboardingFields';
 import { isEmptyObject } from 'utils/isEmptyObject';
-import { OnboardingFormFields } from 'views/onboarding/form-fields';
+import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 
 import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
 import { useCreateDraftAccount } from './queries/createDraftAccount';
+import { useSetPhoneNumber } from './queries/setPhoneNumber';
 const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
   return keys.reduce((o, key) => {
     const data = fields.get(key);
@@ -38,14 +39,28 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     mutate: completeIndividualDraftAccountMutate,
   } = useCompleteIndividualDraftAccount();
 
+  const {
+    data: phoneNumberData,
+    error: phoneNumberError,
+    isLoading: isPhoneNumberLoading,
+    mutate: setPhoneNumberMutate,
+    isSuccess: isSetPhoneNumberSuccess,
+  } = useSetPhoneNumber();
+
   const updateData = () => {
     const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
 
     const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
     const individualDraftAccount = getObjecyByKeys(individualDraftAccountFields, storedFieldsMap);
 
+    console.log('storedFields', storedFields);
+
     if (storedFields.accountType) {
       createDraftAccountMutate(storedFields.accountType);
+    }
+
+    if (storedFields.phone?.countryCode && storedFields.phone?.number) {
+      setPhoneNumberMutate({ countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
     }
 
     if (!isEmptyObject(profileDetails)) {
@@ -58,10 +73,10 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
   };
 
   return {
-    data: { ...profileDetailsData, ...individualDraftAccoutntData, ...createDraftAccountData },
-    error: { profileDetailsError, individualDraftAccountError, createDraftAccountError },
-    isLoading: isProfileDetailsLoading || isIndividualDraftAccountLoading || isCreateDraftAccountLoading,
-    isSuccess: isCreateDraftAccountSuccess,
+    data: { ...profileDetailsData, ...individualDraftAccoutntData, ...createDraftAccountData, phoneNumberData },
+    error: { profileDetailsError, individualDraftAccountError, createDraftAccountError, phoneNumberError },
+    isLoading: isProfileDetailsLoading || isIndividualDraftAccountLoading || isCreateDraftAccountLoading || isPhoneNumberLoading,
+    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess,
     updateData: updateData,
   };
 };

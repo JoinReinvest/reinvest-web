@@ -1,13 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
 
@@ -26,13 +28,18 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { formState, control, handleSubmit } = useForm<Fields>({
+    const { formState, control, handleSubmit, getValues } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+      dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
+      ...storeFields,
+    });
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onOpenInformationModalClick = () => {
       setIsInformationModalOpen(true);
@@ -40,8 +47,14 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      moveToNextStep();
+      updateData();
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <>
@@ -59,11 +72,13 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
             onClick={onOpenInformationModalClick}
           />
 
-          <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-          />
+          <ButtonStack>
+            <Button
+              type="submit"
+              label="Continue"
+              disabled={shouldButtonBeDisabled}
+            />
+          </ButtonStack>
         </Form>
 
         <WhyRequiredDateBirthModal
@@ -73,4 +88,10 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       </>
     );
   },
+};
+
+const getDateOfBirth = (dateOfBirth: string) => {
+  const date = dateOfBirth.split('/');
+
+  return `${date[2]}-${date[0]}-${date[1]}`;
 };

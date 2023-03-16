@@ -11,6 +11,10 @@ export interface OnboardingFormFields {
     lastName: string;
     middleName?: string;
   };
+  phone: {
+    countryCode?: string;
+    number?: string;
+  };
   residency: 'us' | 'green-card' | 'visa' | undefined;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
@@ -23,7 +27,7 @@ export interface OnboardingFormFields {
     streetAddress2?: string;
     zipCode?: string;
   };
-  authenticationCode?: string;
+  authCode?: string;
   birthCountry?: string;
   // These fields are only required if residency is 'green-card' or 'visa'
   citizenshipCountry?: string;
@@ -38,8 +42,8 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
+  dateOfBirth?: string;
 
-  dateOfBirth?: Date;
   employmentDetails?: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
@@ -48,7 +52,6 @@ export interface OnboardingFormFields {
   };
 
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-
   // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
   finraInstitution?: string;
@@ -67,15 +70,12 @@ export interface OnboardingFormFields {
     back: File | null;
     front: File | null;
   };
-
   lastName?: string;
   middleName?: string;
 
   netIncome?: string;
 
   netWorth?: string;
-
-  phoneNumber?: string;
 
   profilePicture?: File | null;
   // If `compliances.isAssociatedWithPubliclyTradedCompany` is true

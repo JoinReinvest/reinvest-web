@@ -6,71 +6,81 @@ import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneN
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { CALLING_CODES } from 'constants/country-codes';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-interface Fields {
-  countryCode: string;
-  phone: string;
-}
+type Fields = Pick<OnboardingFormFields, 'phone'>;
 
 const schema = z.object({
-  countryCode: z.enum(CALLING_CODES),
+  phone: z.object({
+    countryCode: z.enum(CALLING_CODES),
+    number: z.string(),
+  }),
 });
 
 export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PHONE_NUMBER,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const phoneNumber = storeFields.phoneNumber;
-    const { countryCode, phone } = useMemo(() => getPhoneNumberAndCountryCode(phoneNumber), [phoneNumber]);
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: { countryCode, phone },
+      defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
+    const { control, handleSubmit, getValues } = form;
+    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+      ...getValues(),
+      ...storeFields,
+    });
+
+    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onMoreInformationClick = () => {
       setIsInformationModalOpen(true);
     };
 
-    const onSubmit: SubmitHandler<Fields> = ({ countryCode, phone }) => {
-      const phoneNumber = `${countryCode}${phone}`;
-      updateStoreFields({ phoneNumber });
-      moveToNextStep();
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields(fields);
+      updateData();
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <>
-        <Form onSubmit={form.handleSubmit(onSubmit)}>
+        <Form onSubmit={handleSubmit(onSubmit)}>
           <Title
             title="Enter your phone number"
             subtitle="We’ll text you a confirmation code within 10 minutes."
           />
 
           <div className="flex">
-            <div className="contents child:basis-2/5">
+            <div className="child:basis-2/5 contents">
               <InputPhoneNumberCountryCode
-                name="countryCode"
-                control={form.control}
+                name="phone.countryCode"
+                control={control}
                 defaultValue="1"
               />
             </div>
 
             <div className="contents">
               <InputPhoneNumber
-                name="phone"
-                control={form.control}
+                name="phone.number"
+                control={control}
               />
             </div>
           </div>
@@ -95,18 +105,4 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
       </>
     );
   },
-};
-
-const getPhoneNumberAndCountryCode = (phoneNumber: string | undefined) => {
-  if (phoneNumber) {
-    const phoneNumberDigits = /\d{10}$/.exec(phoneNumber);
-
-    if (phoneNumberDigits) {
-      const { index } = phoneNumberDigits;
-
-      return { countryCode: phoneNumber.slice(0, index), phone: phoneNumber.slice(index) };
-    }
-  }
-
-  return { countryCode: '', phone: '' };
 };
