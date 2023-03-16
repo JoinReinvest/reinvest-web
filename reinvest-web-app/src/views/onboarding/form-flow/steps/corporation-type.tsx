@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { CORPORATION_TYPES_VALUES, CORPORATION_TYPES_AS_OPTIONS } from 'constants/account-types';
+import { CORPORATION_TYPES_AS_OPTIONS, CORPORATION_TYPES_VALUES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -13,7 +14,6 @@ import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 
 type Fields = Pick<OnboardingFormFields, 'corporationType'>;
 
@@ -58,7 +58,7 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
             orientation="vertical"
           />
 
-          <div className="w-full flex justify-center">
+          <div className="flex w-full justify-center">
             <OpenModalLink
               label="Not sure which is best for you?"
               onClick={onLinkClick}
