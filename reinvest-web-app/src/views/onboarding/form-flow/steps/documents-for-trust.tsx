@@ -22,6 +22,10 @@ const schema = z.object({
 export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
 
+  willBePartOfTheFlow: fields => {
+    return fields.accountType === 'trust';
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = { documentsForTrust: storeFields.documentsForTrust || [] };
     const { control, formState, handleSubmit } = useForm<Fields>({

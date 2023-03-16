@@ -1,11 +1,12 @@
+import { AccountTypeValue } from 'constants/account-types';
 import { CorporationTypeValue } from 'constants/account-types';
 
 export interface OnboardingFormFields {
-  accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
+  accountType?: AccountTypeValue;
   // Are we displaying this as an URL or a file upload?
   address?: {
     city?: string;
