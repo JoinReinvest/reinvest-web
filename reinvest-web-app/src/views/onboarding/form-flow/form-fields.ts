@@ -1,5 +1,19 @@
+import { DomicileType } from 'types/graphql';
+
 export interface OnboardingFormFields {
   accountType: string;
+  domicile: {
+    type: DomicileType;
+    forGreenCard?: {
+      birthCountry: string;
+      citizenshipCountry: string;
+    };
+    forVisa?: {
+      birthCountry: string;
+      citizenshipCountry: string;
+      visaType: string;
+    };
+  };
   employment: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
@@ -15,7 +29,6 @@ export interface OnboardingFormFields {
     countryCode?: string;
     number?: string;
   };
-  residency: 'us' | 'green-card' | 'visa' | undefined;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;

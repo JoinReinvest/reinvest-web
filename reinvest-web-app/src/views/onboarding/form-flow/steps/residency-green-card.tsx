@@ -6,36 +6,57 @@ import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
 import { formValidationRules } from 'formValidationRules';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { DomicileType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'birthCountry' | 'citizenshipCountry'>;
+type Fields = Pick<OnboardingFormFields, 'domicile'>;
 
 const schema = z.object({
-  birthCountry: formValidationRules.birthCountry,
-  citizenshipCountry: formValidationRules.citizenshipCountry,
+  domicile: z.object({
+    forGreenCard: z.object({
+      birthCountry: formValidationRules.birthCountry,
+      citizenshipCountry: formValidationRules.citizenshipCountry,
+    }),
+  }),
 });
 
 export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_GREEN_CARD,
+  willBePartOfTheFlow(fields) {
+    return fields.domicile?.type === DomicileType.GreenCard || fields.domicile?.type === DomicileType.Citizen;
+  },
+  doesMeetConditionFields(fields) {
+    return fields.domicile?.type === DomicileType.GreenCard || fields.domicile?.type === DomicileType.Citizen;
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { formState, control, handleSubmit } = useForm<Fields>({
+    const { formState, control, handleSubmit, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      moveToNextStep();
+      updateData();
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -43,14 +64,14 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
         <WarningMessage message="US Residents Only" />
 
         <Select
-          name="citizenshipCountry"
+          name="domicile.forGreenCard.citizenshipCountry"
           control={control}
           options={COUNTRIES_AS_OPTIONS}
           placeholder="Citizenship Country"
         />
 
         <Select
-          name="birthCountry"
+          name="domicile.forGreenCard.birthCountry"
           control={control}
           options={COUNTRIES_AS_OPTIONS}
           placeholder="Birth Country"
