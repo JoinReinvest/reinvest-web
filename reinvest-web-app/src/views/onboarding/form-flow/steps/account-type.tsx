@@ -39,6 +39,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
+      updateData();
       moveToNextStep();
     };
 
@@ -48,7 +49,10 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     return (
       <>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form
+          onSubmit={handleSubmit(onSubmit)}
+          className="gap-0"
+        >
           <Title title="Which type of account would you like to open?" />
 
           <SelectionCards

@@ -1,23 +1,24 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
+import { AccountType } from 'types/graphql';
 
 export const ACCOUNT_TYPES = [
   {
     label: 'For Individuals',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consel.',
-    value: 'individual',
+    value: AccountType.Individual,
   },
   {
     label: 'For Corporations',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consel.',
-    value: 'corporation',
+    value: AccountType.Corporate,
   },
   {
     label: 'For Trust',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem ipsum dolor sit amet, consel.',
-    value: 'trust',
+    value: AccountType.Trust,
   },
 ] as const;
 
