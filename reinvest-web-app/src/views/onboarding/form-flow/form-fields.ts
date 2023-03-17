@@ -33,6 +33,7 @@ export interface OnboardingFormFields {
 
   corporationAnnualRevenue?: CorporationAnnualRevenue;
   corporationIndustry?: Industry;
+  corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
