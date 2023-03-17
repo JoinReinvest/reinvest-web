@@ -23,7 +23,7 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
 
   willBePartOfTheFlow: fields => {
-    return fields.accountType === 'corporation';
+    return fields.accountType === 'CORPORATE';
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
