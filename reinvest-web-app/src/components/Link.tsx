@@ -7,14 +7,11 @@ export interface LinkProps extends NextLinkProps {
   title: string;
   className?: string;
   openInNewWindow?: boolean;
-  target?: string;
 }
 
 export const Link = ({ className, children, ...props }: LinkProps) => (
   <NextLink
     {...props}
-    passHref
-    shallow
     className={cx({ 'typo-link text-green-frost-01': !className }, className)}
   >
     {children}

@@ -62,21 +62,21 @@ export interface OnboardingFormFields {
   };
   lastName?: string;
 
+  middleName?: string;
+
   netIncome?: string;
 
   netWorth?: string;
 
   phoneNumber?: string;
-
   profilePicture?: File | null;
+
   // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
 
   socialSecurityNumber?: string;
-
   trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
-  middleName?: string;
 }
 
 export interface CompanyTickerSymbol {
