@@ -37,13 +37,13 @@ export interface OnboardingFormFields {
 
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
+  documentsForTrust?: File[];
 
   employmentDetails?: {
     employerName?: string;
     industry?: Industry;
     occupation?: string;
   };
-
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
 
@@ -59,7 +59,6 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   identificationDocument?: {
     back: File | null;
     front: File | null;
@@ -70,7 +69,6 @@ export interface OnboardingFormFields {
 
   netIncome?: string;
   netWorth?: string;
-
   phoneNumber?: string;
   profilePicture?: File | null;
   seniorPoliticalFigure?: string;

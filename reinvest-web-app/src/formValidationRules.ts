@@ -49,6 +49,20 @@ export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMega
     }, 'File type not supported');
 };
 
+export const generateMultiFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
+  const sizeLimitInBytes = sizeLimitInMegaBytes * BYTES_IN_MEGABYTE;
+
+  return zod
+    .custom<File>()
+    .array()
+    .refine(files => files.every(file => file.size <= sizeLimitInBytes), `File size must be smaller than ${sizeLimitInMegaBytes}MB`)
+    .refine(files => {
+      const acceptedTypes = mapToMimeType(accepts);
+
+      return files.every(file => acceptedTypes.includes(file.type));
+    }, 'File type not supported');
+};
+
 export const dateOlderThanEighteenYearsSchema = formValidationRules.date.superRefine((value, context) => {
   const dates = {
     today: dayjs(),
