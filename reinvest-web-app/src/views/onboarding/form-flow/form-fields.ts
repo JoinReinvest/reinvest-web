@@ -1,14 +1,14 @@
-import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
+import { AccountTypeValue, CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
 import { Industry } from 'constants/industries';
 
 export interface OnboardingFormFields {
-  accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
 
   _didDocumentIdentificationValidationSucceed?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
+  accountType?: AccountTypeValue;
 
   address?: {
     city?: string;
@@ -34,9 +34,10 @@ export interface OnboardingFormFields {
   corporationAnnualRevenue?: CorporationAnnualRevenue;
   corporationIndustry?: Industry;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
-
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
+
+  documentsForCorporation?: File[];
   documentsForTrust?: File[];
 
   employmentDetails?: {

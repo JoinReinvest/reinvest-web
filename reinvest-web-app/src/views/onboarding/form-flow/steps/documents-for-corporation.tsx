@@ -11,23 +11,23 @@ import { z } from 'zod';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'documentsForTrust'>;
+type Fields = Pick<OnboardingFormFields, 'documentsForCorporation'>;
 
-const MINIMUM_NUMBER_OF_FILES = 2;
+const MINIMUM_NUMBER_OF_FILES = 5;
 
 const schema = z.object({
-  documentsForTrust: z.custom<File>().array().min(MINIMUM_NUMBER_OF_FILES, `You must upload at least ${MINIMUM_NUMBER_OF_FILES} file(s)`),
+  documentsForCorporation: z.custom<File>().array().min(MINIMUM_NUMBER_OF_FILES, `You must upload at least ${MINIMUM_NUMBER_OF_FILES} file(s)`),
 });
 
-export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
+export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
 
   willBePartOfTheFlow: fields => {
-    return fields.accountType === 'TRUST';
+    return fields.accountType === 'CORPORATE';
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { documentsForTrust: storeFields.documentsForTrust || [] };
+    const defaultValues: Fields = { documentsForCorporation: storeFields.documentsForCorporation || [] };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
@@ -36,26 +36,26 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ documentsForTrust }) => {
-      await updateStoreFields({ documentsForTrust });
+    const onSubmit: SubmitHandler<Fields> = async ({ documentsForCorporation }) => {
+      await updateStoreFields({ documentsForCorporation });
       moveToNextStep();
     };
 
     const subtitle = (
       <>
-        <b>Required documents: </b>The Full Trust Document or Certification of Trust,List of All Trustees, Grantors and Protectors.
+        <b>Required documents: </b>Articles of Incorporation, Certificate of Formation, By-laws, Shareholders and Authorized Signers List
       </>
     );
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title
-          title="Upload the following documents to verify your trust."
+          title="Upload the following documents to verify your organization."
           subtitle={subtitle}
         />
 
         <InputMultiFile
-          name="documentsForTrust"
+          name="documentsForCorporation"
           control={control}
           accepts={['pdf']}
           minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
