@@ -32,20 +32,22 @@ export interface OnboardingFormFields {
   };
 
   corporationAnnualRevenue?: CorporationAnnualRevenue;
+
   corporationIndustry?: Industry;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
-
   documentsForCorporation?: File[];
-  documentsForTrust?: File[];
 
+  documentsForTrust?: File[];
   employmentDetails?: {
     employerName?: string;
     industry?: Industry;
     occupation?: string;
   };
+
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+  isAccreditedInvestor?: boolean;
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
 
   finraInstitution?: string;

@@ -1,4 +1,5 @@
 import { StepAccountType } from './account-type';
+import { StepAccreditedInvestor } from './accredited-investor';
 import { StepCompliances } from './compliance';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepEmploymentDetails } from './employment-details';
@@ -25,6 +26,7 @@ export const FLOW_STEPS = [
   StepFinraInstitution,
   StepSocialSecurityNumber,
   StepIdentificationDocuments,
+  StepAccreditedInvestor,
   StepExperience,
   StepEmploymentDetails,
   StepProfilePicture,
