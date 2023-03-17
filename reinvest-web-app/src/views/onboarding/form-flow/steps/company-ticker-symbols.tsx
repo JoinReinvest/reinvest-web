@@ -13,7 +13,9 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
+const MINUMUM_COMPANY_TICKER_SYMBOLS = 3;
 const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
+const initialValues = new Array(MINUMUM_COMPANY_TICKER_SYMBOLS).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
 
 const schema = z
   .object({
@@ -22,16 +24,17 @@ const schema = z
         symbol: z.string(),
       })
       .array()
-      .min(1),
+      .min(MINUMUM_COMPANY_TICKER_SYMBOLS),
   })
   .superRefine((fields, context) => {
-    const hasAtLeastOneFilled = fields.companyTickerSymbols.some(({ symbol }) => symbol !== '');
+    const countOfFilledFields = fields.companyTickerSymbols.filter(({ symbol }) => symbol !== '').length;
+    const hasAtLeastThreeFilled = countOfFilledFields > -MINUMUM_COMPANY_TICKER_SYMBOLS;
 
-    if (!hasAtLeastOneFilled) {
+    if (!hasAtLeastThreeFilled) {
       return context.addIssue({
         code: 'custom',
         path: ['companyTickerSymbols'],
-        message: 'At least one company ticker symbol is required.',
+        message: `Must have at least ${MINUMUM_COMPANY_TICKER_SYMBOLS} ticker symbols.`,
       });
     }
   });
@@ -39,12 +42,18 @@ const schema = z
 export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.COMPANY_TICKER_SYMBOLS,
 
+  willBePartOfTheFlow: fields => {
+    return fields.accountType === 'CORPORATE';
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const initialValues = storeFields.companyTickerSymbols || [EMPTY_COMPANY_TICKER_SYMBOL];
+    const hasStoredTickerSymbols = !!storeFields.companyTickerSymbols?.length;
+    const defaultValues: Fields = { companyTickerSymbols: hasStoredTickerSymbols ? storeFields.companyTickerSymbols : initialValues };
+
     const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: { companyTickerSymbols: initialValues },
+      defaultValues,
     });
 
     const { fields, append } = useFieldArray({ control, name: 'companyTickerSymbols' });
