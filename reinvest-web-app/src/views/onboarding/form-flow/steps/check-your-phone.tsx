@@ -37,7 +37,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     const { handleSubmit, control, formState, getValues } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+    const { updateData } = useUpdateDataIndividualOnboarding({
       ...getValues(),
       ...storeFields,
     });
@@ -52,12 +52,6 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     const resendCodeOnClick = async () => {
       console.log('resend code clicked');
     };
-
-    // useEffect(() => {
-    //   if (isSuccess) {
-    //     moveToNextStep();
-    //   }
-    // }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>

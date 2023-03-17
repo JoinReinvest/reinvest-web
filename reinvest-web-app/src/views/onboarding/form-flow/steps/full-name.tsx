@@ -39,7 +39,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
+    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 

@@ -53,8 +53,6 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
     const individualDraftAccount = getObjecyByKeys(individualDraftAccountFields, storedFieldsMap);
 
-    console.log('storedFields', storedFields);
-
     if (storedFields.accountType) {
       createDraftAccountMutate(storedFields.accountType);
     }

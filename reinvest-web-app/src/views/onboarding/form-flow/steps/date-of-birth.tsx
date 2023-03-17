@@ -47,7 +47,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
       dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
       ...storeFields,
     });

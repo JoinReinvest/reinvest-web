@@ -44,7 +44,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     });
 
     const { control, handleSubmit, getValues } = form;
-    const { data, error, isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
       ...getValues(),
       ...storeFields,
     });
@@ -75,7 +75,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
           />
 
           <div className="flex">
-            <div className="child:basis-2/5 contents">
+            <div className="contents child:basis-2/5">
               <InputPhoneNumberCountryCode
                 name="phone.countryCode"
                 control={control}
