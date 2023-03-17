@@ -4,7 +4,7 @@ import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
-import { INDUESTRIES_AS_OPTIONS } from 'constants/industries';
+import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -19,7 +19,7 @@ const schema = z.object({
   employmentDetails: z.object({
     employerName: formValidationRules.employerName,
     occupation: formValidationRules.occupation,
-    industry: formValidationRules.industry,
+    industry: z.enum(INDUSTRIES_VALUES),
   }),
 });
 
