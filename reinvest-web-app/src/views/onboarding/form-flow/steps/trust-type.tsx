@@ -5,29 +5,29 @@ import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { CORPORATION_TYPES_AS_OPTIONS, CORPORATION_TYPES_VALUES } from 'constants/account-types';
+import { TRUST_TYPES_AS_OPTIONS, TRUST_TYPES_VALUES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { WhyRequiredCorporationTypeModal } from 'views/whyRequiredModals/WhyRequiredCorporationTypeModal';
+import { WhyRequiredTrustTypeModal } from 'views/whyRequiredModals/WhyRequiredTrustTypeModal';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'corporationType'>;
+type Fields = Pick<OnboardingFormFields, 'trustType'>;
 
 const schema = z.object({
-  corporationType: z.enum(CORPORATION_TYPES_VALUES),
+  trustType: z.enum(TRUST_TYPES_VALUES),
 });
 
-export const StepCorporationType: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.CORPORATION_TYPE,
+export const StepTrustType: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.TRUST_TYPE,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { trustType: storeFields?.trustType };
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const defaultValues: Fields = { corporationType: storeFields?.corporationType };
     const { handleSubmit, formState, control } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
@@ -48,13 +48,13 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="What type of Corporation do you have?" />
+          <Title title="Which type of account would you like to open?" />
 
           <SelectionCards
-            name="corporationType"
+            name="trustType"
             control={control}
-            options={CORPORATION_TYPES_AS_OPTIONS}
-            className="flex flex-col items-stretch justify-center gap-16"
+            options={TRUST_TYPES_AS_OPTIONS}
+            className="mb-30 flex flex-col items-stretch justify-center gap-16"
             orientation="vertical"
           />
 
@@ -74,7 +74,7 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
           </ButtonStack>
         </Form>
 
-        <WhyRequiredCorporationTypeModal
+        <WhyRequiredTrustTypeModal
           isOpen={isInformationModalOpen}
           onOpenChange={setIsInformationModalOpen}
         />
