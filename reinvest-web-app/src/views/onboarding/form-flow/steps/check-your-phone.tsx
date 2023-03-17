@@ -50,7 +50,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     };
 
     const resendCodeOnClick = async () => {
-      console.log('resend code clicked');
+      return;
     };
 
     return (
