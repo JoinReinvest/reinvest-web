@@ -69,8 +69,8 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
       append(EMPTY_COMPANY_TICKER_SYMBOL);
     };
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
+    const onSubmit: SubmitHandler<Fields> = async ({ companyTickerSymbols }) => {
+      await updateStoreFields({ companyTickerSymbols });
       moveToNextStep();
     };
 
