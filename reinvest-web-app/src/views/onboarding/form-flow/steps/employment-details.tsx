@@ -7,7 +7,8 @@ import { Title } from 'components/Title';
 import { INDUESTRIES_AS_OPTIONS } from 'constants/industries';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -25,6 +26,21 @@ const schema = z.object({
 
 export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_DETAILS,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+      fields.socialSecurityNumber,
+    ];
+
+    return fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields);
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -47,7 +63,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Are you currently employed?" />
+        <Title title="Where are you employed?" />
 
         <Input
           name="employmentDetails.employerName"

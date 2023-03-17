@@ -6,7 +6,7 @@ import { Title } from 'components/Title';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { AccountType, Experience } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -15,7 +15,7 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'experience'>;
 
 const schema = z.object({
-  experience: z.enum(['no-experience', 'some-experience', 'very-experienced', 'expert']),
+  experience: z.enum([Experience.VeryExperienced, Experience.Expert, Experience.NoExperience, Experience.SomeExperience]),
 });
 
 export const StepExperience: StepParams<OnboardingFormFields> = {
