@@ -1,4 +1,4 @@
-import { CorporationTypeValue } from 'constants/account-types';
+import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { DomicileType, StatementType } from 'types/graphql';
 
 export interface OnboardingFormFields {
@@ -86,6 +86,7 @@ export interface OnboardingFormFields {
   };
   isAssociatedWithFinra?: boolean;
   lastName?: string;
+
   middleName?: string;
   netIncome?: string;
 
@@ -99,6 +100,7 @@ export interface OnboardingFormFields {
   socialSecurityNumber?: string;
 
   statementType?: StatementType;
+  trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 

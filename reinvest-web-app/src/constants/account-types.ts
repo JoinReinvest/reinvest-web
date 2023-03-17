@@ -50,3 +50,26 @@ export const CORPORATION_TYPES_AS_OPTIONS: SelectionOption[] = CORPORATION_TYPES
   description,
   value,
 }));
+
+export const TRUST_TYPES = [
+  {
+    label: 'Revocable',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    value: 'revocable',
+  },
+  {
+    label: 'Irrevocable',
+    description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    value: 'irrevocable',
+  },
+] as const;
+
+export type TrustTypeValue = (typeof TRUST_TYPES)[number]['value'];
+
+export const TRUST_TYPES_VALUES: [TrustTypeValue, ...TrustTypeValue[]] = [TRUST_TYPES[0].value, ...TRUST_TYPES.slice(1).map(({ value }) => value)];
+
+export const TRUST_TYPES_AS_OPTIONS: SelectionOption[] = TRUST_TYPES.map(({ label, description, value }) => ({
+  title: label,
+  description,
+  value,
+}));
