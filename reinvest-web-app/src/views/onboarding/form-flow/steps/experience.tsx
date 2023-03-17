@@ -5,7 +5,7 @@ import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { Title } from 'components/Title';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
@@ -25,7 +25,18 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
     return fields.accountType === AccountType.Individual;
   },
   doesMeetConditionFields(fields) {
-    return fields.accountType === AccountType.Individual;
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+      fields.socialSecurityNumber,
+    ];
+
+    return fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

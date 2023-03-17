@@ -1,10 +1,14 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
+import { Experience } from 'types/graphql';
 
-import { lowerCaseWithoutSpacesGenerator } from '../utils/optionValueGenerators';
+const EXPERIENCES = [
+  { title: 'No Experience', value: Experience.NoExperience },
+  { title: 'Some Experience', value: Experience.SomeExperience },
+  { title: 'Very Experienced', value: Experience.VeryExperienced },
+  { title: 'Expert', value: Experience.Expert },
+];
 
-const EXPERIENCES = ['No Experience', 'Some Experience', 'Very Experienced', 'Expert'];
-
-export const EXPERIENCES_AS_OPTIONS: SelectionOption[] = EXPERIENCES.map(experience => ({
-  title: experience,
-  value: lowerCaseWithoutSpacesGenerator(experience),
+export const EXPERIENCES_AS_OPTIONS: SelectionOption[] = EXPERIENCES.map(({ title, value }) => ({
+  title,
+  value,
 }));
