@@ -1,12 +1,15 @@
-import { CorporationTypeValue } from 'constants/account-types';
+import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
+import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
+import { Industry } from 'constants/industries';
 
 export interface OnboardingFormFields {
   accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
+
   _didDocumentIdentificationValidationSucceed?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
-  // Are we displaying this as an URL or a file upload?
+
   address?: {
     city?: string;
     state?: string;
@@ -16,9 +19,7 @@ export interface OnboardingFormFields {
   };
   authenticationCode?: string;
   birthCountry?: string;
-  // These fields are only required if residency is 'green-card' or 'visa'
   citizenshipCountry?: string;
-  // If `compliances.isAssociatedWithFinra` is true
   companyTickerSymbols?: CompanyTickerSymbol[];
 
   compliances?: {
@@ -30,19 +31,20 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
 
+  corporationAnnualRevenue?: CorporationAnnualRevenue;
+  corporationIndustry?: Industry;
+  corporationNumberOfEmployees?: CorporationNumberOfEmployees;
+
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
-
   documentsForTrust?: File[];
 
   employmentDetails?: {
-    // Only required if `employmentStatus` is 'employed'
     employerName?: string;
-    industry?: string;
+    industry?: Industry;
     occupation?: string;
   };
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-  // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
 
   finraInstitution?: string;
@@ -61,21 +63,17 @@ export interface OnboardingFormFields {
     back: File | null;
     front: File | null;
   };
-
   lastName?: string;
 
   middleName?: string;
 
   netIncome?: string;
-
   netWorth?: string;
   phoneNumber?: string;
-
   profilePicture?: File | null;
-
-  // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
   socialSecurityNumber?: string;
+  trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
