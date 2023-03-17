@@ -7,9 +7,10 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
 
@@ -25,8 +26,25 @@ const schema = z.object({
 export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER,
 
+  willBePartOfTheFlow(fields) {
+    return fields.accountType === AccountType.Individual;
+  },
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    return fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields);
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const { control, formState, handleSubmit, setValue } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
@@ -56,6 +74,18 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       }
     };
 
+    const setValueOnSocialSecurityNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
+      const isValue = !!event.target.value;
+
+      if (isValue) {
+        const value = event.target.value;
+        const firstPart = value.substring(0, 3);
+        const secondPart = value.substring(3, 5);
+        const thirdPart = value.substring(5, 9);
+        setValue('socialSecurityNumber', `${firstPart}-${secondPart}-${thirdPart}`);
+      }
+    };
+
     if (isLoading) {
       return (
         <div className="flex flex-col items-center gap-32">
@@ -74,6 +104,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
           <InputSocialSecurityNumber
             name="socialSecurityNumber"
             control={control}
+            rules={{ onChange: setValueOnSocialSecurityNumberChange }}
           />
 
           <OpenModalLink

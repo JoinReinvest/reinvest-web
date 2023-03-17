@@ -6,7 +6,8 @@ import { InputFile } from 'components/FormElements/InputFile';
 import { Title } from 'components/Title';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -23,6 +24,25 @@ const schema = z.object({
 
 export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.IDENTIFICATION_DOCUMENTS,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    const individualFields = [fields.socialSecurityNumber];
+
+    return (
+      (fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
+      (fields.accountType !== AccountType.Individual && allRequiredFieldsExists(requiredFields))
+    );
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({

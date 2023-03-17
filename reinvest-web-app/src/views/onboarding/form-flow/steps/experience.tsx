@@ -6,6 +6,7 @@ import { Title } from 'components/Title';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -19,6 +20,13 @@ const schema = z.object({
 
 export const StepExperience: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EXPERIENCE,
+
+  willBePartOfTheFlow(fields) {
+    return fields.accountType === AccountType.Individual;
+  },
+  doesMeetConditionFields(fields) {
+    return fields.accountType === AccountType.Individual;
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({

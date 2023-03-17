@@ -7,6 +7,7 @@ import { Title } from 'components/Title';
 import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { StatementType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -116,7 +117,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
         isSeniorPoliticalFigure: fields.isSeniorPoliticalFigure,
       };
 
-      updateStoreFields({ compliances });
+      updateStoreFields({ compliances, statementType: StatementType.FinraMember });
       moveToNextStep();
     };
 

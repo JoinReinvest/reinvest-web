@@ -5,15 +5,16 @@ import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { StatementType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'finraInstitution'>;
+type Fields = Pick<OnboardingFormFields, 'finraInstitutionName'>;
 
 const schema = z.object({
-  finraInstitution: z.string().min(1),
+  finraInstitutionName: z.string().min(1),
 });
 
 export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
@@ -31,7 +32,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
       fields.residency,
     ];
 
-    return allRequiredFieldsExists(requiredFields);
+    return allRequiredFieldsExists(requiredFields) && fields.statementType === StatementType.FinraMember;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -53,7 +54,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
         <Title title="Please provide name of the FINRA institution below." />
 
         <Input
-          name="finraInstitution"
+          name="finraInstitutionName"
           control={control}
           placeholder="FINRA Institute Name"
         />
