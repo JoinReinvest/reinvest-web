@@ -23,16 +23,16 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
   doesMeetConditionFields(fields) {
     const requiredFields = [
-      // fields.accountType,
       fields.name?.firstName,
       fields.name?.lastName,
       fields.phone?.number,
       fields.phone?.countryCode,
       fields.authCode,
       fields.dateOfBirth,
-      fields.domicile?.type,
+      fields.residency,
       fields.socialSecurityNumber,
       fields.identificationDocument,
+      fields.accountType,
     ];
 
     //TODO: More conditions for individual account type

@@ -5,6 +5,7 @@ import { Form } from 'components/FormElements/Form';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
+import dayjs from 'dayjs';
 import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -103,8 +104,4 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   },
 };
 
-const getDateOfBirth = (dateOfBirth: string) => {
-  const date = dateOfBirth.split('/');
-
-  return `${date[2]}-${date[0]}-${date[1]}`;
-};
+const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM/DD/YYYY').format('YYYY-MM-DD');

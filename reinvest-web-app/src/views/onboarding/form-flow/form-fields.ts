@@ -1,5 +1,5 @@
 import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
-import { DomicileType, StatementType } from 'types/graphql';
+import { DomicileType, EmploymentStatus, StatementType } from 'types/graphql';
 
 export interface OnboardingFormFields {
   accountType: string;
@@ -65,7 +65,7 @@ export interface OnboardingFormFields {
     industry?: string;
     occupation?: string;
   };
-  employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+  employmentStatus?: EmploymentStatus;
   // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
   finraInstitutionName?: string;
