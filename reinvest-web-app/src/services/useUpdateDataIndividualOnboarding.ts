@@ -22,6 +22,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     error: createDraftAccountError,
     isLoading: isCreateDraftAccountLoading,
     mutate: createDraftAccountMutate,
+    isSuccess: isCreateDraftAccountSuccess,
   } = useCreateDraftAccount();
 
   const {
@@ -29,7 +30,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     error: profileDetailsError,
     isLoading: isProfileDetailsLoading,
     mutate: completeProfileMutate,
-    isSuccess: isCreateDraftAccountSuccess,
+    isSuccess: isProfileDetailsSuccess,
   } = useCompleteProfileDetails();
 
   const {
@@ -74,7 +75,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     data: { ...profileDetailsData, ...individualDraftAccoutntData, ...createDraftAccountData, phoneNumberData },
     error: { profileDetailsError, individualDraftAccountError, createDraftAccountError, phoneNumberError },
     isLoading: isProfileDetailsLoading || isIndividualDraftAccountLoading || isCreateDraftAccountLoading || isPhoneNumberLoading,
-    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess,
+    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess || isProfileDetailsSuccess,
     updateData: updateData,
   };
 };

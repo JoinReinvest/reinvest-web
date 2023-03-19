@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
@@ -33,19 +34,29 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { isLoading, updateData } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    const {
+      isLoading,
+      updateData,
+      error: { createDraftAccountError },
+      isSuccess,
+    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
       updateData();
-      moveToNextStep();
     };
 
     const onLinkClick = () => {
       setIsInformationModalOpen(true);
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <>
@@ -54,6 +65,8 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           className="gap-0"
         >
           <Title title="Which type of account would you like to open?" />
+
+          {createDraftAccountError && <FormMessage message={createDraftAccountError.message} />}
 
           <SelectionCards
             name="accountType"

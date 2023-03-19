@@ -4,7 +4,7 @@ import { getApiClient } from 'services/getApiClient';
 import { Mutation } from 'types/graphql';
 
 const createDraftAccountMutatuion = gql`
-  mutation createDraftAccount($type: AccountType) {
+  mutation createDraftAccount($type: DraftAccountType) {
     createDraftAccount(type: $type) {
       id
       type
@@ -12,7 +12,7 @@ const createDraftAccountMutatuion = gql`
   }
 `;
 
-export const useCreateDraftAccount = (): UseMutationResult<Mutation['createDraftAccount']> =>
+export const useCreateDraftAccount = (): UseMutationResult<Mutation['createDraftAccount'], Error> =>
   useMutation({
     mutationFn: async type => {
       const api = await getApiClient();
