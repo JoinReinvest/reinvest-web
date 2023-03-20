@@ -2,11 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputFile } from 'components/FormElements/InputFile';
 import { Title } from 'components/Title';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
@@ -45,38 +47,36 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const [isLoading, setIsLoading] = useState(false);
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocument }) => {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
       try {
-        setIsLoading(true);
-
-        //  TO-DO: Upload files to S3
-        updateStoreFields({ identificationDocument });
-
-        //  TO-DO: Begin document verification process
-
-        //  TO-DO: If documents are valid, update the meta field
-        //      this will be useful for the `IDENTIFICATION_DOCUMENTS_VALIDATION`
-        //      step to know if the documents were valid or not.
-        updateStoreFields({ _didDocumentIdentificationValidationSucceed: true });
-        setIsLoading(false);
-        moveToNextStep();
+        updateStoreFields(fields);
+        updateStoreFields({ _didDocumentIdentificationValidationSucceed: true, ...getValues() });
+        updateData();
       } catch (error) {
-        //  TO-DO: Not sure if we want to move to the next step
-        //      or display an error message.
         updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
-        setIsLoading(false);
       }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     if (isLoading) {
       return (
@@ -92,6 +92,8 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       return (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Title title="Please upload your Driver’s License or Passport for further verification" />
+
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
           <InputFile
             name="identificationDocument.front"
@@ -111,6 +113,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
         </Form>
       );

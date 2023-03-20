@@ -1,4 +1,4 @@
-export const fetcher = (url: string, method = 'GET', body: URLSearchParams | null = null) =>
+export const fetcher = (url: string, method = 'GET', body: URLSearchParams | File | null = null) =>
   fetch(url, { method, body }).then(async res => {
     const result = await res.json();
 

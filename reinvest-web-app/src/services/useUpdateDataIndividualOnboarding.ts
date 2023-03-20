@@ -4,6 +4,7 @@ import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 
 import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
+import { useCreateDocumentsFileLinks } from './queries/createDocumentsFileLinks';
 import { useCreateDraftAccount } from './queries/createDraftAccount';
 import { useSetPhoneNumber } from './queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from './queries/verifyPhoneNumber';
@@ -57,7 +58,16 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     mutate: verifyPhoneNumberMutate,
   } = useVerifyPhoneNumber();
 
-  const updateData = () => {
+  const {
+    data: createDocumentsFileLinksData,
+    error: createDocumentsFileLinksError,
+    isLoading: isCreateDocumentsFileLinksLoading,
+    // mutate: createDocumentsFileLinksMutate,
+    isSuccess: isCreateDocumentsFileLinksSuccess,
+    mutateAsync: createDocumentsFileLinksMutate,
+  } = useCreateDocumentsFileLinks();
+
+  const updateData = async () => {
     const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
 
     const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
@@ -78,6 +88,20 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
       const ssn = socialSecurityNumber ? { ssn: socialSecurityNumber } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
 
+      // send documents to s3
+      // if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back) {
+      //   const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
+
+      //   const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
+
+      //   try {
+      //     s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
+      //     s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
+      //   } catch (error) {
+      //     console.log('error', error);
+      //   }
+      // }
+
       completeProfileMutate({ ...profileDetails, domicile, statements, ssn, investingExperience });
     }
 
@@ -91,10 +115,30 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
   };
 
   return {
-    data: { ...profileDetailsData, ...individualDraftAccoutntData, ...createDraftAccountData, phoneNumberData, verifyPhoneNumberData },
-    error: { profileDetailsError, individualDraftAccountError, createDraftAccountError, phoneNumberError, verifyPhoneNumberError },
-    isLoading: isProfileDetailsLoading || isIndividualDraftAccountLoading || isCreateDraftAccountLoading || isPhoneNumberLoading || isVerifyPhoneNumberLoading,
-    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess || isProfileDetailsSuccess,
+    data: {
+      ...profileDetailsData,
+      ...individualDraftAccoutntData,
+      ...createDraftAccountData,
+      phoneNumberData,
+      verifyPhoneNumberData,
+      ...createDocumentsFileLinksData,
+    },
+    error: {
+      profileDetailsError,
+      individualDraftAccountError,
+      createDraftAccountError,
+      phoneNumberError,
+      verifyPhoneNumberError,
+      createDocumentsFileLinksError,
+    },
+    isLoading:
+      isProfileDetailsLoading ||
+      isIndividualDraftAccountLoading ||
+      isCreateDraftAccountLoading ||
+      isPhoneNumberLoading ||
+      isVerifyPhoneNumberLoading ||
+      isCreateDocumentsFileLinksLoading,
+    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess || isProfileDetailsSuccess || isCreateDocumentsFileLinksSuccess,
     updateData,
   };
 };
