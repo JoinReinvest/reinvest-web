@@ -3,6 +3,7 @@ import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
+import { fetcher } from './fetcher';
 import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from './queries/createDocumentsFileLinks';
@@ -113,18 +114,18 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
       const investingExperience = experience ? { experience: experience } : undefined;
 
       // send documents to s3
-      // if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back) {
-      //   const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
+      if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back) {
+        const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
 
-      //   const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
-
-      //   try {
-      //     s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
-      //     s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
-      //   } catch (error) {
-      //     console.log('error', error);
-      //   }
-      // }
+        const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
+        console.log('s3urls', s3urls);
+        try {
+          s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
+          s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
+        } catch (error) {
+          console.log('error', error);
+        }
+      }
 
       completeProfileMutate({ ...profileDetails, domicile, statements, ssn, investingExperience });
     }
