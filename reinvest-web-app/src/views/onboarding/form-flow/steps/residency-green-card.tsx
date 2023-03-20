@@ -55,7 +55,7 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData();
+      updateData(Identifiers.RESIDENCY_GREEN_CARD);
     };
 
     useEffect(() => {

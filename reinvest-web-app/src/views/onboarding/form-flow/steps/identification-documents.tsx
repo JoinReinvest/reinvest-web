@@ -66,7 +66,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       try {
         updateStoreFields(fields);
         updateStoreFields({ _didDocumentIdentificationValidationSucceed: true, ...getValues() });
-        updateData();
+        updateData(Identifiers.IDENTIFICATION_DOCUMENTS);
       } catch (error) {
         updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }

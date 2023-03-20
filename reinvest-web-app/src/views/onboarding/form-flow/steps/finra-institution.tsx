@@ -56,7 +56,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData();
+      updateData(Identifiers.FINRA_INSTITUTION);
     };
 
     useEffect(() => {

@@ -67,7 +67,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
-      updateData();
+      updateData(Identifiers.DATE_OF_BIRTH);
     };
 
     useEffect(() => {

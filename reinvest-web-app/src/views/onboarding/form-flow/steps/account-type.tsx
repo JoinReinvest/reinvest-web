@@ -45,7 +45,8 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData();
+      updateData(Identifiers.ACCOUNT_TYPE);
+      moveToNextStep();
     };
 
     const onLinkClick = () => {
@@ -54,7 +55,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        moveToNextStep();
+        // moveToNextStep();
       }
     }, [isSuccess, moveToNextStep]);
 

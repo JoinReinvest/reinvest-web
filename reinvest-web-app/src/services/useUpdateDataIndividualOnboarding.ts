@@ -1,6 +1,7 @@
 import { individualDraftAccountFields, profileFields } from 'constants/individualOnboardingFields';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
+import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
 import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
@@ -18,6 +19,29 @@ const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
     return Object.assign(o, { [key]: data });
   }, {});
 };
+
+const profileDetailsSteps = [
+  Identifiers.CHECK_YOUR_PHONE,
+  Identifiers.PHONE_NUMBER,
+  Identifiers.PROFILE_PICTURE,
+  Identifiers.FULL_NAME,
+  Identifiers.DATE_OF_BIRTH,
+  Identifiers.RESIDENCY_STATUS,
+  Identifiers.RESIDENCY_GREEN_CARD,
+  Identifiers.RESIDENCY_VISA,
+  Identifiers.COMPLIANCES,
+  Identifiers.FINRA_INSTITUTION,
+  Identifiers.EMPLOYMENT_STATUS,
+  Identifiers.EMPLOYMENT_DETAILS,
+  Identifiers.NET_WORTH_AND_INCOME,
+  Identifiers.EXPERIENCE,
+  Identifiers.IDENTIFICATION_DOCUMENTS,
+  Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
+  Identifiers.SOCIAL_SECURITY_NUMBER,
+  Identifiers.SOCIAL_SECURITY_NUMBER_VALIDATION,
+];
+
+const createIndividualDraftAccountSteps = [Identifiers.ACCOUNT_TYPE];
 
 export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFields) => {
   const {
@@ -67,13 +91,13 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     mutateAsync: createDocumentsFileLinksMutate,
   } = useCreateDocumentsFileLinks();
 
-  const updateData = async () => {
+  const updateData = async (stepId: Identifiers) => {
     const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
 
     const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
     const individualDraftAccount = getObjecyByKeys(individualDraftAccountFields, storedFieldsMap);
 
-    if (storedFields.accountType) {
+    if (storedFields.accountType && createIndividualDraftAccountSteps.includes(stepId)) {
       createDraftAccountMutate(storedFields.accountType);
     }
 
@@ -81,7 +105,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
       setPhoneNumberMutate({ countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
     }
 
-    if (!isEmptyObject(profileDetails)) {
+    if (!isEmptyObject(profileDetails) && profileDetailsSteps.includes(stepId)) {
       const { residency, statementType, finraInstitutionName, socialSecurityNumber, experience } = storedFields;
       const domicile = residency ? { ...profileDetails.domicile, type: residency } : undefined;
       const statements = statementType && finraInstitutionName ? { type: statementType, forFINRA: { name: finraInstitutionName } } : undefined;

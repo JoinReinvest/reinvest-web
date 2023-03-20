@@ -63,7 +63,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData();
+      updateData(Identifiers.PHONE_NUMBER);
     };
 
     useEffect(() => {

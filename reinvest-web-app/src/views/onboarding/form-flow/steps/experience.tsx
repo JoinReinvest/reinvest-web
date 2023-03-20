@@ -60,7 +60,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData();
+      updateData(Identifiers.EXPERIENCE);
       // moveToNextStep();
     };
 

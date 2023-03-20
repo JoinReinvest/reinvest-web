@@ -51,7 +51,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData();
+      updateData(Identifiers.FULL_NAME);
     };
 
     useEffect(() => {

@@ -50,7 +50,8 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
-      updateData();
+      updateData(Identifiers.CHECK_YOUR_PHONE);
+      moveToNextStep();
     };
 
     const resendCodeOnClick = async () => {
@@ -59,7 +60,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (verifyPhoneNumberData) {
-        moveToNextStep();
+        // moveToNextStep();
       }
     }, [verifyPhoneNumberData, moveToNextStep]);
 

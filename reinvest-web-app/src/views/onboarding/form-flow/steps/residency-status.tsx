@@ -61,7 +61,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
 
-      updateData();
+      updateData(Identifiers.RESIDENCY_STATUS);
     };
 
     useEffect(() => {
