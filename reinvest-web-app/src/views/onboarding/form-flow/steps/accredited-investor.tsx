@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
-import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -14,28 +14,50 @@ import { z } from 'zod';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'accountType'>;
+interface Fields {
+  isAccreditedInvestor: 'yes' | 'no';
+}
 
 const schema = z.object({
-  accountType: z.enum(ACCOUNT_TYPES_VALUES),
+  isAccreditedInvestor: z.enum(['yes', 'no']),
 });
 
-export const StepAccountType: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.ACCOUNT_TYPE,
+const OPTIONS: RadioGroupOptionItem[] = [
+  {
+    title: 'Yes',
+    value: 'yes',
+  },
+  {
+    title: 'No',
+    value: 'no',
+  },
+];
+
+export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.ACCREDITED_INVESTOR,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === 'INDIVIDUAL';
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
+    const hasStoredValue = storeFields.isAccreditedInvestor !== undefined;
+    const storedValue = storeFields.isAccreditedInvestor ? 'yes' : 'no';
+    const defaultValues: Fields = { isAccreditedInvestor: hasStoredValue ? storedValue : 'no' };
     const { handleSubmit, formState, control } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ accountType }) => {
-      await updateStoreFields({ accountType });
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      const isAccreditedInvestor = fields?.isAccreditedInvestor === 'yes' ? true : false;
+
+      await updateStoreFields({ isAccreditedInvestor });
       moveToNextStep();
     };
 
@@ -46,26 +68,26 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Which type of account would you like to open?" />
-
-          <SelectionCards
-            name="accountType"
-            control={control}
-            options={ACCOUNT_TYPES_AS_OPTIONS}
-            className="mb-30 flex flex-col items-stretch justify-center gap-24"
-            orientation="vertical"
-          />
+          <Title title="Are you an accredited investor?" />
 
           <OpenModalLink
-            label="Not sure which is best for you?"
+            label="What is an accredited investor?"
             onClick={onLinkClick}
           />
 
-          <Button
-            type="submit"
-            disabled={shouldButtonBeDisabled}
-            label="Continue"
+          <RadioGroupOptions
+            name="isAccreditedInvestor"
+            control={control}
+            options={OPTIONS}
           />
+
+          <ButtonStack>
+            <Button
+              type="submit"
+              disabled={shouldButtonBeDisabled}
+              label="Continue"
+            />
+          </ButtonStack>
         </Form>
 
         <WhyRequiredAccountTypeModal

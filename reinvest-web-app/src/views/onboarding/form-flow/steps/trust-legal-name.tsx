@@ -1,7 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
-import { TextArea } from 'components/FormElements/TextArea';
+import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -10,20 +11,25 @@ import { z } from 'zod';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'seniorPoliticalFigure'>;
+type Fields = Pick<OnboardingFormFields, 'trustLegalName'>;
 
 const schema = z.object({
-  seniorPoliticalFigure: z.string().min(1),
+  trustLegalName: z.string().min(1),
 });
 
-export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.SENIOR_POLITICAL_FIGURE,
+export const StepTrustLegalName: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.TRUST_LEGAL_NAME,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === 'TRUST';
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { trustLegalName: storeFields.trustLegalName || '' };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -35,19 +41,21 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please provide the name and position of this senior political figure." />
+        <Title title="Enter yout Trust's legal name." />
 
-        <TextArea
-          name="seniorPoliticalFigure"
+        <Input
+          name="trustLegalName"
           control={control}
-          maxCharacters={220}
+          placeholder="Trust Legal Name"
         />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

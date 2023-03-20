@@ -27,11 +27,12 @@ export const formValidationRules = {
   citizenshipCountry: standardRequiredString,
   visaType: standardRequiredString,
   middleName: zod.string().optional(),
-  referralCode: zod.string().regex(/^\d{6}$/, { message: 'Invalid referral code' }),
+  referralCode: zod.string().regex(/^[a-zA-Z0-9]{6}$/, { message: 'Invalid referral code' }),
   date: zod.string({ required_error: requiredError }).regex(/^(\d{2})\/(\d{2})\/(\d{4})$/),
   phoneNumber: zod.string().regex(/^\d{10}$/, { message: 'Invalid phone number' }),
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
   socialSecurityNumber: zod.string().regex(/^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$/, { message: 'Invalid Social Security Number' }),
+  ein: zod.string().regex(/^[0-9]{3}-[0-9]{6}/, { message: 'Invalid EIN' }),
 };
 
 export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
@@ -46,6 +47,20 @@ export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMega
       const fileType = file?.type;
 
       return acceptedTypes.includes(fileType);
+    }, 'File type not supported');
+};
+
+export const generateMultiFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
+  const sizeLimitInBytes = sizeLimitInMegaBytes * BYTES_IN_MEGABYTE;
+
+  return zod
+    .custom<File>()
+    .array()
+    .refine(files => files.every(file => file.size <= sizeLimitInBytes), `File size must be smaller than ${sizeLimitInMegaBytes}MB`)
+    .refine(files => {
+      const acceptedTypes = mapToMimeType(accepts);
+
+      return files.every(file => acceptedTypes.includes(file.type));
     }, 'File type not supported');
 };
 
