@@ -202,6 +202,10 @@ export const STATES = [
     name: 'Wyoming',
     code: 'WY',
   },
-];
+] as const;
+
+export type StateCode = (typeof STATES)[number]['code'];
+
+export const STATE_CODES: [StateCode, ...StateCode[]] = [STATES[0].code, ...STATES.slice(1).map(({ code }) => code)];
 
 export const STATES_AS_SELECT_OPTION: ComponentProps<typeof Select>['options'] = STATES.map(({ name, code }) => ({ label: name, value: code }));
