@@ -40,20 +40,20 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
         setIsLoading(true);
 
         //  TO-DO: Upload files to S3
-        await updateStoreFields({ identificationDocument });
+        updateStoreFields({ identificationDocument });
 
         //  TO-DO: Begin document verification process
 
         //  TO-DO: If documents are valid, update the meta field
         //      this will be useful for the `IDENTIFICATION_DOCUMENTS_VALIDATION`
         //      step to know if the documents were valid or not.
-        await updateStoreFields({ _didDocumentIdentificationValidationSucceed: true });
+        updateStoreFields({ _didDocumentIdentificationValidationSucceed: true });
         setIsLoading(false);
         moveToNextStep();
       } catch (error) {
         //  TO-DO: Not sure if we want to move to the next step
         //      or display an error message.
-        await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
+        updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
         setIsLoading(false);
       }
     };

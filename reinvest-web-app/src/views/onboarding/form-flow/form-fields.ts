@@ -1,15 +1,10 @@
-import { AccountTypeValue, CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
-import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
-import { Industry } from 'constants/industries';
-
 export interface OnboardingFormFields {
+  accountType: string;
   residency: 'us' | 'green-card' | 'visa' | undefined;
-
   _didDocumentIdentificationValidationSucceed?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
-  accountType?: AccountTypeValue;
-
+  // Are we displaying this as an URL or a file upload?
   address?: {
     city?: string;
     state?: string;
@@ -19,7 +14,9 @@ export interface OnboardingFormFields {
   };
   authenticationCode?: string;
   birthCountry?: string;
+  // These fields are only required if residency is 'green-card' or 'visa'
   citizenshipCountry?: string;
+  // If `compliances.isAssociatedWithFinra` is true
   companyTickerSymbols?: CompanyTickerSymbol[];
 
   compliances?: {
@@ -31,27 +28,19 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
 
-  corporationAnnualRevenue?: CorporationAnnualRevenue;
-
-  corporationIndustry?: Industry;
-  corporationLegalName?: string;
-  corporationNumberOfEmployees?: CorporationNumberOfEmployees;
-  corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
-  documentsForCorporation?: File[];
-
-  documentsForTrust?: File[];
-  ein?: string;
   employmentDetails?: {
+    // Only required if `employmentStatus` is 'employed'
     employerName?: string;
-    industry?: Industry;
+    industry?: string;
     occupation?: string;
   };
 
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+
+  // Are we displaying this as an URL or a file upload?
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
   finraInstitution?: string;
-
   firstName?: string;
 
   household?: {
@@ -62,23 +51,27 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
+
   identificationDocument?: {
     back: File | null;
     front: File | null;
   };
-  isAccreditedInvestor?: boolean;
 
   lastName?: string;
-
   middleName?: string;
+
   netIncome?: string;
+
   netWorth?: string;
+
   phoneNumber?: string;
+
   profilePicture?: File | null;
+  // If `compliances.isAssociatedWithPubliclyTradedCompany` is true
   seniorPoliticalFigure?: string;
+
   socialSecurityNumber?: string;
-  trustLegalName?: string;
-  trustType?: TrustTypeValue;
+
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 

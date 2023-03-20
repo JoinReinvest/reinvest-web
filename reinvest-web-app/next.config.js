@@ -29,8 +29,5 @@ module.exports = withVideos(
       AWS_COGNITO_REGION: process.env.AWS_COGNITO_REGION,
       API_URL: process.env.API_URL,
     },
-    redirects: async () => {
-      return [{ source: '/referral/:id', destination: '/register/?referral=:id', permanent: true }];
-    },
   }),
 );

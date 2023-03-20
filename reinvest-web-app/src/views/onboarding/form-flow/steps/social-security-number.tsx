@@ -7,7 +7,7 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
@@ -26,7 +26,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, setValue } = useForm<Fields>({
+    const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
@@ -49,22 +49,10 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         //      or assigned to another account - set `_isSocialSecurityNumberBanned`
         //      and `_isSocialSecurityNumberAlreadyAssigned` accordingly.
 
-        await updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+        updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
         moveToNextStep();
       } catch (error) {
         setIsLoading(false);
-      }
-    };
-
-    const setValueOnSocialSecurityNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const isValue = !!event.target.value;
-
-      if (isValue) {
-        const value = event.target.value;
-        const firstPart = value.substring(0, 3);
-        const secondPart = value.substring(3, 5);
-        const thirdPart = value.substring(5, 9);
-        setValue('socialSecurityNumber', `${firstPart}-${secondPart}-${thirdPart}`);
       }
     };
 
@@ -86,7 +74,6 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
           <InputSocialSecurityNumber
             name="socialSecurityNumber"
             control={control}
-            rules={{ onChange: setValueOnSocialSecurityNumberChange }}
           />
 
           <OpenModalLink

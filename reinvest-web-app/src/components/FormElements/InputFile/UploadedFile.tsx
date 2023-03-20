@@ -10,7 +10,7 @@ export const UploadedFile = ({ fileName, onRemove }: UploadedFileProps) => {
     <div className="flex items-center gap-8 border border-dashed border-green-frost-01 p-8">
       <Typography
         variant="button"
-        className="text-left line-clamp-1"
+        className="text-left"
       >
         {fileName}
       </Typography>

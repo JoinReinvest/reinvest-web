@@ -34,8 +34,8 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ accountType }) => {
-      await updateStoreFields({ accountType });
+    const onSubmit: SubmitHandler<Fields> = fields => {
+      updateStoreFields(fields);
       moveToNextStep();
     };
 
