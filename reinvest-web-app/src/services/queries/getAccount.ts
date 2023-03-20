@@ -4,17 +4,34 @@ import { getApiClient } from 'services/getApiClient';
 import { Query } from 'types/graphql';
 
 import { AvatarFragment } from './fragments/avatar';
+import { EmployerFragment } from './fragments/employer';
+import { NetRangeFragment } from './fragments/netRange';
 
 const getAccountQuery = gql`
   ${AvatarFragment}
-  query getAccount($accountId: String) {
-    getAccount(accountId: $accountId) {
+  ${EmployerFragment}
+  ${NetRangeFragment}
+  query getIndividualAccount($accountId: String) {
+    getIndividualAccount(accountId: $accountId) {
       id
-      type
       avatar {
         ...AvatarFragment
       }
       positionTotal
+      details {
+        employmentStatus {
+          status
+        }
+        employer {
+          ...EmployerFragment
+        }
+        netWorth {
+          ...NetRangeFragment
+        }
+        netIncome {
+          ...NetRangeFragment
+        }
+      }
     }
   }
 `;
