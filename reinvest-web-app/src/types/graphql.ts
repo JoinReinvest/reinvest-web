@@ -416,6 +416,11 @@ export type ProfileCompletionStatus = {
   phoneCompleted?: Maybe<Scalars['Boolean']>;
 };
 
+export type UserInvitationToken = {
+  __typename?: 'UserInvitationToken';
+  url?: Maybe<Scalars['String']>;
+};
+
 export type ProfileDetails = {
   __typename?: 'ProfileDetails';
   address?: Maybe<Address>;
@@ -483,6 +488,7 @@ export type Query = {
   /** [MOCK] List all existing draft accounts if you need come back to onboarding */
   listAccountDrafts?: Maybe<Array<Maybe<DraftAccount>>>;
   profileCompletionStatus?: Maybe<ProfileCompletionStatus>;
+  userInvitationLink?: Maybe<UserInvitationToken>;
 };
 
 export type QueryCanOpenAccountArgs = {
