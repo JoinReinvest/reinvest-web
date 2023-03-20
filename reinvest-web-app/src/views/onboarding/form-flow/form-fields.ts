@@ -34,12 +34,14 @@ export interface OnboardingFormFields {
   corporationAnnualRevenue?: CorporationAnnualRevenue;
 
   corporationIndustry?: Industry;
+  corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
   documentsForCorporation?: File[];
 
   documentsForTrust?: File[];
+  ein?: string;
   employmentDetails?: {
     employerName?: string;
     industry?: Industry;
@@ -47,9 +49,7 @@ export interface OnboardingFormFields {
   };
 
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-  isAccreditedInvestor?: boolean;
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
-
   finraInstitution?: string;
 
   firstName?: string;
@@ -66,10 +66,11 @@ export interface OnboardingFormFields {
     back: File | null;
     front: File | null;
   };
+  isAccreditedInvestor?: boolean;
+
   lastName?: string;
 
   middleName?: string;
-
   netIncome?: string;
   netWorth?: string;
   phoneNumber?: string;

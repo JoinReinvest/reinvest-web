@@ -49,7 +49,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         //      or assigned to another account - set `_isSocialSecurityNumberBanned`
         //      and `_isSocialSecurityNumberAlreadyAssigned` accordingly.
 
-        updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+        await updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
         moveToNextStep();
       } catch (error) {
         setIsLoading(false);

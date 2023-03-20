@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
@@ -10,44 +11,51 @@ import { z } from 'zod';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'finraInstitution'>;
+type Fields = Pick<OnboardingFormFields, 'corporationLegalName'>;
 
 const schema = z.object({
-  finraInstitution: z.string().min(1),
+  corporationLegalName: z.string().min(1),
 });
 
-export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.FINRA_INSTITUTION,
+export const StepCorporationLegalName: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.CORPORATION_LEGAL_NAME,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === 'CORPORATE';
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { corporationLegalName: storeFields.corporationLegalName || '' };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
+    const onSubmit: SubmitHandler<Fields> = fields => {
+      updateStoreFields(fields);
       moveToNextStep();
     };
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please provide name of the FINRA institution below." />
+        <Title title="Enter your Corporation's legal name." />
 
         <Input
-          name="finraInstitution"
+          name="corporationLegalName"
           control={control}
-          placeholder="FINRA Institute Name"
+          placeholder="Corporate Legal Name"
         />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

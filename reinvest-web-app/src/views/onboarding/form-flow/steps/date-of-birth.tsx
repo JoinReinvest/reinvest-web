@@ -39,8 +39,8 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       setIsInformationModalOpen(true);
     };
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
+    const onSubmit: SubmitHandler<Fields> = async ({ dateOfBirth }) => {
+      await updateStoreFields({ dateOfBirth });
       moveToNextStep();
     };
 
