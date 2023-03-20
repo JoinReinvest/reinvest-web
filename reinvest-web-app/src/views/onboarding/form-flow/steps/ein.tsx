@@ -2,37 +2,42 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
-import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { InputEIN } from 'components/FormElements/InputEIN';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { TRUST_TYPES_AS_OPTIONS, TRUST_TYPES_VALUES } from 'constants/account-types';
+import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { WhyRequiredTrustTypeModal } from 'views/whyRequiredModals/WhyRequiredTrustTypeModal';
+import { WhatIsEINModal } from 'views/EINModal';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'trustType'>;
+type Fields = Pick<OnboardingFormFields, 'ein'>;
 
 const schema = z.object({
-  trustType: z.enum(TRUST_TYPES_VALUES),
+  ein: formValidationRules.ein,
 });
 
-export const StepTrustType: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.TRUST_TYPE,
+export const StepEIN: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.EIN,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === 'CORPORATE' || accountType === 'TRUST';
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { trustType: storeFields?.trustType };
-    const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const defaultValues: Fields = { ein: storeFields.ein || '' };
 
-    const { handleSubmit, formState, control } = useForm<Fields>({
+    const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues,
     });
+
+    const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
@@ -41,40 +46,41 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
-    const onLinkClick = () => {
-      setIsInformationModalOpen(true);
-    };
-
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Which type of account would you like to open?" />
+          <Title title="Enter your EIN" />
 
-          <SelectionCards
-            name="trustType"
-            control={control}
-            options={TRUST_TYPES_AS_OPTIONS}
-            className="mb-30 flex flex-col items-stretch justify-center gap-16"
-            orientation="vertical"
-          />
-
-          <div className="flex w-full justify-center">
-            <OpenModalLink
-              label="Not sure which is best for you?"
-              onClick={onLinkClick}
+          <div className="flex w-full flex-col gap-32">
+            <InputEIN
+              name="ein"
+              control={control}
             />
+
+            <div className="flex justify-between">
+              <OpenModalLink
+                label="EIN?"
+                green
+                onClick={() => setIsInformationModalOpen(true)}
+              />
+
+              <OpenModalLink
+                label="I do not have an EIN."
+                green
+              />
+            </div>
           </div>
 
           <ButtonStack>
             <Button
               type="submit"
-              disabled={shouldButtonBeDisabled}
               label="Continue"
+              disabled={shouldButtonBeDisabled}
             />
           </ButtonStack>
         </Form>
 
-        <WhyRequiredTrustTypeModal
+        <WhatIsEINModal
           isOpen={isInformationModalOpen}
           onOpenChange={setIsInformationModalOpen}
         />

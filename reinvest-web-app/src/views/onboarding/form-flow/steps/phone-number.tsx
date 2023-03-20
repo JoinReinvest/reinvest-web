@@ -44,9 +44,10 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
       setIsInformationModalOpen(true);
     };
 
-    const onSubmit: SubmitHandler<Fields> = ({ countryCode, phone }) => {
+    const onSubmit: SubmitHandler<Fields> = async ({ countryCode, phone }) => {
       const phoneNumber = `${countryCode}${phone}`;
-      updateStoreFields({ phoneNumber });
+
+      await updateStoreFields({ phoneNumber });
       moveToNextStep();
     };
 

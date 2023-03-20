@@ -1,5 +1,6 @@
 import { StepAccountType } from './account-type';
 import { StepCompliances } from './compliance';
+import { StepCorporationLegalName } from './corporation-legal-name';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepEmploymentDetails } from './employment-details';
 import { StepExperience } from './experience';
@@ -29,6 +30,7 @@ export const FLOW_STEPS = [
   StepIdentificationDocuments,
   StepExperience,
   StepEmploymentDetails,
+  StepCorporationLegalName,
   StepTrustType,
   StepTrustLegalName,
   StepProfilePicture,
