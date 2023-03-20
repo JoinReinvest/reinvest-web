@@ -14,6 +14,8 @@ import { StepResidencyGreenCard } from './residency-green-card';
 import { StepResidencyStatus } from './residency-status';
 import { StepResidencyVisa } from './residency-visa';
 import { StepSocialSecurityNumber } from './social-security-number';
+import { StepTrustLegalName } from './trust-legal-name';
+import { StepTrustType } from './trust-type';
 
 export const FLOW_STEPS = [
   StepAccountType,
@@ -31,5 +33,7 @@ export const FLOW_STEPS = [
   StepExperience,
   StepEmploymentDetails,
   StepCorporationLegalName,
+  StepTrustType,
+  StepTrustLegalName,
   StepProfilePicture,
 ];

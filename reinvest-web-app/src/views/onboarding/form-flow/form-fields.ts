@@ -77,6 +77,7 @@ export interface OnboardingFormFields {
   profilePicture?: File | null;
   seniorPoliticalFigure?: string;
   socialSecurityNumber?: string;
+  trustLegalName?: string;
   trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
