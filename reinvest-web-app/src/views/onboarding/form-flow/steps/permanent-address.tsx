@@ -5,19 +5,19 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
-import { AsyncSelectOption, SelectAsync } from 'components/FormElements/SelectAsync';
+import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { STATES_AS_SELECT_OPTION } from 'constants/states';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 
-import { Address, OnboardingFormFields } from '../form-fields';
+import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Address;
-type AddressAsOption = AsyncSelectOption<Address>;
+type Fields = Exclude<OnboardingFormFields['permanentAddress'], undefined>;
 
 const schema = formValidationRules.address;
 
@@ -25,30 +25,28 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PERMANENT_ADDRESS,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const initialValues: Fields = { streetAddress: '', streetAddress2: '', city: '', state: '', zipCode: '' };
+    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '' };
     const defaultValues: Fields = storeFields.permanentAddress || initialValues;
 
-    const { control, formState, setValue, handleSubmit, watch } = useForm<Fields>({
+    const { control, formState, setValue, handleSubmit } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues,
     });
 
-    const zipCode = watch('zipCode');
-
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const formatSelectedAddress = (address: AddressAsOption) => {
-      const hasStreetAddress = !!address.streetAddress;
+      const hasStreetAddress = !!address.addressLine1;
 
-      return hasStreetAddress ? address.streetAddress : address.label;
+      return hasStreetAddress ? address.addressLine1 : address.label;
     };
 
     const setValuesFromStreetAddress = (address: AddressAsOption | null) => {
       if (address) {
-        setValue('city', address.city);
-        setValue('state', address.state);
-        setValue('zipCode', address.zipCode);
+        setValue('city', address.city || '');
+        setValue('state', address.state || '');
+        setValue('zip', address.zip || '');
       }
     };
 
@@ -68,17 +66,17 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
         <div className="flex w-full flex-col gap-16">
           <SelectAsync
-            name="streetAddress"
+            name="addressLine1"
             control={control}
             loadOptions={getAddresses}
             placeholder="Street Address or P.O. Box"
-            formatOptionsLabel={(option, meta) => formatOptionLabel(option, meta.inputValue)}
+            formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
             formatSelectedOptionLabel={formatSelectedAddress}
             onOptionSelected={setValuesFromStreetAddress}
           />
 
           <Input
-            name="streetAddress2"
+            name="addressLine2"
             control={control}
             placeholder="Apt, suite, unit, building, floor, etc"
           />
@@ -97,8 +95,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
           />
 
           <InputZipCode
-            name="zipCode"
-            defaultValue={zipCode}
+            name="zip"
             control={control}
             shouldUnregister
           />
@@ -114,74 +111,4 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
       </Form>
     );
   },
-};
-
-const formatOptionLabel = ({ streetAddress, city, state, label }: AddressAsOption, inputValue?: string) => {
-  const hasRequiredFields = !!streetAddress && !!city && !!state;
-  const hasLabel = !!label;
-
-  if (hasRequiredFields) {
-    return `${streetAddress} ${city}, ${state}`;
-  }
-
-  if (!hasRequiredFields && hasLabel) {
-    return label;
-  }
-
-  return inputValue || '';
-};
-
-// TO-DO: Replace with service call
-const getAddresses = async (inputValue: string) => {
-  const addresses: Address[] = [
-    {
-      streetAddress: '461 Dean Street',
-      streetAddress2: 'Apt 1',
-      city: 'Brooklyn',
-      state: 'NY',
-      zipCode: '11217',
-    },
-    {
-      streetAddress: '461 West 34th Street',
-      streetAddress2: '',
-      city: 'New York',
-      state: 'NY',
-      zipCode: '10001',
-    },
-    {
-      streetAddress: '4610 Center Boulevard',
-      streetAddress2: '',
-      city: 'Long Island City',
-      state: 'NY',
-      zipCode: '11109',
-    },
-    {
-      streetAddress: '4612 Glenwood Road',
-      streetAddress2: '',
-      city: 'Brooklyn',
-      state: 'NY',
-      zipCode: '11210',
-    },
-    {
-      streetAddress: '4617 7th Avenue',
-      streetAddress2: '',
-      city: 'Brooklyn',
-      state: 'NY',
-      zipCode: '11220',
-    },
-  ];
-
-  const addressesAsOptions: AddressAsOption[] = addresses
-    .map(address => ({
-      label: '',
-      value: address.streetAddress,
-      ...address,
-    }))
-    .map(address => ({ ...address, label: formatOptionLabel(address) }));
-
-  return new Promise<AddressAsOption[]>(resolve => {
-    setTimeout(() => {
-      resolve(addressesAsOptions.filter(address => address.value.toLowerCase().includes(inputValue.toLowerCase())));
-    }, 1000);
-  });
 };

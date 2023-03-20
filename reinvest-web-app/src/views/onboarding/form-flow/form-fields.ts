@@ -1,6 +1,7 @@
 import { AccountTypeValue, CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
 import { Industry } from 'constants/industries';
+import { Address } from 'types/graphql';
 
 export interface OnboardingFormFields {
   residency: 'us' | 'green-card' | 'visa' | undefined;
@@ -77,12 +78,4 @@ export interface OnboardingFormFields {
 
 export interface CompanyTickerSymbol {
   symbol: string;
-}
-
-export interface Address {
-  city: string;
-  state: string;
-  streetAddress: string;
-  zipCode: string;
-  streetAddress2?: string;
 }
