@@ -1,7 +1,7 @@
 import { StepAccountType } from './account-type';
 import { StepAccreditedInvestor } from './accredited-investor';
-import { StepBusinessAddress } from './business-address';
 import { StepSignatoryEntity } from './authorized-signatory-entity';
+import { StepBusinessAddress } from './business-address';
 import { StepCompliances } from './compliance';
 import { StepCorporationLegalName } from './corporation-legal-name';
 import { StepDateOfBirth } from './date-of-birth';
