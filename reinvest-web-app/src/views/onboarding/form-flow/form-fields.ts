@@ -12,6 +12,7 @@ export interface OnboardingFormFields {
   accountType?: AccountTypeValue;
   authenticationCode?: string;
   birthCountry?: string;
+  businessAddress?: Address;
   citizenshipCountry?: string;
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: {
