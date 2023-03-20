@@ -1,6 +1,7 @@
 import { AccountTypeValue, CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
 import { Industry } from 'constants/industries';
+import { Address } from 'types/graphql';
 
 export interface OnboardingFormFields {
   residency: 'us' | 'green-card' | 'visa' | undefined;
@@ -9,19 +10,11 @@ export interface OnboardingFormFields {
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
   accountType?: AccountTypeValue;
-
-  address?: {
-    city?: string;
-    state?: string;
-    streetAddress?: string;
-    streetAddress2?: string;
-    zipCode?: string;
-  };
   authenticationCode?: string;
   birthCountry?: string;
+  businessAddress?: Address;
   citizenshipCountry?: string;
   companyTickerSymbols?: CompanyTickerSymbol[];
-
   compliances?: {
     // Are you or anyone in your immediate compliances, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
@@ -34,20 +27,20 @@ export interface OnboardingFormFields {
   corporationAnnualRevenue?: CorporationAnnualRevenue;
 
   corporationIndustry?: Industry;
+
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
   documentsForCorporation?: File[];
-
   documentsForTrust?: File[];
+
   ein?: string;
   employmentDetails?: EmploymentDetails;
-
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
+
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
   finraInstitution?: string;
-
   firstName?: string;
 
   household?: {
@@ -58,12 +51,21 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-  identificationDocument?: IdentificationDocuments;
+
+  identificationDocument?: {
+    back: File | null;
+    front: File | null;
+  };
+  
   isAccreditedInvestor?: boolean;
+  identificationDocument?: IdentificationDocuments;
+  isAuthorizedSignatoryEntity?: boolean;
   lastName?: string;
   middleName?: string;
+
   netIncome?: string;
   netWorth?: string;
+  permanentAddress?: Address;
   phoneNumber?: string;
   phoneNumberAuthenticationCode?: string;
   profilePicture?: File | null;
