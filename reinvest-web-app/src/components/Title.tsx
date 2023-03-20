@@ -1,5 +1,4 @@
 import cx from 'classnames';
-import { ReactNode } from 'react';
 
 import { Typography } from './Typography';
 
@@ -7,7 +6,7 @@ interface Props {
   title: string;
   className?: string;
   isTitleCenteredOnMobile?: boolean;
-  subtitle?: ReactNode;
+  subtitle?: string;
 }
 
 export const Title = ({ title, subtitle, className = '', isTitleCenteredOnMobile = false }: Props) => {

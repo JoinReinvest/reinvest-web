@@ -36,8 +36,8 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
+    const onSubmit: SubmitHandler<Fields> = fields => {
+      updateStoreFields(fields);
       moveToNextStep();
     };
 

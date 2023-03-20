@@ -206,8 +206,27 @@ module.exports = {
         'transform-color': 'transform, color',
       },
       animation: {
-        'spin-reverse': 'spin 1s linear infinite reverse'
-      }
+        spinner: 'fade-out 0.8s linear infinite',
+      },
+      keyframes: {
+        'fade-in': {
+          '0%': {
+            opacity: 0,
+          },
+          '100%': {
+            opacity: 1,
+          },
+        },
+
+        'fade-out': {
+          '0%': {
+            opacity: 1,
+          },
+          '100%': {
+            opacity: 0,
+          },
+        },
+      },
     },
   },
   plugins: [
@@ -228,6 +247,33 @@ module.exports = {
 
         '.font-stretch-normal': {
           'font-stretch': 'normal',
+        },
+      });
+
+      addUtilities({
+        '.animation-delay-100': {
+          'animation-delay': '100ms',
+        },
+        '.animation-delay-200': {
+          'animation-delay': '200ms',
+        },
+        '.animation-delay-300': {
+          'animation-delay': '300ms',
+        },
+        '.animation-delay-400': {
+          'animation-delay': '400ms',
+        },
+        '.animation-delay-500': {
+          'animation-delay': '500ms',
+        },
+        '.animation-delay-600': {
+          'animation-delay': '600ms',
+        },
+        '.animation-delay-700': {
+          'animation-delay': '700ms',
+        },
+        '.animation-delay-800': {
+          'animation-delay': '800ms',
         },
       });
 

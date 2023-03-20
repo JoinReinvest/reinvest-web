@@ -13,9 +13,7 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
-const MINUMUM_COMPANY_TICKER_SYMBOLS = 3;
 const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
-const initialValues = new Array(MINUMUM_COMPANY_TICKER_SYMBOLS).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
 
 const schema = z
   .object({
@@ -24,17 +22,16 @@ const schema = z
         symbol: z.string(),
       })
       .array()
-      .min(MINUMUM_COMPANY_TICKER_SYMBOLS),
+      .min(1),
   })
   .superRefine((fields, context) => {
-    const countOfFilledFields = fields.companyTickerSymbols.filter(({ symbol }) => symbol !== '').length;
-    const hasAtLeastThreeFilled = countOfFilledFields > -MINUMUM_COMPANY_TICKER_SYMBOLS;
+    const hasAtLeastOneFilled = fields.companyTickerSymbols.some(({ symbol }) => symbol !== '');
 
-    if (!hasAtLeastThreeFilled) {
+    if (!hasAtLeastOneFilled) {
       return context.addIssue({
         code: 'custom',
         path: ['companyTickerSymbols'],
-        message: `Must have at least ${MINUMUM_COMPANY_TICKER_SYMBOLS} ticker symbols.`,
+        message: 'At least one company ticker symbol is required.',
       });
     }
   });
@@ -42,18 +39,12 @@ const schema = z
 export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.COMPANY_TICKER_SYMBOLS,
 
-  willBePartOfTheFlow: fields => {
-    return fields.accountType === 'CORPORATE';
-  },
-
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const hasStoredTickerSymbols = !!storeFields.companyTickerSymbols?.length;
-    const defaultValues: Fields = { companyTickerSymbols: hasStoredTickerSymbols ? storeFields.companyTickerSymbols : initialValues };
-
+    const initialValues = storeFields.companyTickerSymbols || [EMPTY_COMPANY_TICKER_SYMBOL];
     const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues,
+      defaultValues: { companyTickerSymbols: initialValues },
     });
 
     const { fields, append } = useFieldArray({ control, name: 'companyTickerSymbols' });
@@ -78,8 +69,8 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
       append(EMPTY_COMPANY_TICKER_SYMBOL);
     };
 
-    const onSubmit: SubmitHandler<Fields> = async ({ companyTickerSymbols }) => {
-      await updateStoreFields({ companyTickerSymbols });
+    const onSubmit: SubmitHandler<Fields> = fields => {
+      updateStoreFields(fields);
       moveToNextStep();
     };
 

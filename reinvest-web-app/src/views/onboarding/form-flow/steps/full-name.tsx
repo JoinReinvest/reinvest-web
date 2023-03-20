@@ -31,8 +31,8 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
+    const onSubmit: SubmitHandler<Fields> = fields => {
+      updateStoreFields(fields);
       moveToNextStep();
     };
 

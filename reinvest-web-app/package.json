@@ -49,7 +49,7 @@
     "@hookooekoo/ui-collapsible": "^0.1.5",
     "@hookooekoo/ui-dialog": "^0.2.0",
     "@hookooekoo/ui-icon": "^0.0.12",
-    "@hookooekoo/ui-input-masked": "^0.5.1",
+    "@hookooekoo/ui-input-masked": "^0.5.0",
     "@hookooekoo/ui-input-text": "^0.4.0",
     "@hookooekoo/ui-link": "^0.1.0",
     "@hookooekoo/ui-radio-group": "^1.2.0",
