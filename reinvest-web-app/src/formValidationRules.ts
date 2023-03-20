@@ -1,5 +1,6 @@
 import { BYTES_IN_MEGABYTE } from 'constants/conversions';
 import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
+import { STATE_CODES } from 'constants/states';
 import dayjs from 'dayjs';
 import zod from 'zod';
 
@@ -33,6 +34,14 @@ export const formValidationRules = {
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
   socialSecurityNumber: zod.string().regex(/^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$/, { message: 'Invalid Social Security Number' }),
   ein: zod.string().regex(/^[0-9]{3}-[0-9]{6}/, { message: 'Invalid EIN' }),
+
+  address: zod.object({
+    city: standardRequiredString,
+    state: zod.enum(STATE_CODES),
+    streetAddress: standardRequiredString,
+    streetAddress2: zod.string().nullable(),
+    zipCode: zod.string().regex(/^\d{5}(?:[-\s]\d{4})?$/, { message: 'Invalid zip code' }),
+  }),
 };
 
 export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
