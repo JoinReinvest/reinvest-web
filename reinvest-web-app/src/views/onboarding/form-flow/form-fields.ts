@@ -67,6 +67,7 @@ export interface OnboardingFormFields {
     front: File | null;
   };
   isAccreditedInvestor?: boolean;
+  isAuthorizedSignatoryEntity?: boolean;
 
   lastName?: string;
 
