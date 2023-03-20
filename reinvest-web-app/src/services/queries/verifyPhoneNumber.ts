@@ -5,21 +5,25 @@ import { getApiClient } from 'services/getApiClient';
 import { Mutation } from '../../types/graphql';
 
 const verifyPhoneNumberMutation = gql`
-  mutation verifyPhoneNumber($countryCode: String, phoneNumber: String, authCode: String) {
+  mutation verifyPhoneNumber($countryCode: String, $phoneNumber: String, $authCode: String) {
     verifyPhoneNumber(countryCode: $countryCode, phoneNumber: $phoneNumber, authCode: $authCode)
   }
 `;
 
-export const useVerifyPhoneNumber = (countryCode: string, phoneNumber: string, authCode: string): UseMutationResult<Mutation['verifyPhoneNumber']> =>
+export const useVerifyPhoneNumber = (): UseMutationResult<
+  Mutation['verifyPhoneNumber'],
+  Error,
+  { authCode: string; countryCode: string; phoneNumber: string }
+> =>
   useMutation({
-    mutationFn: async () => {
+    mutationFn: async input => {
       const api = await getApiClient();
 
       if (!api) {
         return null;
       }
 
-      const { verifyPhoneNumber } = await api.request<Mutation>(verifyPhoneNumberMutation, { countryCode, phoneNumber, authCode });
+      const { verifyPhoneNumber } = await api.request<Mutation>(verifyPhoneNumberMutation, { ...input });
 
       return verifyPhoneNumber;
     },

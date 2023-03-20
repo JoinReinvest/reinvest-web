@@ -24,7 +24,7 @@ const completeProfileDetailsMutation = gql`
   }
 `;
 
-export const useCompleteProfileDetails = (): UseMutationResult<Mutation['completeProfileDetails']> =>
+export const useCompleteProfileDetails = (): UseMutationResult<Mutation['completeProfileDetails'], Error> =>
   useMutation({
     mutationFn: async input => {
       const api = await getApiClient();

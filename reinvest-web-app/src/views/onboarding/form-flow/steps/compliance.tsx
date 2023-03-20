@@ -111,13 +111,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      const compliances: OnboardingFormFields['compliances'] = {
-        isAssociatedWithFinra: fields.isAssociatedWithFinra,
-        isAssociatedWithPubliclyTradedCompany: fields.isAssociatedWithPubliclyTradedCompany,
-        isSeniorPoliticalFigure: fields.isSeniorPoliticalFigure,
-      };
-
-      updateStoreFields({ compliances, statementType: StatementType.FinraMember });
+      updateStoreFields({ statementType: StatementType.FinraMember });
       moveToNextStep();
     };
 

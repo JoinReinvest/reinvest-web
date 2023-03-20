@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
 import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
@@ -44,7 +45,12 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     });
 
     const { control, handleSubmit, getValues } = form;
-    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+    const {
+      isLoading,
+      updateData,
+      error: { phoneNumberError },
+      data: { phoneNumberData },
+    } = useUpdateDataIndividualOnboarding({
       ...getValues(),
       ...storeFields,
     });
@@ -61,10 +67,10 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (isSuccess) {
+      if (phoneNumberData) {
         moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [phoneNumberData, moveToNextStep]);
 
     return (
       <>
@@ -74,8 +80,10 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
             subtitle="We’ll text you a confirmation code within 10 minutes."
           />
 
+          {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
+
           <div className="flex">
-            <div className="contents child:basis-2/5">
+            <div className="child:basis-2/5 contents">
               <InputPhoneNumberCountryCode
                 name="phone.countryCode"
                 control={control}

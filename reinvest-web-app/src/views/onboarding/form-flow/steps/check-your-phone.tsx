@@ -2,12 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
@@ -37,7 +38,11 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     const { handleSubmit, control, formState, getValues } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const { updateData } = useUpdateDataIndividualOnboarding({
+    const {
+      updateData,
+      error: { verifyPhoneNumberError },
+      data: { verifyPhoneNumberData },
+    } = useUpdateDataIndividualOnboarding({
       ...getValues(),
       ...storeFields,
     });
@@ -46,12 +51,17 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
       updateData();
-      moveToNextStep();
     };
 
     const resendCodeOnClick = async () => {
       return;
     };
+
+    useEffect(() => {
+      if (verifyPhoneNumberData) {
+        moveToNextStep();
+      }
+    }, [verifyPhoneNumberData, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -59,6 +69,8 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
           title="Check Your Phone"
           subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
         />
+
+        {verifyPhoneNumberError && <FormMessage message={verifyPhoneNumberError.message} />}
 
         <div className="flex w-full flex-col gap-32">
           <InputAuthenticationCode

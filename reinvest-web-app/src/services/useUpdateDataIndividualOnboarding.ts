@@ -6,8 +6,10 @@ import { useCompleteIndividualDraftAccount } from './queries/completeIndividualD
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
 import { useCreateDraftAccount } from './queries/createDraftAccount';
 import { useSetPhoneNumber } from './queries/setPhoneNumber';
+import { useVerifyPhoneNumber } from './queries/verifyPhoneNumber';
+
 const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
-  return keys.reduce((o, key) => {
+  return keys.reduce<Record<string, any>>((o, key) => {
     const data = fields.get(key);
 
     if (!data) return o;
@@ -48,6 +50,13 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     isSuccess: isSetPhoneNumberSuccess,
   } = useSetPhoneNumber();
 
+  const {
+    data: verifyPhoneNumberData,
+    error: verifyPhoneNumberError,
+    isLoading: isVerifyPhoneNumberLoading,
+    mutate: verifyPhoneNumberMutate,
+  } = useVerifyPhoneNumber();
+
   const updateData = () => {
     const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
 
@@ -63,19 +72,29 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     }
 
     if (!isEmptyObject(profileDetails)) {
-      completeProfileMutate(profileDetails);
+      const { residency, statementType, finraInstitutionName, socialSecurityNumber, experience } = storedFields;
+      const domicile = residency ? { ...profileDetails.domicile, type: residency } : undefined;
+      const statements = statementType && finraInstitutionName ? { type: statementType, forFINRA: { name: finraInstitutionName } } : undefined;
+      const ssn = socialSecurityNumber ? { ssn: socialSecurityNumber } : undefined;
+      const investingExperience = experience ? { experience: experience } : undefined;
+
+      completeProfileMutate({ ...profileDetails, domicile, statements, ssn, investingExperience });
     }
 
     if (!isEmptyObject(individualDraftAccount)) {
       completeIndividualDraftAccountMutate(individualDraftAccount);
     }
+
+    if (storedFields.authCode && storedFields.phone.countryCode && storedFields.phone.number) {
+      verifyPhoneNumberMutate({ authCode: storedFields.authCode, countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
+    }
   };
 
   return {
-    data: { ...profileDetailsData, ...individualDraftAccoutntData, ...createDraftAccountData, phoneNumberData },
-    error: { profileDetailsError, individualDraftAccountError, createDraftAccountError, phoneNumberError },
-    isLoading: isProfileDetailsLoading || isIndividualDraftAccountLoading || isCreateDraftAccountLoading || isPhoneNumberLoading,
+    data: { ...profileDetailsData, ...individualDraftAccoutntData, ...createDraftAccountData, phoneNumberData, verifyPhoneNumberData },
+    error: { profileDetailsError, individualDraftAccountError, createDraftAccountError, phoneNumberError, verifyPhoneNumberError },
+    isLoading: isProfileDetailsLoading || isIndividualDraftAccountLoading || isCreateDraftAccountLoading || isPhoneNumberLoading || isVerifyPhoneNumberLoading,
     isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess || isProfileDetailsSuccess,
-    updateData: updateData,
+    updateData,
   };
 };

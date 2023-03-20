@@ -10,7 +10,7 @@ const setPhoneNumberMutation = gql`
   }
 `;
 
-export const useSetPhoneNumber = (): UseMutationResult<Mutation['setPhoneNumber'], unknown, { countryCode: string; phoneNumber: string }> =>
+export const useSetPhoneNumber = (): UseMutationResult<Mutation['setPhoneNumber'], Error, { countryCode: string; phoneNumber: string }> =>
   useMutation({
     mutationFn: async input => {
       const api = await getApiClient();

@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { WarningMessage } from 'components/BlackModal/WarningMessage';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
@@ -45,7 +46,12 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding({
       ...storeFields,
       ...getValues(),
       domicile: { forVisa: getValues().domicile?.forVisa },
@@ -68,6 +74,8 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title title="Please enter your US Visa details." />
         <WarningMessage message="US Residents Only" />
+
+        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
         <Select
           name="domicile.forVisa.citizenshipCountry"
@@ -94,6 +102,7 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
           type="submit"
           label="Continue"
           disabled={shouldButtonBeDisabled}
+          loading={isLoading}
         />
       </Form>
     );

@@ -1,10 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { StatementType } from 'types/graphql';
 import { z } from 'zod';
 
@@ -36,23 +39,37 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      moveToNextStep();
+      updateData();
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title title="Please provide name of the FINRA institution below." />
 
+        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
         <Input
           name="finraInstitutionName"
           control={control}
@@ -63,6 +80,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
           type="submit"
           label="Continue"
           disabled={shouldButtonBeDisabled}
+          loading={isLoading}
         />
       </Form>
     );

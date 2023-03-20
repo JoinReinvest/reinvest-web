@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
@@ -48,9 +49,14 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({
-      dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding({
       ...storeFields,
+      dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
@@ -60,7 +66,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
+      updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
       updateData();
     };
 
@@ -74,6 +80,8 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Title title="Enter your date of birth" />
+
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
           <InputBirthDate
             name="dateOfBirth"

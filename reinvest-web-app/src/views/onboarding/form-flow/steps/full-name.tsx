@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
@@ -39,7 +40,12 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { isLoading, updateData, isSuccess } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
@@ -57,6 +63,8 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <Title title="Enter your first and last name as it appears on your ID" />
+
+        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
         <Input
           name="name.firstName"

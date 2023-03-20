@@ -26,5 +26,6 @@ export const ProfileDetailsFragment = gql`
     statements {
       ...StatementFragment
     }
+    experience
   }
 `;

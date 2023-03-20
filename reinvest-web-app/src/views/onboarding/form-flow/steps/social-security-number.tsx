@@ -2,14 +2,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { AccountType } from 'types/graphql';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
@@ -44,14 +46,20 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, setValue } = useForm<Fields>({
+    const { control, formState, handleSubmit, setValue, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
@@ -60,19 +68,15 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async ({ socialSecurityNumber }) => {
-      try {
-        setIsLoading(true);
-
-        //  TO-DO: Verify if the social security number is not banned
-        //      or assigned to another account - set `_isSocialSecurityNumberBanned`
-        //      and `_isSocialSecurityNumberAlreadyAssigned` accordingly.
-
-        updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
-        moveToNextStep();
-      } catch (error) {
-        setIsLoading(false);
-      }
+      updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+      updateData();
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     const setValueOnSocialSecurityNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
       const isValue = !!event.target.value;
@@ -100,6 +104,8 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Title title="What’s your social security number?" />
+
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
           <InputSocialSecurityNumber
             name="socialSecurityNumber"
