@@ -32,28 +32,28 @@ export interface OnboardingFormFields {
   };
 
   corporationAnnualRevenue?: CorporationAnnualRevenue;
+
   corporationIndustry?: Industry;
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
-
   documentsForCorporation?: File[];
-  documentsForTrust?: File[];
 
+  documentsForTrust?: File[];
   ein?: string;
   employmentDetails?: {
     employerName?: string;
     industry?: Industry;
     occupation?: string;
   };
+
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
-
   finraInstitution?: string;
 
   firstName?: string;
+
   household?: {
     // Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
@@ -66,10 +66,12 @@ export interface OnboardingFormFields {
     back: File | null;
     front: File | null;
   };
+  isAccreditedInvestor?: boolean;
 
   lastName?: string;
 
   middleName?: string;
+  netIncome?: string;
   netWorth?: string;
   phoneNumber?: string;
   profilePicture?: File | null;
@@ -78,7 +80,6 @@ export interface OnboardingFormFields {
   trustLegalName?: string;
   trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
-  netIncome?: string;
 }
 
 export interface CompanyTickerSymbol {
