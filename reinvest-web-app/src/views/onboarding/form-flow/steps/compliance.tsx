@@ -94,14 +94,14 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
       setValue('doNoneApply', value);
     };
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
+    const onSubmit: SubmitHandler<Fields> = async ({ isAssociatedWithFinra, isAssociatedWithPubliclyTradedCompany, isSeniorPoliticalFigure }) => {
       const compliances: OnboardingFormFields['compliances'] = {
-        isAssociatedWithFinra: fields.isAssociatedWithFinra,
-        isAssociatedWithPubliclyTradedCompany: fields.isAssociatedWithPubliclyTradedCompany,
-        isSeniorPoliticalFigure: fields.isSeniorPoliticalFigure,
+        isAssociatedWithFinra,
+        isAssociatedWithPubliclyTradedCompany,
+        isSeniorPoliticalFigure,
       };
 
-      updateStoreFields({ compliances });
+      await updateStoreFields({ compliances });
       moveToNextStep();
     };
 
