@@ -1,10 +1,11 @@
 import { IconBell } from 'assets/icons/IconBell';
+import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import cx from 'classnames';
+import { Avatar } from 'components/Avatar';
 import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
 
 import { useGetUserProfile } from '../../services/queries/getProfile';
-import { AccountMenu } from './AccountMenu';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderNavigation } from './HeaderNavigation';
 
@@ -54,7 +55,12 @@ export const Header = () => {
           <div className="flex gap-16 lg:gap-24">
             <IconBell className="h-28 w-28 lg:h-44 lg:w-44" />
 
-            {data && <AccountMenu profile={data} />}
+            {data && (
+              <Avatar
+                src={placeholderPicture}
+                alt={`${data?.details?.firstName} ${data?.details?.lastName}`}
+              />
+            )}
           </div>
         </div>
         <HeaderNavigation
