@@ -40,6 +40,7 @@ export const formValidationRules = {
     state: zod.enum(STATE_CODES),
     streetAddress: standardRequiredString,
     streetAddress2: zod.string().nullable(),
+    // eslint-disable-next-line security/detect-unsafe-regex
     zipCode: zod.string().regex(/^\d{5}(?:[-\s]\d{4})?$/, { message: 'Invalid zip code' }),
   }),
 };
