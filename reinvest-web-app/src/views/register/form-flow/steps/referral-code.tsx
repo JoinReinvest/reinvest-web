@@ -2,11 +2,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputReferralCode } from 'components/FormElements/InputReferralCode';
 import { Title } from 'components/Title';
+import { env } from 'env';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { fetcher } from 'services/fetcher';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
@@ -21,6 +24,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [isValidatingReferralCode, setIsValidatingReferralCode] = useState(false);
+    const [error, setError] = useState<string | undefined>('');
 
     const schema: Schema<Fields> = zod.object({
       referralCode: formValidationRules.referralCode,
@@ -31,13 +35,29 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
+      setError(undefined);
       try {
         setIsValidatingReferralCode(true);
         updateStoreFields(fields);
         setIsValidatingReferralCode(false);
 
-        moveToNextStep();
+        if (fields.referralCode) {
+          const response = await fetcher(
+            `${env.apiUrl}/incentive-token`,
+            'POST',
+            new URLSearchParams({
+              token: fields.referralCode,
+            }),
+          );
+
+          if (!response.status) {
+            throw new Error('Invalid referral code');
+          }
+
+          moveToNextStep();
+        }
       } catch (error) {
+        setError((error as Error).message);
         setIsValidatingReferralCode(false);
       }
     };
@@ -54,9 +74,12 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
           subtitle="You and your referrer will receive $20 in dividends following your first investment!"
         />
 
+        {error && <FormMessage message={error} />}
+
         <InputReferralCode
           name="referralCode"
           control={control}
+          defaultValue={storeFields.referralCode}
         />
 
         <ButtonStack>

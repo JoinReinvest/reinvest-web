@@ -4,13 +4,28 @@ import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { Link } from 'components/Link';
 import { Title } from 'components/Title';
+import { URL } from 'constants/urls';
 import { useAuth } from 'providers/AuthProvider';
 import { useEffect, useMemo, useState } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+
+const LoginLink = () => {
+  const label = 'Go to sign in';
+
+  return (
+    <Link
+      href={URL.login}
+      title={label}
+    >
+      {label}
+    </Link>
+  );
+};
 
 export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
   identifier: Identifiers.FLOW_COMPLETION,
@@ -26,6 +41,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     const authContext = useAuth();
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState('');
+    const [displayLoginLink, setDisplayLoginLink] = useState(false);
 
     const title = useMemo(() => {
       if (isLoading) {
@@ -52,7 +68,14 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
         try {
           await Auth.confirmSignUp(storeFields.email, storeFields.authenticationCode);
         } catch (err) {
-          setError((err as Error).message);
+          const error = err as Error;
+
+          if (error.message.includes('Current status is CONFIRMED')) {
+            error.message = 'The user with this email is already registered.';
+            setDisplayLoginLink(true);
+          }
+
+          setError(error.message);
         } finally {
           setIsLoading(false);
         }
@@ -68,7 +91,12 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
           {!isLoading && !error && <CircleSuccess />}
           {error && <IconXCircle />}
 
-          <Title title={error || title} />
+          <Title
+            title={error || title}
+            isTitleCenteredOnMobile
+            subtitle={displayLoginLink && <LoginLink />}
+            className="items-center"
+          />
         </div>
 
         <ButtonStack>

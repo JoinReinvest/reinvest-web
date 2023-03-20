@@ -1750,10 +1750,10 @@
     "@hookooekoo/configs-stylelint" "*"
     "@radix-ui/react-label" "^2.0.0"
 
-"@hookooekoo/ui-input-masked@^0.5.0":
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.5.0.tgz#1173e5118b31bc23cb2eb957b16910ba6a641c6c"
-  integrity sha512-ShX8OHUJCqHhEfsbsUwYM7QJWHOgnp96lCuhiV6HOKhuO3sA57SILMf71ezeoAjJ4Fzd9XWuZcVd8zbfGjhPpw==
+"@hookooekoo/ui-input-masked@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.5.1.tgz#977f4362039760a959cbca892d4492b5858c625a"
+  integrity sha512-uSChv87rae153V4EsdFrilxiWnNMz/Xc86H3/MdBESQKhpwZCfxPCFx7geSqREQBPXQBbKr/bDiSDu62G4iokw==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
     "@hookooekoo/ui-input-control" "*"
