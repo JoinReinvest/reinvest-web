@@ -12,7 +12,8 @@ import { STATES_AS_SELECT_OPTION } from 'constants/states';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { DraftAccountType } from 'types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -23,6 +24,26 @@ const schema = formValidationRules.address;
 
 export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PERMANENT_ADDRESS,
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+      fields._didDocumentIdentificationValidationSucceed,
+    ];
+
+    const individualFields = [fields.socialSecurityNumber];
+
+    return (
+      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
+      (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields))
+    );
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '' };

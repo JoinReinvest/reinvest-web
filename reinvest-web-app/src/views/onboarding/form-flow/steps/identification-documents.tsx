@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { AccountType } from 'types/graphql';
+import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -41,8 +41,8 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
     const individualFields = [fields.socialSecurityNumber];
 
     return (
-      (fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
-      (fields.accountType !== AccountType.Individual && allRequiredFieldsExists(requiredFields))
+      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
+      (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields))
     );
   },
 
