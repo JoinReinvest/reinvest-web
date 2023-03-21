@@ -52,13 +52,8 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
 
-  identificationDocument?: {
-    back: File | null;
-    front: File | null;
-  };
-  
-  isAccreditedInvestor?: boolean;
   identificationDocument?: IdentificationDocuments;
+  isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
   lastName?: string;
   middleName?: string;
