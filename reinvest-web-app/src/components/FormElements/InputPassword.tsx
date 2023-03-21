@@ -6,7 +6,9 @@ import { ComponentPropsWithoutRef, useState } from 'react';
 import { useController } from 'react-hook-form';
 import { FieldValues, UseControllerProps } from 'react-hook-form';
 
-interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {}
+interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
+  iconWhite?: boolean;
+}
 
 type PrimitiveProps = Pick<PrimitiveTextInputProps, 'required' | 'disabled' | 'placeholder'>;
 type PrimitiveTextInputProps = ComponentPropsWithoutRef<typeof PrimitiveTextInput>;
@@ -15,10 +17,17 @@ export function InputPassword<FormFields extends FieldValues>({
   required = false,
   disabled = false,
   placeholder = 'Password',
+  iconWhite = true,
   ...controllerProps
 }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
   const [fieldType, setFieldType] = useState<'text' | 'password'>('password');
+
+  const iconStyles = cx('absolute w-32 h-32 stroke-1 right-0', {
+    'stroke-gray-03': !!disabled,
+    'stroke-white': !!iconWhite,
+    'stroke-current': !iconWhite,
+  });
 
   const onIconEyeClick = () => {
     setFieldType(fieldType === 'text' ? 'password' : 'text');
@@ -34,7 +43,7 @@ export function InputPassword<FormFields extends FieldValues>({
       placeholder={placeholder}
       onChange={field.onChange}
       onBlur={field.onBlur}
-      iconRight={generateIcon(fieldType, onIconEyeClick, disabled)}
+      iconRight={generateIcon(fieldType, onIconEyeClick, iconStyles)}
       error={fieldState.error?.message}
       ref={field.ref}
       autoCapitalize={false}
@@ -43,11 +52,7 @@ export function InputPassword<FormFields extends FieldValues>({
   );
 }
 
-const generateIcon = (fieldType: 'text' | 'password', onClick: () => void, isFieldDisabled: boolean) => {
-  const className = cx('absolute w-32 h-32 stroke-01 right-0', {
-    'stroke-gray-03': isFieldDisabled,
-  });
-
+const generateIcon = (fieldType: 'text' | 'password', onClick: () => void, className: string) => {
   if (fieldType === 'text') {
     return (
       <IconEyeHide
