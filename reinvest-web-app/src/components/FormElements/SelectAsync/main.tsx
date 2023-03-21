@@ -1,34 +1,27 @@
 import { InputControl } from '@hookooekoo/ui-input-control';
-import { SelectProps } from '@hookooekoo/ui-select';
 import { Classes } from '@hookooekoo/ui-select/dist/enums/classes';
 import { resetStyles } from '@hookooekoo/ui-select/dist/style-reset';
 import { IconSearch } from 'assets/icons/IconSearch';
-import { SelectOption } from 'components/Select';
 import { useMemo, useRef, useState } from 'react';
-import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
-import { GroupBase, StylesConfig } from 'react-select';
+import { FieldValues, useController } from 'react-hook-form';
 import AsyncCreatableSelect from 'react-select/async-creatable';
 
-interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
-  loadOptions: (inputValue: string, callback: (options: SelectOption[]) => void) => Promise<SelectOption[]>;
-  disabled?: boolean;
-  menuPortalTarget?: HTMLElement | null;
-  placeholder?: string;
-  required?: boolean;
-  willCacheOptions?: boolean;
-}
+import { ChangeHandler, Props, Styles } from './interfaces';
+import { SingleValue } from './SingleValue';
 
-type ChangeHandler = SelectProps<SelectOption>['onChange'];
-
-export function SelectAsync<FormFields extends FieldValues>({
+export function SelectAsync<FormFields extends FieldValues, Option>({
   loadOptions,
   placeholder,
   disabled = false,
   required = false,
   willCacheOptions = false,
   menuPortalTarget,
+  formatOptionsLabel,
+  formatSelectedOptionLabel,
+  onOptionCreated,
+  onOptionSelected,
   ...controllerProps
-}: Props<FormFields>) {
+}: Props<FormFields, Option>) {
   const { field, fieldState } = useController(controllerProps);
   const menuPortalTargetMemoized = useMemo(() => menuPortalTarget, [menuPortalTarget]);
   const [focused, setFocused] = useState(false);
@@ -43,7 +36,16 @@ export function SelectAsync<FormFields extends FieldValues>({
     field.onBlur();
   };
 
-  const onChange: ChangeHandler = option => {
+  const onChange: ChangeHandler<Option> = (option, { action }) => {
+    if (action === 'select-option') {
+      onOptionSelected && onOptionSelected(option);
+    }
+
+    if (action === 'create-option') {
+      field.onChange(option?.value);
+      onOptionCreated && onOptionCreated(option);
+    }
+
     const value = option?.value;
     field.onChange({ target: { value } });
   };
@@ -79,19 +81,22 @@ export function SelectAsync<FormFields extends FieldValues>({
         data-is-dirty={!!isDirty}
         data-has-error={!!errorMessage}
         classNamePrefix={Classes.SELECT}
-        styles={resetStyles() as StylesConfig<SelectOption, false, GroupBase<SelectOption>>}
+        styles={resetStyles() as Styles<Option>}
         menuPosition="absolute"
         menuPlacement="auto"
         menuShouldScrollIntoView={menuShouldScrollIntoView}
         components={{
           DropdownIndicator: DropdownIndicator,
           LoadingIndicator: undefined,
+          SingleValue,
         }}
         openMenuOnFocus
         menuPortalTarget={menuPortalTargetMemoized}
-        allowCreateWhileLoading
+        allowCreateWhileLoading={false}
         formatCreateLabel={value => value}
         createOptionPosition="first"
+        formatOptionLabel={formatOptionsLabel}
+        formatSelectedOptionLabel={formatSelectedOptionLabel}
       />
     </InputControl>
   );
