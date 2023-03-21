@@ -45,13 +45,13 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...form.getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.FULL_NAME);
+      updateData(Identifiers.FULL_NAME, { ...storeFields, ...form.getValues() });
     };
 
     useEffect(() => {

@@ -58,7 +58,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -66,7 +66,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       try {
         updateStoreFields(fields);
         updateStoreFields({ _didDocumentIdentificationValidationSucceed: true, ...getValues() });
-        updateData(Identifiers.IDENTIFICATION_DOCUMENTS);
+        updateData(Identifiers.IDENTIFICATION_DOCUMENTS, { ...storeFields, ...getValues() });
       } catch (error) {
         updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }

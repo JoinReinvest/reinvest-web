@@ -9,7 +9,7 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { AccountType, Experience } from 'types/graphql';
+import { DraftAccountType, Experience } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -25,7 +25,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EXPERIENCE,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === AccountType.Individual;
+    return fields.accountType === DraftAccountType.Individual;
   },
   doesMeetConditionFields(fields) {
     const requiredFields = [
@@ -39,7 +39,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
       fields.socialSecurityNumber,
     ];
 
-    return fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -54,13 +54,13 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData(Identifiers.EXPERIENCE);
+      updateData(Identifiers.EXPERIENCE, { ...storeFields, experience: getValues().experience });
       // moveToNextStep();
     };
 

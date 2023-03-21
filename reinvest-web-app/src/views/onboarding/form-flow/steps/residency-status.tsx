@@ -54,14 +54,14 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
 
-      updateData(Identifiers.RESIDENCY_STATUS);
+      updateData(Identifiers.RESIDENCY_STATUS, { ...storeFields, ...getValues() });
     };
 
     useEffect(() => {

@@ -51,17 +51,17 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({
-      ...storeFields,
-      ...getValues(),
-      domicile: { forVisa: getValues().domicile?.forVisa },
-    });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.RESIDENCY_VISA);
+      updateData(Identifiers.RESIDENCY_VISA, {
+        ...storeFields,
+        ...getValues(),
+        domicile: { forVisa: getValues().domicile?.forVisa },
+      });
     };
 
     useEffect(() => {

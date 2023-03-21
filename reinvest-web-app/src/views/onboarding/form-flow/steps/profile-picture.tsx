@@ -6,7 +6,7 @@ import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -36,7 +36,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     ];
 
     //TODO: More conditions for individual account type
-    return allRequiredFieldsExists(requiredFields) && fields.accountType === AccountType.Individual;
+    return allRequiredFieldsExists(requiredFields) && fields.accountType === DraftAccountType.Individual;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

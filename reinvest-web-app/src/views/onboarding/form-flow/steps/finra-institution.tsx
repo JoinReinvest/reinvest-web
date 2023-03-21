@@ -50,13 +50,13 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData(Identifiers.FINRA_INSTITUTION);
+      updateData(Identifiers.FINRA_INSTITUTION, { ...storeFields, ...getValues() });
     };
 
     useEffect(() => {

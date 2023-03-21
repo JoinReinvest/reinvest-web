@@ -42,15 +42,15 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
       updateData,
       error: { verifyPhoneNumberError },
       data: { verifyPhoneNumberData },
-    } = useUpdateDataIndividualOnboarding({
-      ...getValues(),
-      ...storeFields,
-    });
+    } = useUpdateDataIndividualOnboarding();
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setIsValidatingCredentials(true);
       updateStoreFields(fields);
-      updateData(Identifiers.CHECK_YOUR_PHONE);
+      updateData(Identifiers.CHECK_YOUR_PHONE, {
+        ...getValues(),
+        ...storeFields,
+      });
       moveToNextStep();
     };
 

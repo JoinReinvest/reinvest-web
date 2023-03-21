@@ -8,7 +8,7 @@ import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries'
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -39,7 +39,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       fields.socialSecurityNumber,
     ];
 
-    return fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

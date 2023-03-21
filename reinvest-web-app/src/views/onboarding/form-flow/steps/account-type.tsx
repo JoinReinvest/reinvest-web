@@ -39,13 +39,13 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       updateData,
       error: { createDraftAccountError },
       isSuccess,
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields(fields);
-      updateData(Identifiers.ACCOUNT_TYPE);
+      updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
       moveToNextStep();
     };
 

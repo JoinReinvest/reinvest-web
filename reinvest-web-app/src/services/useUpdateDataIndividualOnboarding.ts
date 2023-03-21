@@ -1,4 +1,5 @@
 import { individualDraftAccountFields, profileFields } from 'constants/individualOnboardingFields';
+import { AccreditedInvestorStatement, StatementType } from 'types/graphql';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
@@ -8,6 +9,7 @@ import { useCompleteIndividualDraftAccount } from './queries/completeIndividualD
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from './queries/createDocumentsFileLinks';
 import { useCreateDraftAccount } from './queries/createDraftAccount';
+import { useOpenAccount } from './queries/openAccount';
 import { useSetPhoneNumber } from './queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from './queries/verifyPhoneNumber';
 
@@ -38,11 +40,13 @@ const profileDetailsSteps = [
   Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
   Identifiers.SOCIAL_SECURITY_NUMBER,
   Identifiers.SOCIAL_SECURITY_NUMBER_VALIDATION,
+  Identifiers.PERMANENT_ADDRESS,
+  Identifiers.ACCREDITED_INVESTOR,
 ];
 
 const createIndividualDraftAccountSteps = [Identifiers.ACCOUNT_TYPE];
 
-export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFields) => {
+export const useUpdateDataIndividualOnboarding = () => {
   const {
     data: createDraftAccountData,
     error: createDraftAccountError,
@@ -55,7 +59,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     data: profileDetailsData,
     error: profileDetailsError,
     isLoading: isProfileDetailsLoading,
-    mutate: completeProfileMutate,
+    mutateAsync: completeProfileMutate,
     isSuccess: isProfileDetailsSuccess,
   } = useCompleteProfileDetails();
 
@@ -90,7 +94,15 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     mutateAsync: createDocumentsFileLinksMutate,
   } = useCreateDocumentsFileLinks();
 
-  const updateData = async (stepId: Identifiers) => {
+  const {
+    // data: openAccountData,
+    error: openAccountError,
+    isLoading: isOpenAccountLoading,
+    mutate: openAccountMutate,
+    isSuccess: isOpenAccountSuccess,
+  } = useOpenAccount();
+
+  const updateData = async (stepId: Identifiers, storedFields: OnboardingFormFields) => {
     const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
 
     const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
@@ -105,27 +117,57 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
     }
 
     if (!isEmptyObject(profileDetails) && profileDetailsSteps.includes(stepId)) {
-      const { residency, statementType, finraInstitutionName, socialSecurityNumber, experience } = storedFields;
+      const { residency, statementType, finraInstitutionName, socialSecurityNumber, experience, isAccreditedInvestor } = storedFields;
       const domicile = residency ? { ...profileDetails.domicile, type: residency } : undefined;
-      const statements = statementType && finraInstitutionName ? { type: statementType, forFINRA: { name: finraInstitutionName } } : undefined;
+      const statements = [];
+      statementType && finraInstitutionName ? statements.push({ type: statementType, forFINRA: { name: finraInstitutionName } }) : undefined;
+      stepId === Identifiers.ACCREDITED_INVESTOR
+        ? statements.push({
+            type: StatementType.AccreditedInvestor,
+            forAccreditedInvestor: {
+              statement: isAccreditedInvestor
+                ? AccreditedInvestorStatement.IAmAnAccreditedInvestor
+                : AccreditedInvestorStatement.IAmNotExceeding_10PercentOfMyNetWorthOrAnnualIncome,
+            },
+          })
+        : undefined;
       const ssn = socialSecurityNumber ? { ssn: socialSecurityNumber } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
 
-      // send documents to s3
-      if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back) {
-        const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
+      const address = stepId === Identifiers.PERMANENT_ADDRESS ? { ...storedFields.permanentAddress, country: 'USA' } : undefined;
+      const idScan = [];
 
+      // send documents to s3
+      if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
+        const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
         const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
-        console.log('s3urls', s3urls);
+
         try {
           s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
+        } catch (error) {
+          console.log('error1', error);
+        }
+
+        try {
           s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
         } catch (error) {
-          console.log('error', error);
+          console.log('error2', error);
         }
+
+        const documentIds = documentsFileLinks?.map(documentFileLink => ({ id: documentFileLink?.id })) as { id: string }[];
+        idScan.push(...documentIds);
       }
 
-      completeProfileMutate({ ...profileDetails, domicile, statements, ssn, investingExperience });
+      await completeProfileMutate({
+        ...profileDetails,
+        domicile,
+        statements,
+        ssn,
+        investingExperience,
+        address,
+        idScan: idScan.length ? idScan : undefined,
+        verifyAndFinish: stepId === Identifiers.EXPERIENCE,
+      });
     }
 
     if (!isEmptyObject(individualDraftAccount)) {
@@ -153,6 +195,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
       phoneNumberError,
       verifyPhoneNumberError,
       createDocumentsFileLinksError,
+      openAccountError,
     },
     isLoading:
       isProfileDetailsLoading ||
@@ -160,8 +203,9 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
       isCreateDraftAccountLoading ||
       isPhoneNumberLoading ||
       isVerifyPhoneNumberLoading ||
-      isCreateDocumentsFileLinksLoading,
-    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess || isProfileDetailsSuccess || isCreateDocumentsFileLinksSuccess,
+      isCreateDocumentsFileLinksLoading ||
+      isOpenAccountLoading,
+    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess || isProfileDetailsSuccess || isCreateDocumentsFileLinksSuccess || isOpenAccountSuccess,
     updateData,
   };
 };

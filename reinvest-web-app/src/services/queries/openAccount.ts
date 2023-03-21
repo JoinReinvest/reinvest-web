@@ -10,16 +10,16 @@ const openAccountMutation = gql`
   }
 `;
 
-export const useOpenAccount = (draftAccountId: string): UseMutationResult<Mutation['openAccount']> =>
+export const useOpenAccount = (): UseMutationResult<Mutation['openAccount'], Error, { draftAccountId: string }> =>
   useMutation({
-    mutationFn: async () => {
+    mutationFn: async input => {
       const api = await getApiClient();
 
       if (!api) {
         return null;
       }
 
-      const { openAccount } = await api.request<Mutation>(openAccountMutation, { draftAccountId });
+      const { openAccount } = await api.request<Mutation>(openAccountMutation, { ...input });
 
       return openAccount;
     },

@@ -3,6 +3,7 @@ import { WarningMessage } from 'components/BlackModal/WarningMessage';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
@@ -10,9 +11,11 @@ import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { STATES_AS_SELECT_OPTION } from 'constants/states';
 import { formValidationRules } from 'formValidationRules';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { DraftAccountType } from 'types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -51,11 +54,18 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     const { control, formState, setValue, handleSubmit } = useForm<Fields>({
       mode: 'onSubmit',
-      resolver: zodResolver(schema),
+      // resolver: zodResolver(schema),
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const formatSelectedAddress = (address: AddressAsOption) => {
       const hasStreetAddress = !!address.addressLine1;
@@ -72,10 +82,15 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
-      // TO-DO: Validate address using service
       await updateStoreFields({ permanentAddress });
-      moveToNextStep();
+      updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, permanentAddress });
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -84,6 +99,8 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
           <WarningMessage message="US Residents Only" />
         </div>
+
+        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
         <div className="flex w-full flex-col gap-16">
           <SelectAsync
@@ -127,6 +144,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>

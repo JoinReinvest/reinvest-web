@@ -50,10 +50,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
       updateData,
       error: { phoneNumberError },
       data: { phoneNumberData },
-    } = useUpdateDataIndividualOnboarding({
-      ...getValues(),
-      ...storeFields,
-    });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
@@ -63,7 +60,10 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.PHONE_NUMBER);
+      updateData(Identifiers.PHONE_NUMBER, {
+        ...getValues(),
+        ...storeFields,
+      });
     };
 
     useEffect(() => {

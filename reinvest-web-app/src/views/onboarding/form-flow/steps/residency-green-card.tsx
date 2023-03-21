@@ -49,13 +49,13 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.RESIDENCY_GREEN_CARD);
+      updateData(Identifiers.RESIDENCY_GREEN_CARD, { ...storeFields, ...getValues() });
     };
 
     useEffect(() => {

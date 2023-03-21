@@ -54,10 +54,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({
-      ...storeFields,
-      dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
-    });
+    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -67,7 +64,10 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = fields => {
       updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
-      updateData(Identifiers.DATE_OF_BIRTH);
+      updateData(Identifiers.DATE_OF_BIRTH, {
+        ...storeFields,
+        dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
+      });
     };
 
     useEffect(() => {

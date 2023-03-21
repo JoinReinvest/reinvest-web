@@ -57,7 +57,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       updateData,
       isSuccess,
       error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding({ ...storeFields, ...getValues() });
+    } = useUpdateDataIndividualOnboarding();
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -69,7 +69,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ socialSecurityNumber }) => {
       await updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
-      updateData(Identifiers.SOCIAL_SECURITY_NUMBER);
+      updateData(Identifiers.SOCIAL_SECURITY_NUMBER, { ...storeFields, ...getValues() });
     };
 
     useEffect(() => {
