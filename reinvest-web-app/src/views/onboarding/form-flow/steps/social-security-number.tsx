@@ -12,7 +12,7 @@ import { ChangeEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { AccountType } from 'types/graphql';
+import { DraftAccountType } from 'types/graphql';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
 
@@ -29,7 +29,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === AccountType.Individual;
+    return fields.accountType === DraftAccountType.Individual;
   },
   doesMeetConditionFields(fields) {
     const requiredFields = [
@@ -42,7 +42,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       fields.residency,
     ];
 
-    return fields.accountType === AccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

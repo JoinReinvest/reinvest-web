@@ -22,8 +22,6 @@ const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
 };
 
 const profileDetailsSteps = [
-  Identifiers.CHECK_YOUR_PHONE,
-  Identifiers.PHONE_NUMBER,
   Identifiers.PROFILE_PICTURE,
   Identifiers.FULL_NAME,
   Identifiers.DATE_OF_BIRTH,
@@ -102,7 +100,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
       createDraftAccountMutate(storedFields.accountType);
     }
 
-    if (storedFields.phone?.countryCode && storedFields.phone?.number) {
+    if (storedFields.phone?.countryCode && storedFields.phone?.number && stepId === Identifiers.PHONE_NUMBER) {
       setPhoneNumberMutate({ countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
     }
 
@@ -134,7 +132,7 @@ export const useUpdateDataIndividualOnboarding = (storedFields: OnboardingFormFi
       completeIndividualDraftAccountMutate(individualDraftAccount);
     }
 
-    if (storedFields.authCode && storedFields.phone.countryCode && storedFields.phone.number) {
+    if (storedFields.authCode && storedFields.phone.countryCode && storedFields.phone.number && stepId === Identifiers.CHECK_YOUR_PHONE) {
       verifyPhoneNumberMutate({ authCode: storedFields.authCode, countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
     }
   };
