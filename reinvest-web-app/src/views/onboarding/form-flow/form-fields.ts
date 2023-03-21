@@ -60,6 +60,8 @@ export interface OnboardingFormFields {
   };
   identificationDocument?: IdentificationDocuments;
   isAccreditedInvestor?: boolean;
+  isAuthorizedSignatoryEntity?: boolean;
+
   lastName?: string;
   middleName?: string;
   netIncome?: string;
