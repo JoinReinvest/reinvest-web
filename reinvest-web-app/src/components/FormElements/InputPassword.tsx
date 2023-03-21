@@ -37,6 +37,8 @@ export function InputPassword<FormFields extends FieldValues>({
       iconRight={generateIcon(fieldType, onIconEyeClick, disabled)}
       error={fieldState.error?.message}
       ref={field.ref}
+      autoCapitalize={false}
+      autoComplete={false}
     />
   );
 }
