@@ -2,32 +2,50 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
-import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { TRUST_TYPES_AS_OPTIONS, TRUST_TYPES_VALUES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { WhyRequiredTrustTypeModal } from 'views/whyRequiredModals/WhyRequiredTrustTypeModal';
+import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'trustType'>;
+interface Fields {
+  isAccreditedInvestor: 'yes' | 'no';
+}
 
 const schema = z.object({
-  trustType: z.enum(TRUST_TYPES_VALUES),
+  isAccreditedInvestor: z.enum(['yes', 'no']),
 });
 
-export const StepTrustType: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.TRUST_TYPE,
+const OPTIONS: RadioGroupOptionItem[] = [
+  {
+    title: 'Yes',
+    value: 'yes',
+  },
+  {
+    title: 'No',
+    value: 'no',
+  },
+];
+
+export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.ACCREDITED_INVESTOR,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === 'INDIVIDUAL';
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { trustType: storeFields?.trustType };
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
+    const hasStoredValue = storeFields.isAccreditedInvestor !== undefined;
+    const storedValue = storeFields.isAccreditedInvestor ? 'yes' : 'no';
+    const defaultValues: Fields = { isAccreditedInvestor: hasStoredValue ? storedValue : 'no' };
     const { handleSubmit, formState, control } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
@@ -37,7 +55,9 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
+      const isAccreditedInvestor = fields?.isAccreditedInvestor === 'yes' ? true : false;
+
+      await updateStoreFields({ isAccreditedInvestor });
       moveToNextStep();
     };
 
@@ -48,22 +68,18 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Which type of account would you like to open?" />
+          <Title title="Are you an accredited investor?" />
 
-          <SelectionCards
-            name="trustType"
-            control={control}
-            options={TRUST_TYPES_AS_OPTIONS}
-            className="mb-30 flex flex-col items-stretch justify-center gap-16"
-            orientation="vertical"
+          <OpenModalLink
+            label="What is an accredited investor?"
+            onClick={onLinkClick}
           />
 
-          <div className="flex w-full justify-center">
-            <OpenModalLink
-              label="Not sure which is best for you?"
-              onClick={onLinkClick}
-            />
-          </div>
+          <RadioGroupOptions
+            name="isAccreditedInvestor"
+            control={control}
+            options={OPTIONS}
+          />
 
           <ButtonStack>
             <Button
@@ -74,7 +90,7 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
           </ButtonStack>
         </Form>
 
-        <WhyRequiredTrustTypeModal
+        <WhyRequiredAccountTypeModal
           isOpen={isInformationModalOpen}
           onOpenChange={setIsInformationModalOpen}
         />

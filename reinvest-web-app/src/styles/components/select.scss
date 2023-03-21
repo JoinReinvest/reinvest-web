@@ -4,7 +4,7 @@
   &__menu {
     @apply -left-15 bg-green-frost-01 text-black-01;
     /* stylelint-disable-next-line function-no-unknown */
-    width: calc(100% + theme("spacing.28"));
+    width: calc(100% + theme("spacing.30"));
   }
 
   &__control--menu-is-open {
@@ -14,8 +14,16 @@
     }
   }
 
+  &__input-container {
+    @apply overflow-hidden;
+  }
+
+  &__single-value {
+    @apply text-bonus-heading #{!important};
+  }
+
   &__value-container {
-    @apply text-paragraph-large;
+    @apply relative top-4 text-paragraph-large;
     @apply child:text-white #{!important};
   }
 
@@ -25,6 +33,10 @@
 
   &__indicator {
     @apply p-0 #{!important};
+  }
+
+  &__option, &__menu-notice {
+    @apply text-paragraph #{!important};
   }
 
   &[disabled] {
@@ -41,8 +53,8 @@
 }
 
 .hkek-select-control {
-  @apply w-full relative flex items-center gap-x-10 mb-10 p-14 transition-transform-color;
-  @apply text-gray-02  border border-gray-03 hover:border-green-frost-01;
+  @apply w-full relative flex items-center gap-x-10 p-14 transition-transform-color;
+  @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {
     @apply flex-1 h-17;
@@ -71,7 +83,7 @@
 
   &[data-is-dirty="true"] {
     .hkek-select-control-placeholder {
-      @apply -z-10 text-base -translate-y-6 top-10;
+      @apply text-base -translate-y-6 top-10;
     }
   }
 

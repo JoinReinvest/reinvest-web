@@ -1,5 +1,6 @@
 import { BYTES_IN_MEGABYTE } from 'constants/conversions';
 import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
+import { STATE_CODES } from 'constants/states';
 import dayjs from 'dayjs';
 import zod from 'zod';
 
@@ -31,7 +32,17 @@ export const formValidationRules = {
   date: zod.string({ required_error: requiredError }).regex(/^(\d{2})\/(\d{2})\/(\d{4})$/),
   phoneNumber: zod.string().regex(/^\d{10}$/, { message: 'Invalid phone number' }),
   authenticationCode: zod.string({ required_error: requiredError }).regex(/^\d{6}$/, { message: 'Invalid authentication code' }),
-  socialSecurityNumber: zod.string().regex(/^(?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4}$/, { message: 'Invalid Social Security Number' }),
+  socialSecurityNumber: zod.string().regex(/^(?!666|000|9\\d{2})\\d{3}-(?!00)\\d{2}-(?!0{4})\\d{4}$/, { message: 'Invalid Social Security Number' }),
+  ein: zod.string().regex(/^[0-9]{3}-[0-9]{6}/, { message: 'Invalid EIN' }),
+
+  address: zod.object({
+    city: standardRequiredString,
+    state: zod.enum(STATE_CODES),
+    streetAddress: standardRequiredString,
+    streetAddress2: zod.string().nullable(),
+    // eslint-disable-next-line security/detect-unsafe-regex
+    zipCode: zod.string().regex(/^\d{5}(?:[-\s]\d{4})?$/, { message: 'Invalid zip code' }),
+  }),
 };
 
 export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
@@ -46,6 +57,20 @@ export const generateFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMega
       const fileType = file?.type;
 
       return acceptedTypes.includes(fileType);
+    }, 'File type not supported');
+};
+
+export const generateMultiFileSchema = (accepts: PartialMimeTypeKeys, sizeLimitInMegaBytes: number) => {
+  const sizeLimitInBytes = sizeLimitInMegaBytes * BYTES_IN_MEGABYTE;
+
+  return zod
+    .custom<File>()
+    .array()
+    .refine(files => files.every(file => file.size <= sizeLimitInBytes), `File size must be smaller than ${sizeLimitInMegaBytes}MB`)
+    .refine(files => {
+      const acceptedTypes = mapToMimeType(accepts);
+
+      return files.every(file => acceptedTypes.includes(file.type));
     }, 'File type not supported');
 };
 

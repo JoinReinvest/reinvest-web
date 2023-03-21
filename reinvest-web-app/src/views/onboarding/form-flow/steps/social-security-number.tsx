@@ -68,7 +68,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async ({ socialSecurityNumber }) => {
-      updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+      await updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
       updateData(Identifiers.SOCIAL_SECURITY_NUMBER);
     };
 

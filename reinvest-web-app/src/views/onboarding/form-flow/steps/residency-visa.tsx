@@ -59,8 +59,8 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields(fields);
       updateData(Identifiers.RESIDENCY_VISA);
     };
 

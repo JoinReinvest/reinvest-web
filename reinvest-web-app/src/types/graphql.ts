@@ -1,4 +1,4 @@
-/* eslint-disable */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
 export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
@@ -17,14 +17,7 @@ export type Scalars = {
   inCents_Int_NotNull_min_0: any;
   lastName_String_NotNull_minLength_1: any;
   numberOfLinks_Int_NotNull_min_1_max_10: any;
-};
-
-export type Account = {
-  __typename?: 'Account';
-  avatar?: Maybe<GetAvatarLink>;
-  id?: Maybe<Scalars['String']>;
-  positionTotal?: Maybe<Scalars['String']>;
-  type?: Maybe<Scalars['String']>;
+  ssn_String_NotNull_pattern_093092094: any;
 };
 
 export type AccountOverview = {
@@ -36,6 +29,7 @@ export type AccountOverview = {
 };
 
 export enum AccountType {
+  Beneficiary = 'BENEFICIARY',
   Corporate = 'CORPORATE',
   Individual = 'INDIVIDUAL',
   Trust = 'TRUST',
@@ -157,13 +151,19 @@ export enum DomicileType {
 export type DraftAccount = {
   __typename?: 'DraftAccount';
   id?: Maybe<Scalars['ID']>;
-  type?: Maybe<AccountType>;
+  type?: Maybe<DraftAccountType>;
 };
 
 export enum DraftAccountState {
   Active = 'ACTIVE',
   Canceled = 'CANCELED',
   Opened = 'OPENED',
+}
+
+export enum DraftAccountType {
+  Corporate = 'CORPORATE',
+  Individual = 'INDIVIDUAL',
+  Trust = 'TRUST',
 }
 
 export type EinInput = {
@@ -239,6 +239,7 @@ export type GenericFieldInput = {
 export type GetAvatarLink = {
   __typename?: 'GetAvatarLink';
   id?: Maybe<Scalars['String']>;
+  initials?: Maybe<Scalars['String']>;
   url?: Maybe<Scalars['String']>;
 };
 
@@ -252,6 +253,22 @@ export type GetDocumentLink = {
 export type GreenCardInput = {
   birthCountry: Scalars['String'];
   citizenshipCountry: Scalars['String'];
+};
+
+export type IndividualAccount = {
+  __typename?: 'IndividualAccount';
+  avatar?: Maybe<GetAvatarLink>;
+  details?: Maybe<IndividualAccountDetails>;
+  id?: Maybe<Scalars['String']>;
+  positionTotal?: Maybe<Scalars['String']>;
+};
+
+export type IndividualAccountDetails = {
+  __typename?: 'IndividualAccountDetails';
+  employer?: Maybe<Employer>;
+  employmentStatus?: Maybe<EmploymentStatusType>;
+  netIncome?: Maybe<NetRange>;
+  netWorth?: Maybe<NetRange>;
 };
 
 export type IndividualAccountInput = {
@@ -293,7 +310,7 @@ export type Mutation = {
   __typename?: 'Mutation';
   /** [MOCK] Complete corporate draft account */
   completeCorporateDraftAccount?: Maybe<CorporateDraftAccount>;
-  /** [MOCK] Complete individual draft account */
+  /** Complete individual draft account */
   completeIndividualDraftAccount?: Maybe<IndividualDraftAccount>;
   /**
    * Profile onboarding mutation.
@@ -304,19 +321,40 @@ export type Mutation = {
   completeProfileDetails?: Maybe<Profile>;
   /** [MOCK] Complete trust draft account */
   completeTrustDraftAccount?: Maybe<TrustDraftAccount>;
+  /**
+   * Create file links for avatar.
+   * In the response, it returns the "id" and "url".
+   * Use "url" for PUT request to upload the avatar directly to AWS S3. The url has expiration date!
+   * Use "id" wherever system needs the reference to the avatar file.
+   */
   createAvatarFileLink?: Maybe<PutFileLink>;
+  /**
+   * Create file links for documents.
+   * In the response, it returns the "id" and "url".
+   * Use "url" for PUT request to upload the file directly to AWS S3. The url has expiration date!
+   * Use "id" wherever system needs the reference to uploaded file.
+   */
   createDocumentsFileLinks?: Maybe<Array<Maybe<PutFileLink>>>;
   /**
-   * [MOCK] Create draft of an account to fulfill with data before open it.
+   * Create draft of an account to fulfill with data before open it.
    * You can have only one draft account created of a specific type in the same time.
    */
   createDraftAccount?: Maybe<DraftAccount>;
-  /** [MOCK] */
+  /**
+   * Open REINVEST Account based on draft.
+   * Currently supported: Individual Account
+   */
   openAccount?: Maybe<Scalars['Boolean']>;
-  /** [MOCK] Remove draft account */
+  /** Remove draft account */
   removeDraftAccount?: Maybe<Scalars['Boolean']>;
+  /** Add phone number. The system will send the verification code to the provided phone number via sms. */
   setPhoneNumber?: Maybe<Scalars['Boolean']>;
+  /** [WIP] */
   signDocumentFromTemplate?: Maybe<SignatureId>;
+  /**
+   * Verify phone number with received verification code on sms.
+   * This action will set the phone number in the user Cognito profile and allow to use 2FA with phone number
+   */
   verifyPhoneNumber?: Maybe<Scalars['Boolean']>;
 };
 
@@ -344,7 +382,7 @@ export type MutationCreateDocumentsFileLinksArgs = {
 };
 
 export type MutationCreateDraftAccountArgs = {
-  type?: InputMaybe<AccountType>;
+  type?: InputMaybe<DraftAccountType>;
 };
 
 export type MutationOpenAccountArgs = {
@@ -352,7 +390,7 @@ export type MutationOpenAccountArgs = {
 };
 
 export type MutationRemoveDraftAccountArgs = {
-  id?: InputMaybe<Scalars['ID']>;
+  draftAccountId?: InputMaybe<Scalars['ID']>;
 };
 
 export type MutationSetPhoneNumberArgs = {
@@ -410,12 +448,6 @@ export type Profile = {
   label?: Maybe<Scalars['String']>;
 };
 
-export type ProfileCompletionStatus = {
-  __typename?: 'ProfileCompletionStatus';
-  detailsCompleted?: Maybe<Scalars['Boolean']>;
-  phoneCompleted?: Maybe<Scalars['Boolean']>;
-};
-
 export type ProfileDetails = {
   __typename?: 'ProfileDetails';
   address?: Maybe<Address>;
@@ -464,37 +496,44 @@ export type PutFileLink = {
 
 export type Query = {
   __typename?: 'Query';
-  /** [MOCK] */
-  canOpenAccount?: Maybe<Scalars['Boolean']>;
-  /** [MOCK] Return account information - schema WIP! */
-  getAccount?: Maybe<Account>;
-  /** [MOCK] Return all accounts overview */
+  /**
+   * Return all accounts overview
+   * [PARTIAL_MOCK] Position total is still mocked!!
+   */
   getAccountsOverview?: Maybe<Array<Maybe<AccountOverview>>>;
   /** [MOCK] */
   getCorporateDraftAccount?: Maybe<CorporateDraftAccount>;
-  /** [MOCK] Individual draft account */
+  /**
+   * Returns individual account information
+   * [PARTIAL_MOCK] Position total is still mocked!!
+   */
+  getIndividualAccount?: Maybe<IndividualAccount>;
+  /** Get details of individual draft account */
   getIndividualDraftAccount?: Maybe<IndividualDraftAccount>;
-  /** [MOCK] */
+  /** Get user profile */
   getProfile?: Maybe<Profile>;
+  /** [WIP] */
   getTemplate?: Maybe<Template>;
   /** [MOCK] */
   getTrustDraftAccount?: Maybe<TrustDraftAccount>;
+  /**  Just say hello  */
   hello?: Maybe<Scalars['Boolean']>;
-  /** [MOCK] List all existing draft accounts if you need come back to onboarding */
+  /** List all existing draft accounts if you need come back to onboarding */
   listAccountDrafts?: Maybe<Array<Maybe<DraftAccount>>>;
-  profileCompletionStatus?: Maybe<ProfileCompletionStatus>;
-};
-
-export type QueryCanOpenAccountArgs = {
-  accountType?: InputMaybe<AccountType>;
-};
-
-export type QueryGetAccountArgs = {
-  accountId?: InputMaybe<Scalars['String']>;
+  /** Returns list of account types that user can open */
+  listAccountTypesUserCanOpen?: Maybe<Array<Maybe<AccountType>>>;
+  /** [MOCK] Returns information if user already assigned and verified phone number */
+  phoneCompleted?: Maybe<Scalars['Boolean']>;
+  /** Returns invitation link with a valid referral code (incentive token) */
+  userInvitationLink?: Maybe<UserInvitationLink>;
 };
 
 export type QueryGetCorporateDraftAccountArgs = {
   accountId?: InputMaybe<Scalars['ID']>;
+};
+
+export type QueryGetIndividualAccountArgs = {
+  accountId?: InputMaybe<Scalars['String']>;
 };
 
 export type QueryGetIndividualDraftAccountArgs = {
@@ -510,7 +549,8 @@ export type QueryGetTrustDraftAccountArgs = {
 };
 
 export type SsnInput = {
-  ssn: Scalars['String'];
+  /** The valid SSN is 9 digits in format 'XXX-XX-XXXX' */
+  ssn: Scalars['ssn_String_NotNull_pattern_093092094'];
 };
 
 export type SignatureId = {
@@ -621,6 +661,12 @@ export type TrustDraftAccountInput = {
   removeDocuments?: InputMaybe<Array<InputMaybe<FileLinkInput>>>;
   removeStakeholders?: InputMaybe<Array<InputMaybe<SsnInput>>>;
   stakeholders?: InputMaybe<Array<InputMaybe<StakeholderInput>>>;
+};
+
+/** User invitation/referral/incentive token link to share with others */
+export type UserInvitationLink = {
+  __typename?: 'UserInvitationLink';
+  url?: Maybe<Scalars['String']>;
 };
 
 export type VisaInput = {
