@@ -5,8 +5,8 @@ import { Address } from 'types/graphql';
 
 export interface OnboardingFormFields {
   residency: 'us' | 'green-card' | 'visa' | undefined;
-
   _didDocumentIdentificationValidationSucceed?: boolean;
+  _hasAuthenticatedPhoneNumber?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
   accountType?: AccountTypeValue;
@@ -36,11 +36,7 @@ export interface OnboardingFormFields {
   documentsForTrust?: File[];
 
   ein?: string;
-  employmentDetails?: {
-    employerName?: string;
-    industry?: Industry;
-    occupation?: string;
-  };
+  employmentDetails?: EmploymentDetails;
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
 
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
@@ -60,15 +56,18 @@ export interface OnboardingFormFields {
     back: File | null;
     front: File | null;
   };
+  
   isAccreditedInvestor?: boolean;
+  identificationDocument?: IdentificationDocuments;
+  isAuthorizedSignatoryEntity?: boolean;
   lastName?: string;
-
   middleName?: string;
 
   netIncome?: string;
   netWorth?: string;
   permanentAddress?: Address;
   phoneNumber?: string;
+  phoneNumberAuthenticationCode?: string;
   profilePicture?: File | null;
   seniorPoliticalFigure?: string;
   socialSecurityNumber?: string;
@@ -79,4 +78,15 @@ export interface OnboardingFormFields {
 
 export interface CompanyTickerSymbol {
   symbol: string;
+}
+
+interface IdentificationDocuments {
+  back: File | null;
+  front: File | null;
+}
+
+interface EmploymentDetails {
+  employerName?: string;
+  industry?: Industry;
+  occupation?: string;
 }
