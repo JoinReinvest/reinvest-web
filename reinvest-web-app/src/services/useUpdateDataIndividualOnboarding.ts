@@ -44,6 +44,7 @@ const profileDetailsSteps = [
   Identifiers.ACCREDITED_INVESTOR,
 ];
 
+const individualDraftAccountSteps = [Identifiers.EMPLOYMENT_DETAILS, Identifiers.EMPLOYMENT_STATUS];
 const createIndividualDraftAccountSteps = [Identifiers.ACCOUNT_TYPE];
 
 export const useUpdateDataIndividualOnboarding = () => {
@@ -170,8 +171,15 @@ export const useUpdateDataIndividualOnboarding = () => {
       });
     }
 
-    if (!isEmptyObject(individualDraftAccount)) {
-      completeIndividualDraftAccountMutate(individualDraftAccount);
+    if (!isEmptyObject(individualDraftAccount) && individualDraftAccountSteps.includes(stepId)) {
+      const accountId = 'aa4e7363-3181-4d1e-ac68-864efd748e3e'; //Get from store
+      const { employmentStatus: storedemploymentStatus, employmentDetails } = storedFields;
+      const employmentStatus = storedemploymentStatus ? { status: storedemploymentStatus } : undefined;
+      const employer = employmentDetails
+        ? { nameOfEmployer: employmentDetails.employerName, title: employmentDetails.occupation, industry: employmentDetails.industry }
+        : undefined;
+
+      completeIndividualDraftAccountMutate({ accountId, input: { employmentStatus, employer } });
     }
 
     if (storedFields.authCode && storedFields.phone.countryCode && storedFields.phone.number && stepId === Identifiers.CHECK_YOUR_PHONE) {

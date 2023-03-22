@@ -7,6 +7,7 @@ import { StepCompliances } from './compliance';
 import { StepCorporationLegalName } from './corporation-legal-name';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepEmploymentDetails } from './employment-details';
+import { StepEmploymentStatus } from './employment-status';
 import { StepExperience } from './experience';
 import { StepFinraInstitution } from './finra-institution';
 import { StepFullName } from './full-name';
@@ -40,6 +41,7 @@ export const FLOW_STEPS = [
   StepPermanentAddress,
   StepAccreditedInvestor,
   StepExperience,
+  StepEmploymentStatus,
   StepEmploymentDetails,
   StepNetWorthAndIncome,
   // StepSignatoryEntity,

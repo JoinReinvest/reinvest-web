@@ -1,13 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { Form } from 'components/FormElements/Form';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { Select } from 'components/Select';
 import { Title } from 'components/Title';
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
 import { formValidationRules } from 'formValidationRules';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
@@ -49,11 +52,18 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      error: { individualDraftAccountError },
+      isSuccess,
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      moveToNextStep();
+      updateData(Identifiers.EMPLOYMENT_DETAILS, { ...storeFields, ...fields });
     };
 
     const onSkip = () => {
@@ -61,10 +71,17 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <Title title="Where are you employed?" />
 
+        {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
         <Input
           name="employmentDetails.employerName"
           control={control}

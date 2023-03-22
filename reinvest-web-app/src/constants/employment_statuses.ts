@@ -1,7 +1,23 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
+import { EmploymentStatus } from 'types/graphql';
 
-import { lowerCaseWithoutSpacesGenerator } from '../utils/optionValueGenerators';
+const STATUSES = [
+  {
+    title: 'Employed',
+    value: EmploymentStatus.Employed,
+  },
+  {
+    title: 'Unemployed',
+    value: EmploymentStatus.Unemployed,
+  },
+  {
+    title: 'Retired',
+    value: EmploymentStatus.Retired,
+  },
+  {
+    title: 'Student',
+    value: EmploymentStatus.Student,
+  },
+];
 
-const STATUSES = ['Employed', 'Unemployed', 'Retired', 'Student'];
-
-export const EMPLOYMENT_STATUSES: SelectionOption[] = STATUSES.map(status => ({ title: status, value: lowerCaseWithoutSpacesGenerator(status) }));
+export const EMPLOYMENT_STATUSES: SelectionOption[] = STATUSES.map(({ title, value }) => ({ title, value }));

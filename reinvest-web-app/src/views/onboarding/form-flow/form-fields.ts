@@ -36,6 +36,7 @@ export interface OnboardingFormFields {
   _hasAuthenticatedPhoneNumber?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
+  accountId?: string;
   // Are we displaying this as an URL or a file upload?
   address?: {
     city?: string;
