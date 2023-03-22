@@ -23,8 +23,12 @@ export function TextArea<FormFields extends FieldValues>({ disabled = false, req
     return `${numberOfCharactersLeft} Characters`;
   }, [numberOfCharacters, maxCharacters]);
 
-  const isDirty = focused || field.value;
-  const onFocusHandler = () => setFocused(true);
+  const isDirty = !!focused || !!field.value;
+
+  const onFocusHandler = () => {
+    setFocused(true);
+  };
+
   const onBlurHandler = () => {
     setFocused(false);
     field.onBlur && field.onBlur();
