@@ -9,6 +9,7 @@ import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/accoun
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useGetUserProfile } from 'services/queries/getProfile';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
@@ -25,7 +26,15 @@ const schema = z.object({
 export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+  Component: async ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    try {
+      const { status, data: profileData, error, isFetching } = useGetUserProfile();
+    } catch (error) {
+      console.log('error', error);
+    }
+
+    // console.log('profile data', profileData);
+
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const { handleSubmit, formState, control, getValues } = useForm<Fields>({
@@ -39,6 +48,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       updateData,
       error: { createDraftAccountError },
       isSuccess,
+      data,
     } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
@@ -55,9 +65,10 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
+        updateStoreFields({ ...storeFields, accountId: data?.id || '' });
         // moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [data, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
 
     return (
       <>
