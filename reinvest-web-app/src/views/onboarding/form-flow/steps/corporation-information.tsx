@@ -14,6 +14,7 @@ import {
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -31,7 +32,7 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATION_INFORMATION,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'CORPORATE';
+    return accountType === AccountType.Corporate;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

@@ -8,6 +8,7 @@ import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { EMPLOYMENT_STATUSES } from 'constants/employment_statuses';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -23,7 +24,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_STATUS,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'INDIVIDUAL';
+    return accountType === AccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

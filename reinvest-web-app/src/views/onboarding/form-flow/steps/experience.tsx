@@ -8,6 +8,7 @@ import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -23,7 +24,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EXPERIENCE,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'INDIVIDUAL';
+    return accountType === AccountType.Individual;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

@@ -9,6 +9,7 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
@@ -38,7 +39,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCREDITED_INVESTOR,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'INDIVIDUAL';
+    return accountType === AccountType.Individual;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

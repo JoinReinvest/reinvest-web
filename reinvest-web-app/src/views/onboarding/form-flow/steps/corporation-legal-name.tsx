@@ -7,6 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -22,7 +23,7 @@ export const StepCorporationLegalName: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATION_LEGAL_NAME,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'CORPORATE';
+    return accountType === AccountType.Corporate;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

@@ -11,6 +11,7 @@ import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { WhyRequiredNetWorthModal } from 'views/whyRequiredModals/WhyRequiredNetWorthModal';
 import { z } from 'zod';
 
@@ -28,7 +29,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.NET_WORTH_AND_INCOME,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'INDIVIDUAL';
+    return accountType === AccountType.Individual;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

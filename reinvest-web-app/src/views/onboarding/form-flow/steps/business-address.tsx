@@ -13,6 +13,7 @@ import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -25,7 +26,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.BUSINESS_ADDRESS,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'CORPORATE';
+    return accountType === AccountType.Corporate;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

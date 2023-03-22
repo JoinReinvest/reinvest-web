@@ -10,6 +10,7 @@ import { TRUST_TYPES_AS_OPTIONS, TRUST_TYPES_VALUES } from 'constants/account-ty
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { WhyRequiredTrustTypeModal } from 'views/whyRequiredModals/WhyRequiredTrustTypeModal';
 import { z } from 'zod';
 
@@ -26,7 +27,7 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_TYPE,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'TRUST';
+    return accountType === AccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

@@ -10,6 +10,7 @@ import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries'
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -30,7 +31,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
 
   willBePartOfTheFlow: ({ employmentStatus, accountType }) => {
     const isEmployed = employmentStatus === 'employed';
-    const isCreatingAnIndividualAccount = accountType === 'INDIVIDUAL';
+    const isCreatingAnIndividualAccount = accountType === AccountType.Individual;
 
     return isEmployed && isCreatingAnIndividualAccount;
   },
