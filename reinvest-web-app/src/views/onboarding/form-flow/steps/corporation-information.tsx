@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { Select } from 'components/Select';
-import { Title } from 'components/Title';
 import {
   CORPORATION_ANNUAL_REVENUE_AS_OPTIONS,
   CORPORATION_ANNUAL_REVENUES,
@@ -29,6 +29,10 @@ const schema = z.object({
 export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATION_INFORMATION,
 
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === 'CORPORATE';
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = {
       corporationAnnualRevenue: storeFields.corporationAnnualRevenue,
@@ -51,7 +55,7 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please provide  the following information regarding your corporation." />
+        <BlackModalTitle title="Please provide  the following information regarding your corporation." />
 
         <div className="flex w-full flex-col gap-16">
           <Select

@@ -1,10 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { WarningMessage } from 'components/BlackModal/WarningMessage';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
-import { Title } from 'components/Title';
 import { RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS, RESIDENCY_STATUS_VALUES } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -39,11 +38,11 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Title
+        <BlackModalTitle
           title="Residency Status"
           subtitle="Please select your US residency status."
+          informationMessage="REINVEST does not accept non-US residents at this time."
         />
-        <WarningMessage message="REINVEST does not accept non-US residents at this time." />
 
         <RadioGroupOptions
           name="residency"

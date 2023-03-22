@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
-import { Title } from 'components/Title';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -19,6 +20,10 @@ const schema = z.object({
 
 export const StepExperience: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EXPERIENCE,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === 'INDIVIDUAL';
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -40,27 +45,31 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="What is your experience with real estate investment?" />
+        <BlackModalTitle title="What is your experience with real estate investment?" />
 
         <SelectionCards
           name="experience"
           control={control}
           options={EXPERIENCES_AS_OPTIONS}
+          className="flex flex-col items-stretch justify-center gap-22 lg:gap-24"
           orientation="vertical"
           required
         />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
 
-        <Button
-          label="Skip"
-          variant="outlined"
-          onClick={onSkip}
-        />
+          <Button
+            label="Skip"
+            variant="outlined"
+            onClick={onSkip}
+            className="text-green-frost-01"
+          />
+        </ButtonStack>
       </Form>
     );
   },

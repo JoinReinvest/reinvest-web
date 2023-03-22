@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -46,26 +47,32 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Which type of account would you like to open?" />
+          <BlackModalTitle title="Which type of account would you like to open?" />
 
-          <SelectionCards
-            name="accountType"
-            control={control}
-            options={ACCOUNT_TYPES_AS_OPTIONS}
-            className="mb-30 flex flex-col items-stretch justify-center gap-24"
-            orientation="vertical"
-          />
+          <div className="flex w-full flex-col gap-24">
+            <SelectionCards
+              name="accountType"
+              control={control}
+              options={ACCOUNT_TYPES_AS_OPTIONS}
+              className="flex flex-col items-stretch justify-center gap-24"
+              orientation="vertical"
+            />
 
-          <OpenModalLink
-            label="Not sure which is best for you?"
-            onClick={onLinkClick}
-          />
+            <OpenModalLink
+              label="Not sure which is best for you?"
+              green
+              center
+              onClick={onLinkClick}
+            />
+          </div>
 
-          <Button
-            type="submit"
-            disabled={shouldButtonBeDisabled}
-            label="Continue"
-          />
+          <ButtonStack>
+            <Button
+              type="submit"
+              disabled={shouldButtonBeDisabled}
+              label="Continue"
+            />
+          </ButtonStack>
         </Form>
 
         <WhyRequiredAccountTypeModal

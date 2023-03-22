@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { InputEIN } from 'components/FormElements/InputEIN';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -32,7 +32,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
     const defaultValues: Fields = { ein: storeFields.ein || '' };
 
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'all',
+      mode: 'onBlur',
       resolver: zodResolver(schema),
       defaultValues,
     });
@@ -49,9 +49,9 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Enter your EIN" />
+          <BlackModalTitle title="Enter your EIN" />
 
-          <div className="flex w-full flex-col gap-32">
+          <div className="flex w-full flex-col gap-16">
             <InputEIN
               name="ein"
               control={control}

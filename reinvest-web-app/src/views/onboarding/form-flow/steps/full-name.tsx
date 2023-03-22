@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
@@ -40,31 +41,35 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <Title title="Enter your first and last name as it appears on your ID" />
 
-        <Input
-          name="firstName"
-          control={form.control}
-          placeholder="First Name"
-          required
-        />
+        <div className="flex w-full flex-col gap-16">
+          <Input
+            name="firstName"
+            control={form.control}
+            placeholder="First Name"
+            required
+          />
 
-        <Input
-          name="middleName"
-          control={form.control}
-          placeholder="Middle Name (Optional)"
-        />
+          <Input
+            name="middleName"
+            control={form.control}
+            placeholder="Middle Name (Optional)"
+          />
 
-        <Input
-          name="lastName"
-          control={form.control}
-          placeholder="Last Name"
-          required
-        />
+          <Input
+            name="lastName"
+            control={form.control}
+            placeholder="Last Name"
+            required
+          />
+        </div>
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

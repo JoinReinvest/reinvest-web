@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
-import { Title } from 'components/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -15,7 +16,7 @@ type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
 const MINUMUM_COMPANY_TICKER_SYMBOLS = 3;
 const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
-const initialValues = new Array(MINUMUM_COMPANY_TICKER_SYMBOLS).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
+const initialValues = new Array(MINUMUM_COMPANY_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
 
 const schema = z
   .object({
@@ -28,7 +29,7 @@ const schema = z
   })
   .superRefine((fields, context) => {
     const countOfFilledFields = fields.companyTickerSymbols.filter(({ symbol }) => symbol !== '').length;
-    const hasAtLeastThreeFilled = countOfFilledFields > -MINUMUM_COMPANY_TICKER_SYMBOLS;
+    const hasAtLeastThreeFilled = countOfFilledFields >= MINUMUM_COMPANY_TICKER_SYMBOLS;
 
     if (!hasAtLeastThreeFilled) {
       return context.addIssue({
@@ -42,8 +43,8 @@ const schema = z
 export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.COMPANY_TICKER_SYMBOLS,
 
-  willBePartOfTheFlow: fields => {
-    return fields.accountType === 'CORPORATE';
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isAssociatedWithPubliclyTradedCompany;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -85,31 +86,35 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please list ticker symbols of the publicly traded company(s) below." />
+        <BlackModalTitle title="Please list ticker symbols of the publicly traded company(s) below." />
 
-        {fields.map((field, index) => (
-          <Input
-            key={field.id}
-            name={`companyTickerSymbols.${index}.symbol`}
-            control={control}
-            placeholder="Ticker Symbol"
+        <div className="flex w-full flex-col gap-16">
+          {fields.map((field, index) => (
+            <Input
+              key={field.id}
+              name={`companyTickerSymbols.${index}.symbol`}
+              control={control}
+              placeholder="Ticker Symbol"
+            />
+          ))}
+        </div>
+
+        <ButtonStack>
+          <Button
+            type="button"
+            label="Additional Company"
+            icon="add"
+            showIcon="left"
+            onClick={onAdditionalCompanyClick}
+            disabled={shouldAppendButtonBeDisabled}
           />
-        ))}
 
-        <Button
-          type="button"
-          label="Additional Company"
-          icon="add"
-          showIcon="left"
-          onClick={onAdditionalCompanyClick}
-          disabled={shouldAppendButtonBeDisabled}
-        />
-
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldSubmitButtonBeDisabled}
-        />
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldSubmitButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

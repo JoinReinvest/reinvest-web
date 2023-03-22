@@ -30,7 +30,7 @@ export const StepPhoneAuthentication: StepParams<OnboardingFormFields> = {
     return allRequiredFieldsExists([fields.accountType, fields.phoneNumber]);
   },
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const error = '';
     const infoMessage = '';
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
@@ -46,6 +46,7 @@ export const StepPhoneAuthentication: StepParams<OnboardingFormFields> = {
         await updateStoreFields({ phoneNumberAuthenticationCode, _hasAuthenticatedPhoneNumber: true });
 
         setIsValidatingCredentials(false);
+        moveToNextStep();
       } catch (error) {
         setIsValidatingCredentials(false);
         await updateStoreFields({ _hasAuthenticatedPhoneNumber: false });
@@ -92,7 +93,7 @@ export const StepPhoneAuthentication: StepParams<OnboardingFormFields> = {
         <ButtonStack>
           <Button
             type="submit"
-            label="Sign Up"
+            label="Continue"
             disabled={shouldButtonBeDisabled}
             loading={isValidatingCredentials}
           />

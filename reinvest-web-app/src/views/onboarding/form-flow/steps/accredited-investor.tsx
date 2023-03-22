@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -68,11 +68,15 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Are you an accredited investor?" />
-
-          <OpenModalLink
-            label="What is an accredited investor?"
-            onClick={onLinkClick}
+          <BlackModalTitle
+            title="Are you an accredited investor?"
+            subtitle={
+              <OpenModalLink
+                label="What is an accredited investor?"
+                onClick={onLinkClick}
+                green
+              />
+            }
           />
 
           <RadioGroupOptions

@@ -1,8 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { Input } from 'components/FormElements/Input';
-import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
@@ -18,6 +19,10 @@ const schema = z.object({
 
 export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.FINRA_INSTITUTION,
+
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isAssociatedWithFinra;
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -35,7 +40,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please provide name of the FINRA institution below." />
+        <BlackModalTitle title="Please provide name of the FINRA institution below." />
 
         <Input
           name="finraInstitution"
@@ -43,11 +48,13 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
           placeholder="FINRA Institute Name"
         />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

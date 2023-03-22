@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
 import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
@@ -56,37 +57,41 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
         <Form onSubmit={form.handleSubmit(onSubmit)}>
           <Title
             title="Enter your phone number"
-            subtitle="We’ll text you a confirmation code within 10 minutes."
+            subtitle="We'll text you a confirmation code within 10 minutes."
           />
 
-          <div className="flex">
-            <div className="contents child:basis-2/5">
-              <InputPhoneNumberCountryCode
-                name="countryCode"
-                control={form.control}
-                defaultValue="1"
-              />
+          <div className="flex w-full flex-col gap-16">
+            <div className="flex">
+              <div className="contents child:basis-2/5">
+                <InputPhoneNumberCountryCode
+                  name="countryCode"
+                  control={form.control}
+                  defaultValue={CALLING_CODES[0]}
+                />
+              </div>
+
+              <div className="contents">
+                <InputPhoneNumber
+                  name="phone"
+                  control={form.control}
+                />
+              </div>
             </div>
 
-            <div className="contents">
-              <InputPhoneNumber
-                name="phone"
-                control={form.control}
-              />
-            </div>
+            <OpenModalLink
+              label="Required. Why?"
+              onClick={onMoreInformationClick}
+              green
+            />
           </div>
 
-          <OpenModalLink
-            label="Required. Why?"
-            onClick={onMoreInformationClick}
-            green
-          />
-
-          <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-          />
+          <ButtonStack>
+            <Button
+              type="submit"
+              label="Continue"
+              disabled={shouldButtonBeDisabled}
+            />
+          </ButtonStack>
         </Form>
 
         <WhyRequiredPhoneNumberModal

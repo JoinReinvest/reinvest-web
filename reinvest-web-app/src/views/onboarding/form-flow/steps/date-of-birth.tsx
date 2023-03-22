@@ -28,7 +28,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const { formState, control, handleSubmit } = useForm<Fields>({
-      mode: 'onChange',
+      mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
@@ -49,16 +49,18 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Title title="Enter your date of birth" />
 
-          <InputBirthDate
-            name="dateOfBirth"
-            control={control}
-          />
+          <div className="flex w-full flex-col gap-16">
+            <InputBirthDate
+              name="dateOfBirth"
+              control={control}
+            />
 
-          <OpenModalLink
-            label="Required. Why?"
-            green
-            onClick={onOpenInformationModalClick}
-          />
+            <OpenModalLink
+              label="Required. Why?"
+              green
+              onClick={onOpenInformationModalClick}
+            />
+          </div>
 
           <ButtonStack>
             <Button
