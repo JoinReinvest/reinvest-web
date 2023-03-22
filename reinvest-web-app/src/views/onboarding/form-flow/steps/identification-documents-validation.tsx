@@ -1,7 +1,8 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
-import { Title } from 'components/Title';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { Typography } from 'components/Typography';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -11,6 +12,12 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
   isAValidationView: true,
 
   identifier: Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
+
+  willBePartOfTheFlow: fields => {
+    const { _didDocumentIdentificationValidationSucceed } = fields;
+
+    return !_didDocumentIdentificationValidationSucceed;
+  },
 
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     // TO-DO: If the documents were not valid, the text and
@@ -40,15 +47,17 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
     };
 
     return (
-      <div className="flex flex-col items-center gap-36">
-        <Title title={titleGenerator()} />
-
+      <div className="relative flex flex-col items-center gap-36">
         {iconGenerator()}
 
-        <Button
-          label="Continue"
-          onClick={onContinueButtonClick}
-        />
+        <Typography variant="h5">{titleGenerator()}</Typography>
+
+        <ButtonStack>
+          <Button
+            label="Continue"
+            onClick={onContinueButtonClick}
+          />
+        </ButtonStack>
       </div>
     );
   },

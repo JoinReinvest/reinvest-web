@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
-import { Title } from 'components/Title';
 import {
   CORPORATION_ANNUAL_REVENUE_AS_OPTIONS,
   CORPORATION_ANNUAL_REVENUES,
@@ -13,6 +14,7 @@ import {
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -28,6 +30,10 @@ const schema = z.object({
 
 export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATION_INFORMATION,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === AccountType.Corporate;
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = {
@@ -51,30 +57,32 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please provide  the following information regarding your corporation." />
+        <FormContent>
+          <BlackModalTitle title="Please provide  the following information regarding your corporation." />
 
-        <div className="flex w-full flex-col gap-16">
-          <Select
-            name="corporationAnnualRevenue"
-            control={control}
-            options={CORPORATION_ANNUAL_REVENUE_AS_OPTIONS}
-            placeholder="Annual Revenue"
-          />
+          <div className="flex w-full flex-col gap-16">
+            <Select
+              name="corporationAnnualRevenue"
+              control={control}
+              options={CORPORATION_ANNUAL_REVENUE_AS_OPTIONS}
+              placeholder="Annual Revenue"
+            />
 
-          <Select
-            name="corporationNumberOfEmployees"
-            control={control}
-            options={CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS}
-            placeholder="# of Employees"
-          />
+            <Select
+              name="corporationNumberOfEmployees"
+              control={control}
+              options={CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS}
+              placeholder="# of Employees"
+            />
 
-          <Select
-            name="corporationIndustry"
-            control={control}
-            options={INDUESTRIES_AS_OPTIONS}
-            placeholder="Industry"
-          />
-        </div>
+            <Select
+              name="corporationIndustry"
+              control={control}
+              options={INDUESTRIES_AS_OPTIONS}
+              placeholder="Industry"
+            />
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

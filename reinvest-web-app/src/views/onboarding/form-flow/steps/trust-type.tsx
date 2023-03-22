@@ -1,14 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { TRUST_TYPES_AS_OPTIONS, TRUST_TYPES_VALUES } from 'constants/account-types';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { WhyRequiredTrustTypeModal } from 'views/whyRequiredModals/WhyRequiredTrustTypeModal';
 import { z } from 'zod';
 
@@ -23,6 +25,10 @@ const schema = z.object({
 
 export const StepTrustType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_TYPE,
+
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === AccountType.Trust;
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = { trustType: storeFields?.trustType };
@@ -48,22 +54,27 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Which type of account would you like to open?" />
+          <FormContent>
+            <BlackModalTitle title="Which type of account would you like to open?" />
 
-          <SelectionCards
-            name="trustType"
-            control={control}
-            options={TRUST_TYPES_AS_OPTIONS}
-            className="mb-30 flex flex-col items-stretch justify-center gap-16"
-            orientation="vertical"
-          />
+            <div className="flex w-full flex-col gap-24">
+              <SelectionCards
+                name="trustType"
+                control={control}
+                options={TRUST_TYPES_AS_OPTIONS}
+                className="flex flex-col items-stretch justify-center gap-16"
+                orientation="vertical"
+              />
 
-          <div className="flex w-full justify-center">
-            <OpenModalLink
-              label="Not sure which is best for you?"
-              onClick={onLinkClick}
-            />
-          </div>
+              <div className="flex w-full justify-center">
+                <OpenModalLink
+                  label="Not sure which is best for you?"
+                  green
+                  onClick={onLinkClick}
+                />
+              </div>
+            </div>
+          </FormContent>
 
           <ButtonStack>
             <Button

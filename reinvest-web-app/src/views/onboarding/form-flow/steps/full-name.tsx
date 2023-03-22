@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
-import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -38,33 +40,39 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Title title="Enter your first and last name as it appears on your ID" />
+        <FormContent>
+          <BlackModalTitle title="Enter your first and last name as it appears on your ID" />
 
-        <Input
-          name="firstName"
-          control={form.control}
-          placeholder="First Name"
-          required
-        />
+          <div className="flex w-full flex-col gap-16">
+            <Input
+              name="firstName"
+              control={form.control}
+              placeholder="First Name"
+              required
+            />
 
-        <Input
-          name="middleName"
-          control={form.control}
-          placeholder="Middle Name (Optional)"
-        />
+            <Input
+              name="middleName"
+              control={form.control}
+              placeholder="Middle Name (Optional)"
+            />
 
-        <Input
-          name="lastName"
-          control={form.control}
-          placeholder="Last Name"
-          required
-        />
+            <Input
+              name="lastName"
+              control={form.control}
+              placeholder="Last Name"
+              required
+            />
+          </div>
+        </FormContent>
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

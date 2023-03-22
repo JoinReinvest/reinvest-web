@@ -1,13 +1,15 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
@@ -37,7 +39,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCREDITED_INVESTOR,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'INDIVIDUAL';
+    return accountType === AccountType.Individual;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -68,18 +70,24 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Are you an accredited investor?" />
+          <FormContent>
+            <BlackModalTitle
+              title="Are you an accredited investor?"
+              subtitle={
+                <OpenModalLink
+                  label="What is an accredited investor?"
+                  onClick={onLinkClick}
+                  green
+                />
+              }
+            />
 
-          <OpenModalLink
-            label="What is an accredited investor?"
-            onClick={onLinkClick}
-          />
-
-          <RadioGroupOptions
-            name="isAccreditedInvestor"
-            control={control}
-            options={OPTIONS}
-          />
+            <RadioGroupOptions
+              name="isAccreditedInvestor"
+              control={control}
+              options={OPTIONS}
+            />
+          </FormContent>
 
           <ButtonStack>
             <Button

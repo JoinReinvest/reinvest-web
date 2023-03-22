@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -28,7 +29,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const { formState, control, handleSubmit } = useForm<Fields>({
-      mode: 'onChange',
+      mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
@@ -47,18 +48,22 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Enter your date of birth" />
+          <FormContent>
+            <BlackModalTitle title="Enter your date of birth" />
 
-          <InputBirthDate
-            name="dateOfBirth"
-            control={control}
-          />
+            <div className="flex w-full flex-col gap-16">
+              <InputBirthDate
+                name="dateOfBirth"
+                control={control}
+              />
 
-          <OpenModalLink
-            label="Required. Why?"
-            green
-            onClick={onOpenInformationModalClick}
-          />
+              <OpenModalLink
+                label="Required. Why?"
+                green
+                onClick={onOpenInformationModalClick}
+              />
+            </div>
+          </FormContent>
 
           <ButtonStack>
             <Button

@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
-import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -34,7 +36,7 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.AUTHORIZED_SIGNATORY_ENTITY,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'CORPORATE' || accountType === 'TRUST';
+    return accountType === AccountType.Corporate || accountType === AccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -58,13 +60,15 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Are you an authorized signatory & beneficiary owner of this entity?" />
+        <FormContent>
+          <BlackModalTitle title="Are you an authorized signatory & beneficiary owner of this entity?" />
 
-        <RadioGroupOptions
-          name="isAuthorizedSignatoryEntity"
-          control={control}
-          options={OPTIONS}
-        />
+          <RadioGroupOptions
+            name="isAuthorizedSignatoryEntity"
+            control={control}
+            options={OPTIONS}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

@@ -2,12 +2,12 @@ import cx from 'classnames';
 import { HTMLAttributes, PropsWithChildren } from 'react';
 
 type PrimitiveProps = Pick<HTMLAttributes<HTMLFormElement>, 'className' | 'onSubmit'>;
-interface FormProps extends PrimitiveProps, PropsWithChildren {}
+interface Props extends PrimitiveProps, PropsWithChildren {}
 
-export const Form = ({ onSubmit, children, className }: FormProps) => (
+export const Form = ({ onSubmit, children, className }: Props) => (
   <form
     onSubmit={onSubmit}
-    className={cx('relative flex h-full flex-col gap-60 lg:gap-16 lg:justify-center', className)}
+    className={cx('relative h-full grid grid-rows-[1fr_auto] gap-16 justify-between', className)}
   >
     {children}
   </form>

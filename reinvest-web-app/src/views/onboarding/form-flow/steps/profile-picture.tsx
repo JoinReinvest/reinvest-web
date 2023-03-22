@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
-import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -41,35 +43,39 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title=" Upload Profile Picture" />
+        <FormContent>
+          <BlackModalTitle title="Upload Profile Picture" />
 
-        <InputAvatar
-          name="profilePicture"
-          control={control}
-          altText="Profile picture for account"
-        />
+          <div className="flex w-full flex-col items-center gap-12">
+            <InputAvatar
+              name="profilePicture"
+              control={control}
+              altText="Profile picture for account"
+            />
 
-        <Typography variant="paragraph-large">Upload profile picture</Typography>
+            <Typography
+              variant="paragraph-large"
+              className="text-white/50"
+            >
+              Customize your profile picture
+            </Typography>
+          </div>
+        </FormContent>
 
-        <Typography
-          variant="paragraph-large"
-          className="text-white/50"
-        >
-          Customize your profile picture
-        </Typography>
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
-
-        <Button
-          label="Skip"
-          variant="outlined"
-          onClick={onSkip}
-          className="text-green-frost-01"
-        />
+          <Button
+            label="Skip"
+            variant="outlined"
+            onClick={onSkip}
+            className="text-green-frost-01"
+          />
+        </ButtonStack>
       </Form>
     );
   },

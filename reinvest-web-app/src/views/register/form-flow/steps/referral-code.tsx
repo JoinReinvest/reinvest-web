@@ -1,10 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputReferralCode } from 'components/FormElements/InputReferralCode';
-import { Title } from 'components/Title';
 import { env } from 'env';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
@@ -69,18 +70,20 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title
-          title="Do you have a referral code? (optional)"
-          subtitle="You and your referrer will receive $20 in dividends following your first investment!"
-        />
+        <FormContent>
+          <BlackModalTitle
+            title="Do you have a referral code? (optional)"
+            subtitle="You and your referrer will receive $20 in dividends following your first investment!"
+          />
 
-        {error && <FormMessage message={error} />}
+          {error && <FormMessage message={error} />}
 
-        <InputReferralCode
-          name="referralCode"
-          control={control}
-          defaultValue={storeFields.referralCode}
-        />
+          <InputReferralCode
+            name="referralCode"
+            control={control}
+            defaultValue={storeFields.referralCode}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

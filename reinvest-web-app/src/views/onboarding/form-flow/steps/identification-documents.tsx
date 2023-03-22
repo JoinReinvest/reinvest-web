@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputFile } from 'components/FormElements/InputFile';
-import { Title } from 'components/Title';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -16,8 +18,8 @@ type Fields = Pick<OnboardingFormFields, 'identificationDocument'>;
 
 const schema = z.object({
   identificationDocument: z.object({
-    frontSide: z.custom<File>().nullable(),
-    backSide: z.custom<File>().nullable(),
+    frontSide: z.custom<File>(),
+    backSide: z.custom<File>(),
   }),
 });
 
@@ -63,7 +65,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
         <div className="flex items-center gap-32">
           <IconSpinner />
 
-          <Title title="Verifying Account Information" />
+          <BlackModalTitle title="Verifying Account Information" />
         </div>
       );
     }
@@ -71,27 +73,31 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
     if (!isLoading) {
       return (
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="Please upload your Driver’s License or Passport for further verification" />
+          <FormContent>
+            <BlackModalTitle title="Please upload your Driver’s License or Passport for further verification" />
 
-          <InputFile
-            name="identificationDocument.front"
-            control={control}
-            label="Upload ID Front"
-            placeholder="Upload File"
-          />
+            <div className="flex w-full flex-col gap-16">
+              <InputFile
+                name="identificationDocument.front"
+                control={control}
+                placeholder="Upload ID Front"
+              />
 
-          <InputFile
-            name="identificationDocument.back"
-            control={control}
-            label="Upload ID Back"
-            placeholder="Upload File"
-          />
+              <InputFile
+                name="identificationDocument.back"
+                control={control}
+                placeholder="Upload ID Back"
+              />
+            </div>
+          </FormContent>
 
-          <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-          />
+          <ButtonStack>
+            <Button
+              type="submit"
+              label="Continue"
+              disabled={shouldButtonBeDisabled}
+            />
+          </ButtonStack>
         </Form>
       );
     }
