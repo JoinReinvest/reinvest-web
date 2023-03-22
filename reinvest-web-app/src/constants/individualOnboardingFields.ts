@@ -11,5 +11,3 @@ export const profileFields = [
   'investmentExperience',
   'verifyAndFinish',
 ];
-
-export const individualDraftAccountFields = ['employmentStatus', 'employer', 'netWorth', 'netIncome'];

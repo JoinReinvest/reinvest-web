@@ -31,10 +31,10 @@ const schema = z.object({
 export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_GREEN_CARD,
   willBePartOfTheFlow(fields) {
-    return fields.residency === DomicileType.GreenCard || fields.residency === DomicileType.Citizen;
+    return (fields.residency === DomicileType.GreenCard || fields.residency === DomicileType.Citizen) && !fields.isCompletedProfile;
   },
   doesMeetConditionFields(fields) {
-    return fields.residency === DomicileType.GreenCard || fields.residency === DomicileType.Citizen;
+    return (fields.residency === DomicileType.GreenCard || fields.residency === DomicileType.Citizen) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

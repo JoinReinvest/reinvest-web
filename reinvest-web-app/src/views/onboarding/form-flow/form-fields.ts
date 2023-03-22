@@ -1,7 +1,7 @@
 import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
 import { Industry } from 'constants/industries';
-import { DomicileType, DraftAccountType, EmploymentStatus, StatementType } from 'types/graphql';
+import { DomicileType, DraftAccountType, EmploymentStatus, Experience, StatementType } from 'types/graphql';
 import { Address } from 'types/graphql';
 
 export interface OnboardingFormFields {
@@ -38,13 +38,7 @@ export interface OnboardingFormFields {
   _isSocialSecurityNumberBanned?: boolean;
   accountId?: string;
   // Are we displaying this as an URL or a file upload?
-  address?: {
-    city?: string;
-    state?: string;
-    streetAddress?: string;
-    streetAddress2?: string;
-    zipCode?: string;
-  };
+  address?: Address;
   authCode?: string;
   birthCountry?: string;
   businessAddress?: Address;
@@ -76,7 +70,7 @@ export interface OnboardingFormFields {
   employmentStatus?: EmploymentStatus;
 
   // Are we displaying this as an URL or a file upload?
-  experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
+  experience?: Experience;
   finraInstitution?: string;
 
   finraInstitutionName?: string;
@@ -90,10 +84,10 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   identificationDocument?: IdentificationDocuments;
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
+  isCompletedProfile?: boolean;
   lastName?: string;
   middleName?: string;
   netIncome?: string;
@@ -106,7 +100,7 @@ export interface OnboardingFormFields {
   seniorPoliticalFigure?: string;
   socialSecurityNumber?: string;
 
-  statementType?: StatementType;
+  statementTypes?: StatementType[];
   trustLegalName?: string;
   trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';

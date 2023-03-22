@@ -21,7 +21,7 @@ import { DraftAccountType } from 'types/graphql';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Exclude<OnboardingFormFields['permanentAddress'], undefined>;
+type Fields = Exclude<OnboardingFormFields['address'], undefined>;
 
 const schema = formValidationRules.address;
 
@@ -50,11 +50,11 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '' };
-    const defaultValues: Fields = storeFields.permanentAddress || initialValues;
+    const defaultValues: Fields = storeFields.address || initialValues;
 
     const { control, formState, setValue, handleSubmit } = useForm<Fields>({
       mode: 'onSubmit',
-      // resolver: zodResolver(schema),
+      resolver: zodResolver(schema),
       defaultValues,
     });
 
@@ -81,9 +81,9 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
       }
     };
 
-    const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
-      await updateStoreFields({ permanentAddress });
-      updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, permanentAddress });
+    const onSubmit: SubmitHandler<Fields> = async address => {
+      await updateStoreFields({ address });
+      updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, address });
     };
 
     useEffect(() => {

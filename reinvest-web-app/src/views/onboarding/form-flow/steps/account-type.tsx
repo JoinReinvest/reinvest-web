@@ -9,6 +9,7 @@ import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/accoun
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { useGetListAccount } from 'services/queries/getListAccount';
 import { useGetUserProfile } from 'services/queries/getProfile';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
@@ -26,14 +27,9 @@ const schema = z.object({
 export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
-  Component: async ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    try {
-      const { status, data: profileData, error, isFetching } = useGetUserProfile();
-    } catch (error) {
-      console.log('error', error);
-    }
-
-    // console.log('profile data', profileData);
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const { data: profileData } = useGetUserProfile();
+    const { data: listAccounts } = useGetListAccount();
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -48,15 +44,14 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       updateData,
       error: { createDraftAccountError },
       isSuccess,
-      data,
+      data: individualAccountData,
     } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
-      updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
-      moveToNextStep();
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields(fields);
+      await updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
     };
 
     const onLinkClick = () => {
@@ -65,10 +60,42 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        updateStoreFields({ ...storeFields, accountId: data?.id || '' });
-        // moveToNextStep();
+        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '' });
+        moveToNextStep();
       }
-    }, [data, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
+    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
+
+    useEffect(() => {
+      const updateStore = async (accountId: string) => {
+        return updateStoreFields({ ...storeFields, accountId });
+      };
+
+      if (createDraftAccountError && listAccounts) {
+        if (createDraftAccountError.message.includes('already exists')) {
+          const account = listAccounts.find(account => account?.type === getValues().accountType);
+          updateStore(account?.id || '');
+          moveToNextStep();
+        }
+      }
+    }, [createDraftAccountError, individualAccountData, storeFields, updateStoreFields]);
+
+    useEffect(() => {
+      if (profileData) {
+        updateStoreFields({
+          ...storeFields,
+          address: profileData?.details?.address || undefined,
+          name: {
+            firstName: profileData?.details?.firstName || '',
+            lastName: profileData?.details?.lastName || '',
+            middleName: profileData?.details?.middleName || '',
+          },
+          dateOfBirth: profileData?.details?.dateOfBirth || undefined,
+          residency: profileData?.details?.domicile?.type || undefined,
+          experience: profileData?.details?.experience || undefined,
+          isCompletedProfile: profileData?.isCompleted || false,
+        });
+      }
+    }, [profileData, storeFields, updateStoreFields]);
 
     return (
       <>

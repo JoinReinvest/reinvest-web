@@ -26,7 +26,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PROFILE_PICTURE,
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
+    const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
       fields.phone?.number,
@@ -40,7 +40,12 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     ];
 
     //TODO: More conditions for individual account type
-    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+    const individualAccountFields = [fields.employmentStatus, fields.employmentDetails, fields.netIncome, fields.netWorth];
+
+    return (
+      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields) && !fields.isCompletedProfile) ||
+      (allRequiredFieldsExists(individualAccountFields) && !!fields.isCompletedProfile)
+    );
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

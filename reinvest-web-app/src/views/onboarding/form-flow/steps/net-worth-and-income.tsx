@@ -32,7 +32,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
     return fields.employmentStatus === EmploymentStatus.Employed;
   },
   doesMeetConditionFields(fields) {
-    const requiredFields = [
+    const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
       fields.phone?.number,
@@ -42,10 +42,14 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       fields.residency,
       fields.socialSecurityNumber,
       fields.experience,
-      fields.employmentStatus,
     ];
 
-    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+    const individualAccountFields = [fields.employmentStatus, fields.employmentDetails];
+
+    return (
+      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields) && !fields.isCompletedProfile) ||
+      (allRequiredFieldsExists(individualAccountFields) && !!fields.isCompletedProfile)
+    );
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

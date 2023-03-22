@@ -25,10 +25,10 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_STATUS,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === DraftAccountType.Individual;
+    return fields.accountType === DraftAccountType.Individual && !!fields.isCompletedProfile;
   },
   doesMeetConditionFields(fields) {
-    const requiredFields = [
+    const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
       fields.phone?.number,
@@ -42,7 +42,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       fields.experience,
     ];
 
-    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || !!fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

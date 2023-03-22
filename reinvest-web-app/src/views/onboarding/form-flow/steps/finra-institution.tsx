@@ -35,7 +35,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
       fields.residency,
     ];
 
-    return allRequiredFieldsExists(requiredFields) && fields.statementType === StatementType.FinraMember;
+    return allRequiredFieldsExists(requiredFields) && !!fields.statementTypes?.includes(StatementType.FinraMember);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

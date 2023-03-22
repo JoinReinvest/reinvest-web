@@ -29,10 +29,14 @@ const schema = z.object({
 export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PHONE_NUMBER,
 
+  willBePartOfTheFlow(fields) {
+    return fields.accountType && !fields.isCompletedProfile;
+  },
+
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
 
-    return allRequiredFieldsExists(requiredFields);
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

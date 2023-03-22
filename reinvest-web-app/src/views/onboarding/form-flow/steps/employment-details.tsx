@@ -11,7 +11,7 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType } from 'types/graphql';
+import { DraftAccountType, EmploymentStatus } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -30,8 +30,12 @@ const schema = z.object({
 export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_DETAILS,
 
+  willBePartOfTheFlow(fields) {
+    return (!!fields.isCompletedProfile && fields.accountType === DraftAccountType.Individual) || fields.employmentStatus === EmploymentStatus.Employed;
+  },
+
   doesMeetConditionFields(fields) {
-    const requiredFields = [
+    const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
       fields.phone?.number,
@@ -42,7 +46,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       fields.socialSecurityNumber,
     ];
 
-    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || !!fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

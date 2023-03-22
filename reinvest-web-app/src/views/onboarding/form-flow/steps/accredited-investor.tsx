@@ -8,8 +8,9 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { DraftAccountType } from 'types/graphql';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
@@ -38,8 +39,14 @@ const OPTIONS: RadioGroupOptionItem[] = [
 export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCREDITED_INVESTOR,
 
-  willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'INDIVIDUAL';
+  willBePartOfTheFlow: ({ accountType, isCompletedProfile }) => {
+    return accountType === DraftAccountType.Individual && !isCompletedProfile;
+  },
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
+
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

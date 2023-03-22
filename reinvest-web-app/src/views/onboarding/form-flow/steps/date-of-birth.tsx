@@ -27,6 +27,10 @@ const schema = z.object({
 export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DATE_OF_BIRTH,
 
+  willBePartOfTheFlow(fields) {
+    return fields.accountType && !fields.isCompletedProfile;
+  },
+
   doesMeetConditionFields(fields) {
     const requiredFields = [
       fields.accountType,

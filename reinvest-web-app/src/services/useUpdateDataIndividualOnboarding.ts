@@ -33,9 +33,6 @@ const profileDetailsSteps = [
   Identifiers.RESIDENCY_VISA,
   Identifiers.COMPLIANCES,
   Identifiers.FINRA_INSTITUTION,
-  Identifiers.EMPLOYMENT_STATUS,
-  Identifiers.EMPLOYMENT_DETAILS,
-  Identifiers.NET_WORTH_AND_INCOME,
   Identifiers.EXPERIENCE,
   Identifiers.IDENTIFICATION_DOCUMENTS,
   Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
@@ -76,6 +73,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     error: individualDraftAccountError,
     isLoading: isIndividualDraftAccountLoading,
     mutateAsync: completeIndividualDraftAccountMutate,
+    isSuccess: isIndividualDraftAccountSuccess,
   } = useCompleteIndividualDraftAccount();
 
   const {
@@ -124,10 +122,12 @@ export const useUpdateDataIndividualOnboarding = () => {
     }
 
     if (!isEmptyObject(profileDetails) && profileDetailsSteps.includes(stepId)) {
-      const { residency, statementType, finraInstitutionName, socialSecurityNumber, experience, isAccreditedInvestor } = storedFields;
+      const { residency, statementTypes, finraInstitutionName, socialSecurityNumber, experience, isAccreditedInvestor } = storedFields;
       const domicile = residency ? { ...profileDetails.domicile, type: residency } : undefined;
       const statements = [];
-      statementType && finraInstitutionName ? statements.push({ type: statementType, forFINRA: { name: finraInstitutionName } }) : undefined;
+      statementTypes?.includes(StatementType.FinraMember) && finraInstitutionName
+        ? statements.push({ type: StatementType.FinraMember, forFINRA: { name: finraInstitutionName } })
+        : undefined;
       stepId === Identifiers.ACCREDITED_INVESTOR
         ? statements.push({
             type: StatementType.AccreditedInvestor,
@@ -141,7 +141,7 @@ export const useUpdateDataIndividualOnboarding = () => {
       const ssn = socialSecurityNumber ? { ssn: socialSecurityNumber } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
 
-      const address = stepId === Identifiers.PERMANENT_ADDRESS ? { ...storedFields.permanentAddress, country: 'USA' } : undefined;
+      const address = stepId === Identifiers.PERMANENT_ADDRESS ? { ...storedFields.address, country: 'USA' } : undefined;
       const idScan = [];
 
       // send documents to s3
@@ -152,13 +152,13 @@ export const useUpdateDataIndividualOnboarding = () => {
         try {
           s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
         } catch (error) {
-          return error;
+          console.log(error);
         }
 
         try {
           s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
         } catch (error) {
-          return error;
+          console.log(error);
         }
 
         const documentIds = documentsFileLinks?.map(documentFileLink => ({ id: documentFileLink?.id })) as { id: string }[];
@@ -177,14 +177,14 @@ export const useUpdateDataIndividualOnboarding = () => {
       });
     }
 
-    if (individualDraftAccountSteps.includes(stepId)) {
-      const accountId = 'aa4e7363-3181-4d1e-ac68-864efd748e3e'; //Get from store
+    if (individualDraftAccountSteps.includes(stepId) && storedFields.accountId) {
       const {
         employmentStatus: storedemploymentStatus,
         employmentDetails,
         netWorth: storageNetWorth,
         netIncome: storageNetIncome,
         profilePicture,
+        accountId,
       } = storedFields;
       const employmentStatus = storedemploymentStatus ? { status: storedemploymentStatus } : undefined;
       const employer = employmentDetails
@@ -257,7 +257,8 @@ export const useUpdateDataIndividualOnboarding = () => {
       isProfileDetailsSuccess ||
       isCreateDocumentsFileLinksSuccess ||
       isOpenAccountSuccess ||
-      isCreateAvatarLinkSuccess,
+      isCreateAvatarLinkSuccess ||
+      isIndividualDraftAccountSuccess,
     updateData,
   };
 };

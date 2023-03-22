@@ -22,10 +22,14 @@ type Fields = Pick<OnboardingFormFields, 'authCode'>;
 export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CHECK_YOUR_PHONE,
 
+  willBePartOfTheFlow(fields) {
+    return fields.accountType && !fields.isCompletedProfile;
+  },
+
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.phone?.number, fields.phone?.countryCode];
 
-    return allRequiredFieldsExists(requiredFields);
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
