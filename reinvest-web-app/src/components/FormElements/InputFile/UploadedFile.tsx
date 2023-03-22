@@ -1,5 +1,5 @@
-import { IconTrashcan } from '../../../assets/icons/IconTrashcan';
-import { Typography } from '../../Typography';
+import { IconTrashcan } from 'assets/icons/IconTrashcan';
+import { Typography } from 'components/Typography';
 
 interface UploadedFileProps {
   fileName: string;
@@ -7,7 +7,7 @@ interface UploadedFileProps {
 }
 export const UploadedFile = ({ fileName, onRemove }: UploadedFileProps) => {
   return (
-    <div className="flex items-center gap-8 border border-dashed border-green-frost-01 p-8">
+    <div className="flex items-center justify-between gap-8 border border-dashed border-green-frost-01 p-8">
       <Typography
         variant="button"
         className="text-left line-clamp-1"
