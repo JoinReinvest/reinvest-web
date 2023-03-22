@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -45,16 +46,18 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="What is your experience with real estate investment?" />
+        <FormContent>
+          <BlackModalTitle title="What is your experience with real estate investment?" />
 
-        <SelectionCards
-          name="experience"
-          control={control}
-          options={EXPERIENCES_AS_OPTIONS}
-          className="flex flex-col items-stretch justify-center gap-22 lg:gap-24"
-          orientation="vertical"
-          required
-        />
+          <SelectionCards
+            name="experience"
+            control={control}
+            options={EXPERIENCES_AS_OPTIONS}
+            className="flex flex-col items-stretch justify-center gap-22 lg:gap-24"
+            orientation="vertical"
+            required
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

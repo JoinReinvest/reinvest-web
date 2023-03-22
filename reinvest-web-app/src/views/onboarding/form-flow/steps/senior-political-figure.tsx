@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { TextArea } from 'components/FormElements/TextArea';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -40,13 +41,15 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Please provide the name and position of this senior political figure." />
+        <FormContent>
+          <BlackModalTitle title="Please provide the name and position of this senior political figure." />
 
-        <TextArea
-          name="seniorPoliticalFigure"
-          control={control}
-          maxCharacters={220}
-        />
+          <TextArea
+            name="seniorPoliticalFigure"
+            control={control}
+            maxCharacters={220}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

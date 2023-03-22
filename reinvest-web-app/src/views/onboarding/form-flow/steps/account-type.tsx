@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
@@ -47,24 +48,26 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <BlackModalTitle title="Which type of account would you like to open?" />
+          <FormContent>
+            <BlackModalTitle title="Which type of account would you like to open?" />
 
-          <div className="flex w-full flex-col gap-24">
-            <SelectionCards
-              name="accountType"
-              control={control}
-              options={ACCOUNT_TYPES_AS_OPTIONS}
-              className="flex flex-col items-stretch justify-center gap-24"
-              orientation="vertical"
-            />
+            <div className="flex w-full flex-col gap-24">
+              <SelectionCards
+                name="accountType"
+                control={control}
+                options={ACCOUNT_TYPES_AS_OPTIONS}
+                className="flex flex-col items-stretch justify-center gap-24"
+                orientation="vertical"
+              />
 
-            <OpenModalLink
-              label="Not sure which is best for you?"
-              green
-              center
-              onClick={onLinkClick}
-            />
-          </div>
+              <OpenModalLink
+                label="Not sure which is best for you?"
+                green
+                center
+                onClick={onLinkClick}
+              />
+            </div>
+          </FormContent>
 
           <ButtonStack>
             <Button

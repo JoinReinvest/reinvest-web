@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { CORPORATION_TYPES_AS_OPTIONS, CORPORATION_TYPES_VALUES } from 'constants/account-types';
@@ -48,25 +49,27 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <BlackModalTitle title="What type of Corporation do you have?" />
+          <FormContent>
+            <BlackModalTitle title="What type of Corporation do you have?" />
 
-          <div className="flex w-full flex-col gap-24">
-            <SelectionCards
-              name="corporationType"
-              control={control}
-              options={CORPORATION_TYPES_AS_OPTIONS}
-              className="flex flex-col items-stretch justify-center gap-16"
-              orientation="vertical"
-            />
-
-            <div className="flex w-full justify-center">
-              <OpenModalLink
-                label="Not sure which is best for you?"
-                green
-                onClick={onLinkClick}
+            <div className="flex w-full flex-col gap-24">
+              <SelectionCards
+                name="corporationType"
+                control={control}
+                options={CORPORATION_TYPES_AS_OPTIONS}
+                className="flex flex-col items-stretch justify-center gap-16"
+                orientation="vertical"
               />
+
+              <div className="flex w-full justify-center">
+                <OpenModalLink
+                  label="Not sure which is best for you?"
+                  green
+                  onClick={onLinkClick}
+                />
+              </div>
             </div>
-          </div>
+          </FormContent>
 
           <ButtonStack>
             <Button

@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -49,17 +50,19 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle
-          title="Upload the following documents to verify your trust."
-          subtitle={subtitle}
-        />
+        <FormContent>
+          <BlackModalTitle
+            title="Upload the following documents to verify your trust."
+            subtitle={subtitle}
+          />
 
-        <InputMultiFile
-          name="documentsForTrust"
-          control={control}
-          accepts={['pdf']}
-          minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
-        />
+          <InputMultiFile
+            name="documentsForTrust"
+            control={control}
+            accepts={['pdf']}
+            minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

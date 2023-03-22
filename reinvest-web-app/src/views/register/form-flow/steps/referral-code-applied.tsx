@@ -1,7 +1,7 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
-import { Title } from 'components/Title';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
@@ -21,7 +21,7 @@ export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
     <div className="relative flex h-full flex-col gap-24 md:justify-center">
       <IconCheckCircle className="mx-auto" />
 
-      <Title title="Referral code applied" />
+      <BlackModalTitle title="Referral code applied" />
 
       <ButtonStack>
         <Button

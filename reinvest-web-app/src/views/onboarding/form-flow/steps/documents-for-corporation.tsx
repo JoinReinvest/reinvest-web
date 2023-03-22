@@ -1,9 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
-import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
@@ -49,17 +50,19 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title
-          title="Upload the following documents to verify your organization."
-          subtitle={subtitle}
-        />
+        <FormContent>
+          <BlackModalTitle
+            title="Upload the following documents to verify your organization."
+            subtitle={subtitle}
+          />
 
-        <InputMultiFile
-          name="documentsForCorporation"
-          control={control}
-          accepts={['pdf']}
-          minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
-        />
+          <InputMultiFile
+            name="documentsForCorporation"
+            control={control}
+            accepts={['pdf']}
+            minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

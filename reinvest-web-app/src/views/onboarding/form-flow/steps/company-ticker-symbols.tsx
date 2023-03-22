@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
@@ -86,18 +87,20 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Please list ticker symbols of the publicly traded company(s) below." />
+        <FormContent>
+          <BlackModalTitle title="Please list ticker symbols of the publicly traded company(s) below." />
 
-        <div className="flex w-full flex-col gap-16">
-          {fields.map((field, index) => (
-            <Input
-              key={field.id}
-              name={`companyTickerSymbols.${index}.symbol`}
-              control={control}
-              placeholder="Ticker Symbol"
-            />
-          ))}
-        </div>
+          <div className="flex w-full flex-col gap-16">
+            {fields.map((field, index) => (
+              <Input
+                key={field.id}
+                name={`companyTickerSymbols.${index}.symbol`}
+                control={control}
+                placeholder="Ticker Symbol"
+              />
+            ))}
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

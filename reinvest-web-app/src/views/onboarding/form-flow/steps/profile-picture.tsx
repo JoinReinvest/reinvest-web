@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
 import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -42,22 +43,24 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Upload Profile Picture" />
+        <FormContent>
+          <BlackModalTitle title="Upload Profile Picture" />
 
-        <div className="flex w-full flex-col items-center gap-12">
-          <InputAvatar
-            name="profilePicture"
-            control={control}
-            altText="Profile picture for account"
-          />
+          <div className="flex w-full flex-col items-center gap-12">
+            <InputAvatar
+              name="profilePicture"
+              control={control}
+              altText="Profile picture for account"
+            />
 
-          <Typography
-            variant="paragraph-large"
-            className="text-white/50"
-          >
-            Customize your profile picture
-          </Typography>
-        </div>
+            <Typography
+              variant="paragraph-large"
+              className="text-white/50"
+            >
+              Customize your profile picture
+            </Typography>
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

@@ -4,6 +4,7 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
@@ -108,50 +109,52 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Do any of the following apply to you?" />
+        <FormContent>
+          <BlackModalTitle title="Do any of the following apply to you?" />
 
-        <div className="flex w-full flex-col gap-16">
-          {formState.errors.root?.message && (
-            <FormMessage
-              message={formState.errors.root?.message}
-              variant="error"
-            />
-          )}
+          <div className="flex w-full flex-col gap-16">
+            {formState.errors.root?.message && (
+              <FormMessage
+                message={formState.errors.root?.message}
+                variant="error"
+              />
+            )}
 
-          <CheckboxLabeled
-            name="isAssociatedWithFinra"
-            control={control}
-            rules={{ onChange: event => onFieldComplianceChange('isAssociatedWithFinra', event) }}
-          >
-            Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or
-            greater) of the equity, associated with a FINRA member, organization, or the SEC.
-          </CheckboxLabeled>
+            <CheckboxLabeled
+              name="isAssociatedWithFinra"
+              control={control}
+              rules={{ onChange: event => onFieldComplianceChange('isAssociatedWithFinra', event) }}
+            >
+              Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or
+              greater) of the equity, associated with a FINRA member, organization, or the SEC.
+            </CheckboxLabeled>
 
-          <CheckboxLabeled
-            name="isAssociatedWithPubliclyTradedCompany"
-            control={control}
-            rules={{ onChange: event => onFieldComplianceChange('isAssociatedWithPubliclyTradedCompany', event) }}
-          >
-            Are you or anyone in your household or immediate family, or, for any non-natural person, any of its directors, trustees, 10% (or more) equity
-            holder, an officer, or member of the board of directors of a publicly traded company?
-          </CheckboxLabeled>
+            <CheckboxLabeled
+              name="isAssociatedWithPubliclyTradedCompany"
+              control={control}
+              rules={{ onChange: event => onFieldComplianceChange('isAssociatedWithPubliclyTradedCompany', event) }}
+            >
+              Are you or anyone in your household or immediate family, or, for any non-natural person, any of its directors, trustees, 10% (or more) equity
+              holder, an officer, or member of the board of directors of a publicly traded company?
+            </CheckboxLabeled>
 
-          <CheckboxLabeled
-            name="isSeniorPoliticalFigure"
-            control={control}
-            rules={{ onChange: event => onFieldComplianceChange('isSeniorPoliticalFigure', event) }}
-          >
-            Are you or any of your immediate family a senior political figure?
-          </CheckboxLabeled>
+            <CheckboxLabeled
+              name="isSeniorPoliticalFigure"
+              control={control}
+              rules={{ onChange: event => onFieldComplianceChange('isSeniorPoliticalFigure', event) }}
+            >
+              Are you or any of your immediate family a senior political figure?
+            </CheckboxLabeled>
 
-          <CheckboxLabeled
-            name="doNoneApply"
-            control={control}
-            rules={{ onChange: onFieldDoNoneApplyChange }}
-          >
-            None of the above apply
-          </CheckboxLabeled>
-        </div>
+            <CheckboxLabeled
+              name="doNoneApply"
+              control={control}
+              rules={{ onChange: onFieldDoNoneApplyChange }}
+            >
+              None of the above apply
+            </CheckboxLabeled>
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

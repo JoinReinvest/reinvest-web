@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
 import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
 import { formValidationRules } from 'formValidationRules';
@@ -39,26 +40,28 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle
-          title="Please enter your US Green Card details."
-          informationMessage="US Residents Only"
-        />
-
-        <div className="flex w-full flex-col gap-16">
-          <Select
-            name="citizenshipCountry"
-            control={control}
-            options={COUNTRIES_AS_OPTIONS}
-            placeholder="Citizenship Country"
+        <FormContent>
+          <BlackModalTitle
+            title="Please enter your US Green Card details."
+            informationMessage="US Residents Only"
           />
 
-          <Select
-            name="birthCountry"
-            control={control}
-            options={COUNTRIES_AS_OPTIONS}
-            placeholder="Birth Country"
-          />
-        </div>
+          <div className="flex w-full flex-col gap-16">
+            <Select
+              name="citizenshipCountry"
+              control={control}
+              options={COUNTRIES_AS_OPTIONS}
+              placeholder="Citizenship Country"
+            />
+
+            <Select
+              name="birthCountry"
+              control={control}
+              options={COUNTRIES_AS_OPTIONS}
+              placeholder="Birth Country"
+            />
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

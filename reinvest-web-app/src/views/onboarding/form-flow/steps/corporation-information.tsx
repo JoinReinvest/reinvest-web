@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
 import {
   CORPORATION_ANNUAL_REVENUE_AS_OPTIONS,
@@ -55,30 +56,32 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Please provide  the following information regarding your corporation." />
+        <FormContent>
+          <BlackModalTitle title="Please provide  the following information regarding your corporation." />
 
-        <div className="flex w-full flex-col gap-16">
-          <Select
-            name="corporationAnnualRevenue"
-            control={control}
-            options={CORPORATION_ANNUAL_REVENUE_AS_OPTIONS}
-            placeholder="Annual Revenue"
-          />
+          <div className="flex w-full flex-col gap-16">
+            <Select
+              name="corporationAnnualRevenue"
+              control={control}
+              options={CORPORATION_ANNUAL_REVENUE_AS_OPTIONS}
+              placeholder="Annual Revenue"
+            />
 
-          <Select
-            name="corporationNumberOfEmployees"
-            control={control}
-            options={CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS}
-            placeholder="# of Employees"
-          />
+            <Select
+              name="corporationNumberOfEmployees"
+              control={control}
+              options={CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS}
+              placeholder="# of Employees"
+            />
 
-          <Select
-            name="corporationIndustry"
-            control={control}
-            options={INDUESTRIES_AS_OPTIONS}
-            placeholder="Industry"
-          />
-        </div>
+            <Select
+              name="corporationIndustry"
+              control={control}
+              options={INDUESTRIES_AS_OPTIONS}
+              placeholder="Industry"
+            />
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

@@ -4,6 +4,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputFile } from 'components/FormElements/InputFile';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -72,21 +73,23 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
     if (!isLoading) {
       return (
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <BlackModalTitle title="Please upload your Driver’s License or Passport for further verification" />
+          <FormContent>
+            <BlackModalTitle title="Please upload your Driver’s License or Passport for further verification" />
 
-          <div className="flex w-full flex-col gap-16">
-            <InputFile
-              name="identificationDocument.front"
-              control={control}
-              placeholder="Upload ID Front"
-            />
+            <div className="flex w-full flex-col gap-16">
+              <InputFile
+                name="identificationDocument.front"
+                control={control}
+                placeholder="Upload ID Front"
+              />
 
-            <InputFile
-              name="identificationDocument.back"
-              control={control}
-              placeholder="Upload ID Back"
-            />
-          </div>
+              <InputFile
+                name="identificationDocument.back"
+                control={control}
+                placeholder="Upload ID Back"
+              />
+            </div>
+          </FormContent>
 
           <ButtonStack>
             <Button

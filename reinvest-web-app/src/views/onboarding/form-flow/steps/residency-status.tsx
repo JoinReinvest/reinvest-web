@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS, RESIDENCY_STATUS_VALUES } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -38,17 +39,19 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <BlackModalTitle
-          title="Residency Status"
-          subtitle="Please select your US residency status."
-          informationMessage="REINVEST does not accept non-US residents at this time."
-        />
+        <FormContent>
+          <BlackModalTitle
+            title="Residency Status"
+            subtitle="Please select your US residency status."
+            informationMessage="REINVEST does not accept non-US residents at this time."
+          />
 
-        <RadioGroupOptions
-          name="residency"
-          control={form.control}
-          options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
-        />
+          <RadioGroupOptions
+            name="residency"
+            control={form.control}
+            options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

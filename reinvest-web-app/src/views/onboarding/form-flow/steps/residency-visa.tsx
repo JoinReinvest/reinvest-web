@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
 import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
 import { VISAS_AS_OPTIONS } from 'constants/visas';
@@ -41,33 +42,35 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle
-          title="Please enter your US Visa details."
-          informationMessage="US Residents Only"
-        />
-
-        <div className="flex w-full flex-col gap-16">
-          <Select
-            name="citizenshipCountry"
-            control={control}
-            options={COUNTRIES_AS_OPTIONS}
-            placeholder="Citizenship Country"
+        <FormContent>
+          <BlackModalTitle
+            title="Please enter your US Visa details."
+            informationMessage="US Residents Only"
           />
 
-          <Select
-            name="birthCountry"
-            control={control}
-            options={COUNTRIES_AS_OPTIONS}
-            placeholder="Birth Country"
-          />
+          <div className="flex w-full flex-col gap-16">
+            <Select
+              name="citizenshipCountry"
+              control={control}
+              options={COUNTRIES_AS_OPTIONS}
+              placeholder="Citizenship Country"
+            />
 
-          <Select
-            name="visaType"
-            control={control}
-            options={VISAS_AS_OPTIONS}
-            placeholder="Visa Type"
-          />
-        </div>
+            <Select
+              name="birthCountry"
+              control={control}
+              options={COUNTRIES_AS_OPTIONS}
+              placeholder="Birth Country"
+            />
+
+            <Select
+              name="visaType"
+              control={control}
+              options={VISAS_AS_OPTIONS}
+              placeholder="Visa Type"
+            />
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

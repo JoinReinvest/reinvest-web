@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useState } from 'react';
@@ -68,22 +69,24 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <BlackModalTitle
-            title="Are you an accredited investor?"
-            subtitle={
-              <OpenModalLink
-                label="What is an accredited investor?"
-                onClick={onLinkClick}
-                green
-              />
-            }
-          />
+          <FormContent>
+            <BlackModalTitle
+              title="Are you an accredited investor?"
+              subtitle={
+                <OpenModalLink
+                  label="What is an accredited investor?"
+                  onClick={onLinkClick}
+                  green
+                />
+              }
+            />
 
-          <RadioGroupOptions
-            name="isAccreditedInvestor"
-            control={control}
-            options={OPTIONS}
-          />
+            <RadioGroupOptions
+              name="isAccreditedInvestor"
+              control={control}
+              options={OPTIONS}
+            />
+          </FormContent>
 
           <ButtonStack>
             <Button

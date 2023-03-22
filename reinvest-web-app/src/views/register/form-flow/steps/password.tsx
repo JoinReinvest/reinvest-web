@@ -1,12 +1,13 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPassword } from 'components/FormElements/InputPassword';
 import { PasswordChecklist } from 'components/PasswordChecklist';
-import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -78,35 +79,34 @@ export const StepPassword: StepParams<RegisterFormFields> = {
     };
 
     return (
-      <Form
-        onSubmit={handleSubmit(onSubmit)}
-        className="!gap-60"
-      >
-        <Title
-          title="Sign up to REINVEST"
-          subtitle="Create a unique password for your account to continue."
-        />
-
-        {error && <FormMessage message={error} />}
-
-        <div className="flex w-full flex-col gap-16 lg:gap-24">
-          <InputPassword
-            name="password"
-            control={control}
-            required
+      <Form onSubmit={handleSubmit(onSubmit)}>
+        <FormContent>
+          <BlackModalTitle
+            title="Sign up to REINVEST"
+            subtitle="Create a unique password for your account to continue."
           />
 
-          <InputPassword
-            name="passwordConfirmation"
-            control={control}
-            required
-          />
+          {error && <FormMessage message={error} />}
 
-          <PasswordChecklist
-            password={fields.password}
-            passwordConfirmation={fields.passwordConfirmation}
-          />
-        </div>
+          <div className="flex w-full flex-col gap-16 lg:gap-24">
+            <InputPassword
+              name="password"
+              control={control}
+              required
+            />
+
+            <InputPassword
+              name="passwordConfirmation"
+              control={control}
+              required
+            />
+
+            <PasswordChecklist
+              password={fields.password}
+              passwordConfirmation={fields.passwordConfirmation}
+            />
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

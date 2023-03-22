@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
 import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { CALLING_CODES } from 'constants/country-codes';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -55,35 +56,37 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={form.handleSubmit(onSubmit)}>
-          <Title
-            title="Enter your phone number"
-            subtitle="We'll text you a confirmation code within 10 minutes."
-          />
-
-          <div className="flex w-full flex-col gap-16">
-            <div className="flex">
-              <div className="contents child:basis-2/5">
-                <InputPhoneNumberCountryCode
-                  name="countryCode"
-                  control={form.control}
-                  defaultValue={CALLING_CODES[0]}
-                />
-              </div>
-
-              <div className="contents">
-                <InputPhoneNumber
-                  name="phone"
-                  control={form.control}
-                />
-              </div>
-            </div>
-
-            <OpenModalLink
-              label="Required. Why?"
-              onClick={onMoreInformationClick}
-              green
+          <FormContent>
+            <BlackModalTitle
+              title="Enter your phone number"
+              subtitle="We'll text you a confirmation code within 10 minutes."
             />
-          </div>
+
+            <div className="flex w-full flex-col gap-16">
+              <div className="flex">
+                <div className="contents child:basis-2/5">
+                  <InputPhoneNumberCountryCode
+                    name="countryCode"
+                    control={form.control}
+                    defaultValue={CALLING_CODES[0]}
+                  />
+                </div>
+
+                <div className="contents">
+                  <InputPhoneNumber
+                    name="phone"
+                    control={form.control}
+                  />
+                </div>
+              </div>
+
+              <OpenModalLink
+                label="Required. Why?"
+                onClick={onMoreInformationClick}
+                green
+              />
+            </div>
+          </FormContent>
 
           <ButtonStack>
             <Button

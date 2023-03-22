@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
@@ -62,47 +63,49 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle
-          title="Enter the business address for your corporation."
-          informationMessage="US Residents Only"
-        />
-
-        <div className="flex w-full flex-col gap-16">
-          <SelectAsync
-            name="addressLine1"
-            control={control}
-            loadOptions={getAddresses}
-            placeholder="Street Address or P.O. Box"
-            formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
-            formatSelectedOptionLabel={formatSelectedAddress}
-            onOptionSelected={setValuesFromStreetAddress}
+        <FormContent>
+          <BlackModalTitle
+            title="Enter the business address for your corporation."
+            informationMessage="US Residents Only"
           />
 
-          <Input
-            name="addressLine2"
-            control={control}
-            placeholder="Apt, suite, unit, building, floor, etc"
-          />
+          <div className="flex w-full flex-col gap-16">
+            <SelectAsync
+              name="addressLine1"
+              control={control}
+              loadOptions={getAddresses}
+              placeholder="Street Address or P.O. Box"
+              formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
+              formatSelectedOptionLabel={formatSelectedAddress}
+              onOptionSelected={setValuesFromStreetAddress}
+            />
 
-          <Input
-            name="city"
-            control={control}
-            placeholder="City"
-          />
+            <Input
+              name="addressLine2"
+              control={control}
+              placeholder="Apt, suite, unit, building, floor, etc"
+            />
 
-          <Select
-            name="state"
-            control={control}
-            options={STATES_AS_SELECT_OPTION}
-            placeholder="State"
-          />
+            <Input
+              name="city"
+              control={control}
+              placeholder="City"
+            />
 
-          <InputZipCode
-            name="zip"
-            control={control}
-            shouldUnregister
-          />
-        </div>
+            <Select
+              name="state"
+              control={control}
+              options={STATES_AS_SELECT_OPTION}
+              placeholder="State"
+            />
+
+            <InputZipCode
+              name="zip"
+              control={control}
+              shouldUnregister
+            />
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

@@ -4,6 +4,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
@@ -82,34 +83,37 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <BlackModalTitle title="What’s your social security number?" />
+          <FormContent>
+            <BlackModalTitle title="What’s your social security number?" />
 
-          <div className="flex w-full flex-col gap-24">
-            <div className="flex w-full flex-col gap-16">
-              <InputSocialSecurityNumber
-                name="socialSecurityNumber"
-                control={control}
-                rules={{ onChange: setValueOnSocialSecurityNumberChange }}
-              />
+            <div className="flex w-full flex-col gap-24">
+              <div className="flex w-full flex-col gap-16">
+                <InputSocialSecurityNumber
+                  name="socialSecurityNumber"
+                  control={control}
+                  rules={{ onChange: setValueOnSocialSecurityNumberChange }}
+                />
 
-              <OpenModalLink
-                label="Required. Why?"
-                onClick={onMoreInformationClick}
-                green
-              />
+                <OpenModalLink
+                  label="Required. Why?"
+                  onClick={onMoreInformationClick}
+                  green
+                />
+              </div>
+
+              <div className="flex w-full flex-col gap-4">
+                <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
+
+                <Typography
+                  variant="paragraph"
+                  className="text-gray-02"
+                >
+                  We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
+                </Typography>
+              </div>
             </div>
+          </FormContent>
 
-            <div className="flex w-full flex-col gap-4">
-              <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
-
-              <Typography
-                variant="paragraph"
-                className="text-gray-02"
-              >
-                We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
-              </Typography>
-            </div>
-          </div>
           <ButtonStack>
             <Button
               type="submit"

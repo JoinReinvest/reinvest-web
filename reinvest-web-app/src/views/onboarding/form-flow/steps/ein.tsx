@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputEIN } from 'components/FormElements/InputEIN';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { formValidationRules } from 'formValidationRules';
@@ -49,27 +50,29 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <BlackModalTitle title="Enter your EIN" />
+          <FormContent>
+            <BlackModalTitle title="Enter your EIN" />
 
-          <div className="flex w-full flex-col gap-16">
-            <InputEIN
-              name="ein"
-              control={control}
-            />
-
-            <div className="flex justify-between">
-              <OpenModalLink
-                label="EIN?"
-                green
-                onClick={() => setIsInformationModalOpen(true)}
+            <div className="flex w-full flex-col gap-16">
+              <InputEIN
+                name="ein"
+                control={control}
               />
 
-              <OpenModalLink
-                label="I do not have an EIN."
-                green
-              />
+              <div className="flex justify-between">
+                <OpenModalLink
+                  label="EIN?"
+                  green
+                  onClick={() => setIsInformationModalOpen(true)}
+                />
+
+                <OpenModalLink
+                  label="I do not have an EIN."
+                  green
+                />
+              </div>
             </div>
-          </div>
+          </FormContent>
 
           <ButtonStack>
             <Button

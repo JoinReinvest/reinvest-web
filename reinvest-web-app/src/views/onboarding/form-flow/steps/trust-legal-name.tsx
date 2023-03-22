@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -41,13 +42,15 @@ export const StepTrustLegalName: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Enter yout Trust's legal name." />
+        <FormContent>
+          <BlackModalTitle title="Enter yout Trust's legal name." />
 
-        <Input
-          name="trustLegalName"
-          control={control}
-          placeholder="Trust Legal Name"
-        />
+          <Input
+            name="trustLegalName"
+            control={control}
+            placeholder="Trust Legal Name"
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

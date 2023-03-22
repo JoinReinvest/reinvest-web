@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { EMPLOYMENT_STATUSES } from 'constants/employment_statuses';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -46,16 +47,18 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Are you currently employed?" />
+        <FormContent>
+          <BlackModalTitle title="Are you currently employed?" />
 
-        <SelectionCards
-          name="employmentStatus"
-          control={form.control}
-          options={EMPLOYMENT_STATUSES}
-          required={false}
-          orientation="vertical"
-          className="flex flex-col items-stretch gap-22 lg:gap-24"
-        />
+          <SelectionCards
+            name="employmentStatus"
+            control={form.control}
+            options={EMPLOYMENT_STATUSES}
+            required={false}
+            orientation="vertical"
+            className="flex flex-col items-stretch gap-22 lg:gap-24"
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

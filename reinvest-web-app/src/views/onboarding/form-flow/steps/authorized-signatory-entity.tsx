@@ -3,6 +3,7 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -58,13 +59,15 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <BlackModalTitle title="Are you an authorized signatory & beneficiary owner of this entity?" />
+        <FormContent>
+          <BlackModalTitle title="Are you an authorized signatory & beneficiary owner of this entity?" />
 
-        <RadioGroupOptions
-          name="isAuthorizedSignatoryEntity"
-          control={control}
-          options={OPTIONS}
-        />
+          <RadioGroupOptions
+            name="isAuthorizedSignatoryEntity"
+            control={control}
+            options={OPTIONS}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button
