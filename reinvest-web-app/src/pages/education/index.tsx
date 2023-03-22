@@ -58,10 +58,13 @@ const EducationPage = () => {
       <div className="relative -mx-20 flex min-h-180 text-white lg:mx-0 lg:w-full">
         <Typography
           variant="h3"
-          className="absolute bottom-24 left-24 lg:bottom-32 lg:left-32"
+          className="absolute bottom-24 left-24 z-10 lg:bottom-32 lg:left-32"
         >
           Education
         </Typography>
+
+        <div className="absolute bottom-0 h-1/2 w-full bg-gradient-to-b from-transparent to-black-01" />
+
         <Image
           alt="Education"
           src={hero}
