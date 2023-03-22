@@ -86,6 +86,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
             name="password"
             control={control}
             required
+            iconWhite={false}
           />
 
           <Link

@@ -32,7 +32,7 @@ export const StepPhoneAuthentication: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
     const error = '';
-    const [infoMessage] = '';
+    const infoMessage = '';
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
 
     const defaultValues: Fields = { phoneNumberAuthenticationCode: storeFields.phoneNumberAuthenticationCode || '' };
