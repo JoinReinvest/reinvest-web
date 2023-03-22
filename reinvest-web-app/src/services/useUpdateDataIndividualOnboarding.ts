@@ -1,4 +1,4 @@
-import { individualDraftAccountFields, profileFields } from 'constants/individualOnboardingFields';
+import { profileFields } from 'constants/individualOnboardingFields';
 import { AccreditedInvestorStatement, StatementType } from 'types/graphql';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
@@ -7,6 +7,7 @@ import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 import { fetcher } from './fetcher';
 import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
+import { useCreateAvatarFileLink } from './queries/createAvatarFileLink';
 import { useCreateDocumentsFileLinks } from './queries/createDocumentsFileLinks';
 import { useCreateDraftAccount } from './queries/createDraftAccount';
 import { useOpenAccount } from './queries/openAccount';
@@ -44,7 +45,13 @@ const profileDetailsSteps = [
   Identifiers.ACCREDITED_INVESTOR,
 ];
 
-const individualDraftAccountSteps = [Identifiers.EMPLOYMENT_DETAILS, Identifiers.EMPLOYMENT_STATUS];
+const individualDraftAccountSteps = [
+  Identifiers.EMPLOYMENT_DETAILS,
+  Identifiers.EMPLOYMENT_STATUS,
+  Identifiers.NET_WORTH_AND_INCOME,
+  Identifiers.PROFILE_PICTURE,
+];
+
 const createIndividualDraftAccountSteps = [Identifiers.ACCOUNT_TYPE];
 
 export const useUpdateDataIndividualOnboarding = () => {
@@ -68,7 +75,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     data: individualDraftAccoutntData,
     error: individualDraftAccountError,
     isLoading: isIndividualDraftAccountLoading,
-    mutate: completeIndividualDraftAccountMutate,
+    mutateAsync: completeIndividualDraftAccountMutate,
   } = useCompleteIndividualDraftAccount();
 
   const {
@@ -90,24 +97,23 @@ export const useUpdateDataIndividualOnboarding = () => {
     data: createDocumentsFileLinksData,
     error: createDocumentsFileLinksError,
     isLoading: isCreateDocumentsFileLinksLoading,
-    // mutate: createDocumentsFileLinksMutate,
     isSuccess: isCreateDocumentsFileLinksSuccess,
     mutateAsync: createDocumentsFileLinksMutate,
   } = useCreateDocumentsFileLinks();
 
   const {
-    // data: openAccountData,
-    error: openAccountError,
-    isLoading: isOpenAccountLoading,
-    mutate: openAccountMutate,
-    isSuccess: isOpenAccountSuccess,
-  } = useOpenAccount();
+    error: createAvatarLinkError,
+    isLoading: isCreateAvatarLinkLoading,
+    isSuccess: isCreateAvatarLinkSuccess,
+    mutateAsync: createAvatarLinkMutate,
+  } = useCreateAvatarFileLink();
+
+  const { error: openAccountError, isLoading: isOpenAccountLoading, mutate: openAccountMutate, isSuccess: isOpenAccountSuccess } = useOpenAccount();
 
   const updateData = async (stepId: Identifiers, storedFields: OnboardingFormFields) => {
     const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
 
     const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
-    const individualDraftAccount = getObjecyByKeys(individualDraftAccountFields, storedFieldsMap);
 
     if (storedFields.accountType && createIndividualDraftAccountSteps.includes(stepId)) {
       createDraftAccountMutate(storedFields.accountType);
@@ -146,13 +152,13 @@ export const useUpdateDataIndividualOnboarding = () => {
         try {
           s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
         } catch (error) {
-          console.log('error1', error);
+          return error;
         }
 
         try {
           s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
         } catch (error) {
-          console.log('error2', error);
+          return error;
         }
 
         const documentIds = documentsFileLinks?.map(documentFileLink => ({ id: documentFileLink?.id })) as { id: string }[];
@@ -171,15 +177,45 @@ export const useUpdateDataIndividualOnboarding = () => {
       });
     }
 
-    if (!isEmptyObject(individualDraftAccount) && individualDraftAccountSteps.includes(stepId)) {
+    if (individualDraftAccountSteps.includes(stepId)) {
       const accountId = 'aa4e7363-3181-4d1e-ac68-864efd748e3e'; //Get from store
-      const { employmentStatus: storedemploymentStatus, employmentDetails } = storedFields;
+      const {
+        employmentStatus: storedemploymentStatus,
+        employmentDetails,
+        netWorth: storageNetWorth,
+        netIncome: storageNetIncome,
+        profilePicture,
+      } = storedFields;
       const employmentStatus = storedemploymentStatus ? { status: storedemploymentStatus } : undefined;
       const employer = employmentDetails
         ? { nameOfEmployer: employmentDetails.employerName, title: employmentDetails.occupation, industry: employmentDetails.industry }
         : undefined;
+      const netWorth = storageNetWorth ? { range: storageNetWorth } : undefined;
+      const netIncome = storageNetIncome ? { range: storageNetIncome } : undefined;
 
-      completeIndividualDraftAccountMutate({ accountId, input: { employmentStatus, employer } });
+      let avatarId = '';
+
+      if (profilePicture && stepId === Identifiers.PROFILE_PICTURE) {
+        const link = await createAvatarLinkMutate({});
+
+        try {
+          link?.url ? await fetcher(link?.url, 'PUT', profilePicture) : null;
+        } catch (error) {
+          return error;
+        }
+        avatarId = link?.id || '';
+      }
+
+      const avatar = avatarId ? { id: avatarId } : undefined;
+
+      const individualDraftAccount = await completeIndividualDraftAccountMutate({
+        accountId,
+        input: { employmentStatus, employer, netWorth, netIncome, avatar, verifyAndFinish: stepId === Identifiers.PROFILE_PICTURE },
+      });
+
+      if (stepId === Identifiers.PROFILE_PICTURE && individualDraftAccount?.isCompleted) {
+        openAccountMutate({ draftAccountId: accountId });
+      }
     }
 
     if (storedFields.authCode && storedFields.phone.countryCode && storedFields.phone.number && stepId === Identifiers.CHECK_YOUR_PHONE) {
@@ -204,6 +240,7 @@ export const useUpdateDataIndividualOnboarding = () => {
       verifyPhoneNumberError,
       createDocumentsFileLinksError,
       openAccountError,
+      createAvatarLinkError,
     },
     isLoading:
       isProfileDetailsLoading ||
@@ -212,8 +249,15 @@ export const useUpdateDataIndividualOnboarding = () => {
       isPhoneNumberLoading ||
       isVerifyPhoneNumberLoading ||
       isCreateDocumentsFileLinksLoading ||
-      isOpenAccountLoading,
-    isSuccess: isCreateDraftAccountSuccess || isSetPhoneNumberSuccess || isProfileDetailsSuccess || isCreateDocumentsFileLinksSuccess || isOpenAccountSuccess,
+      isOpenAccountLoading ||
+      isCreateAvatarLinkLoading,
+    isSuccess:
+      isCreateDraftAccountSuccess ||
+      isSetPhoneNumberSuccess ||
+      isProfileDetailsSuccess ||
+      isCreateDocumentsFileLinksSuccess ||
+      isOpenAccountSuccess ||
+      isCreateAvatarLinkSuccess,
     updateData,
   };
 };
