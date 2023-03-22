@@ -29,7 +29,7 @@ export const Header = () => {
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
   const headerStyles = cx({
-    'container mx-auto flex justify-between pt-20 pb-36': true,
+    'container mx-auto flex justify-between py-20 top-0 left-0 right-0 fixed bg-white z-10': true,
     'absolute lg:relative h-screen lg:h-auto w-full z-10 bg-white left-0 right-0': isMenuOpen,
   });
 
