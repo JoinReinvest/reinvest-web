@@ -36,12 +36,12 @@ export const formValidationRules = {
   ein: zod.string().regex(/^[0-9]{3}-[0-9]{6}/, { message: 'Invalid EIN' }),
 
   address: zod.object({
+    addressLine1: standardRequiredString,
+    addressLine2: zod.string().nullable(),
     city: standardRequiredString,
     state: zod.enum(STATE_CODES),
-    streetAddress: standardRequiredString,
-    streetAddress2: zod.string().nullable(),
     // eslint-disable-next-line security/detect-unsafe-regex
-    zipCode: zod.string().regex(/^\d{5}(?:[-\s]\d{4})?$/, { message: 'Invalid zip code' }),
+    zip: zod.string().regex(/^\d{5}(?:[-\s]\d{4})?$/, { message: 'Invalid zip code' }),
   }),
 };
 
