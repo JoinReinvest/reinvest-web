@@ -11,8 +11,8 @@ import { Select } from 'components/Select';
 import { STATES_AS_SELECT_OPTION } from 'constants/states';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
-import { StepComponentProps, StepParams } from 'services/form-flow';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

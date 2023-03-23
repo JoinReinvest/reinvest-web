@@ -9,7 +9,7 @@ import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
 import { VISAS_AS_OPTIONS } from 'constants/visas';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';

@@ -2,7 +2,7 @@ import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

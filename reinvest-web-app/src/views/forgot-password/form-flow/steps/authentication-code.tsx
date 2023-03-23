@@ -12,7 +12,7 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import zod, { Schema } from 'zod';
 
 import { ForgotPasswordFormFields } from '../form-fields';
