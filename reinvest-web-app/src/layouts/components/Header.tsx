@@ -4,6 +4,7 @@ import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { getApiClient } from 'services/getApiClient';
+import { RemoveScroll } from 'react-remove-scroll';
 
 import { AccountMenu } from './AccountMenu';
 import { HeaderIcon } from './HeaderIcon';
@@ -32,6 +33,7 @@ export const Header = () => {
   const headerStyles = cx({
     'container mx-auto flex justify-between py-20 top-0 left-0 right-0 fixed bg-white z-10': true,
     'absolute lg:relative h-screen lg:h-auto w-full z-10 bg-white left-0 right-0': isMenuOpen,
+    [RemoveScroll.classNames.zeroRight]: true,
   });
 
   return (
