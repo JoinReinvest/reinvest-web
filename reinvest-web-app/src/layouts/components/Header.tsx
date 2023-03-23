@@ -2,9 +2,9 @@ import { IconBell } from 'assets/icons/IconBell';
 import cx from 'classnames';
 import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
+import { RemoveScroll } from 'react-remove-scroll';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { getApiClient } from 'services/getApiClient';
-import { RemoveScroll } from 'react-remove-scroll';
 
 import { AccountMenu } from './AccountMenu';
 import { HeaderIcon } from './HeaderIcon';
