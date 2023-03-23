@@ -7,7 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -36,7 +36,7 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.AUTHORIZED_SIGNATORY_ENTITY,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Corporate || accountType === AccountType.Trust;
+    return accountType === DraftAccountType.Corporate || accountType === DraftAccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

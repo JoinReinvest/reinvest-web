@@ -23,7 +23,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CHECK_YOUR_PHONE,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType && !fields.isCompletedProfile;
+    return !fields.accountType && !fields.isCompletedProfile;
   },
 
   doesMeetConditionFields(fields) {

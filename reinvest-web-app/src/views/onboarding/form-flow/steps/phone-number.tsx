@@ -32,7 +32,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PHONE_NUMBER,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType && !fields.isCompletedProfile;
+    return !fields.accountType && !fields.isCompletedProfile;
   },
 
   doesMeetConditionFields(fields) {

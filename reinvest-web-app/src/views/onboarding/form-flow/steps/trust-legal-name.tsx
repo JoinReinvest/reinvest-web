@@ -7,7 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -23,7 +23,7 @@ export const StepTrustLegalName: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_LEGAL_NAME,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Trust;
+    return accountType === DraftAccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

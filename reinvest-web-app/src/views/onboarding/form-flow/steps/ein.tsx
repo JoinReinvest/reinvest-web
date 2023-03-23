@@ -10,7 +10,7 @@ import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { DraftAccountType } from 'types/graphql';
 import { WhatIsEINModal } from 'views/EINModal';
 import { z } from 'zod';
 
@@ -27,7 +27,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EIN,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Corporate || accountType === AccountType.Trust;
+    return accountType === DraftAccountType.Corporate || accountType === DraftAccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

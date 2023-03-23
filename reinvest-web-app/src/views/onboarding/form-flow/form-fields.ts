@@ -5,38 +5,12 @@ import { DomicileType, DraftAccountType, EmploymentStatus, Experience, Statement
 import { Address } from 'types/graphql';
 
 export interface OnboardingFormFields {
-  accountType: DraftAccountType;
-  domicile: {
-    forGreenCard?: {
-      birthCountry: string;
-      citizenshipCountry: string;
-    };
-    forVisa?: {
-      birthCountry: string;
-      citizenshipCountry: string;
-      visaType: string;
-    };
-  };
-  employment: {
-    // Only required if `employmentStatus` is 'employed'
-    employerName?: string;
-    industry?: string;
-    occupation?: string;
-  };
-  name: {
-    firstName: string;
-    lastName: string;
-    middleName?: string;
-  };
-  phone: {
-    countryCode?: string;
-    number?: string;
-  };
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
   accountId?: string;
+  accountType?: DraftAccountType;
   // Are we displaying this as an URL or a file upload?
   address?: Address;
   authCode?: string;
@@ -52,9 +26,7 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   corporationAnnualRevenue?: CorporationAnnualRevenue;
-
   corporationIndustry?: Industry;
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
@@ -62,13 +34,31 @@ export interface OnboardingFormFields {
   corporationType?: CorporationTypeValue;
 
   dateOfBirth?: string;
-
   documentsForCorporation?: File[];
   documentsForTrust?: File[];
+
+  domicile?: {
+    forGreenCard?: {
+      birthCountry: string;
+      citizenshipCountry: string;
+    };
+    forVisa?: {
+      birthCountry: string;
+      citizenshipCountry: string;
+      visaType: string;
+    };
+  };
+
   ein?: string;
+
+  employment?: {
+    // Only required if `employmentStatus` is 'employed'
+    employerName?: string;
+    industry?: string;
+    occupation?: string;
+  };
   employmentDetails?: EmploymentDetails;
   employmentStatus?: EmploymentStatus;
-
   // Are we displaying this as an URL or a file upload?
   experience?: Experience;
   finraInstitution?: string;
@@ -85,14 +75,24 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
   identificationDocument?: IdentificationDocuments;
+
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
   isCompletedProfile?: boolean;
   lastName?: string;
   middleName?: string;
+  name?: {
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+  };
   netIncome?: string;
   netWorth?: string;
   permanentAddress?: Address;
+  phone?: {
+    countryCode?: string;
+    number?: string;
+  };
   phoneNumber?: string;
   phoneNumberAuthenticationCode?: string;
   profilePicture?: File | null;

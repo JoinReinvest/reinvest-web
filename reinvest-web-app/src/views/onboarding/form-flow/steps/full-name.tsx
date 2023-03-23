@@ -30,7 +30,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.FULL_NAME,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType && !fields.isCompletedProfile;
+    return !fields.accountType && !fields.isCompletedProfile;
   },
 
   doesMeetConditionFields(fields) {

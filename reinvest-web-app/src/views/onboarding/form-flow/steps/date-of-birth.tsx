@@ -29,7 +29,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DATE_OF_BIRTH,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType && !fields.isCompletedProfile;
+    return !fields.accountType && !fields.isCompletedProfile;
   },
 
   doesMeetConditionFields(fields) {
