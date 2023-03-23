@@ -21,10 +21,10 @@ import { z } from 'zod';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'socialSecurityNumber'>;
+type Fields = Pick<OnboardingFormFields, 'ssn'>;
 
 const schema = z.object({
-  socialSecurityNumber: formValidationRules.socialSecurityNumber,
+  ssn: formValidationRules.socialSecurityNumber,
 });
 
 export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
@@ -69,8 +69,8 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       setIsInformationModalOpen(true);
     };
 
-    const onSubmit: SubmitHandler<Fields> = async ({ socialSecurityNumber }) => {
-      await updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+    const onSubmit: SubmitHandler<Fields> = async ({ ssn }) => {
+      await updateStoreFields({ ssn, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
       updateData(Identifiers.SOCIAL_SECURITY_NUMBER, { ...storeFields, ...getValues() });
     };
 
@@ -88,7 +88,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         const firstPart = value.substring(0, 3);
         const secondPart = value.substring(3, 5);
         const thirdPart = value.substring(5, 9);
-        setValue('socialSecurityNumber', `${firstPart}-${secondPart}-${thirdPart}`);
+        setValue('ssn', `${firstPart}-${secondPart}-${thirdPart}`);
       }
     };
 
@@ -113,7 +113,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
             <div className="flex w-full flex-col gap-24">
               <div className="flex w-full flex-col gap-16">
                 <InputSocialSecurityNumber
-                  name="socialSecurityNumber"
+                  name="ssn"
                   control={control}
                   rules={{ onChange: setValueOnSocialSecurityNumberChange }}
                 />

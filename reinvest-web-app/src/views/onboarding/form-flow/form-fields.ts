@@ -98,7 +98,7 @@ export interface OnboardingFormFields {
   profilePicture?: File | null;
   residency?: DomicileType;
   seniorPoliticalFigure?: string;
-  socialSecurityNumber?: string;
+  ssn?: string;
 
   statementTypes?: StatementType[];
   trustLegalName?: string;

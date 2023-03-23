@@ -1,11 +1,11 @@
 import { profileFields } from 'constants/individualOnboardingFields';
 import { useState } from 'react';
-import { AccreditedInvestorStatement, StatementType } from 'types/graphql';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
 import { fetcher } from './fetcher';
+import { getStatements } from './getStatements';
 import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
 import { useCreateAvatarFileLink } from './queries/createAvatarFileLink';
@@ -123,35 +123,30 @@ export const useUpdateDataIndividualOnboarding = () => {
     }
 
     if (!isEmptyObject(profileDetails) && profileDetailsSteps.includes(stepId)) {
-      const { residency, statementTypes, finraInstitutionName, socialSecurityNumber, experience, isAccreditedInvestor } = storedFields;
+      const {
+        residency,
+        statementTypes,
+        finraInstitutionName,
+        ssn: storedSsn,
+        experience,
+        isAccreditedInvestor,
+        identificationDocument,
+        address: storageAddress,
+      } = storedFields;
       const domicile = residency ? { ...profileDetails.domicile, type: residency } : undefined;
-      const statements = [];
-      statementTypes?.includes(StatementType.FinraMember) && finraInstitutionName
-        ? statements.push({ type: StatementType.FinraMember, forFINRA: { name: finraInstitutionName } })
-        : undefined;
-      stepId === Identifiers.ACCREDITED_INVESTOR
-        ? statements.push({
-            type: StatementType.AccreditedInvestor,
-            forAccreditedInvestor: {
-              statement: isAccreditedInvestor
-                ? AccreditedInvestorStatement.IAmAnAccreditedInvestor
-                : AccreditedInvestorStatement.IAmNotExceeding_10PercentOfMyNetWorthOrAnnualIncome,
-            },
-          })
-        : undefined;
-      const ssn = socialSecurityNumber ? { ssn: socialSecurityNumber } : undefined;
+      const statements = getStatements(statementTypes || [], finraInstitutionName, isAccreditedInvestor);
+      const ssn = storedSsn ? { ssn: storedSsn } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
-
-      const address = stepId === Identifiers.PERMANENT_ADDRESS ? { ...storedFields.address, country: 'USA' } : undefined;
+      const address = stepId === Identifiers.PERMANENT_ADDRESS ? { ...storageAddress, country: 'USA' } : undefined;
       const idScan = [];
 
       // send documents to s3
-      if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
+      if (identificationDocument?.front && identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
         const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
         setIsLoading(true);
         const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
-        s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
-        s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
+        s3urls[0] ? await fetcher(s3urls[0], 'PUT', identificationDocument.back) : null;
+        s3urls[1] ? await fetcher(s3urls[1], 'PUT', identificationDocument.front) : null;
 
         const documentIds = documentsFileLinks?.map(documentFileLink => ({ id: documentFileLink?.id })) as { id: string }[];
         idScan.push(...documentIds);
