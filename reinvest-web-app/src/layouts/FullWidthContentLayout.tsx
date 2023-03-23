@@ -6,8 +6,7 @@ export const FullWidthContentLayout = ({ children }: PropsWithChildren) => {
   return (
     <>
       <Header />
-
-      <main className="pb-20">{children}</main>
+      <main className="fixed inset-0 z-0">{children}</main>
     </>
   );
 };

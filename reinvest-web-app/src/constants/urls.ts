@@ -10,6 +10,8 @@ export const URL = {
   glossary: '/education/glossary',
   calculator: '/education/calculator',
   index: '/education',
+  not_found: '/404',
+  internal_server_error: '/500',
 };
 
 export const EMAILS = {

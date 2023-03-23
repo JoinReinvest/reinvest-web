@@ -1,11 +1,11 @@
 import { IconBell } from 'assets/icons/IconBell';
-import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import cx from 'classnames';
-import { Avatar } from 'components/Avatar';
 import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
+import { RemoveScroll } from 'react-remove-scroll';
 
 import { useGetUserProfile } from '../../services/queries/getProfile';
+import { AccountMenu } from './AccountMenu';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderNavigation } from './HeaderNavigation';
 
@@ -30,8 +30,9 @@ export const Header = () => {
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);
   const headerStyles = cx({
-    'container mx-auto flex justify-between pt-20 pb-36': true,
+    'container mx-auto flex justify-between py-20 top-0 left-0 right-0 fixed bg-white z-10': true,
     'absolute lg:relative h-screen lg:h-auto w-full z-10 bg-white left-0 right-0': isMenuOpen,
+    [RemoveScroll.classNames.zeroRight]: true,
   });
 
   return (
@@ -55,12 +56,7 @@ export const Header = () => {
           <div className="flex gap-16 lg:gap-24">
             <IconBell className="h-28 w-28 lg:h-44 lg:w-44" />
 
-            {data && (
-              <Avatar
-                src={placeholderPicture}
-                alt={`${data?.details?.firstName} ${data?.details?.lastName}`}
-              />
-            )}
+            {data && <AccountMenu profile={data} />}
           </div>
         </div>
         <HeaderNavigation

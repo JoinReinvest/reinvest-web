@@ -15,7 +15,7 @@ const ArticlePage = ({ slug }: ArticlePageProps) => {
     <FullWidthContentLayout>
       <iframe
         src={`${env.site.url}/blog-iframe/${slug}`}
-        className="h-screen w-full"
+        className="h-full w-full"
         title="Blog page"
       />
     </FullWidthContentLayout>
