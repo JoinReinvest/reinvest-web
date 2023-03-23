@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { WarningMessage } from 'components/BlackModal/WarningMessage';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
-import { Title } from 'components/Title';
 import { STATES_AS_SELECT_OPTION } from 'constants/states';
 import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
@@ -75,9 +75,10 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     const setValuesFromStreetAddress = (address: AddressAsOption | null) => {
       if (address) {
-        setValue('city', address.city || '');
-        setValue('state', address.state || '');
-        setValue('zip', address.zip || '');
+        setValue('addressLine1', address.addressLine1);
+        setValue('city', address.city);
+        setValue('state', address.state);
+        setValue('zip', address.zip);
       }
     };
 
@@ -94,50 +95,50 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <div>
-          <Title title="What is your permanent address?" />
-
-          <WarningMessage message="US Residents Only" />
-        </div>
-
-        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
-
-        <div className="flex w-full flex-col gap-16">
-          <SelectAsync
-            name="addressLine1"
-            control={control}
-            loadOptions={getAddresses}
-            placeholder="Street Address or P.O. Box"
-            formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
-            formatSelectedOptionLabel={formatSelectedAddress}
-            onOptionSelected={setValuesFromStreetAddress}
+        <FormContent>
+          <BlackModalTitle
+            title="What is your permanent address?"
+            informationMessage="US Residents Only"
           />
 
-          <Input
-            name="addressLine2"
-            control={control}
-            placeholder="Apt, suite, unit, building, floor, etc"
-          />
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          <div className="flex w-full flex-col gap-16">
+            <SelectAsync
+              name="addressLine1"
+              control={control}
+              loadOptions={getAddresses}
+              placeholder="Street Address or P.O. Box"
+              formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
+              formatSelectedOptionLabel={formatSelectedAddress}
+              onOptionSelected={setValuesFromStreetAddress}
+            />
 
-          <Input
-            name="city"
-            control={control}
-            placeholder="City"
-          />
+            <Input
+              name="addressLine2"
+              control={control}
+              placeholder="Apt, suite, unit, building, floor, etc"
+            />
 
-          <Select
-            name="state"
-            control={control}
-            options={STATES_AS_SELECT_OPTION}
-            placeholder="State"
-          />
+            <Input
+              name="city"
+              control={control}
+              placeholder="City"
+            />
 
-          <InputZipCode
-            name="zip"
-            control={control}
-            shouldUnregister
-          />
-        </div>
+            <Select
+              name="state"
+              control={control}
+              options={STATES_AS_SELECT_OPTION}
+              placeholder="State"
+            />
+
+            <InputZipCode
+              name="zip"
+              control={control}
+              shouldUnregister
+            />
+          </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
-import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -23,7 +25,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
 
   willBePartOfTheFlow: fields => {
-    return fields.accountType === 'TRUST';
+    return fields.accountType === AccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -49,17 +51,19 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title
-          title="Upload the following documents to verify your trust."
-          subtitle={subtitle}
-        />
+        <FormContent>
+          <BlackModalTitle
+            title="Upload the following documents to verify your trust."
+            subtitle={subtitle}
+          />
 
-        <InputMultiFile
-          name="documentsForTrust"
-          control={control}
-          accepts={['pdf']}
-          minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
-        />
+          <InputMultiFile
+            name="documentsForTrust"
+            control={control}
+            accepts={['pdf']}
+            minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button

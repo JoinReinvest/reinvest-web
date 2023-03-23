@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPhoneNumber } from 'components/FormElements/InputPhoneNumber';
 import { InputPhoneNumberCountryCode } from 'components/FormElements/InputPhoneNumberCountryCode';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { CALLING_CODES } from 'constants/country-codes';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -79,41 +81,47 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title
-            title="Enter your phone number"
-            subtitle="We’ll text you a confirmation code within 10 minutes."
-          />
+          <FormContent>
+            <BlackModalTitle
+              title="Enter your phone number"
+              subtitle="We'll text you a confirmation code within 10 minutes."
+            />
 
-          {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
+            {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
+            <div className="flex w-full flex-col gap-16">
+              <div className="flex">
+                <div className="child:basis-2/5 contents">
+                  <InputPhoneNumberCountryCode
+                    name="phone.countryCode"
+                    control={control}
+                    defaultValue={CALLING_CODES[0]}
+                  />
+                </div>
 
-          <div className="flex">
-            <div className="child:basis-2/5 contents">
-              <InputPhoneNumberCountryCode
-                name="phone.countryCode"
-                control={control}
-                defaultValue="1"
+                <div className="contents">
+                  <InputPhoneNumber
+                    name="phone.number"
+                    control={control}
+                  />
+                </div>
+              </div>
+
+              <OpenModalLink
+                label="Required. Why?"
+                onClick={onMoreInformationClick}
+                green
               />
             </div>
+          </FormContent>
 
-            <div className="contents">
-              <InputPhoneNumber
-                name="phone.number"
-                control={control}
-              />
-            </div>
-          </div>
-
-          <OpenModalLink
-            label="Required. Why?"
-            onClick={onMoreInformationClick}
-            green
-          />
-
-          <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-          />
+          <ButtonStack>
+            <Button
+              type="submit"
+              label="Continue"
+              disabled={shouldButtonBeDisabled}
+              loading={isLoading}
+            />
+          </ButtonStack>
         </Form>
 
         <WhyRequiredPhoneNumberModal

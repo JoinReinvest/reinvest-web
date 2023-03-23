@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { WarningMessage } from 'components/BlackModal/WarningMessage';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
-import { Title } from 'components/Title';
 import { RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS, RESIDENCY_STATUS_VALUES } from 'constants/residenty-status';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -75,26 +75,27 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
     }, [isSuccess, moveToStepByIdentifier, getValues]);
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title
-          title="Residency Status"
-          subtitle="Please select your US residency status."
-        />
-        <WarningMessage message="REINVEST does not accept non-US residents at this time." />
-
-        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
-
-        <RadioGroupOptions
-          name="residency"
-          control={form.control}
-          options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
-        />
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormContent>
+          <BlackModalTitle
+            title="Residency Status"
+            subtitle="Please select your US residency status."
+            informationMessage="REINVEST does not accept non-US residents at this time."
+          />
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          <RadioGroupOptions
+            name="residency"
+            control={form.control}
+            options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>

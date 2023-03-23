@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
-import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -69,7 +71,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
       updateData(Identifiers.PROFILE_PICTURE, { ...storeFields, ...fields });
-      // moveToNextStep();
     };
 
     const onSkip = () => {
@@ -85,37 +86,41 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title=" Upload Profile Picture" />
+        <FormContent>
+          <BlackModalTitle title="Upload Profile Picture" />
 
-        {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+          <div className="flex w-full flex-col items-center gap-12">
+            <InputAvatar
+              name="profilePicture"
+              control={control}
+              altText="Profile picture for account"
+            />
 
-        <InputAvatar
-          name="profilePicture"
-          control={control}
-          altText="Profile picture for account"
-        />
+            <Typography
+              variant="paragraph-large"
+              className="text-white/50"
+            >
+              Customize your profile picture
+            </Typography>
+          </div>
+        </FormContent>
 
-        <Typography variant="paragraph-large">Upload profile picture</Typography>
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
 
-        <Typography
-          variant="paragraph-large"
-          className="text-white/50"
-        >
-          Customize your profile picture
-        </Typography>
-
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
-
-        <Button
-          label="Skip"
-          variant="outlined"
-          onClick={onSkip}
-          className="text-green-frost-01"
-        />
+          <Button
+            label="Skip"
+            variant="outlined"
+            onClick={onSkip}
+            className="text-green-frost-01"
+          />
+        </ButtonStack>
       </Form>
     );
   },

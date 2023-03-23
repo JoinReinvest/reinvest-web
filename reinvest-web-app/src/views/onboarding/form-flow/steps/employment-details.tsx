@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { Select } from 'components/Select';
-import { Title } from 'components/Title';
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
 import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
@@ -83,42 +85,49 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Where are you employed?" />
+        <FormContent>
+          <BlackModalTitle title="Are you currently employed?" />
+          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+          <div className="flex w-full flex-col gap-16">
+            <Input
+              name="employmentDetails.employerName"
+              control={control}
+              placeholder="Name of Employer"
+              required
+            />
 
-        {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
-        <Input
-          name="employmentDetails.employerName"
-          control={control}
-          placeholder="Name of Employer"
-          required
-        />
+            <Input
+              name="employmentDetails.occupation"
+              control={control}
+              placeholder="Title"
+              required
+            />
 
-        <Input
-          name="employmentDetails.occupation"
-          control={control}
-          placeholder="Title"
-          required
-        />
+            <Select
+              name="employmentDetails.industry"
+              control={control}
+              options={INDUESTRIES_AS_OPTIONS}
+              placeholder="Industry"
+              required
+            />
+          </div>
+        </FormContent>
 
-        <Select
-          name="employmentDetails.industry"
-          control={control}
-          options={INDUESTRIES_AS_OPTIONS}
-          placeholder="Industry"
-          required
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
-
-        <Button
-          label="Skip"
-          variant="outlined"
-          onClick={onSkip}
-        />
+          <Button
+            label="Skip"
+            variant="outlined"
+            onClick={onSkip}
+            className="text-green-frost-01"
+          />
+        </ButtonStack>
       </Form>
     );
   },

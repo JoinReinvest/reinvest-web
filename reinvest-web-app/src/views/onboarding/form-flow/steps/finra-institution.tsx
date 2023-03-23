@@ -1,6 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { Title } from 'components/Title';
@@ -23,6 +26,9 @@ const schema = z.object({
 export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.FINRA_INSTITUTION,
 
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isAssociatedWithFinra;
+  },
   doesMeetConditionFields(fields) {
     const requiredFields = [
       fields.accountType,
@@ -67,21 +73,24 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please provide name of the FINRA institution below." />
+        <FormContent>
+          <BlackModalTitle title="Please provide name of the FINRA institution below." />
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          <Input
+            name="finraInstitutionName"
+            control={control}
+            placeholder="FINRA Institute Name"
+          />
+        </FormContent>
 
-        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
-        <Input
-          name="finraInstitutionName"
-          control={control}
-          placeholder="FINRA Institute Name"
-        />
-
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-          loading={isLoading}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
+        </ButtonStack>
       </Form>
     );
   },

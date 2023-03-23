@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
-import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -66,36 +68,41 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
-        <Title title="Enter your first and last name as it appears on your ID" />
+        <FormContent>
+          <BlackModalTitle title="Enter your first and last name as it appears on your ID" />
 
-        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          <div className="flex w-full flex-col gap-16">
+            <Input
+              name="name.firstName"
+              control={form.control}
+              placeholder="First Name"
+              required
+            />
 
-        <Input
-          name="name.firstName"
-          control={form.control}
-          placeholder="First Name"
-          required
-        />
+            <Input
+              name="name.middleName"
+              control={form.control}
+              placeholder="Middle Name (Optional)"
+            />
 
-        <Input
-          name="name.middleName"
-          control={form.control}
-          placeholder="Middle Name (Optional)"
-        />
+            <Input
+              name="name.lastName"
+              control={form.control}
+              placeholder="Last Name"
+              required
+            />
+          </div>
+        </FormContent>
 
-        <Input
-          name="name.lastName"
-          control={form.control}
-          placeholder="Last Name"
-          required
-        />
-
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-          loading={isLoading}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
+        </ButtonStack>
       </Form>
     );
   },

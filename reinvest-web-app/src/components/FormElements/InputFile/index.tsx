@@ -9,9 +9,9 @@ import { FormMessage } from '../FormMessage';
 import { UploadedFile } from './UploadedFile';
 
 interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
-  label: string;
   placeholder: string;
   accepts?: PartialMimeTypeKeys;
+  label?: string;
   sizeLimitInMegaBytes?: number;
 }
 
@@ -49,7 +49,7 @@ export function InputFile<FormFields extends FieldValues>({
 
   return (
     <div className="flex flex-col items-stretch gap-8">
-      <Typography variant="paragraph-emphasized">{label}</Typography>
+      {!!label && <Typography variant="paragraph-emphasized">{label}</Typography>}
 
       <div>
         <input

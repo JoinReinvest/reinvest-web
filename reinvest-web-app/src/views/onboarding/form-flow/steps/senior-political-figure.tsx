@@ -1,8 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { TextArea } from 'components/FormElements/TextArea';
-import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
@@ -18,6 +20,10 @@ const schema = z.object({
 
 export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SENIOR_POLITICAL_FIGURE,
+
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isSeniorPoliticalFigure;
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -35,19 +41,23 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Please provide the name and position of this senior political figure." />
+        <FormContent>
+          <BlackModalTitle title="Please provide the name and position of this senior political figure." />
 
-        <TextArea
-          name="seniorPoliticalFigure"
-          control={control}
-          maxCharacters={220}
-        />
+          <TextArea
+            name="seniorPoliticalFigure"
+            control={control}
+            maxCharacters={220}
+          />
+        </FormContent>
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+          />
+        </ButtonStack>
       </Form>
     );
   },

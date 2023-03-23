@@ -1,7 +1,7 @@
 import { IconXCircle } from 'assets/icons/IconXCircle';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { LinkButton } from 'components/LinkButton';
 import { GetHelpLink } from 'components/Links/GetHelp';
-import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { EMAILS } from 'constants/urls';
 import { StepComponentProps, StepParams } from 'services/form-flow';
@@ -18,6 +18,12 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
   isAValidationView: true,
 
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER_VALIDATION,
+
+  willBePartOfTheFlow: fields => {
+    const { _isSocialSecurityNumberAlreadyAssigned, _isSocialSecurityNumberBanned } = fields;
+
+    return !!_isSocialSecurityNumberAlreadyAssigned || !!_isSocialSecurityNumberBanned;
+  },
 
   Component: ({ storeFields }: StepComponentProps<OnboardingFormFields>) => {
     const { _isSocialSecurityNumberAlreadyAssigned, _isSocialSecurityNumberBanned } = storeFields;
@@ -47,22 +53,34 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
     };
 
     return (
-      <div>
-        <Title title={getTitle()} />
+      <div className="relative flex h-full flex-col gap-60 lg:justify-center lg:gap-16">
+        <div className="flex w-full flex-col gap-36">
+          <IconXCircle className="mx-auto" />
 
-        <div className="text-center">
-          <Typography variant="paragraph-large">
-            {getValidationDescription()}
-            <GetHelpLink label={EMAILS.support} />
-          </Typography>
+          <div className="flex w-full flex-col gap-24">
+            <Typography
+              className="lg:text-center"
+              variant="h5"
+            >
+              {getTitle()}
+            </Typography>
 
-          <IconXCircle className="mx-auto mt-40" />
+            <Typography
+              variant="paragraph-large"
+              className="lg:text-center"
+            >
+              {getValidationDescription()}
+              <GetHelpLink label={EMAILS.support} />
+            </Typography>
+          </div>
+        </div>
 
+        <ButtonStack>
           <LinkButton
             href={EMAILS.supportHref}
             label="Contact"
           />
-        </div>
+        </ButtonStack>
       </div>
     );
   },

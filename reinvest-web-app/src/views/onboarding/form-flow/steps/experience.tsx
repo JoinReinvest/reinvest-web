@@ -1,9 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
-import { Title } from 'components/Title';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -76,30 +78,36 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="What is your experience with real estate investment?" />
+        <FormContent>
+          <BlackModalTitle title="What is your experience with real estate investment?" />
 
-        {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          <SelectionCards
+            name="experience"
+            control={control}
+            options={EXPERIENCES_AS_OPTIONS}
+            className="gap-22 flex flex-col items-stretch justify-center lg:gap-24"
+            orientation="vertical"
+            required
+          />
+        </FormContent>
 
-        <SelectionCards
-          name="experience"
-          control={control}
-          options={EXPERIENCES_AS_OPTIONS}
-          orientation="vertical"
-          required
-        />
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
 
-        <Button
-          type="submit"
-          label="Continue"
-          disabled={shouldButtonBeDisabled}
-        />
-
-        <Button
-          label="Skip"
-          variant="outlined"
-          onClick={onSkip}
-          loading={isLoading}
-        />
+          <Button
+            label="Skip"
+            variant="outlined"
+            onClick={onSkip}
+            className="text-green-frost-01"
+            loading={isLoading}
+          />
+        </ButtonStack>
       </Form>
     );
   },

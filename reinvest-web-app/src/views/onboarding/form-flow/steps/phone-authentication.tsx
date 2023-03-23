@@ -1,12 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -30,7 +31,7 @@ export const StepPhoneAuthentication: StepParams<OnboardingFormFields> = {
     return allRequiredFieldsExists([fields.accountType, fields.phoneNumber]);
   },
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const error = '';
     const infoMessage = '';
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
@@ -46,6 +47,7 @@ export const StepPhoneAuthentication: StepParams<OnboardingFormFields> = {
         await updateStoreFields({ phoneNumberAuthenticationCode, _hasAuthenticatedPhoneNumber: true });
 
         setIsValidatingCredentials(false);
+        moveToNextStep();
       } catch (error) {
         setIsValidatingCredentials(false);
         await updateStoreFields({ _hasAuthenticatedPhoneNumber: false });
@@ -58,41 +60,43 @@ export const StepPhoneAuthentication: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title
-          title="Check Your Phone."
-          subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
-        />
-
-        <div className="flex w-full flex-col gap-32">
-          {error && <FormMessage message={error} />}
-
-          {infoMessage && (
-            <FormMessage
-              message={infoMessage}
-              variant="info"
-            />
-          )}
-
-          <InputAuthenticationCode
-            name="phoneNumberAuthenticationCode"
-            control={control}
-            required
+        <FormContent>
+          <BlackModalTitle
+            title="Check Your Phone."
+            subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
           />
 
-          <div className="flex justify-between">
-            <OpenModalLink
-              label="Resend code"
-              green
-              onClick={resendCodeOnClick}
+          <div className="flex w-full flex-col gap-32">
+            {error && <FormMessage message={error} />}
+
+            {infoMessage && (
+              <FormMessage
+                message={infoMessage}
+                variant="info"
+              />
+            )}
+
+            <InputAuthenticationCode
+              name="phoneNumberAuthenticationCode"
+              control={control}
+              required
             />
-            <GetHelpLink />
+
+            <div className="flex justify-between">
+              <OpenModalLink
+                label="Resend code"
+                green
+                onClick={resendCodeOnClick}
+              />
+              <GetHelpLink />
+            </div>
           </div>
-        </div>
+        </FormContent>
 
         <ButtonStack>
           <Button
             type="submit"
-            label="Sign Up"
+            label="Continue"
             disabled={shouldButtonBeDisabled}
             loading={isValidatingCredentials}
           />

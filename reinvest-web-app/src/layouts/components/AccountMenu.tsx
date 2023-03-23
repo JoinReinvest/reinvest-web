@@ -19,10 +19,18 @@ export const AccountMenu = ({ profile }: AccountMenuProps) => {
       </DropdownMenu.Trigger>
 
       <DropdownMenu.Portal>
-        <DropdownMenu.Content align="end">
+        <DropdownMenu.Content
+          align="end"
+          className="z-10"
+        >
           <div className="mt-8 border border-gray-03 bg-white text-button shadow-xl">
-            <DropdownMenu.Item className="px-20 py-12">
-              <Link href="/invite-friends-and-family">Invite Friends &amp; Family</Link>
+            <DropdownMenu.Item>
+              <Link
+                href="/invite-friends-and-family"
+                className="block px-20 py-12"
+              >
+                Invite Friends &amp; Family
+              </Link>
             </DropdownMenu.Item>
           </div>
         </DropdownMenu.Content>

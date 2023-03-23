@@ -1,10 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -52,6 +54,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
       await updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
+      moveToNextStep();
     };
 
     const onLinkClick = () => {
@@ -77,7 +80,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           moveToNextStep();
         }
       }
-    }, [createDraftAccountError, individualAccountData, storeFields, updateStoreFields]);
+    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields]);
 
     useEffect(() => {
       if (profileData) {
@@ -99,33 +102,37 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     return (
       <>
-        <Form
-          onSubmit={handleSubmit(onSubmit)}
-          className="gap-0"
-        >
-          <Title title="Which type of account would you like to open?" />
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <FormContent>
+            <BlackModalTitle title="Which type of account would you like to open?" />
 
-          {createDraftAccountError && <FormMessage message={createDraftAccountError.message} />}
+            {createDraftAccountError && <FormMessage message={createDraftAccountError.message} />}
+            <div className="flex w-full flex-col gap-24">
+              <SelectionCards
+                name="accountType"
+                control={control}
+                options={ACCOUNT_TYPES_AS_OPTIONS}
+                className="flex flex-col items-stretch justify-center gap-24"
+                orientation="vertical"
+              />
 
-          <SelectionCards
-            name="accountType"
-            control={control}
-            options={ACCOUNT_TYPES_AS_OPTIONS}
-            className="mb-30 flex flex-col items-stretch justify-center gap-24"
-            orientation="vertical"
-          />
+              <OpenModalLink
+                label="Not sure which is best for you?"
+                green
+                center
+                onClick={onLinkClick}
+              />
+            </div>
+          </FormContent>
 
-          <OpenModalLink
-            label="Not sure which is best for you?"
-            onClick={onLinkClick}
-          />
-
-          <Button
-            type="submit"
-            disabled={shouldButtonBeDisabled}
-            label="Continue"
-            loading={isLoading}
-          />
+          <ButtonStack>
+            <Button
+              type="submit"
+              disabled={shouldButtonBeDisabled}
+              label="Continue"
+              loading={isLoading}
+            />
+          </ButtonStack>
         </Form>
 
         <WhyRequiredAccountTypeModal

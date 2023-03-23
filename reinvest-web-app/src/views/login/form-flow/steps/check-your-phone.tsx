@@ -1,13 +1,14 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { formValidationRules } from 'formValidationRules';
 import { useAuth } from 'providers/AuthProvider';
 import { useState } from 'react';
@@ -59,36 +60,38 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title
-          title="Check Your Phone"
-          subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
-        />
-
-        <div className="flex w-full flex-col gap-32">
-          {error && <FormMessage message={error} />}
-
-          {infoMessage && (
-            <FormMessage
-              message={infoMessage}
-              variant="info"
-            />
-          )}
-
-          <InputAuthenticationCode
-            name="authenticationCode"
-            control={control}
-            required
+        <FormContent>
+          <BlackModalTitle
+            title="Check Your Phone"
+            subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
           />
 
-          <div className="flex justify-between">
-            <OpenModalLink
-              label="Resend code"
-              green
-              onClick={resendCodeOnClick}
+          <div className="flex w-full flex-col gap-32">
+            {error && <FormMessage message={error} />}
+
+            {infoMessage && (
+              <FormMessage
+                message={infoMessage}
+                variant="info"
+              />
+            )}
+
+            <InputAuthenticationCode
+              name="authenticationCode"
+              control={control}
+              required
             />
-            <GetHelpLink />
+
+            <div className="flex justify-between">
+              <OpenModalLink
+                label="Resend code"
+                green
+                onClick={resendCodeOnClick}
+              />
+              <GetHelpLink />
+            </div>
           </div>
-        </div>
+        </FormContent>
 
         <ButtonStack>
           <Button

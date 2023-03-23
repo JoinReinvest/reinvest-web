@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import { Typography } from 'components/Typography';
 import { formValidationRules } from 'formValidationRules';
 import { ChangeEvent, useEffect, useState } from 'react';
@@ -95,7 +97,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         <div className="flex flex-col items-center gap-32">
           <IconSpinner />
 
-          <Title title="Validating yout Social Security Number" />
+          <BlackModalTitle title="Validating yout Social Security Number" />
         </div>
       );
     }
@@ -103,36 +105,47 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
-          <Title title="What’s your social security number?" />
+          <FormContent>
+            <BlackModalTitle title="What’s your social security number?" />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
-          <InputSocialSecurityNumber
-            name="socialSecurityNumber"
-            control={control}
-            rules={{ onChange: setValueOnSocialSecurityNumberChange }}
-          />
+            <div className="flex w-full flex-col gap-24">
+              <div className="flex w-full flex-col gap-16">
+                <InputSocialSecurityNumber
+                  name="socialSecurityNumber"
+                  control={control}
+                  rules={{ onChange: setValueOnSocialSecurityNumberChange }}
+                />
 
-          <OpenModalLink
-            label="Required. Why?"
-            onClick={onMoreInformationClick}
-            green
-          />
+                <OpenModalLink
+                  label="Required. Why?"
+                  onClick={onMoreInformationClick}
+                  green
+                />
+              </div>
 
-          <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
+              <div className="flex w-full flex-col gap-4">
+                <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
 
-          <Typography
-            variant="paragraph"
-            className="text-gray-02"
-          >
-            We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
-          </Typography>
+                <Typography
+                  variant="paragraph"
+                  className="text-gray-02"
+                >
+                  We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
+                </Typography>
+              </div>
+            </div>
+          </FormContent>
 
-          <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-          />
+          <ButtonStack>
+            <Button
+              type="submit"
+              label="Continue"
+              disabled={shouldButtonBeDisabled}
+              loading={isLoading}
+            />
+          </ButtonStack>
         </Form>
 
         <WhyRequiredSocialSecurityNumberModal

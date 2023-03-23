@@ -1,11 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
+import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
-import { Title } from 'components/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'services/form-flow';
+import { AccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -21,7 +23,7 @@ export const StepTrustLegalName: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_LEGAL_NAME,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === 'TRUST';
+    return accountType === AccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -41,13 +43,15 @@ export const StepTrustLegalName: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <Title title="Enter yout Trust's legal name." />
+        <FormContent>
+          <BlackModalTitle title="Enter yout Trust's legal name." />
 
-        <Input
-          name="trustLegalName"
-          control={control}
-          placeholder="Trust Legal Name"
-        />
+          <Input
+            name="trustLegalName"
+            control={control}
+            placeholder="Trust Legal Name"
+          />
+        </FormContent>
 
         <ButtonStack>
           <Button
