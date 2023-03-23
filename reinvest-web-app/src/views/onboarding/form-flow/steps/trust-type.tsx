@@ -10,7 +10,7 @@ import { TRUST_TYPES_AS_OPTIONS, TRUST_TYPES_VALUES } from 'constants/account-ty
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'types/graphql';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { WhyRequiredTrustTypeModal } from 'views/whyRequiredModals/WhyRequiredTrustTypeModal';
 import { z } from 'zod';
 

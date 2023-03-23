@@ -13,7 +13,7 @@ import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/state
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'types/graphql';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

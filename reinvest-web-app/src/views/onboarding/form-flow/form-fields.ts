@@ -1,7 +1,7 @@
 import { AccountTypeValue, CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
 import { Industry } from 'constants/industries';
-import { Address } from 'types/graphql';
+import { Address } from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
   residency: 'us' | 'green-card' | 'visa' | undefined;

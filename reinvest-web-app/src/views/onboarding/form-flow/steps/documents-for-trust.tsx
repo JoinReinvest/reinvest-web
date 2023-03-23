@@ -7,7 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'types/graphql';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
