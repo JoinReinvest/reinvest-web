@@ -1,7 +1,7 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
 import { EmploymentStatus } from 'types/graphql';
 
-const STATUSES = [
+export const EMPLOYMENT_STATUSES: SelectionOption[] = [
   {
     title: 'Employed',
     value: EmploymentStatus.Employed,
@@ -19,5 +19,3 @@ const STATUSES = [
     value: EmploymentStatus.Student,
   },
 ];
-
-export const EMPLOYMENT_STATUSES: SelectionOption[] = STATUSES.map(({ title, value }) => ({ title, value }));

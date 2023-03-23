@@ -1,5 +1,5 @@
 import { profileFields } from 'constants/individualOnboardingFields';
-import fs from 'fs';
+import { useState } from 'react';
 import { AccreditedInvestorStatement, StatementType } from 'types/graphql';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
@@ -53,6 +53,7 @@ const individualDraftAccountSteps = [
 const createIndividualDraftAccountSteps = [Identifiers.ACCOUNT_TYPE];
 
 export const useUpdateDataIndividualOnboarding = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const {
     data: createDraftAccountData,
     error: createDraftAccountError,
@@ -147,12 +148,14 @@ export const useUpdateDataIndividualOnboarding = () => {
       // send documents to s3
       if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
         const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
+        setIsLoading(true);
         const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
         s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
         s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
 
         const documentIds = documentsFileLinks?.map(documentFileLink => ({ id: documentFileLink?.id })) as { id: string }[];
         idScan.push(...documentIds);
+        setIsLoading(false);
       }
 
       await completeProfileMutate({
@@ -240,7 +243,8 @@ export const useUpdateDataIndividualOnboarding = () => {
       isVerifyPhoneNumberLoading ||
       isCreateDocumentsFileLinksLoading ||
       isOpenAccountLoading ||
-      isCreateAvatarLinkLoading,
+      isCreateAvatarLinkLoading ||
+      isLoading,
     isSuccess:
       isCreateDraftAccountSuccess ||
       isSetPhoneNumberSuccess ||
