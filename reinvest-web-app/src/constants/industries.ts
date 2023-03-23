@@ -1,4 +1,4 @@
-import { SelectOption } from 'components/Select';
+import { SelectOptions } from 'reinvest-app-common/src/types/select-option';
 
 export const INDUSTRIES = [
   {
@@ -87,4 +87,4 @@ export type Industry = (typeof INDUSTRIES)[number]['value'];
 
 export const INDUSTRIES_VALUES: [Industry, ...Industry[]] = [INDUSTRIES[0].value, ...INDUSTRIES.slice(1).map(({ value }) => value)];
 
-export const INDUESTRIES_AS_OPTIONS: SelectOption[] = [...INDUSTRIES];
+export const INDUESTRIES_AS_OPTIONS: SelectOptions = [...INDUSTRIES];

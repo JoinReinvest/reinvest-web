@@ -2,11 +2,7 @@ import { Select as PrimitiveSelect, SelectProps as PrimitivePropsWithoutOptions 
 import { IconArrowDown } from 'assets/icons/IconArrowDown';
 import { IconSearch } from 'assets/icons/IconSearch';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
-
-export interface SelectOption {
-  label: string;
-  value: string;
-}
+import { SelectOption } from 'reinvest-app-common/src/types/select-option';
 
 type PrimitiveSelectProps = PrimitivePropsWithoutOptions<SelectOption>;
 type PrimitiveProps = Pick<PrimitiveSelectProps, 'placeholder' | 'disabled' | 'required' | 'options'>;
