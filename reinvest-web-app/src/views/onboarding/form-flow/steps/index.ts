@@ -9,7 +9,6 @@ import { StepExperience } from './experience';
 import { StepFinraInstitution } from './finra-institution';
 import { StepFullName } from './full-name';
 import { StepIdentificationDocuments } from './identification-documents';
-import { StepIdentificationDocumentsValidation } from './identification-documents-validation';
 import { StepNetWorthAndIncome } from './net-worth-and-income';
 import { StepPermanentAddress } from './permanent-address';
 import { StepPhoneAuthentication } from './phone-authentication';
@@ -34,7 +33,6 @@ export const FLOW_STEPS = [
   StepFinraInstitution,
   StepSocialSecurityNumber,
   StepIdentificationDocuments,
-  StepIdentificationDocumentsValidation,
   StepPermanentAddress,
   StepAccreditedInvestor,
   StepExperience,

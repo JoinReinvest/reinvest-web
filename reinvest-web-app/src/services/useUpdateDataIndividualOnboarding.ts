@@ -1,4 +1,5 @@
 import { profileFields } from 'constants/individualOnboardingFields';
+import fs from 'fs';
 import { AccreditedInvestorStatement, StatementType } from 'types/graphql';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
@@ -95,7 +96,6 @@ export const useUpdateDataIndividualOnboarding = () => {
     data: createDocumentsFileLinksData,
     error: createDocumentsFileLinksError,
     isLoading: isCreateDocumentsFileLinksLoading,
-    isSuccess: isCreateDocumentsFileLinksSuccess,
     mutateAsync: createDocumentsFileLinksMutate,
   } = useCreateDocumentsFileLinks();
 
@@ -148,18 +148,8 @@ export const useUpdateDataIndividualOnboarding = () => {
       if (storedFields.identificationDocument?.front && storedFields.identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
         const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
         const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
-
-        try {
-          s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
-        } catch (error) {
-          console.log(error);
-        }
-
-        try {
-          s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
-        } catch (error) {
-          console.log(error);
-        }
+        s3urls[0] ? await fetcher(s3urls[0], 'PUT', storedFields.identificationDocument.back) : null;
+        s3urls[1] ? await fetcher(s3urls[1], 'PUT', storedFields.identificationDocument.front) : null;
 
         const documentIds = documentsFileLinks?.map(documentFileLink => ({ id: documentFileLink?.id })) as { id: string }[];
         idScan.push(...documentIds);
@@ -255,7 +245,6 @@ export const useUpdateDataIndividualOnboarding = () => {
       isCreateDraftAccountSuccess ||
       isSetPhoneNumberSuccess ||
       isProfileDetailsSuccess ||
-      isCreateDocumentsFileLinksSuccess ||
       isOpenAccountSuccess ||
       isCreateAvatarLinkSuccess ||
       isIndividualDraftAccountSuccess,
