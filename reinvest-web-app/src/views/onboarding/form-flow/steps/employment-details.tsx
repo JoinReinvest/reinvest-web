@@ -86,7 +86,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Are you currently employed?" />
+          <BlackModalTitle title="Where are you employed?" />
           {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
           <div className="flex w-full flex-col gap-16">
             <Input
