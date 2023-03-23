@@ -91,7 +91,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
             options={EMPLOYMENT_STATUSES}
             required={false}
             orientation="vertical"
-            className="gap-22 flex flex-col items-stretch lg:gap-24"
+            className="flex flex-col items-stretch gap-22 lg:gap-24"
           />
         </FormContent>
 

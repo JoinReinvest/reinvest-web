@@ -18,9 +18,7 @@ import { StepProfilePicture } from './profile-picture';
 import { StepResidencyGreenCard } from './residency-green-card';
 import { StepResidencyStatus } from './residency-status';
 import { StepResidencyVisa } from './residency-visa';
-import { StepSeniorPoliticalFigure } from './senior-political-figure';
 import { StepSocialSecurityNumber } from './social-security-number';
-import { StepSocialSecurityNumberValidation } from './social-security-number-validation';
 
 export const FLOW_STEPS = [
   StepAccountType,
@@ -34,10 +32,7 @@ export const FLOW_STEPS = [
   StepResidencyVisa,
   StepCompliances,
   StepFinraInstitution,
-  // StepCompanyTickerSymbols,
-  // StepSeniorPoliticalFigure,
   StepSocialSecurityNumber,
-  // StepSocialSecurityNumberValidation,
   StepIdentificationDocuments,
   StepIdentificationDocumentsValidation,
   StepPermanentAddress,
@@ -46,17 +41,5 @@ export const FLOW_STEPS = [
   StepEmploymentStatus,
   StepEmploymentDetails,
   StepNetWorthAndIncome,
-  // StepSignatoryEntity,
-  // StepCorporationType,
-  // StepCorporationLegalName,
-  // StepTrustType,
-  // StepTrustLegalName,
-  // StepEIN,
-  // StepBusinessAddress,
-  // StepCorporationInformation,
-  // StepDocumentsForCorporation,
-  // - Major Stakeholder Applicants,
-  // StepDocumentsForTrust,
-  // - Other Trustees, Grantors and Protectors
   StepProfilePicture,
 ];

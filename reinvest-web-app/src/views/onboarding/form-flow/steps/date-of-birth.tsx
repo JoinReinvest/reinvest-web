@@ -7,7 +7,6 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { Title } from 'components/Title';
 import dayjs from 'dayjs';
 import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
 import { useEffect, useState } from 'react';

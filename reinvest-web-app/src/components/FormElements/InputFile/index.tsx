@@ -64,7 +64,7 @@ export function InputFile<FormFields extends FieldValues>({
 
         <label
           htmlFor={field.name}
-          className="bg-green-frost-01 peer-disabled:bg-gray-04 flex cursor-pointer items-center justify-center gap-8 p-8"
+          className="flex cursor-pointer items-center justify-center gap-8 bg-green-frost-01 p-8 peer-disabled:bg-gray-04"
         >
           <IconFileUpload />
           <Typography

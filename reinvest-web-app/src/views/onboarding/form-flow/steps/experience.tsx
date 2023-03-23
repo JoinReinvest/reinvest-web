@@ -86,7 +86,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
             name="experience"
             control={control}
             options={EXPERIENCES_AS_OPTIONS}
-            className="gap-22 flex flex-col items-stretch justify-center lg:gap-24"
+            className="flex flex-col items-stretch justify-center gap-22 lg:gap-24"
             orientation="vertical"
             required
           />

@@ -48,7 +48,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const { getValues, handleSubmit } = form;
+    const { getValues, handleSubmit, formState, control } = form;
     const {
       isLoading,
       updateData,
@@ -56,7 +56,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
       error: { profileDetailsError },
     } = useUpdateDataIndividualOnboarding();
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
@@ -75,7 +75,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
     }, [isSuccess, moveToStepByIdentifier, getValues]);
 
     return (
-      <Form onSubmit={form.handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle
             title="Residency Status"
@@ -85,7 +85,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
           {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
           <RadioGroupOptions
             name="residency"
-            control={form.control}
+            control={control}
             options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
           />
         </FormContent>
