@@ -1,12 +1,13 @@
 import { NextPage } from 'next';
+import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
+import { getApiClient } from 'services/getApiClient';
 
 import { IconLoading } from '../assets/icons/IconLoading';
 import { Typography } from '../components/Typography';
 import { MainLayout } from '../layouts/MainLayout';
-import { useGetInvitationLink } from '../services/queries/getInvitationLink';
 
 const InvitationsPage: NextPage = () => {
-  const { data, isLoading } = useGetInvitationLink();
+  const { data, isLoading } = useGetInvitationLink(getApiClient);
 
   if (isLoading) {
     return (

@@ -8,8 +8,8 @@ import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 

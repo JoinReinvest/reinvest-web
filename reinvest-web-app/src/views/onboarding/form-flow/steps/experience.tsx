@@ -7,8 +7,8 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';

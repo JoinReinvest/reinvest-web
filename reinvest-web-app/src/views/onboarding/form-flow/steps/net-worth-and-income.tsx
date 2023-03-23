@@ -7,11 +7,11 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Select } from 'components/Select';
 import { NET_WORTHS_AS_OPTIONS } from 'constants/net-worths';
-import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { WhyRequiredNetWorthModal } from 'views/whyRequiredModals/WhyRequiredNetWorthModal';
 import { z } from 'zod';
 

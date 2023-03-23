@@ -9,7 +9,7 @@ import { Title } from 'components/Title';
 import { URL } from 'constants/urls';
 import { useAuth } from 'providers/AuthProvider';
 import { useEffect, useMemo, useState } from 'react';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

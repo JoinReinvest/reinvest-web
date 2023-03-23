@@ -8,12 +8,12 @@ import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
-import { STATES_AS_SELECT_OPTION } from 'constants/states';
-import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { AccountType } from 'types/graphql';
+import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

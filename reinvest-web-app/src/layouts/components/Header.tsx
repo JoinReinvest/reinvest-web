@@ -2,9 +2,10 @@ import { IconBell } from 'assets/icons/IconBell';
 import cx from 'classnames';
 import { URL } from 'constants/urls';
 import { ComponentProps, useState } from 'react';
+import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+import { getApiClient } from 'services/getApiClient';
 import { RemoveScroll } from 'react-remove-scroll';
 
-import { useGetUserProfile } from '../../services/queries/getProfile';
 import { AccountMenu } from './AccountMenu';
 import { HeaderIcon } from './HeaderIcon';
 import { HeaderNavigation } from './HeaderNavigation';
@@ -25,7 +26,7 @@ const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
 ];
 
 export const Header = () => {
-  const { data } = useGetUserProfile();
+  const { data } = useGetUserProfile(getApiClient);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const openMenu = () => setIsMenuOpen(true);
   const closeMenu = () => setIsMenuOpen(false);

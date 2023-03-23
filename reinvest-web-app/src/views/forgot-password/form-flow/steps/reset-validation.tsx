@@ -3,7 +3,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { LinkButton } from 'components/LinkButton';
 import { Title } from 'components/Title';
 import { URL } from 'constants/urls';
-import { allRequiredFieldsExists, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { ForgotPasswordFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

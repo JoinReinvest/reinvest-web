@@ -2,11 +2,11 @@ import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hoo
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { FormMessage } from 'components/FormElements/FormMessage';
-import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
-import { generateFileSchema } from 'formValidationRules';
 import { ImageProps } from 'next/image';
 import { ChangeEventHandler, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
+import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
 
 import { EditAvatarButton } from './EditAvatarButton';
 

@@ -1,4 +1,4 @@
-import { SelectOption } from 'components/Select';
+import { SelectOptions } from 'reinvest-app-common/src/types/select-option';
 
 export const COUNTRIES = [
   { name: 'Afghanistan', code: 'AF' },
@@ -246,4 +246,4 @@ export const COUNTRIES = [
   { name: 'Zimbabwe', code: 'ZW' },
 ];
 
-export const COUNTRIES_AS_OPTIONS: SelectOption[] = COUNTRIES.map(country => ({ label: country.name, value: country.code }));
+export const COUNTRIES_AS_OPTIONS: SelectOptions = COUNTRIES.map(country => ({ label: country.name, value: country.code }));

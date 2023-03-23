@@ -3,7 +3,7 @@ import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Typography } from 'components/Typography';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

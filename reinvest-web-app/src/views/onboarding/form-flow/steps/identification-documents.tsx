@@ -8,7 +8,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InputFile } from 'components/FormElements/InputFile';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';

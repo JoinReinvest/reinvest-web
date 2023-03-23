@@ -10,7 +10,7 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { CALLING_CODES } from 'constants/country-codes';
 import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
