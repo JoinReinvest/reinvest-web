@@ -7,9 +7,9 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputEmail } from 'components/FormElements/InputEmail';
-import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 

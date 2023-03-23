@@ -7,8 +7,8 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
 import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
 import { VISAS_AS_OPTIONS } from 'constants/visas';
-import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import { z } from 'zod';
 

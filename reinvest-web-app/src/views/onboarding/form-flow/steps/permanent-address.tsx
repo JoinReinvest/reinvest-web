@@ -9,8 +9,8 @@ import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
 import { STATES_AS_SELECT_OPTION } from 'constants/states';
-import { formValidationRules } from 'formValidationRules';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 

@@ -7,11 +7,11 @@ import { InputPassword } from 'components/FormElements/InputPassword';
 import { Link } from 'components/Link';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
-import { formValidationRules } from 'formValidationRules';
 import { useRouter } from 'next/router';
 import { ChallengeName, useAuth } from 'providers/AuthProvider';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'services/form-flow';
 import zod, { Schema } from 'zod';
 
