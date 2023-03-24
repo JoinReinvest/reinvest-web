@@ -110,7 +110,7 @@ export interface CompanyTickerSymbol {
   symbol: string;
 }
 
-interface IdentificationDocuments {
+export interface IdentificationDocuments {
   back: File | null;
   front: File | null;
 }

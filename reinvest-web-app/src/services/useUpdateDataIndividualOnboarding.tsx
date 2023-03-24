@@ -1,10 +1,12 @@
 import { profileFields } from 'constants/individualOnboardingFields';
 import { useState } from 'react';
+import { PutFileLink } from 'types/graphql';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
 import { fetcher } from './fetcher';
+import { getIdScans } from './getIdScans';
 import { getStatements } from './getStatements';
 import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from './queries/completeProfileDetails';
@@ -14,6 +16,7 @@ import { useCreateDraftAccount } from './queries/createDraftAccount';
 import { useOpenAccount } from './queries/openAccount';
 import { useSetPhoneNumber } from './queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from './queries/verifyPhoneNumber';
+import { sendImagesToS3Bucket, UploadImage } from './sendImagesToS3Bucket';
 
 const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
   return keys.reduce<Record<string, any>>((o, key) => {
@@ -122,6 +125,7 @@ export const useUpdateDataIndividualOnboarding = () => {
       setPhoneNumberMutate({ countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
     }
 
+    //complete profile details
     if (!isEmptyObject(profileDetails) && profileDetailsSteps.includes(stepId)) {
       const {
         residency,
@@ -142,14 +146,9 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       // send documents to s3
       if (identificationDocument?.front && identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
-        const documentsFileLinks = await createDocumentsFileLinksMutate({ numberOfLinks: 2 });
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 2 })) as PutFileLink[];
         setIsLoading(true);
-        const s3urls = documentsFileLinks?.map(documentFileLink => documentFileLink?.url) as string[];
-        s3urls[0] ? await fetcher(s3urls[0], 'PUT', identificationDocument.back) : null;
-        s3urls[1] ? await fetcher(s3urls[1], 'PUT', identificationDocument.front) : null;
-
-        const documentIds = documentsFileLinks?.map(documentFileLink => ({ id: documentFileLink?.id })) as { id: string }[];
-        idScan.push(...documentIds);
+        idScan.push(await getIdScans(documentsFileLinks, identificationDocument));
         setIsLoading(false);
       }
 
@@ -165,6 +164,7 @@ export const useUpdateDataIndividualOnboarding = () => {
       });
     }
 
+    //complete individual draft account
     if (individualDraftAccountSteps.includes(stepId) && storedFields.accountId) {
       const {
         employmentStatus: storedemploymentStatus,
@@ -174,6 +174,7 @@ export const useUpdateDataIndividualOnboarding = () => {
         profilePicture,
         accountId,
       } = storedFields;
+
       const employmentStatus = storedemploymentStatus ? { status: storedemploymentStatus } : undefined;
       const employer = employmentDetails
         ? { nameOfEmployer: employmentDetails.employerName, title: employmentDetails.occupation, industry: employmentDetails.industry }
@@ -185,12 +186,7 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       if (profilePicture && stepId === Identifiers.PROFILE_PICTURE) {
         const link = await createAvatarLinkMutate({});
-
-        try {
-          link?.url ? await fetcher(link?.url, 'PUT', profilePicture) : null;
-        } catch (error) {
-          return error;
-        }
+        link?.url && sendImagesToS3Bucket([{ image: profilePicture, url: link.url }]);
         avatarId = link?.id || '';
       }
 
@@ -206,6 +202,7 @@ export const useUpdateDataIndividualOnboarding = () => {
       }
     }
 
+    //verify phone number
     if (storedFields.authCode && storedFields.phone?.countryCode && storedFields.phone?.number && stepId === Identifiers.CHECK_YOUR_PHONE) {
       verifyPhoneNumberMutate({ authCode: storedFields.authCode, countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
     }
