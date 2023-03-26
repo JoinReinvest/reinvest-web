@@ -1,4 +1,5 @@
-import { RadioGroupOptionItem } from '../components/FormElements/RadioGroupOptions';
+import { RadioGroupOptionItem } from 'components/FormElements/RadioGroupOptions';
+import { SelectOption } from 'reinvest-app-common/src/types/select-option';
 
 export const RESIDENCY_STATUS = [
   {
@@ -21,6 +22,8 @@ export const RESIDENCY_STATUS_VALUES: [ResidencyStatusValue, ...ResidencyStatusV
   RESIDENCY_STATUS[0].value,
   ...RESIDENCY_STATUS.slice(1).map(({ value }) => value),
 ];
+
+export const RESIDENCY_STATUS_AS_SELECT_OPTIONS: SelectOption[] = RESIDENCY_STATUS.map(item => item);
 
 export const RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS: RadioGroupOptionItem[] = RESIDENCY_STATUS.map(({ label, value }) => ({
   title: label,
