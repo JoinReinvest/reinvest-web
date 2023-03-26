@@ -2,6 +2,10 @@ import { StepAccountType } from './account-type';
 import { StepAccreditedInvestor } from './accredited-investor';
 import { StepSignatoryEntity } from './authorized-signatory-entity';
 import { StepBusinessAddress } from './business-address';
+import { StepCompanyMajorStakeholderApplicantDetails } from './company-major-stakeholder-applicant-details';
+import { StepCompanyMajorStakeholderApplicantIdentificationDocument } from './company-major-stakeholder-applicant-identification';
+import { StepCompanyMajorStakeholderApplicantList } from './company-major-stakeholder-applicant-list';
+import { StepCompanyMajorStakeholderApplicantsLanding } from './company-major-stakeholder-applicants-landing';
 import { StepCompanyTickerSymbols } from './company-ticker-symbols';
 import { StepCompliances } from './compliance';
 import { StepCorporationInformation } from './corporation-information';
@@ -64,7 +68,10 @@ export const FLOW_STEPS = [
   StepBusinessAddress,
   StepCorporationInformation,
   StepDocumentsForCorporation,
-  // - Major Stakeholder Applicants,
+  StepCompanyMajorStakeholderApplicantsLanding,
+  StepCompanyMajorStakeholderApplicantDetails,
+  StepCompanyMajorStakeholderApplicantIdentificationDocument,
+  StepCompanyMajorStakeholderApplicantList,
   StepDocumentsForTrust,
   // - Other Trustees, Grantors and Protectors
   StepProfilePicture,

@@ -5,15 +5,19 @@ import { Address } from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
   residency: 'us' | 'green-card' | 'visa' | undefined;
+  _currentCompanyMajorStakeholder?: IndexedSchema<CompanyMajorStakeholderApplicant>;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
+  _isEditingCompanyMajorStakeholderApplicant?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
+  _willHaveMajorStakeholderApplicants?: boolean;
   accountType?: AccountTypeValue;
   authenticationCode?: string;
   birthCountry?: string;
   businessAddress?: Address;
   citizenshipCountry?: string;
+  companyMajorStakeholderApplicants?: CompanyMajorStakeholderApplicant[];
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: {
     // Are you or anyone in your immediate compliances, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
@@ -23,26 +27,20 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   corporationAnnualRevenue?: CorporationAnnualRevenue;
-
   corporationIndustry?: Industry;
-
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporationTypeValue;
   dateOfBirth?: Date;
   documentsForCorporation?: File[];
   documentsForTrust?: File[];
-
   ein?: string;
   employmentDetails?: EmploymentDetails;
   employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
-
   experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
   finraInstitution?: string;
   firstName?: string;
-
   household?: {
     // Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
@@ -51,13 +49,11 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   identificationDocument?: IdentificationDocuments;
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
   lastName?: string;
   middleName?: string;
-
   netIncome?: string;
   netWorth?: string;
   permanentAddress?: Address;
@@ -85,3 +81,18 @@ interface EmploymentDetails {
   industry?: Industry;
   occupation?: string;
 }
+
+export interface CompanyMajorStakeholderApplicant {
+  dateOfBirth?: Date;
+  domicile?: 'us' | 'green-card' | 'visa';
+  firstName?: string;
+  identificationDocument?: File;
+  lastName?: string;
+  middleName?: string;
+  residentialAddress?: string;
+  socialSecurityNumber?: string;
+}
+
+export type IndexedSchema<Schema> = Schema & {
+  _index?: number;
+};
