@@ -34,6 +34,7 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
         },
       }}
       placeholder="Date of Birth"
+      willUseUnmaskedValue={false}
       {...props}
     />
   );
