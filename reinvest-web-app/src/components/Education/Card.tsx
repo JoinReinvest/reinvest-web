@@ -14,8 +14,8 @@ export interface EducationCardProps {
 
 export const EducationCard = ({ title, subtitle, icon, buttonText, href }: EducationCardProps) => {
   return (
-    <div className="flex w-full bg-green-frost-01/30 px-24 py-20 max-lg:relative lg:p-40">
-      <div className="flex w-full flex-col items-start max-lg:pb-84 lg:justify-center">
+    <div className="flex w-full bg-green-frost-01/30 px-24 py-20 relative lg:static lg:p-40">
+      <div className="flex w-full flex-col items-start pb-84 lg:pb-0 lg:justify-center">
         <Typography
           variant="h5"
           className="mb-8 mr-16"
@@ -39,7 +39,7 @@ export const EducationCard = ({ title, subtitle, icon, buttonText, href }: Educa
         </Link>
       </div>
 
-      <div className="bottom-20 right-12 flex w-1/2 justify-end max-lg:absolute max-lg:child:w-auto">{icon}</div>
+      <div className="bottom-20 right-12 flex w-1/2 justify-end absolute lg:static child:w-auto">{icon}</div>
     </div>
   );
 };
