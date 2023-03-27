@@ -1,16 +1,16 @@
 import { fetcher } from './fetcher';
 
-export interface UploadImage {
-  image: File | null;
+export interface UploadFile {
+  file: File | null;
   url: string;
 }
 
-export const sendImagesToS3Bucket = async (uploadImages: UploadImage[]) => {
-  const promises = uploadImages.map(
-    ({ image, url }) =>
+export const sendFilesToS3Bucket = async (uploadFiles: UploadFile[]) => {
+  const promises = uploadFiles.map(
+    ({ file, url }) =>
       new Promise((resolve, reject) => {
         try {
-          const repsonse = fetcher(url, 'PUT', image);
+          const repsonse = fetcher(url, 'PUT', file);
           resolve(repsonse);
         } catch (error) {
           reject(error);

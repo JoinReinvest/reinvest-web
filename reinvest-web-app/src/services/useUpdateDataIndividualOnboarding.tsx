@@ -16,7 +16,7 @@ import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 import { getApiClient } from './getApiClient';
 import { getIdScans } from './getIdScans';
 import { getStatements } from './getStatements';
-import { sendImagesToS3Bucket } from './sendImagesToS3Bucket';
+import { sendFilesToS3Bucket } from './sendFilesToS3Bucket';
 
 const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
   return keys.reduce<Record<string, any>>((o, key) => {
@@ -188,7 +188,7 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       if (profilePicture && stepId === Identifiers.PROFILE_PICTURE) {
         const link = await createAvatarLinkMutate({});
-        link?.url && sendImagesToS3Bucket([{ image: profilePicture, url: link.url }]);
+        link?.url && sendFilesToS3Bucket([{ file: profilePicture, url: link.url }]);
         avatarId = link?.id || '';
       }
 
