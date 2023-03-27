@@ -6,7 +6,10 @@ export type InputMaskedProps<FormFields extends FieldValues> = PrimitiveProps<Fo
 type PrimitiveProps<FormFields extends FieldValues> = Omit<PrimitiveInputMaskedProps<FormFields>, 'error'>;
 type PrimitiveInputMaskedProps<FormFields extends FieldValues> = ComponentPropsWithoutRef<typeof PrimitiveInputMasked<FormFields>>;
 
-export type CustomInputMaskedProps<FormFields extends FieldValues> = Omit<InputMaskedProps<FormFields>, 'maskOptions'>;
+export type CustomInputMaskedProps<FormFields extends FieldValues> = Omit<
+  InputMaskedProps<FormFields>,
+  'maskOptions' | 'willUseUnmaskedValue' | 'willTriggerChangeOnAccept' | 'willTriggerChangeOnCompletion'
+>;
 
 export function InputMasked<FormFields extends FieldValues>({
   name,
@@ -19,6 +22,9 @@ export function InputMasked<FormFields extends FieldValues>({
   defaultValue,
   shouldUnregister,
   rules,
+  willUseUnmaskedValue = true,
+  willTriggerChangeOnAccept = true,
+  willTriggerChangeOnCompletion = false,
 }: InputMaskedProps<FormFields>) {
   return (
     <PrimitiveInputMasked
@@ -32,6 +38,9 @@ export function InputMasked<FormFields extends FieldValues>({
       defaultValue={defaultValue}
       shouldUnregister={shouldUnregister}
       rules={rules}
+      willUseUnmaskedValue={willUseUnmaskedValue}
+      willTriggerChangeOnAccept={willTriggerChangeOnAccept}
+      willTriggerChangeOnCompletion={willTriggerChangeOnCompletion}
     />
   );
 }
