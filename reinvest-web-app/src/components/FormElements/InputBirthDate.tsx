@@ -1,6 +1,5 @@
 import { CustomInputMaskedProps, InputMasked } from 'components/FormElements/InputMasked';
 import dayjs from 'dayjs';
-import IMask from 'imask';
 import { FieldValues } from 'react-hook-form';
 
 type Props<FormFields extends FieldValues> = CustomInputMaskedProps<FormFields>;
@@ -14,14 +13,9 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
     <InputMasked
       maskOptions={{
         mask: Date,
-        pattern: 'm{/}`d{/}`YYYY',
+        pattern: 'm{/}`d{/}`Y',
         min: minDate,
         max: maxDate,
-        blocks: {
-          m: { mask: IMask.MaskedRange, placeholderChar: 'M', from: 1, to: 12, maxLength: 2 },
-          d: { mask: IMask.MaskedRange, placeholderChar: 'D', from: 1, to: 31, maxLength: 2 },
-          Y: { mask: IMask.MaskedRange, placeholderChar: 'Y', from: 1900, to: 9999, maxLength: 4 },
-        },
         format: value => {
           const date = dayjs(value);
 
@@ -34,8 +28,10 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
         },
       }}
       placeholder="Date of Birth"
-      willUseUnmaskedValue={false}
       {...props}
+      willTriggerChangeOnCompletion
+      willUseUnmaskedValue={false}
+      willTriggerChangeOnAccept={false}
     />
   );
 }

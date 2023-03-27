@@ -8,7 +8,8 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -64,6 +65,21 @@ const schema = z
 export const StepCompliances: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.COMPLIANCES,
 
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit, setValue, getValues } = useForm<Fields>({
       mode: 'all',
@@ -96,14 +112,12 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
       setValue('doNoneApply', value);
     };
 
-    const onSubmit: SubmitHandler<Fields> = async ({ isAssociatedWithFinra, isAssociatedWithPubliclyTradedCompany, isSeniorPoliticalFigure }) => {
-      const compliances: OnboardingFormFields['compliances'] = {
-        isAssociatedWithFinra,
-        isAssociatedWithPubliclyTradedCompany,
-        isSeniorPoliticalFigure,
-      };
-
-      await updateStoreFields({ compliances });
+    const onSubmit: SubmitHandler<Fields> = fields => {
+      const statements = [];
+      fields.isAssociatedWithFinra && statements.push(StatementType.FinraMember);
+      fields.isAssociatedWithPubliclyTradedCompany && statements.push(StatementType.TradingCompanyStakeholder);
+      fields.isSeniorPoliticalFigure && statements.push(StatementType.Politician);
+      updateStoreFields({ statementTypes: [StatementType.FinraMember] });
       moveToNextStep();
     };
 

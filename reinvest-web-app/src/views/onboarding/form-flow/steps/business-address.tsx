@@ -13,7 +13,7 @@ import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/state
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -26,11 +26,11 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.BUSINESS_ADDRESS,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Corporate;
+    return accountType === DraftAccountType.Corporate;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '' };
+    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.permanentAddress || initialValues;
 
     const { control, formState, setValue, handleSubmit } = useForm<Fields>({

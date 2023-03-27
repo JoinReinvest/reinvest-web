@@ -12,7 +12,7 @@ import { RESIDENCY_STATUS_AS_SELECT_OPTIONS } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema, formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { CompanyMajorStakeholderApplicant, OnboardingFormFields } from '../form-fields';
@@ -65,7 +65,7 @@ export const StepCompanyMajorStakeholderApplicantDetails: StepParams<OnboardingF
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Corporate;
+    return accountType === DraftAccountType.Corporate;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

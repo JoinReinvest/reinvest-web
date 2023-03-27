@@ -4,18 +4,22 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StatementType } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'finraInstitution'>;
+type Fields = Pick<OnboardingFormFields, 'finraInstitutionName'>;
 
 const schema = z.object({
-  finraInstitution: z.string().min(1),
+  finraInstitutionName: z.string().min(1),
 });
 
 export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
@@ -24,28 +28,55 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   willBePartOfTheFlow: ({ compliances }) => {
     return !!compliances?.isAssociatedWithFinra;
   },
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    return allRequiredFieldsExists(requiredFields) && !!fields.statementTypes?.includes(StatementType.FinraMember);
+  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      moveToNextStep();
+      await updateData(Identifiers.FINRA_INSTITUTION, { ...storeFields, ...getValues() });
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Please provide name of the FINRA institution below." />
-
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
           <Input
-            name="finraInstitution"
+            name="finraInstitutionName"
             control={control}
             placeholder="FINRA Institute Name"
           />
@@ -56,6 +87,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>

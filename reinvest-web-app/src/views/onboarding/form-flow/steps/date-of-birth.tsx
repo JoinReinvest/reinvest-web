@@ -4,12 +4,15 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { useState } from 'react';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
 
@@ -25,25 +28,58 @@ const schema = z.object({
 export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DATE_OF_BIRTH,
 
+  willBePartOfTheFlow(fields) {
+    return !fields.accountType && !fields.isCompletedProfile;
+  },
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+    ];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { formState, control, handleSubmit } = useForm<Fields>({
-      mode: 'onSubmit',
+    const { formState, control, handleSubmit, getValues } = useForm<Fields>({
+      mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onOpenInformationModalClick = () => {
       setIsInformationModalOpen(true);
     };
 
-    const onSubmit: SubmitHandler<Fields> = async ({ dateOfBirth }) => {
-      await updateStoreFields({ dateOfBirth });
-      moveToNextStep();
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
+      await updateData(Identifiers.DATE_OF_BIRTH, {
+        ...storeFields,
+        dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
+      });
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <>
@@ -51,6 +87,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="Enter your date of birth" />
 
+            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
             <div className="flex w-full flex-col gap-16">
               <InputBirthDate
                 name="dateOfBirth"
@@ -70,6 +107,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
               type="submit"
               label="Continue"
               disabled={shouldButtonBeDisabled}
+              loading={isLoading}
             />
           </ButtonStack>
         </Form>
@@ -82,3 +120,5 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     );
   },
 };
+
+const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM/DD/YYYY').format('YYYY-MM-DD');

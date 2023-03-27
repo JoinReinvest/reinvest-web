@@ -4,7 +4,7 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Typography } from 'components/Typography';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { CompanyMajorStakeholderApplicant, IndexedSchema, OnboardingFormFields } from '../form-fields';
@@ -23,7 +23,7 @@ export const StepCompanyMajorStakeholderApplicantList: StepParams<OnboardingForm
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Corporate;
+    return accountType === DraftAccountType.Corporate;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
