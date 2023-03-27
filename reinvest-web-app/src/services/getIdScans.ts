@@ -4,18 +4,11 @@ import { IdentificationDocuments } from 'views/onboarding/form-flow/form-fields'
 import { sendFilesToS3Bucket, UploadFile } from './sendFilesToS3Bucket';
 
 export const getIdScans = async (documentsFileLinks: PutFileLink[], identificationDocument: IdentificationDocuments) => {
-  const s3urls = documentsFileLinks.filter(documentFileLink => documentFileLink.url) as string[];
-
-  const images: UploadFile[] = [
-    {
-      file: identificationDocument.front,
-      url: s3urls[0] || '',
-    },
-    {
-      file: identificationDocument.back,
-      url: s3urls[1] || '',
-    },
-  ];
+  const images = documentsFileLinks
+    .filter(documentFileLink => documentFileLink.url)
+    .map(({ url }, index) => {
+      return index === 0 ? { file: identificationDocument.front, url } : { file: identificationDocument.back, url };
+    }) as UploadFile[];
 
   await sendFilesToS3Bucket(images);
 
