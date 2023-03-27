@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
@@ -12,8 +11,8 @@ import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
 import { getApiClient } from './getApiClient';
-import { sendDocumentsToS3AndGetScanIds } from './getIdScans';
 import { getStatements } from './getStatements';
+import { useSendDocumentsToS3AndGetScanIds } from './queries/useSendDocumentsToS3AndGetScanIds';
 import { sendFilesToS3Bucket } from './sendFilesToS3Bucket';
 
 const profileDetailsSteps = [
@@ -43,7 +42,6 @@ const individualDraftAccountSteps = [
 const createIndividualDraftAccountSteps = [Identifiers.ACCOUNT_TYPE];
 
 export const useUpdateDataIndividualOnboarding = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const {
     data: createDraftAccountData,
     error: createDraftAccountError,
@@ -98,6 +96,13 @@ export const useUpdateDataIndividualOnboarding = () => {
     mutateAsync: createAvatarLinkMutate,
   } = useCreateAvatarFileLink(getApiClient);
 
+  const {
+    error: sendDocumentsToS3AndGetScanIdsError,
+    isLoading: isSendDocumentToS3AndGetScanIdsLoading,
+    isSuccess: isSendDocumentToS3AndGetScanIdsSuccess,
+    mutateAsync: sendDocumentsToS3AndGetScanIdsMutate,
+  } = useSendDocumentsToS3AndGetScanIds();
+
   const { error: openAccountError, isLoading: isOpenAccountLoading, mutate: openAccountMutate, isSuccess: isOpenAccountSuccess } = useOpenAccount(getApiClient);
 
   const updateData = async (stepId: Identifiers, storedFields: OnboardingFormFields) => {
@@ -134,10 +139,8 @@ export const useUpdateDataIndividualOnboarding = () => {
       // send documents to s3
       if (identificationDocument?.front && identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 2 })) as PutFileLink[];
-        setIsLoading(true);
-        const idScans = await sendDocumentsToS3AndGetScanIds(documentsFileLinks, identificationDocument);
-        idScan.push(...idScans);
-        setIsLoading(false);
+        const scanIds = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocument });
+        idScan.push(...scanIds);
       }
 
       await completeProfileMutate({
@@ -217,6 +220,7 @@ export const useUpdateDataIndividualOnboarding = () => {
       createDocumentsFileLinksError,
       openAccountError,
       createAvatarLinkError,
+      sendDocumentsToS3AndGetScanIdsError,
     },
     isLoading:
       isProfileDetailsLoading ||
@@ -227,7 +231,7 @@ export const useUpdateDataIndividualOnboarding = () => {
       isCreateDocumentsFileLinksLoading ||
       isOpenAccountLoading ||
       isCreateAvatarLinkLoading ||
-      isLoading,
+      isSendDocumentToS3AndGetScanIdsLoading,
     isSuccess:
       isCreateDraftAccountSuccess ||
       isSetPhoneNumberSuccess ||
@@ -235,7 +239,8 @@ export const useUpdateDataIndividualOnboarding = () => {
       isOpenAccountSuccess ||
       isCreateAvatarLinkSuccess ||
       isIndividualDraftAccountSuccess ||
-      isVerifyPhoneNumberSuccess,
+      isVerifyPhoneNumberSuccess ||
+      isSendDocumentToS3AndGetScanIdsSuccess,
     updateData,
   };
 };
