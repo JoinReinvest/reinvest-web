@@ -1,7 +1,8 @@
 import { fetcher } from './fetcher';
 
 export interface UploadFile {
-  file: File | null;
+  file: File;
+  id: string;
   url: string;
 }
 

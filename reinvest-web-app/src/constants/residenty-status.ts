@@ -15,9 +15,4 @@ export const RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS = [
   },
 ];
 
-type ResidencyStatusValue = (typeof RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS)[number]['value'];
-
-export const RESIDENCY_STATUS_VALUES: [ResidencyStatusValue, ...ResidencyStatusValue[]] = [
-  RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS[0]?.value ?? DomicileType.Citizen,
-  ...RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS.slice(1).map(({ value }) => value),
-];
+export const RESIDENCY_STATUS_VALUES = [DomicileType.Citizen, DomicileType.GreenCard, DomicileType.Visa] as const;

@@ -1,4 +1,3 @@
-import { profileFields } from 'constants/individualOnboardingFields';
 import { useState } from 'react';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
@@ -9,24 +8,13 @@ import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAcc
 import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
 import { AddressInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
-import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
 import { getApiClient } from './getApiClient';
-import { getIdScans } from './getIdScans';
+import { sendDocumentsToS3AndGetScanIds } from './getIdScans';
 import { getStatements } from './getStatements';
 import { sendFilesToS3Bucket } from './sendFilesToS3Bucket';
-
-const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
-  return keys.reduce<Record<string, any>>((o, key) => {
-    const data = fields.get(key);
-
-    if (!data) return o;
-
-    return Object.assign(o, { [key]: data });
-  }, {});
-};
 
 const profileDetailsSteps = [
   Identifiers.FULL_NAME,
@@ -92,6 +80,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     data: verifyPhoneNumberData,
     error: verifyPhoneNumberError,
     isLoading: isVerifyPhoneNumberLoading,
+    isSuccess: isVerifyPhoneNumberSuccess,
     mutate: verifyPhoneNumberMutate,
   } = useVerifyPhoneNumber(getApiClient);
 
@@ -112,10 +101,6 @@ export const useUpdateDataIndividualOnboarding = () => {
   const { error: openAccountError, isLoading: isOpenAccountLoading, mutate: openAccountMutate, isSuccess: isOpenAccountSuccess } = useOpenAccount(getApiClient);
 
   const updateData = async (stepId: Identifiers, storedFields: OnboardingFormFields) => {
-    const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
-
-    const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
-
     if (storedFields.accountType && createIndividualDraftAccountSteps.includes(stepId)) {
       createDraftAccountMutate({ type: storedFields.accountType });
     }
@@ -125,7 +110,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     }
 
     //complete profile details
-    if (!isEmptyObject(profileDetails) && profileDetailsSteps.includes(stepId)) {
+    if (profileDetailsSteps.includes(stepId)) {
       const {
         residency,
         statementTypes,
@@ -135,8 +120,11 @@ export const useUpdateDataIndividualOnboarding = () => {
         isAccreditedInvestor,
         identificationDocument,
         address: storageAddress,
+        name,
+        dateOfBirth,
+        domicile: storedDomicle,
       } = storedFields;
-      const domicile = residency ? { ...profileDetails.domicile, type: residency } : undefined;
+      const domicile = residency ? { ...storedDomicle, type: residency } : undefined;
       const statements = getStatements(statementTypes || [], finraInstitutionName, isAccreditedInvestor);
       const ssn = storedSsn ? { ssn: storedSsn } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
@@ -147,14 +135,14 @@ export const useUpdateDataIndividualOnboarding = () => {
       if (identificationDocument?.front && identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 2 })) as PutFileLink[];
         setIsLoading(true);
-        const idScans = await getIdScans(documentsFileLinks, identificationDocument);
+        const idScans = await sendDocumentsToS3AndGetScanIds(documentsFileLinks, identificationDocument);
         idScan.push(...idScans);
         setIsLoading(false);
       }
 
       await completeProfileMutate({
         input: {
-          ...profileDetails,
+          name,
           domicile,
           statements,
           ssn,
@@ -162,6 +150,7 @@ export const useUpdateDataIndividualOnboarding = () => {
           address,
           idScan: idScan.length ? idScan : undefined,
           verifyAndFinish: stepId === Identifiers.EXPERIENCE,
+          dateOfBirth,
         },
       });
     }
@@ -187,9 +176,9 @@ export const useUpdateDataIndividualOnboarding = () => {
       let avatarId = '';
 
       if (profilePicture && stepId === Identifiers.PROFILE_PICTURE) {
-        const link = await createAvatarLinkMutate({});
-        link?.url && sendFilesToS3Bucket([{ file: profilePicture, url: link.url }]);
-        avatarId = link?.id || '';
+        const { id, url } = await createAvatarLinkMutate({});
+        url && sendFilesToS3Bucket([{ file: profilePicture, url, id }]);
+        avatarId = id || '';
       }
 
       const avatar = avatarId ? { id: avatarId } : undefined;
@@ -245,7 +234,8 @@ export const useUpdateDataIndividualOnboarding = () => {
       isProfileDetailsSuccess ||
       isOpenAccountSuccess ||
       isCreateAvatarLinkSuccess ||
-      isIndividualDraftAccountSuccess,
+      isIndividualDraftAccountSuccess ||
+      isVerifyPhoneNumberSuccess,
     updateData,
   };
 };

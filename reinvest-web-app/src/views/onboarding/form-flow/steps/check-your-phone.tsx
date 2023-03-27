@@ -38,15 +38,15 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     });
 
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
-
-    const { handleSubmit, control, formState, getValues } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-
     const {
       updateData,
       error: { verifyPhoneNumberError },
-      data: { verifyPhoneNumberData },
+      isLoading,
+      isSuccess,
     } = useUpdateDataIndividualOnboarding();
+
+    const { handleSubmit, control, formState, getValues } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setIsValidatingCredentials(true);
@@ -62,10 +62,10 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (verifyPhoneNumberData) {
+      if (isSuccess) {
         moveToNextStep();
       }
-    }, [verifyPhoneNumberData, moveToNextStep]);
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
