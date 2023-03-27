@@ -3,7 +3,8 @@ import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Typography } from 'components/Typography';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -14,11 +15,24 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
   identifier: Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
 
   willBePartOfTheFlow: fields => {
-    const { _didDocumentIdentificationValidationSucceed } = fields;
-
-    return !_didDocumentIdentificationValidationSucceed;
+    return !fields.accountType && !fields.isCompletedProfile;
   },
 
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    const individualFields = [fields.ssn];
+
+    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields);
+  },
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     // TO-DO: If the documents were not valid, the text and
     //      action for the button may be different.

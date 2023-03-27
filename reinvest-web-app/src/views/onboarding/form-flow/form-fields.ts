@@ -1,16 +1,23 @@
-import { AccountTypeValue, CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
+import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
 import { Industry } from 'constants/industries';
-import { Address } from 'reinvest-app-common/src/types/graphql';
+import { Address, DomicileType, DraftAccountType, EmploymentStatus, Experience, StatementType } from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
-  residency: 'us' | 'green-card' | 'visa' | undefined;
+  // Are we displaying this as an URL or a file upload?
+  address: Address | null;
+  dateOfBirth: string | null;
+  // Are we displaying this as an URL or a file upload?
+  experience: Experience | null;
+  isCompletedProfile: boolean;
+  residency: DomicileType | null;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
-  accountType?: AccountTypeValue;
-  authenticationCode?: string;
+  accountId?: string;
+  accountType?: DraftAccountType;
+  authCode?: string;
   birthCountry?: string;
   businessAddress?: Address;
   citizenshipCountry?: string;
@@ -27,20 +34,38 @@ export interface OnboardingFormFields {
   corporationAnnualRevenue?: CorporationAnnualRevenue;
 
   corporationIndustry?: Industry;
-
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
+
   corporationType?: CorporationTypeValue;
-  dateOfBirth?: Date;
+
   documentsForCorporation?: File[];
+
   documentsForTrust?: File[];
-
+  domicile?: {
+    forGreenCard?: {
+      birthCountry: string;
+      citizenshipCountry: string;
+    };
+    forVisa?: {
+      birthCountry: string;
+      citizenshipCountry: string;
+      visaType: string;
+    };
+  };
   ein?: string;
+  employment?: {
+    // Only required if `employmentStatus` is 'employed'
+    employerName?: string;
+    industry?: string;
+    occupation?: string;
+  };
   employmentDetails?: EmploymentDetails;
-  employmentStatus?: 'employed' | 'unemployed' | 'retired' | 'student';
 
-  experience?: 'no-experience' | 'some-experience' | 'very-experienced' | 'expert';
+  employmentStatus?: EmploymentStatus;
   finraInstitution?: string;
+
+  finraInstitutionName?: string;
   firstName?: string;
 
   household?: {
@@ -51,21 +76,30 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   identificationDocument?: IdentificationDocuments;
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
   lastName?: string;
   middleName?: string;
-
+  name?: {
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+  };
   netIncome?: string;
   netWorth?: string;
   permanentAddress?: Address;
+  phone?: {
+    countryCode?: string;
+    number?: string;
+  };
   phoneNumber?: string;
   phoneNumberAuthenticationCode?: string;
   profilePicture?: File | null;
   seniorPoliticalFigure?: string;
-  socialSecurityNumber?: string;
+  ssn?: string;
+
+  statementTypes?: StatementType[];
   trustLegalName?: string;
   trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
@@ -75,13 +109,13 @@ export interface CompanyTickerSymbol {
   symbol: string;
 }
 
-interface IdentificationDocuments {
+export interface IdentificationDocuments {
   back: File | null;
   front: File | null;
 }
 
 interface EmploymentDetails {
-  employerName?: string;
-  industry?: Industry;
-  occupation?: string;
+  employerName: string;
+  industry: Industry;
+  occupation: string;
 }

@@ -5,10 +5,13 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputFile } from 'components/FormElements/InputFile';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -26,39 +29,55 @@ const schema = z.object({
 export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.IDENTIFICATION_DOCUMENTS,
 
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    const individualFields = [fields.ssn];
+
+    return (
+      allRequiredFieldsExists(requiredFields) &&
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) || fields.accountType !== DraftAccountType.Individual)
+    );
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const [isLoading, setIsLoading] = useState(false);
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocument }) => {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
       try {
-        setIsLoading(true);
-
-        //  TO-DO: Upload files to S3
-        await updateStoreFields({ identificationDocument });
-
-        //  TO-DO: Begin document verification process
-
-        //  TO-DO: If documents are valid, update the meta field
-        //      this will be useful for the `IDENTIFICATION_DOCUMENTS_VALIDATION`
-        //      step to know if the documents were valid or not.
-        await updateStoreFields({ _didDocumentIdentificationValidationSucceed: true });
-        setIsLoading(false);
-        moveToNextStep();
+        await updateStoreFields(fields);
+        await updateData(Identifiers.IDENTIFICATION_DOCUMENTS, { ...storeFields, ...getValues() });
       } catch (error) {
-        //  TO-DO: Not sure if we want to move to the next step
-        //      or display an error message.
-        await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
-        setIsLoading(false);
+        updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     if (isLoading) {
       return (
@@ -75,7 +94,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
             <BlackModalTitle title="Please upload your Driver’s License or Passport for further verification" />
-
+            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
             <div className="flex w-full flex-col gap-16">
               <InputFile
                 name="identificationDocument.front"
@@ -96,6 +115,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
               type="submit"
               label="Continue"
               disabled={shouldButtonBeDisabled}
+              loading={isLoading}
             />
           </ButtonStack>
         </Form>

@@ -4,10 +4,14 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS, RESIDENCY_STATUS_VALUES } from 'constants/residenty-status';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DomicileType } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -22,33 +26,64 @@ const schema = z.object({
 export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_STATUS,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { residency: storeFields.residency };
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+    ];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
+
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { ...storeFields };
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
+    const { getValues, handleSubmit, formState, control } = form;
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      moveToNextStep();
+
+      await updateData(Identifiers.RESIDENCY_STATUS, { ...storeFields, ...getValues() });
     };
 
+    useEffect(() => {
+      if (isSuccess) {
+        getValues().residency === DomicileType.Visa
+          ? moveToStepByIdentifier(Identifiers.RESIDENCY_VISA)
+          : moveToStepByIdentifier(Identifiers.RESIDENCY_GREEN_CARD);
+      }
+    }, [isSuccess, moveToStepByIdentifier, getValues]);
+
     return (
-      <Form onSubmit={form.handleSubmit(onSubmit)}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle
             title="Residency Status"
             subtitle="Please select your US residency status."
             informationMessage="REINVEST does not accept non-US residents at this time."
           />
-
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
           <RadioGroupOptions
             name="residency"
-            control={form.control}
+            control={control}
             options={RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS}
           />
         </FormContent>
@@ -58,6 +93,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>

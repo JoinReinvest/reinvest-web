@@ -5,37 +5,63 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'socialSecurityNumber'>;
+type Fields = Pick<OnboardingFormFields, 'ssn'>;
 
 const schema = z.object({
-  socialSecurityNumber: formValidationRules.socialSecurityNumber,
+  ssn: formValidationRules.socialSecurityNumber,
 });
 
 export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER,
 
+  willBePartOfTheFlow(fields) {
+    return fields.accountType === DraftAccountType.Individual;
+  },
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, setValue } = useForm<Fields>({
+    const { control, formState, handleSubmit, setValue, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
+
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
@@ -43,20 +69,16 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       setIsInformationModalOpen(true);
     };
 
-    const onSubmit: SubmitHandler<Fields> = async ({ socialSecurityNumber }) => {
-      try {
-        setIsLoading(true);
-
-        //  TO-DO: Verify if the social security number is not banned
-        //      or assigned to another account - set `_isSocialSecurityNumberBanned`
-        //      and `_isSocialSecurityNumberAlreadyAssigned` accordingly.
-
-        await updateStoreFields({ socialSecurityNumber, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
-        moveToNextStep();
-      } catch (error) {
-        setIsLoading(false);
-      }
+    const onSubmit: SubmitHandler<Fields> = async ({ ssn }) => {
+      await updateStoreFields({ ssn, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+      await updateData(Identifiers.SOCIAL_SECURITY_NUMBER, { ...storeFields, ...getValues() });
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     const setValueOnSocialSecurityNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
       const isValue = !!event.target.value;
@@ -66,7 +88,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         const firstPart = value.substring(0, 3);
         const secondPart = value.substring(3, 5);
         const thirdPart = value.substring(5, 9);
-        setValue('socialSecurityNumber', `${firstPart}-${secondPart}-${thirdPart}`);
+        setValue('ssn', `${firstPart}-${secondPart}-${thirdPart}`);
       }
     };
 
@@ -86,10 +108,12 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="What’s your social security number?" />
 
+            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+
             <div className="flex w-full flex-col gap-24">
               <div className="flex w-full flex-col gap-16">
                 <InputSocialSecurityNumber
-                  name="socialSecurityNumber"
+                  name="ssn"
                   control={control}
                   rules={{ onChange: setValueOnSocialSecurityNumberChange }}
                 />
@@ -119,6 +143,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
               type="submit"
               label="Continue"
               disabled={shouldButtonBeDisabled}
+              loading={isLoading}
             />
           </ButtonStack>
         </Form>

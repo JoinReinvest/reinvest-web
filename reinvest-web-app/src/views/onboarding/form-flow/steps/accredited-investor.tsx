@@ -4,12 +4,14 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
@@ -38,8 +40,14 @@ const OPTIONS: RadioGroupOptionItem[] = [
 export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCREDITED_INVESTOR,
 
-  willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Individual;
+  willBePartOfTheFlow: ({ accountType, isCompletedProfile }) => {
+    return accountType === DraftAccountType.Individual && !isCompletedProfile;
+  },
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
+
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -54,14 +62,27 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       const isAccreditedInvestor = fields?.isAccreditedInvestor === 'yes' ? true : false;
 
       await updateStoreFields({ isAccreditedInvestor });
-      moveToNextStep();
+      await updateData(Identifiers.ACCREDITED_INVESTOR, { ...storeFields, isAccreditedInvestor });
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     const onLinkClick = () => {
       setIsInformationModalOpen(true);
@@ -81,7 +102,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
                 />
               }
             />
-
+            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
             <RadioGroupOptions
               name="isAccreditedInvestor"
               control={control}
@@ -94,6 +115,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
               type="submit"
               disabled={shouldButtonBeDisabled}
               label="Continue"
+              loading={isLoading}
             />
           </ButtonStack>
         </Form>
