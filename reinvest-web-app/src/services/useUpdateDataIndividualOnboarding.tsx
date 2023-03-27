@@ -180,8 +180,11 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       if (profilePicture && stepId === Identifiers.PROFILE_PICTURE) {
         const { id, url } = await createAvatarLinkMutate({});
-        url && sendFilesToS3Bucket([{ file: profilePicture, url, id }]);
-        avatarId = id || '';
+
+        if (url) {
+          await sendFilesToS3Bucket([{ file: profilePicture, url, id }]);
+          avatarId = id || '';
+        }
       }
 
       const avatar = avatarId ? { id: avatarId } : undefined;
