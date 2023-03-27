@@ -11,7 +11,7 @@ import { Select } from 'components/Select';
 import { RESIDENCY_STATUS_AS_SELECT_OPTIONS } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -30,11 +30,11 @@ export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Trust;
+    return accountType === DraftAccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues = getDefaultValuesForApplicantWithoutIdentification(storeFields, AccountType.Trust);
+    const defaultValues = getDefaultValuesForApplicantWithoutIdentification(storeFields, DraftAccountType.Trust);
 
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onBlur',

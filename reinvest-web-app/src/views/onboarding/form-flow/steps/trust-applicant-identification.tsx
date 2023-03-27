@@ -7,7 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InputFile } from 'components/FormElements/InputFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -27,11 +27,11 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Trust;
+    return accountType === DraftAccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues = getDefaultIdentificationValueForApplicant(storeFields, AccountType.Trust);
+    const defaultValues = getDefaultIdentificationValueForApplicant(storeFields, DraftAccountType.Trust);
 
     const { control, formState, handleSubmit } = useForm<Fields>({
       resolver: zodResolver(APPLICANT_IDENTIFICATION),

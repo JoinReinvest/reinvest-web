@@ -4,7 +4,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -13,7 +13,7 @@ export const StepTrustApplicantsLanding: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_APPLICANTS_LANDING,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Trust;
+    return accountType === DraftAccountType.Trust;
   },
 
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
