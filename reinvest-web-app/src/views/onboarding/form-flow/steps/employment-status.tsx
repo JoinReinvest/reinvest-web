@@ -6,7 +6,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
-import { EMPLOYMENT_STATUSES } from 'constants/employment_statuses';
+import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_VALUES } from 'constants/employment_statuses';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -20,7 +20,7 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'employmentStatus'>;
 
 const schema = z.object({
-  employmentStatus: z.enum(['EMPLOYED', 'UNEMPLOYED', 'RETIRED', 'STUDENT']),
+  employmentStatus: z.enum(EMPLOYMENT_STATUSES_VALUES),
 });
 
 export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {

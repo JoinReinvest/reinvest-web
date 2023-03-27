@@ -19,3 +19,5 @@ export const EMPLOYMENT_STATUSES: SelectionOption[] = [
     value: EmploymentStatus.Student,
   },
 ];
+
+export const EMPLOYMENT_STATUSES_VALUES = [EmploymentStatus.Employed, EmploymentStatus.Unemployed, EmploymentStatus.Retired, EmploymentStatus.Student] as const;
