@@ -15,14 +15,14 @@ const educationCards: EducationCardProps[] = [
   {
     title: 'Commercial Real Estate Underwriting Calculator',
     subtitle: 'Calculate your underwriting income in a few easy steps',
-    icon: <IconHome className="max-lg:h-110" />,
+    icon: <IconHome className="h-110 lg:h-auto" />,
     buttonText: 'View Calculator',
     href: URL.calculator,
   },
   {
     title: 'Real Estate 101 Glossary',
     subtitle: 'Equip yourself with the language of the industry',
-    icon: <IconChart className="max-lg:h-120" />,
+    icon: <IconChart className="h-120 lg:h-auto" />,
     buttonText: 'View Glossary',
     href: URL.glossary,
   },
