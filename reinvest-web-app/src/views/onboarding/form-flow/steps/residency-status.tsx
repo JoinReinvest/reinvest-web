@@ -66,11 +66,9 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        if (getValues().residency === DomicileType.Visa) {
-          moveToStepByIdentifier(Identifiers.RESIDENCY_VISA);
-        } else {
-          moveToStepByIdentifier(Identifiers.RESIDENCY_GREEN_CARD);
-        }
+        getValues().residency === DomicileType.Visa
+          ? moveToStepByIdentifier(Identifiers.RESIDENCY_VISA)
+          : moveToStepByIdentifier(Identifiers.RESIDENCY_GREEN_CARD);
       }
     }, [isSuccess, moveToStepByIdentifier, getValues]);
 

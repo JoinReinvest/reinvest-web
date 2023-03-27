@@ -43,8 +43,8 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
     const individualFields = [fields.ssn];
 
     return (
-      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
-      (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields))
+      allRequiredFieldsExists(requiredFields) &&
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) || fields.accountType !== DraftAccountType.Individual)
     );
   },
 

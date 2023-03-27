@@ -41,12 +41,11 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.accountType,
     ];
 
-    //TODO: More conditions for individual account type
     const individualAccountFields = [fields.employmentStatus, fields.employmentDetails, fields.netIncome, fields.netWorth];
 
     return (
-      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields) && !fields.isCompletedProfile) ||
-      (allRequiredFieldsExists(individualAccountFields) && !!fields.isCompletedProfile)
+      !!fields.isCompletedProfile &&
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || allRequiredFieldsExists(individualAccountFields))
     );
   },
 
