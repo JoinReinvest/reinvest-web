@@ -1,19 +1,16 @@
-import { IconPencil } from 'assets/icons/IconPencil';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
-import { Typography } from 'components/Typography';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
-import { CompanyMajorStakeholderApplicant, IndexedSchema, OnboardingFormFields } from '../form-fields';
+import { Applicant, IndexedSchema, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { generateApplicantListItem } from '../utilities';
 
-type indexedMajorStakeholderApplicants = IndexedSchema<CompanyMajorStakeholderApplicant>[];
-
-export const StepCompanyMajorStakeholderApplicantList: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.COMPANY_MAJOR_STAKEHOLDER_APPLICANT_LIST,
+export const StepCompanyApplicantList: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.CORPORATE_APPLICANT_LIST,
 
   doesMeetConditionFields: fields => {
     const { _willHaveMajorStakeholderApplicants, companyMajorStakeholderApplicants } = fields;
@@ -30,24 +27,24 @@ export const StepCompanyMajorStakeholderApplicantList: StepParams<OnboardingForm
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
 
-    const indexedStakeholderApplicants: indexedMajorStakeholderApplicants = majorStakeholderApplicants.map((item, index) => ({
+    const indexedStakeholderApplicants: IndexedSchema<Applicant>[] = majorStakeholderApplicants.map((item, index) => ({
       ...item,
       _index: index,
     }));
 
-    const onEditApplicant = (applicant: indexedMajorStakeholderApplicants[number]) => {
+    const onEditApplicant = (applicant: IndexedSchema<Applicant>) => {
       const hasIndex = applicant._index !== undefined;
 
       if (hasIndex) {
         // set the current major stakeholder applicant as this value
         updateStoreFields({ _currentCompanyMajorStakeholder: applicant, _isEditingCompanyMajorStakeholderApplicant: true });
-        moveToStepByIdentifier(Identifiers.COMPANY_MAJOR_STAKEHOLDER_APPLICANT_DETAILS);
+        moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
       }
     };
 
     const onAddNewApplication = () => {
       updateStoreFields({ _currentCompanyMajorStakeholder: undefined });
-      moveToStepByIdentifier(Identifiers.COMPANY_MAJOR_STAKEHOLDER_APPLICANT_DETAILS);
+      moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
     };
 
     const onContinue = () => {
@@ -80,23 +77,4 @@ export const StepCompanyMajorStakeholderApplicantList: StepParams<OnboardingForm
       </div>
     );
   },
-};
-
-const generateApplicantListItem = (corporationLegalName: string, applicant: indexedMajorStakeholderApplicants[number], onIconClick: () => void) => {
-  const key = `${corporationLegalName}-${applicant._index}`;
-  const applicantFullName = `${applicant.firstName} ${applicant.lastName}`;
-
-  return (
-    <li
-      key={key}
-      className="flex items-center justify-between"
-    >
-      <Typography variant="paragraph-emphasized">{applicantFullName}</Typography>
-
-      <IconPencil
-        className="cursor-pointer fill-green-frost-01"
-        onClick={onIconClick}
-      />
-    </li>
-  );
 };

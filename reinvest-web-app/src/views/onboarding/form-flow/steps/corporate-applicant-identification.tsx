@@ -6,44 +6,18 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputFile } from 'components/FormElements/InputFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { z } from 'zod';
 
-import { CompanyMajorStakeholderApplicant, OnboardingFormFields } from '../form-fields';
+import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ACCEPTED_FILES_MIME_TYPES, APPLICANT_IDENTIFICATION, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
+import { getDefaultIdentificationValueForApplicant } from '../utilities';
 
-const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
-const FILE_SIZE_LIMIT_IN_MEGABYTES = 5;
+type Fields = Pick<Applicant, 'identificationDocument'>;
 
-type Fields = Pick<CompanyMajorStakeholderApplicant, 'identificationDocument'>;
-
-const schema = z.object({
-  identificationDocument: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES),
-});
-
-const getDefaultValues = (fields: OnboardingFormFields): Fields => {
-  const { _isEditingCompanyMajorStakeholderApplicant, _currentCompanyMajorStakeholder, companyMajorStakeholderApplicants } = fields;
-  const hasMajorStakeholderApplicants = !!companyMajorStakeholderApplicants?.length;
-  const currentCompanyMajorStakeholderIndex = _currentCompanyMajorStakeholder?._index;
-  const hasIndex = currentCompanyMajorStakeholderIndex !== undefined;
-
-  if (hasMajorStakeholderApplicants && !!_isEditingCompanyMajorStakeholderApplicant && hasIndex) {
-    const applicant = companyMajorStakeholderApplicants.at(currentCompanyMajorStakeholderIndex);
-    const hasIdentificationDocument = !!applicant?.identificationDocument;
-
-    if (hasIdentificationDocument) {
-      return { identificationDocument: applicant.identificationDocument };
-    }
-  }
-
-  return {};
-};
-
-export const StepCompanyMajorStakeholderApplicantIdentificationDocument: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.COMPANY_MAJOR_STAKEHOLDER_APPLICANT_IDENTIFICATION_DOCUMENT,
+export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.CORPORATE_APPLICANT_IDENTIFICATION,
 
   doesMeetConditionFields: fields => {
     const { _willHaveMajorStakeholderApplicants, _currentCompanyMajorStakeholder } = fields;
@@ -57,10 +31,10 @@ export const StepCompanyMajorStakeholderApplicantIdentificationDocument: StepPar
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues = getDefaultValues(storeFields);
+    const defaultValues = getDefaultIdentificationValueForApplicant(storeFields, DraftAccountType.Corporate);
 
     const { control, formState, handleSubmit } = useForm<Fields>({
-      resolver: zodResolver(schema),
+      resolver: zodResolver(APPLICANT_IDENTIFICATION),
       defaultValues,
     });
 
