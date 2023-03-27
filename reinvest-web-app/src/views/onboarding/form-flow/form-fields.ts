@@ -5,7 +5,12 @@ import { Address, DomicileType, DraftAccountType, EmploymentStatus, Experience, 
 
 export interface OnboardingFormFields {
   // Are we displaying this as an URL or a file upload?
-  address: Address;
+  address: Address | null;
+  dateOfBirth: string | null;
+  // Are we displaying this as an URL or a file upload?
+  experience: Experience | null;
+  isCompletedProfile: boolean;
+  residency: DomicileType | null;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
@@ -25,17 +30,18 @@ export interface OnboardingFormFields {
     // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
+
   corporationAnnualRevenue?: CorporationAnnualRevenue;
+
   corporationIndustry?: Industry;
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
 
   corporationType?: CorporationTypeValue;
 
-  dateOfBirth?: string;
   documentsForCorporation?: File[];
-  documentsForTrust?: File[];
 
+  documentsForTrust?: File[];
   domicile?: {
     forGreenCard?: {
       birthCountry: string;
@@ -47,9 +53,7 @@ export interface OnboardingFormFields {
       visaType: string;
     };
   };
-
   ein?: string;
-
   employment?: {
     // Only required if `employmentStatus` is 'employed'
     employerName?: string;
@@ -57,9 +61,8 @@ export interface OnboardingFormFields {
     occupation?: string;
   };
   employmentDetails?: EmploymentDetails;
+
   employmentStatus?: EmploymentStatus;
-  // Are we displaying this as an URL or a file upload?
-  experience?: Experience;
   finraInstitution?: string;
 
   finraInstitutionName?: string;
@@ -74,10 +77,8 @@ export interface OnboardingFormFields {
     isSeniorPoliticalFigure?: boolean;
   };
   identificationDocument?: IdentificationDocuments;
-
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
-  isCompletedProfile?: boolean;
   lastName?: string;
   middleName?: string;
   name?: {
@@ -95,7 +96,6 @@ export interface OnboardingFormFields {
   phoneNumber?: string;
   phoneNumberAuthenticationCode?: string;
   profilePicture?: File | null;
-  residency?: DomicileType;
   seniorPoliticalFigure?: string;
   ssn?: string;
 

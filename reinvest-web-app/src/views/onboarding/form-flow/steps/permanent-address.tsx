@@ -21,7 +21,7 @@ import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndivid
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Exclude<OnboardingFormFields['address'], undefined>;
+type Fields = Exclude<OnboardingFormFields['address'], null>;
 
 const schema = formValidationRules.address;
 

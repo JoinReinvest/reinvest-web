@@ -86,16 +86,16 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       if (profileData) {
         updateStoreFields({
           ...storeFields,
-          address: profileData?.details?.address || undefined,
+          address: profileData?.details?.address,
           name: {
             firstName: profileData?.details?.firstName || '',
             lastName: profileData?.details?.lastName || '',
             middleName: profileData?.details?.middleName || '',
           },
-          dateOfBirth: profileData?.details?.dateOfBirth || undefined,
-          residency: profileData?.details?.domicile?.type || undefined,
-          experience: profileData?.details?.experience || undefined,
-          isCompletedProfile: profileData?.isCompleted || false,
+          dateOfBirth: profileData?.details?.dateOfBirth,
+          residency: profileData?.details?.domicile?.type,
+          experience: profileData?.details?.experience,
+          isCompletedProfile: !!profileData?.isCompleted,
         });
       }
     }, [profileData, storeFields, updateStoreFields]);
