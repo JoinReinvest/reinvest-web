@@ -2,32 +2,32 @@ import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { Applicant, IndexedSchema, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 import { generateApplicantListItem } from '../utilities';
 
-export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.CORPORATE_APPLICANT_LIST,
+export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.TRUST_APPLICANT_LIST,
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants, companyMajorStakeholderApplicants } = fields;
-    const hasMajorStakeholderApplicants = !!companyMajorStakeholderApplicants?.length;
+    const { _willHaveTrustTrusteesGrantorsOrProtectors, trustTrusteesGrantorsOrProtectors } = fields;
+    const hasApplicants = !!trustTrusteesGrantorsOrProtectors?.length;
 
-    return !!_willHaveMajorStakeholderApplicants && hasMajorStakeholderApplicants;
+    return !!_willHaveTrustTrusteesGrantorsOrProtectors && hasApplicants;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === DraftAccountType.Corporate;
+    return accountType === AccountType.Corporate;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
-    const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
+    const applicants = storeFields.trustTrusteesGrantorsOrProtectors || [];
 
-    const indexedStakeholderApplicants: IndexedSchema<Applicant>[] = majorStakeholderApplicants.map((item, index) => ({
+    const indexedApplicants: IndexedSchema<Applicant>[] = applicants.map((item, index) => ({
       ...item,
       _index: index,
     }));
@@ -36,15 +36,14 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
       const hasIndex = applicant._index !== undefined;
 
       if (hasIndex) {
-        // set the current major stakeholder applicant as this value
-        updateStoreFields({ _currentCompanyMajorStakeholder: applicant, _isEditingCompanyMajorStakeholderApplicant: true });
-        moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
+        updateStoreFields({ _currentTrustTrusteeGrantorOrProtector: applicant, _isEditingTrustTrusteeGrantorOrProtector: true });
+        moveToStepByIdentifier(Identifiers.TRUST_APPLICANT_DETAILS);
       }
     };
 
     const onAddNewApplication = () => {
-      updateStoreFields({ _currentCompanyMajorStakeholder: undefined });
-      moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
+      updateStoreFields({ _currentTrustTrusteeGrantorOrProtector: undefined });
+      moveToStepByIdentifier(Identifiers.TRUST_APPLICANT_DETAILS);
     };
 
     const onContinue = () => {
@@ -57,7 +56,7 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
           <BlackModalTitle title="Your applicants." />
 
           <ul className="flex flex-col gap-16">
-            {indexedStakeholderApplicants.map(applicant => generateApplicantListItem(corporationLegalName, applicant, () => onEditApplicant(applicant)))}
+            {indexedApplicants.map(applicant => generateApplicantListItem(corporationLegalName, applicant, () => onEditApplicant(applicant)))}
           </ul>
         </div>
 
