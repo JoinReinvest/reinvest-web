@@ -1,7 +1,23 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
+import { EmploymentStatus } from 'reinvest-app-common/src/types/graphql';
 
-import { lowerCaseWithoutSpacesGenerator } from '../utils/optionValueGenerators';
+export const EMPLOYMENT_STATUSES: SelectionOption[] = [
+  {
+    title: 'Employed',
+    value: EmploymentStatus.Employed,
+  },
+  {
+    title: 'Unemployed',
+    value: EmploymentStatus.Unemployed,
+  },
+  {
+    title: 'Retired',
+    value: EmploymentStatus.Retired,
+  },
+  {
+    title: 'Student',
+    value: EmploymentStatus.Student,
+  },
+];
 
-const STATUSES = ['Employed', 'Unemployed', 'Retired', 'Student'];
-
-export const EMPLOYMENT_STATUSES: SelectionOption[] = STATUSES.map(status => ({ title: status, value: lowerCaseWithoutSpacesGenerator(status) }));
+export const EMPLOYMENT_STATUSES_VALUES = [EmploymentStatus.Employed, EmploymentStatus.Unemployed, EmploymentStatus.Retired, EmploymentStatus.Student] as const;

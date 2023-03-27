@@ -4,12 +4,17 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
+import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+import { getApiClient } from 'services/getApiClient';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
@@ -26,24 +31,74 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const { data: profileData } = useGetUserProfile(getApiClient);
+    const { data: listAccounts } = useGetListAccount(getApiClient);
+
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { handleSubmit, formState, control } = useForm<Fields>({
+    const { handleSubmit, formState, control, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      error: { createDraftAccountError },
+      isSuccess,
+      data: individualAccountData,
+    } = useUpdateDataIndividualOnboarding();
 
-    const onSubmit: SubmitHandler<Fields> = async ({ accountType }) => {
-      await updateStoreFields({ accountType });
-      moveToNextStep();
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields(fields);
+      await updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
     };
 
     const onLinkClick = () => {
       setIsInformationModalOpen(true);
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '' });
+        moveToNextStep();
+      }
+    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
+
+    useEffect(() => {
+      const updateStore = async (accountId: string) => {
+        return updateStoreFields({ ...storeFields, accountId });
+      };
+
+      if (createDraftAccountError && listAccounts) {
+        if (createDraftAccountError.message.includes('already exists')) {
+          const account = listAccounts.find(account => account?.type === getValues().accountType);
+          updateStore(account?.id || '');
+          moveToNextStep();
+        }
+      }
+    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields]);
+
+    useEffect(() => {
+      if (profileData) {
+        updateStoreFields({
+          ...storeFields,
+          address: profileData?.details?.address,
+          name: {
+            firstName: profileData?.details?.firstName || '',
+            lastName: profileData?.details?.lastName || '',
+            middleName: profileData?.details?.middleName || '',
+          },
+          dateOfBirth: profileData?.details?.dateOfBirth,
+          residency: profileData?.details?.domicile?.type,
+          experience: profileData?.details?.experience,
+          isCompletedProfile: !!profileData?.isCompleted,
+        });
+      }
+    }, [profileData, storeFields, updateStoreFields]);
 
     return (
       <>
@@ -51,6 +106,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="Which type of account would you like to open?" />
 
+            {createDraftAccountError && <FormMessage message={createDraftAccountError.message} />}
             <div className="flex w-full flex-col gap-24">
               <SelectionCards
                 name="accountType"
@@ -74,6 +130,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
               type="submit"
               disabled={shouldButtonBeDisabled}
               label="Continue"
+              loading={isLoading}
             />
           </ButtonStack>
         </Form>

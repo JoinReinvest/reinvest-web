@@ -4,29 +4,56 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Exclude<OnboardingFormFields['permanentAddress'], undefined>;
+type Fields = Exclude<OnboardingFormFields['address'], null>;
 
 const schema = formValidationRules.address;
 
 export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PERMANENT_ADDRESS,
 
+  willBePartOfTheFlow(fields) {
+    return fields.accountType === DraftAccountType.Individual;
+  },
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    const individualFields = [fields.ssn];
+
+    return (
+      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
+      (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields))
+    );
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '' };
-    const defaultValues: Fields = storeFields.permanentAddress || initialValues;
+    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
+    const defaultValues: Fields = storeFields.address || initialValues;
 
     const { control, formState, setValue, handleSubmit } = useForm<Fields>({
       mode: 'onSubmit',
@@ -34,7 +61,14 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      isSuccess,
+      error: { profileDetailsError },
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const formatSelectedAddress = (address: AddressAsOption) => {
       const hasStreetAddress = !!address.addressLine1;
@@ -43,7 +77,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     };
 
     const setValuesFromStreetAddress = (address: AddressAsOption | null) => {
-      if (address) {
+      if (address?.addressLine1 && address?.city && address?.state && address?.zip) {
         setValue('addressLine1', address.addressLine1);
         setValue('city', address.city);
         setValue('state', address.state);
@@ -51,11 +85,16 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
       }
     };
 
-    const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
-      // TO-DO: Validate address using service
-      await updateStoreFields({ permanentAddress });
-      moveToNextStep();
+    const onSubmit: SubmitHandler<Fields> = async address => {
+      await updateStoreFields({ address });
+      await updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, address });
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -65,6 +104,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             informationMessage="US Residents Only"
           />
 
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
           <div className="flex w-full flex-col gap-16">
             <SelectAsync
               name="addressLine1"
@@ -108,6 +148,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>

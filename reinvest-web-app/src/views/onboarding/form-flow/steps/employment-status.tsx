@@ -4,11 +4,14 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
-import { EMPLOYMENT_STATUSES } from 'constants/employment_statuses';
+import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_VALUES } from 'constants/employment_statuses';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -17,14 +20,31 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'employmentStatus'>;
 
 const schema = z.object({
-  employmentStatus: z.enum(['employed', 'unemployed', 'retired', 'student']),
+  employmentStatus: z.enum(EMPLOYMENT_STATUSES_VALUES),
 });
 
 export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_STATUS,
 
-  willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === AccountType.Trust;
+  willBePartOfTheFlow(fields) {
+    return fields.accountType === DraftAccountType.Individual && !!fields.isCompletedProfile;
+  },
+  doesMeetConditionFields(fields) {
+    const profileFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+      fields.ssn,
+      fields.address,
+      fields.isAccreditedInvestor,
+      fields.experience,
+    ];
+
+    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || !!fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -34,11 +54,18 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
+    const {
+      isLoading,
+      updateData,
+      error: { individualDraftAccountError },
+      isSuccess,
+    } = useUpdateDataIndividualOnboarding();
+
+    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      moveToNextStep();
+      await updateData(Identifiers.EMPLOYMENT_STATUS, { ...storeFields, ...form.getValues() });
     };
 
     const onSkip = () => {
@@ -46,11 +73,18 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       moveToNextStep();
     };
 
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
+
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Are you currently employed?" />
 
+          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
           <SelectionCards
             name="employmentStatus"
             control={form.control}
@@ -66,6 +100,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
 
           <Button
