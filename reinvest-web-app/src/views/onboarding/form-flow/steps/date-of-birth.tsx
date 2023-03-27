@@ -49,7 +49,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const { formState, control, handleSubmit, getValues } = useForm<Fields>({
-      mode: 'onSubmit',
+      mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
