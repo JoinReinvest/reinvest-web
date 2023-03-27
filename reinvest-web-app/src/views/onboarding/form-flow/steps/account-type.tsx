@@ -10,9 +10,10 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'constants/account-types';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { useGetListAccount } from 'services/queries/getListAccount';
-import { useGetUserProfile } from 'services/queries/getProfile';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
+import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+import { getApiClient } from 'services/getApiClient';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
@@ -30,8 +31,8 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { data: profileData } = useGetUserProfile();
-    const { data: listAccounts } = useGetListAccount();
+    const { data: profileData } = useGetUserProfile(getApiClient);
+    const { data: listAccounts } = useGetListAccount(getApiClient);
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -54,7 +55,6 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
       await updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
-      moveToNextStep();
     };
 
     const onLinkClick = () => {

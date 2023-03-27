@@ -6,10 +6,10 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
-import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
@@ -57,7 +57,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.FULL_NAME, { ...storeFields, ...form.getValues() });
+      await updateData(Identifiers.FULL_NAME, { ...storeFields, ...form.getValues() });
     };
 
     useEffect(() => {

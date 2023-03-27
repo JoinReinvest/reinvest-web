@@ -5,7 +5,7 @@ import { OnboardingFormFlowProvider } from 'views/onboarding/form-flow';
 const OnboardingPage: NextPage = () => {
   return (
     <OnboardingFormFlowProvider
-      initialStoreFields={{ residency: undefined }}
+      initialStoreFields={{ residency: undefined, address: { addressLine1: '', city: '', addressLine2: '', country: 'USA', state: '', zip: '' } }}
       isResumable
     >
       <OnboardingFlow />

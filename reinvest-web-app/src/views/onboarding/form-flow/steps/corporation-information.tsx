@@ -13,8 +13,8 @@ import {
 } from 'constants/corporation';
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { DraftAccountType } from 'types/graphql';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';

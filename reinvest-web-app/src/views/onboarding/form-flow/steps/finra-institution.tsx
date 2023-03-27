@@ -8,9 +8,9 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { StatementType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -59,9 +59,9 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
-      updateData(Identifiers.FINRA_INSTITUTION, { ...storeFields, ...getValues() });
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields(fields);
+      await updateData(Identifiers.FINRA_INSTITUTION, { ...storeFields, ...getValues() });
     };
 
     useEffect(() => {

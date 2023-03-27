@@ -10,9 +10,9 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -36,7 +36,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.authCode,
       fields.dateOfBirth,
       fields.residency,
-      fields.socialSecurityNumber,
+      fields.ssn,
       fields.identificationDocument,
       fields.accountType,
     ];
@@ -70,11 +70,11 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.PROFILE_PICTURE, { ...storeFields, ...fields });
+      await updateData(Identifiers.PROFILE_PICTURE, { ...storeFields, ...fields });
     };
 
-    const onSkip = () => {
-      updateData(Identifiers.PROFILE_PICTURE, { ...storeFields });
+    const onSkip = async () => {
+      await updateData(Identifiers.PROFILE_PICTURE, { ...storeFields });
       moveToNextStep();
     };
 

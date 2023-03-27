@@ -9,9 +9,9 @@ import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { EXPERIENCES_AS_OPTIONS } from 'constants/experiences';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType, Experience } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType, Experience } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -38,7 +38,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
       fields.authCode,
       fields.dateOfBirth,
       fields.residency,
-      fields.socialSecurityNumber,
+      fields.ssn,
     ];
 
     return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
@@ -60,10 +60,9 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields(fields);
-      updateData(Identifiers.EXPERIENCE, { ...storeFields, experience: getValues().experience });
-      // moveToNextStep();
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields(fields);
+      await updateData(Identifiers.EXPERIENCE, { ...storeFields, experience: getValues().experience });
     };
 
     const onSkip = () => {

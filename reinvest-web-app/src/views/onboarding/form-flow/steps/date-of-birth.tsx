@@ -8,10 +8,10 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import dayjs from 'dayjs';
-import { dateOlderThanEighteenYearsSchema } from 'formValidationRules';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
@@ -67,9 +67,9 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       setIsInformationModalOpen(true);
     };
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
-      updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
-      updateData(Identifiers.DATE_OF_BIRTH, {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      await updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
+      await updateData(Identifiers.DATE_OF_BIRTH, {
         ...storeFields,
         dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
       });

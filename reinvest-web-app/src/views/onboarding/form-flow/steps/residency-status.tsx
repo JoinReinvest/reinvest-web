@@ -9,9 +9,9 @@ import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS, RESIDENCY_STATUS_VALUES } from 'constants/residenty-status';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DomicileType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DomicileType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -61,7 +61,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
 
-      updateData(Identifiers.RESIDENCY_STATUS, { ...storeFields, ...getValues() });
+      await updateData(Identifiers.RESIDENCY_STATUS, { ...storeFields, ...getValues() });
     };
 
     useEffect(() => {

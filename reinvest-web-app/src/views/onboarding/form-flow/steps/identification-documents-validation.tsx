@@ -3,8 +3,8 @@ import { IconXCircle } from 'assets/icons/IconXCircle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Typography } from 'components/Typography';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
-import { DraftAccountType } from 'types/graphql';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -29,7 +29,7 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
       fields.residency,
     ];
 
-    const individualFields = [fields.socialSecurityNumber];
+    const individualFields = [fields.ssn];
 
     return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields);
   },

@@ -11,7 +11,7 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { CALLING_CODES } from 'constants/country-codes';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
@@ -66,7 +66,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.PHONE_NUMBER, {
+      await updateData(Identifiers.PHONE_NUMBER, {
         ...getValues(),
         ...storeFields,
       });

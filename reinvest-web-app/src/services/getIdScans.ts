@@ -1,4 +1,4 @@
-import { PutFileLink } from 'types/graphql';
+import { PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { IdentificationDocuments } from 'views/onboarding/form-flow/form-fields';
 
 import { sendImagesToS3Bucket, UploadImage } from './sendImagesToS3Bucket';
@@ -15,8 +15,6 @@ export const getIdScans = async (documentsFileLinks: PutFileLink[], identificati
       url: s3urls[1] || '',
     },
   ];
-
-  const images1 = s3urls.map((url, index) => ({ image: identificationDocument[index], url }));
 
   await sendImagesToS3Bucket(images);
 

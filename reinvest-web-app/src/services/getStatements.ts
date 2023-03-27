@@ -1,4 +1,4 @@
-import { AccreditedInvestorStatement, StatementType } from 'types/graphql';
+import { AccreditedInvestorStatement, StatementType } from 'reinvest-app-common/src/types/graphql';
 
 export const getStatements = (statementTypes: StatementType[], finraInstitutionName?: string, isAccreditedInvestor?: boolean) => {
   const statements = [];

@@ -1,5 +1,5 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
-import { EmploymentStatus } from 'types/graphql';
+import { EmploymentStatus } from 'reinvest-app-common/src/types/graphql';
 
 export const EMPLOYMENT_STATUSES: SelectionOption[] = [
   {

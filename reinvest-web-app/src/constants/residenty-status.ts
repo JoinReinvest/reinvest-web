@@ -1,4 +1,4 @@
-import { DomicileType } from 'types/graphql';
+import { DomicileType } from 'reinvest-app-common/src/types/graphql';
 
 import { RadioGroupOptionItem } from '../components/FormElements/RadioGroupOptions';
 

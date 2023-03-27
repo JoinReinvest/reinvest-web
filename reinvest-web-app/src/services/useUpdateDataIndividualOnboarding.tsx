@@ -1,22 +1,22 @@
 import { profileFields } from 'constants/individualOnboardingFields';
 import { useState } from 'react';
-import { PutFileLink } from 'types/graphql';
+import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
+import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
+import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
+import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
+import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
+import { AddressInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { isEmptyObject } from 'utils/isEmptyObject';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
-import { fetcher } from './fetcher';
+import { getApiClient } from './getApiClient';
 import { getIdScans } from './getIdScans';
 import { getStatements } from './getStatements';
-import { useCompleteIndividualDraftAccount } from './queries/completeIndividualDraftAccount';
-import { useCompleteProfileDetails } from './queries/completeProfileDetails';
-import { useCreateAvatarFileLink } from './queries/createAvatarFileLink';
-import { useCreateDocumentsFileLinks } from './queries/createDocumentsFileLinks';
-import { useCreateDraftAccount } from './queries/createDraftAccount';
-import { useOpenAccount } from './queries/openAccount';
-import { useSetPhoneNumber } from './queries/setPhoneNumber';
-import { useVerifyPhoneNumber } from './queries/verifyPhoneNumber';
-import { sendImagesToS3Bucket, UploadImage } from './sendImagesToS3Bucket';
+import { sendImagesToS3Bucket } from './sendImagesToS3Bucket';
 
 const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
   return keys.reduce<Record<string, any>>((o, key) => {
@@ -29,7 +29,6 @@ const getObjecyByKeys = (keys: string[], fields: Map<string, any>) => {
 };
 
 const profileDetailsSteps = [
-  Identifiers.PROFILE_PICTURE,
   Identifiers.FULL_NAME,
   Identifiers.DATE_OF_BIRTH,
   Identifiers.RESIDENCY_STATUS,
@@ -63,7 +62,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     isLoading: isCreateDraftAccountLoading,
     mutate: createDraftAccountMutate,
     isSuccess: isCreateDraftAccountSuccess,
-  } = useCreateDraftAccount();
+  } = useCreateDraftAccount(getApiClient);
 
   const {
     data: profileDetailsData,
@@ -71,7 +70,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     isLoading: isProfileDetailsLoading,
     mutateAsync: completeProfileMutate,
     isSuccess: isProfileDetailsSuccess,
-  } = useCompleteProfileDetails();
+  } = useCompleteProfileDetails(getApiClient);
 
   const {
     data: individualDraftAccoutntData,
@@ -79,7 +78,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     isLoading: isIndividualDraftAccountLoading,
     mutateAsync: completeIndividualDraftAccountMutate,
     isSuccess: isIndividualDraftAccountSuccess,
-  } = useCompleteIndividualDraftAccount();
+  } = useCompleteIndividualDraftAccount(getApiClient);
 
   const {
     data: phoneNumberData,
@@ -87,30 +86,30 @@ export const useUpdateDataIndividualOnboarding = () => {
     isLoading: isPhoneNumberLoading,
     mutate: setPhoneNumberMutate,
     isSuccess: isSetPhoneNumberSuccess,
-  } = useSetPhoneNumber();
+  } = useSetPhoneNumber(getApiClient);
 
   const {
     data: verifyPhoneNumberData,
     error: verifyPhoneNumberError,
     isLoading: isVerifyPhoneNumberLoading,
     mutate: verifyPhoneNumberMutate,
-  } = useVerifyPhoneNumber();
+  } = useVerifyPhoneNumber(getApiClient);
 
   const {
     data: createDocumentsFileLinksData,
     error: createDocumentsFileLinksError,
     isLoading: isCreateDocumentsFileLinksLoading,
     mutateAsync: createDocumentsFileLinksMutate,
-  } = useCreateDocumentsFileLinks();
+  } = useCreateDocumentsFileLinks(getApiClient);
 
   const {
     error: createAvatarLinkError,
     isLoading: isCreateAvatarLinkLoading,
     isSuccess: isCreateAvatarLinkSuccess,
     mutateAsync: createAvatarLinkMutate,
-  } = useCreateAvatarFileLink();
+  } = useCreateAvatarFileLink(getApiClient);
 
-  const { error: openAccountError, isLoading: isOpenAccountLoading, mutate: openAccountMutate, isSuccess: isOpenAccountSuccess } = useOpenAccount();
+  const { error: openAccountError, isLoading: isOpenAccountLoading, mutate: openAccountMutate, isSuccess: isOpenAccountSuccess } = useOpenAccount(getApiClient);
 
   const updateData = async (stepId: Identifiers, storedFields: OnboardingFormFields) => {
     const storedFieldsMap = new Map<string, any>(Object.entries(storedFields));
@@ -118,7 +117,7 @@ export const useUpdateDataIndividualOnboarding = () => {
     const profileDetails = getObjecyByKeys(profileFields, storedFieldsMap);
 
     if (storedFields.accountType && createIndividualDraftAccountSteps.includes(stepId)) {
-      createDraftAccountMutate(storedFields.accountType);
+      createDraftAccountMutate({ type: storedFields.accountType });
     }
 
     if (storedFields.phone?.countryCode && storedFields.phone?.number && stepId === Identifiers.PHONE_NUMBER) {
@@ -141,26 +140,29 @@ export const useUpdateDataIndividualOnboarding = () => {
       const statements = getStatements(statementTypes || [], finraInstitutionName, isAccreditedInvestor);
       const ssn = storedSsn ? { ssn: storedSsn } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
-      const address = stepId === Identifiers.PERMANENT_ADDRESS ? { ...storageAddress, country: 'USA' } : undefined;
+      const address = stepId === Identifiers.PERMANENT_ADDRESS ? ({ ...storageAddress, country: 'USA' } as AddressInput) : undefined;
       const idScan = [];
 
       // send documents to s3
       if (identificationDocument?.front && identificationDocument?.back && stepId === Identifiers.IDENTIFICATION_DOCUMENTS) {
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 2 })) as PutFileLink[];
         setIsLoading(true);
-        idScan.push(await getIdScans(documentsFileLinks, identificationDocument));
+        const idScans = await getIdScans(documentsFileLinks, identificationDocument);
+        idScan.push(...idScans);
         setIsLoading(false);
       }
 
       await completeProfileMutate({
-        ...profileDetails,
-        domicile,
-        statements,
-        ssn,
-        investingExperience,
-        address,
-        idScan: idScan.length ? idScan : undefined,
-        verifyAndFinish: stepId === Identifiers.EXPERIENCE,
+        input: {
+          ...profileDetails,
+          domicile,
+          statements,
+          ssn,
+          investingExperience,
+          address,
+          idScan: idScan.length ? idScan : undefined,
+          verifyAndFinish: stepId === Identifiers.EXPERIENCE,
+        },
       });
     }
 

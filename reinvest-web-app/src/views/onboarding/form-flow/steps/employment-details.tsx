@@ -8,12 +8,12 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { Select } from 'components/Select';
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
-import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType, EmploymentStatus } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType, EmploymentStatus } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -45,7 +45,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       fields.authCode,
       fields.dateOfBirth,
       fields.residency,
-      fields.socialSecurityNumber,
+      fields.ssn,
     ];
 
     return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || !!fields.isCompletedProfile;
@@ -69,7 +69,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.EMPLOYMENT_DETAILS, { ...storeFields, ...fields });
+      await updateData(Identifiers.EMPLOYMENT_DETAILS, { ...storeFields, ...fields });
     };
 
     const onSkip = () => {

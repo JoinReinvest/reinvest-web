@@ -6,11 +6,11 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputEIN } from 'components/FormElements/InputEIN';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { formValidationRules } from 'formValidationRules';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
-import { DraftAccountType } from 'types/graphql';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { WhatIsEINModal } from 'views/EINModal';
 import { z } from 'zod';
 

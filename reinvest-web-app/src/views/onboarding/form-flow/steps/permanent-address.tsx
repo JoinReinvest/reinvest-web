@@ -9,14 +9,14 @@ import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
-import { STATES_AS_SELECT_OPTION } from 'constants/states';
-import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'services/address-validations';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType } from 'types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -28,6 +28,10 @@ const schema = formValidationRules.address;
 export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PERMANENT_ADDRESS,
 
+  willBePartOfTheFlow(fields) {
+    return fields.accountType === DraftAccountType.Individual;
+  },
+
   doesMeetConditionFields(fields) {
     const requiredFields = [
       fields.name?.firstName,
@@ -37,10 +41,9 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
       fields.authCode,
       fields.dateOfBirth,
       fields.residency,
-      fields._didDocumentIdentificationValidationSucceed,
     ];
 
-    const individualFields = [fields.socialSecurityNumber];
+    const individualFields = [fields.ssn];
 
     return (
       (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
@@ -49,7 +52,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '' };
+    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.address || initialValues;
 
     const { control, formState, setValue, handleSubmit } = useForm<Fields>({
@@ -74,7 +77,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     };
 
     const setValuesFromStreetAddress = (address: AddressAsOption | null) => {
-      if (address) {
+      if (address?.addressLine1 && address?.city && address?.state && address?.zip) {
         setValue('addressLine1', address.addressLine1);
         setValue('city', address.city);
         setValue('state', address.state);
@@ -84,7 +87,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async address => {
       await updateStoreFields({ address });
-      updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, address });
+      await updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, address });
     };
 
     useEffect(() => {

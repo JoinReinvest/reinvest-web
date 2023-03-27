@@ -9,9 +9,9 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputFile } from 'components/FormElements/InputFile';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -40,7 +40,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       fields.residency,
     ];
 
-    const individualFields = [fields.socialSecurityNumber];
+    const individualFields = [fields.ssn];
 
     return (
       (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
@@ -66,9 +66,8 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       try {
-        updateStoreFields(fields);
-        updateStoreFields({ _didDocumentIdentificationValidationSucceed: true, ...getValues() });
-        updateData(Identifiers.IDENTIFICATION_DOCUMENTS, { ...storeFields, ...getValues() });
+        await updateStoreFields(fields);
+        await updateData(Identifiers.IDENTIFICATION_DOCUMENTS, { ...storeFields, ...getValues() });
       } catch (error) {
         updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }

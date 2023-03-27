@@ -4,7 +4,7 @@ import { LinkButton } from 'components/LinkButton';
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { Typography } from 'components/Typography';
 import { EMAILS } from 'constants/urls';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';

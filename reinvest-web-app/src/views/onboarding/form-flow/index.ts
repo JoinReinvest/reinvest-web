@@ -1,4 +1,4 @@
-import { createFormFlow } from 'services/form-flow';
+import { createFormFlow } from 'reinvest-app-common/src/services/form-flow';
 
 import { OnboardingFormFields } from './form-fields';
 import { FLOW_STEPS } from './steps';

@@ -8,12 +8,12 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { Select } from 'components/Select';
 import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
 import { VISAS_AS_OPTIONS } from 'constants/visas';
-import { formValidationRules } from 'formValidationRules';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'services/form-flow';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DomicileType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DomicileType } from 'types/graphql';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -58,7 +58,7 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.RESIDENCY_VISA, {
+      await updateData(Identifiers.RESIDENCY_VISA, {
         ...storeFields,
         ...getValues(),
         domicile: { forVisa: getValues().domicile?.forVisa },

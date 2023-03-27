@@ -12,6 +12,7 @@ const withVideos = require('next-videos');
  **/
 module.exports = withVideos(
   withBundleAnalyzer({
+    transpilePackages: ['reinvest-app-common'],
     eslint: {
       dirs: ['src'],
     },

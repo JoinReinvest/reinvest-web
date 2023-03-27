@@ -1,9 +1,8 @@
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
+import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
+import { Avatar } from 'components/Avatar';
 import Link from 'next/link';
-
-import placeholderPicture from '../../assets/images/profile-picture-placeholder.png';
-import { Avatar } from '../../components/Avatar';
-import { Profile } from '../../types/graphql';
+import { Profile } from 'reinvest-app-common/src/types/graphql';
 
 interface AccountMenuProps {
   profile: Profile;

@@ -7,12 +7,12 @@ import { InputAuthenticationCode } from 'components/FormElements/InputAuthentica
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Title } from 'components/Title';
-import { formValidationRules } from 'formValidationRules';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import zod, { Schema } from 'zod';
+import { Schema, z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -33,7 +33,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const schema: Schema<Fields> = zod.object({
+    const schema: Schema<Fields> = z.object({
       authCode: formValidationRules.authenticationCode,
     });
 
@@ -50,12 +50,11 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setIsValidatingCredentials(true);
-      updateStoreFields(fields);
-      updateData(Identifiers.CHECK_YOUR_PHONE, {
+      await updateStoreFields(fields);
+      await updateData(Identifiers.CHECK_YOUR_PHONE, {
         ...getValues(),
         ...storeFields,
       });
-      moveToNextStep();
     };
 
     const resendCodeOnClick = async () => {
@@ -64,7 +63,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (verifyPhoneNumberData) {
-        // moveToNextStep();
+        moveToNextStep();
       }
     }, [verifyPhoneNumberData, moveToNextStep]);
 

@@ -1,5 +1,5 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
-import { AccountType } from 'types/graphql';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 export const ACCOUNT_TYPES = [
   {

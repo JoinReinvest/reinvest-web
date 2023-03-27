@@ -8,12 +8,12 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Select } from 'components/Select';
 import { NET_WORTHS_AS_OPTIONS } from 'constants/net-worths';
-import { formValidationRules } from 'formValidationRules';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType, EmploymentStatus } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType, EmploymentStatus } from 'types/graphql';
 import { WhyRequiredNetWorthModal } from 'views/whyRequiredModals/WhyRequiredNetWorthModal';
 import { z } from 'zod';
 
@@ -42,7 +42,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       fields.authCode,
       fields.dateOfBirth,
       fields.residency,
-      fields.socialSecurityNumber,
+      fields.ssn,
       fields.experience,
     ];
 
@@ -74,7 +74,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      updateData(Identifiers.NET_WORTH_AND_INCOME, { ...storeFields, ...fields });
+      await updateData(Identifiers.NET_WORTH_AND_INCOME, { ...storeFields, ...fields });
     };
 
     const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);

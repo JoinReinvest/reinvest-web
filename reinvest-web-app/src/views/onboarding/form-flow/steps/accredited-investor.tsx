@@ -9,9 +9,9 @@ import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
-import { DraftAccountType } from 'types/graphql';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
@@ -75,7 +75,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
       const isAccreditedInvestor = fields?.isAccreditedInvestor === 'yes' ? true : false;
 
       await updateStoreFields({ isAccreditedInvestor });
-      updateData(Identifiers.ACCREDITED_INVESTOR, { ...storeFields, isAccreditedInvestor });
+      await updateData(Identifiers.ACCREDITED_INVESTOR, { ...storeFields, isAccreditedInvestor });
     };
 
     useEffect(() => {

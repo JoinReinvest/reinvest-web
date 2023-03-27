@@ -1,5 +1,5 @@
 import { SelectionOption } from 'components/FormElements/SelectionCards';
-import { Experience } from 'types/graphql';
+import { Experience } from 'reinvest-app-common/src/types/graphql';
 
 export const EXPERIENCES_AS_OPTIONS: SelectionOption[] = [
   { title: 'No Experience', value: Experience.NoExperience },

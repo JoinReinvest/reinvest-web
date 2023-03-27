@@ -1,18 +1,17 @@
 import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
 import { Industry } from 'constants/industries';
-import { DomicileType, DraftAccountType, EmploymentStatus, Experience, StatementType } from 'types/graphql';
-import { Address } from 'types/graphql';
+import { Address, DomicileType, DraftAccountType, EmploymentStatus, Experience, StatementType } from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
+  // Are we displaying this as an URL or a file upload?
+  address: Address;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
   accountId?: string;
   accountType?: DraftAccountType;
-  // Are we displaying this as an URL or a file upload?
-  address?: Address;
   authCode?: string;
   birthCountry?: string;
   businessAddress?: Address;
@@ -116,7 +115,7 @@ export interface IdentificationDocuments {
 }
 
 interface EmploymentDetails {
-  employerName?: string;
-  industry?: Industry;
-  occupation?: string;
+  employerName: string;
+  industry: Industry;
+  occupation: string;
 }

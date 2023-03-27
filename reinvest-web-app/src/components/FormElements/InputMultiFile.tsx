@@ -1,10 +1,10 @@
 import { IconAdd } from 'assets/icons/IconAdd';
 import { IconFileUpload } from 'assets/icons/IconFileUpload';
 import { Typography } from 'components/Typography';
-import { mapToMimeType, PartialMimeTypeKeys } from 'constants/mime-types';
-import { generateMultiFileSchema } from 'formValidationRules';
 import { ChangeEventHandler, ReactNode, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
+import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas';
 
 import { FormMessage } from './FormMessage';
 import { UploadedFile } from './InputFile/UploadedFile';
