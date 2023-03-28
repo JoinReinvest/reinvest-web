@@ -7,7 +7,7 @@ export function InputSocialSecurityNumber<FormFields extends FieldValues>(props:
       {...props}
       maskOptions={{ mask: '000-00-0000' }}
       placeholder="SSN"
-      willUseUnmaskedValue={false}
+      shouldUnregister
     />
   );
 }
