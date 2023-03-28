@@ -9,7 +9,7 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
-import { ChangeEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -33,7 +33,10 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   willBePartOfTheFlow(fields) {
     return fields.accountType === DraftAccountType.Individual;
   },
+
   doesMeetConditionFields(fields) {
+    const isCreatingIndividualAccount = fields.accountType === DraftAccountType.Individual;
+
     const requiredFields = [
       fields.name?.firstName,
       fields.name?.lastName,
@@ -44,12 +47,12 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       fields.residency,
     ];
 
-    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return isCreatingIndividualAccount && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, setValue, getValues } = useForm<Fields>({
-      mode: 'all',
+    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
+      mode: 'onBlur',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
@@ -80,18 +83,6 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       }
     }, [isSuccess, moveToNextStep]);
 
-    const setValueOnSocialSecurityNumberChange = (event: ChangeEvent<HTMLInputElement>) => {
-      const isValue = !!event.target.value;
-
-      if (isValue) {
-        const value = event.target.value;
-        const firstPart = value.substring(0, 3);
-        const secondPart = value.substring(3, 5);
-        const thirdPart = value.substring(5, 9);
-        setValue('ssn', `${firstPart}-${secondPart}-${thirdPart}`);
-      }
-    };
-
     if (isLoading) {
       return (
         <div className="flex flex-col items-center gap-32">
@@ -115,7 +106,6 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
                 <InputSocialSecurityNumber
                   name="ssn"
                   control={control}
-                  rules={{ onChange: setValueOnSocialSecurityNumberChange }}
                 />
 
                 <OpenModalLink

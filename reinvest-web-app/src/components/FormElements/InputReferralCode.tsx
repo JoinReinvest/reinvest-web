@@ -7,6 +7,8 @@ export function InputReferralCode<FormFields extends FieldValues>(props: CustomI
       maskOptions={{ mask: '***-***' }}
       placeholder="Referral code"
       {...props}
+      shouldUnregister
+      willUseUnmaskedValue
     />
   );
 }
