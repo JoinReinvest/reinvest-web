@@ -94,7 +94,7 @@ export const StepAuthenticationCode: StepParams<ForgotPasswordFormFields> = {
         <ButtonStack>
           <Button
             type="submit"
-            label="Sign In"
+            label="Verify Code"
             disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>
