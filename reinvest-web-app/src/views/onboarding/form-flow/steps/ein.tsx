@@ -58,6 +58,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
               <InputEIN
                 name="ein"
                 control={control}
+                shouldUnregister
               />
 
               <div className="flex justify-between">
