@@ -7,6 +7,7 @@ export function InputZipCode<FormFields extends FieldValues>(props: CustomInputM
       maskOptions={{ mask: '00000[-0000]' }}
       placeholder="Zip Code"
       {...props}
+      shouldUnregister
     />
   );
 }
