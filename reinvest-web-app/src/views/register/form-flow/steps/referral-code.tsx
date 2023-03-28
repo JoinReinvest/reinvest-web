@@ -19,6 +19,10 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<RegisterFormFields, 'referralCode'>;
 
+const schema: Schema<Fields> = zod.object({
+  referralCode: formValidationRules.referralCode,
+});
+
 export const StepReferralCode: StepParams<RegisterFormFields> = {
   identifier: Identifiers.REFERRAL_CODE,
   doesMeetConditionFields: fields => !!fields.email,
@@ -27,11 +31,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
     const [isValidatingReferralCode, setIsValidatingReferralCode] = useState(false);
     const [error, setError] = useState<string | undefined>('');
 
-    const schema: Schema<Fields> = zod.object({
-      referralCode: formValidationRules.referralCode,
-    });
-
-    const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
+    const { handleSubmit, control, formState } = useForm<Fields>({ mode: 'onBlur', defaultValues: storeFields, resolver: zodResolver(schema) });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
