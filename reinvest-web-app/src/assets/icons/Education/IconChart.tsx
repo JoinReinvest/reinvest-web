@@ -28,10 +28,7 @@ export const IconChart = Icon(
       d="M170.199 44.2348L208.7 20.9219V226.186L170.199 188.62V44.2348Z"
       fill="#DBDAEB"
     />
-    <g
-      // style="mix-blend-mode:multiply"
-      opacity="0.8"
-    >
+    <g opacity="0.8">
       <path
         d="M170.199 44.2348L208.7 20.9219V226.186L170.199 188.62V44.2348Z"
         fill="#01483F"
@@ -159,37 +156,25 @@ export const IconChart = Icon(
           fill="#01483F"
         />
       </g>
-      <g
-        // style="mix-blend-mode:multiply"
-        opacity="0.8"
-      >
+      <g opacity="0.8">
         <path
           d="M101.793 168.18H95.0508V189.775H101.793V168.18Z"
           fill="#01483F"
         />
       </g>
-      <g
-        // style="mix-blend-mode:multiply"
-        opacity="0.8"
-      >
+      <g opacity="0.8">
         <path
           d="M115.668 150.027H108.926V189.776H115.668V150.027Z"
           fill="#01483F"
         />
       </g>
-      <g
-        // style="mix-blend-mode:multiply"
-        opacity="0.8"
-      >
+      <g opacity="0.8">
         <path
           d="M143.555 139.672H136.812V189.775H143.555V139.672Z"
           fill="#01483F"
         />
       </g>
-      <g
-        // style="mix-blend-mode:multiply"
-        opacity="0.8"
-      >
+      <g opacity="0.8">
         <path
           d="M129.586 161.059H122.844V189.775H129.586V161.059Z"
           fill="#01483F"
