@@ -11,7 +11,6 @@ import { StepFullName } from './full-name';
 import { StepIdentificationDocuments } from './identification-documents';
 import { StepNetWorthAndIncome } from './net-worth-and-income';
 import { StepPermanentAddress } from './permanent-address';
-import { StepPhoneAuthentication } from './phone-authentication';
 import { StepPhoneNumber } from './phone-number';
 import { StepProfilePicture } from './profile-picture';
 import { StepResidencyGreenCard } from './residency-green-card';
@@ -24,7 +23,6 @@ export const FLOW_STEPS = [
   StepFullName,
   StepPhoneNumber,
   StepCheckYourPhone,
-  StepPhoneAuthentication,
   StepDateOfBirth,
   StepResidencyStatus,
   StepResidencyGreenCard,
