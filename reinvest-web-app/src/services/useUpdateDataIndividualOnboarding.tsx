@@ -179,11 +179,11 @@ export const useUpdateDataIndividualOnboarding = () => {
       let avatarId = '';
 
       if (profilePicture && stepId === Identifiers.PROFILE_PICTURE) {
-        const { id, url } = await createAvatarLinkMutate({});
+        const avatarLink = await createAvatarLinkMutate({});
 
-        if (url) {
-          await sendFilesToS3Bucket([{ file: profilePicture, url, id }]);
-          avatarId = id || '';
+        if (avatarLink?.url && avatarLink.id) {
+          await sendFilesToS3Bucket([{ file: profilePicture, url: avatarLink.url, id: avatarLink.id }]);
+          avatarId = avatarLink.id;
         }
       }
 
