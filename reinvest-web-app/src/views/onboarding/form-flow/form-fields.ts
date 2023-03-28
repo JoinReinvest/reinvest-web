@@ -4,43 +4,37 @@ import { Industry } from 'constants/industries';
 import { Address, DomicileType, DraftAccountType, EmploymentStatus, Experience, StatementType } from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
-  // Are we displaying this as an URL or a file upload?
   address: Address | null;
   dateOfBirth: string | null;
-  // Are we displaying this as an URL or a file upload?
   experience: Experience | null;
   isCompletedProfile: boolean;
   residency: DomicileType | null;
+  _currentCompanyMajorStakeholder?: IndexedSchema<CompanyMajorStakeholderApplicant>;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
+  _isEditingCompanyMajorStakeholderApplicant?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
+  _willHaveMajorStakeholderApplicants?: boolean;
   accountId?: string;
   accountType?: DraftAccountType;
   authCode?: string;
   birthCountry?: string;
   businessAddress?: Address;
   citizenshipCountry?: string;
+  companyMajorStakeholderApplicants?: CompanyMajorStakeholderApplicant[];
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: {
-    // Are you or anyone in your immediate compliances, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
     isAssociatedWithFinra?: boolean;
-    // Are you or anyone in your compliances or immediate family, or, for any non-natural person, any of its directors, trustees, 10% (or more) equity holder, an officer, or member of the board of directors of a publicly traded company?
     isAssociatedWithPubliclyTradedCompany?: boolean;
-    // Are you or any of your immediate family a senior political figure?
     isSeniorPoliticalFigure?: boolean;
   };
-
   corporationAnnualRevenue?: CorporationAnnualRevenue;
-
   corporationIndustry?: Industry;
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
-
   corporationType?: CorporationTypeValue;
-
   documentsForCorporation?: File[];
-
   documentsForTrust?: File[];
   domicile?: {
     forGreenCard?: {
@@ -55,32 +49,17 @@ export interface OnboardingFormFields {
   };
   ein?: string;
   employment?: {
-    // Only required if `employmentStatus` is 'employed'
     employerName?: string;
     industry?: string;
     occupation?: string;
   };
   employmentDetails?: EmploymentDetails;
-
   employmentStatus?: EmploymentStatus;
   finraInstitution?: string;
-
   finraInstitutionName?: string;
-  firstName?: string;
-
-  household?: {
-    // Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or greater) of the equity, associated with a FINRA member, organization, or the SEC.
-    isAssociatedWithFinra?: boolean;
-    // Are you or anyone in your household or immediate family, or, for any non-natural person, any of its directors, trustees, 10% (or more) equity holder, an officer, or member of the board of directors of a publicly traded company?
-    isAssociatedWithPubliclyTradedCompany?: boolean;
-    // Are you or any of your immediate family a senior political figure?
-    isSeniorPoliticalFigure?: boolean;
-  };
   identificationDocument?: IdentificationDocuments;
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
-  lastName?: string;
-  middleName?: string;
   name?: {
     firstName: string;
     lastName: string;
@@ -98,7 +77,6 @@ export interface OnboardingFormFields {
   profilePicture?: File | null;
   seniorPoliticalFigure?: string;
   ssn?: string;
-
   statementTypes?: StatementType[];
   trustLegalName?: string;
   trustType?: TrustTypeValue;
@@ -119,3 +97,18 @@ interface EmploymentDetails {
   industry: Industry;
   occupation: string;
 }
+
+export interface CompanyMajorStakeholderApplicant {
+  dateOfBirth?: Date;
+  domicile?: 'us' | 'green-card' | 'visa';
+  firstName?: string;
+  identificationDocument?: File;
+  lastName?: string;
+  middleName?: string;
+  residentialAddress?: string;
+  socialSecurityNumber?: string;
+}
+
+export type IndexedSchema<Schema> = Schema & {
+  _index?: number;
+};
