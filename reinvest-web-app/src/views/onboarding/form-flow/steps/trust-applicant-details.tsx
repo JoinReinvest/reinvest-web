@@ -10,77 +10,42 @@ import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSe
 import { Select } from 'components/Select';
 import { RESIDENCY_STATUS_AS_SELECT_OPTIONS } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { dateOlderThanEighteenYearsSchema, formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { z } from 'zod';
 
-import { CompanyMajorStakeholderApplicant, OnboardingFormFields } from '../form-fields';
+import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { APPLICANT_WITHOUT_IDENTIFICATION } from '../schemas';
+import { getDefaultValuesForApplicantWithoutIdentification } from '../utilities';
 
-type Fields = Omit<CompanyMajorStakeholderApplicant, 'identificationDocument'>;
+type Fields = Omit<Applicant, 'identificationDocument'>;
 
-const schema = z.object({
-  firstName: formValidationRules.firstName,
-  middleName: formValidationRules.middleName,
-  lastName: formValidationRules.lastName,
-  residentialAddress: z.string().min(1),
-  socialSecurityNumber: z.string().min(1),
-  dateOfBirth: dateOlderThanEighteenYearsSchema,
-  domicile: z.enum(['us', 'green-card', 'visa']),
-});
-
-const getDefaultValues = (fields: OnboardingFormFields): Fields => {
-  const { _isEditingCompanyMajorStakeholderApplicant, _currentCompanyMajorStakeholder, companyMajorStakeholderApplicants } = fields;
-  const hasMajorStakeholderApplicants = !!companyMajorStakeholderApplicants?.length;
-  const currentCompanyMajorStakeholderIndex = _currentCompanyMajorStakeholder?._index;
-  const hasIndex = currentCompanyMajorStakeholderIndex !== undefined;
-  const hasAtLeastOneFieldFilled = Object.values(_currentCompanyMajorStakeholder || {}).some(Boolean);
-
-  const isEditingAMajorStakeholderApplicant = hasMajorStakeholderApplicants && !!_isEditingCompanyMajorStakeholderApplicant && hasIndex;
-  const isCreatingAMajorStakeholderApplicant = !_isEditingCompanyMajorStakeholderApplicant && hasAtLeastOneFieldFilled;
-
-  if (isEditingAMajorStakeholderApplicant) {
-    const applicant = companyMajorStakeholderApplicants.at(currentCompanyMajorStakeholderIndex);
-
-    if (applicant) {
-      return { ...applicant };
-    }
-  }
-
-  if (isCreatingAMajorStakeholderApplicant) {
-    return { ...(_currentCompanyMajorStakeholder || {}) };
-  }
-
-  return {};
-};
-
-export const StepCompanyMajorStakeholderApplicantDetails: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.COMPANY_MAJOR_STAKEHOLDER_APPLICANT_DETAILS,
+export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.TRUST_APPLICANT_DETAILS,
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants } = fields;
+    const { _willHaveTrustTrusteesGrantorsOrProtectors } = fields;
 
-    return !!_willHaveMajorStakeholderApplicants;
+    return !!_willHaveTrustTrusteesGrantorsOrProtectors;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === DraftAccountType.Corporate;
+    return accountType === DraftAccountType.Trust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues = getDefaultValues(storeFields);
+    const defaultValues = getDefaultValuesForApplicantWithoutIdentification(storeFields, DraftAccountType.Trust);
 
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onBlur',
-      resolver: zodResolver(schema),
+      resolver: zodResolver(APPLICANT_WITHOUT_IDENTIFICATION),
       defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({ _currentCompanyMajorStakeholder: fields });
+      await updateStoreFields({ _currentTrustTrusteeGrantorOrProtector: fields });
       moveToNextStep();
     };
 

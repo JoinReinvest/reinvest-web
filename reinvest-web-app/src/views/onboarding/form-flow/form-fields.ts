@@ -9,26 +9,26 @@ export interface OnboardingFormFields {
   experience: Experience | null;
   isCompletedProfile: boolean;
   residency: DomicileType | null;
-  _currentCompanyMajorStakeholder?: IndexedSchema<CompanyMajorStakeholderApplicant>;
+  _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
+  _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
   _isEditingCompanyMajorStakeholderApplicant?: boolean;
+  _isEditingTrustTrusteeGrantorOrProtector?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
   _willHaveMajorStakeholderApplicants?: boolean;
+  _willHaveTrustTrusteesGrantorsOrProtectors?: boolean;
   accountId?: string;
   accountType?: DraftAccountType;
   authCode?: string;
+  authenticationCode?: string;
   birthCountry?: string;
   businessAddress?: Address;
   citizenshipCountry?: string;
-  companyMajorStakeholderApplicants?: CompanyMajorStakeholderApplicant[];
+  companyMajorStakeholderApplicants?: Applicant[];
   companyTickerSymbols?: CompanyTickerSymbol[];
-  compliances?: {
-    isAssociatedWithFinra?: boolean;
-    isAssociatedWithPubliclyTradedCompany?: boolean;
-    isSeniorPoliticalFigure?: boolean;
-  };
+  compliances?: Compliances;
   corporationAnnualRevenue?: CorporationAnnualRevenue;
   corporationIndustry?: Industry;
   corporationLegalName?: string;
@@ -79,6 +79,7 @@ export interface OnboardingFormFields {
   ssn?: string;
   statementTypes?: StatementType[];
   trustLegalName?: string;
+  trustTrusteesGrantorsOrProtectors?: Applicant[];
   trustType?: TrustTypeValue;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
@@ -98,7 +99,13 @@ interface EmploymentDetails {
   occupation: string;
 }
 
-export interface CompanyMajorStakeholderApplicant {
+interface Compliances {
+  isAssociatedWithFinra?: boolean;
+  isAssociatedWithPubliclyTradedCompany?: boolean;
+  isSeniorPoliticalFigure?: boolean;
+}
+
+export interface Applicant {
   dateOfBirth?: Date;
   domicile?: 'us' | 'green-card' | 'visa';
   firstName?: string;

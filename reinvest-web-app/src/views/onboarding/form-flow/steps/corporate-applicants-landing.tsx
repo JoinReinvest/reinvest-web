@@ -9,8 +9,8 @@ import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-export const StepCompanyMajorStakeholderApplicantsLanding: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.COMPANY_MAJOR_STAKEHOLDER_APPLICANTS_LANDING,
+export const StepCorporateApplicantsLanding: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.CORPORATE_APPLICANTS_LANDING,
 
   willBePartOfTheFlow: ({ accountType }) => {
     return accountType === DraftAccountType.Corporate;
