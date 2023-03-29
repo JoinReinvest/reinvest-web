@@ -32,12 +32,7 @@ const profileDetailsSteps = [
   Identifiers.ACCREDITED_INVESTOR,
 ];
 
-const individualDraftAccountSteps = [
-  Identifiers.EMPLOYMENT_DETAILS,
-  Identifiers.EMPLOYMENT_STATUS,
-  Identifiers.NET_WORTH_AND_INCOME,
-  Identifiers.PROFILE_PICTURE,
-];
+const individualDraftAccountSteps = [Identifiers.EMPLOYMENT_DETAILS, Identifiers.EMPLOYMENT_STATUS, Identifiers.PROFILE_PICTURE];
 
 const createIndividualDraftAccountSteps = [Identifiers.ACCOUNT_TYPE];
 
@@ -162,21 +157,12 @@ export const useUpdateDataIndividualOnboarding = () => {
 
     //complete individual draft account
     if (individualDraftAccountSteps.includes(stepId) && storedFields.accountId) {
-      const {
-        employmentStatus: storedemploymentStatus,
-        employmentDetails,
-        netWorth: storageNetWorth,
-        netIncome: storageNetIncome,
-        profilePicture,
-        accountId,
-      } = storedFields;
+      const { employmentStatus: storedemploymentStatus, employmentDetails, profilePicture, accountId } = storedFields;
 
       const employmentStatus = storedemploymentStatus ? { status: storedemploymentStatus } : undefined;
       const employer = employmentDetails
         ? { nameOfEmployer: employmentDetails.employerName, title: employmentDetails.occupation, industry: employmentDetails.industry }
         : undefined;
-      const netWorth = storageNetWorth ? { range: storageNetWorth } : undefined;
-      const netIncome = storageNetIncome ? { range: storageNetIncome } : undefined;
 
       let avatarId = '';
 
@@ -193,7 +179,7 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       const individualDraftAccount = await completeIndividualDraftAccountMutate({
         accountId,
-        input: { employmentStatus, employer, netWorth, netIncome, avatar, verifyAndFinish: stepId === Identifiers.PROFILE_PICTURE },
+        input: { employmentStatus, employer, avatar, verifyAndFinish: stepId === Identifiers.PROFILE_PICTURE },
       });
 
       if (stepId === Identifiers.PROFILE_PICTURE && individualDraftAccount?.isCompleted) {
