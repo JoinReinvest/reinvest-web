@@ -125,7 +125,6 @@ export const useUpdateDataIndividualOnboarding = () => {
         isAccreditedInvestor,
         identificationDocument,
         address: storageAddress,
-        name,
         dateOfBirth,
         domicile: storedDomicle,
       } = storedFields;
@@ -145,7 +144,6 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       await completeProfileMutate({
         input: {
-          name,
           domicile,
           statements,
           ssn,
