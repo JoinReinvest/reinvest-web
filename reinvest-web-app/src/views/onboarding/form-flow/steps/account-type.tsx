@@ -62,21 +62,17 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (isSuccess) {
-        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '' });
+      if (isSuccess && profileData) {
+        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
 
     useEffect(() => {
-      const updateStore = async (accountId: string) => {
-        return updateStoreFields({ ...storeFields, accountId });
-      };
-
-      if (createDraftAccountError && listAccounts) {
+      if (createDraftAccountError && listAccounts && profileData) {
         if (createDraftAccountError.message.includes('already exists')) {
           const account = listAccounts.find(account => account?.type === getValues().accountType);
-          updateStore(account?.id || '');
+          updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
           moveToNextStep();
         }
       }
