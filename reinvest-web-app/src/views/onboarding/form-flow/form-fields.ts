@@ -1,7 +1,15 @@
-import { CorporationTypeValue, TrustTypeValue } from 'constants/account-types';
-import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'constants/corporation';
-import { Industry } from 'constants/industries';
-import { Address, DomicileType, DraftAccountType, EmploymentStatus, Experience, StatementType } from 'reinvest-app-common/src/types/graphql';
+import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'reinvest-app-common/src/constants/corporation';
+import { Industry } from 'reinvest-app-common/src/constants/industries';
+import {
+  Address,
+  CorporateCompanyType,
+  DomicileType,
+  DraftAccountType,
+  EmploymentStatus,
+  Experience,
+  StatementType,
+  TrustCompanyType,
+} from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
   address: Address | null;
@@ -33,7 +41,7 @@ export interface OnboardingFormFields {
   corporationIndustry?: Industry;
   corporationLegalName?: string;
   corporationNumberOfEmployees?: CorporationNumberOfEmployees;
-  corporationType?: CorporationTypeValue;
+  corporationType?: CorporateCompanyType;
   documentsForCorporation?: File[];
   documentsForTrust?: File[];
   domicile?: {
@@ -80,7 +88,7 @@ export interface OnboardingFormFields {
   statementTypes?: StatementType[];
   trustLegalName?: string;
   trustTrusteesGrantorsOrProtectors?: Applicant[];
-  trustType?: TrustTypeValue;
+  trustType?: TrustCompanyType;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
