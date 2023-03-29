@@ -7,6 +7,7 @@ export function InputEIN<FormFields extends FieldValues>(props: CustomInputMaske
       maskOptions={{ mask: '000-000000' }}
       {...props}
       placeholder="EIN"
+      willUseUnmaskedValue={false}
     />
   );
 }
