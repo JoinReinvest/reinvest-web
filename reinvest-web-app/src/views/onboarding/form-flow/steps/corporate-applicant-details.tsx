@@ -8,8 +8,8 @@ import { Input } from 'components/FormElements/Input';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { Select } from 'components/Select';
-import { RESIDENCY_STATUS_AS_SELECT_OPTIONS } from 'constants/residenty-status';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { RESIDENCY_STATUS_OPTIONS } from 'reinvest-app-common/src/constants/residenty-status';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
@@ -93,7 +93,7 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
             <Select
               name="domicile"
               control={control}
-              options={RESIDENCY_STATUS_AS_SELECT_OPTIONS}
+              options={RESIDENCY_STATUS_OPTIONS}
               placeholder="Domicile"
               defaultValue={defaultValues?.domicile}
             />
