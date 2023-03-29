@@ -46,7 +46,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
     const form = useForm<Fields>({
-      mode: 'all',
+      mode: 'onBlur',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
@@ -89,6 +89,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
             />
 
             {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
+
             <div className="flex w-full flex-col gap-16">
               <div className="flex">
                 <div className="contents child:basis-2/5">
