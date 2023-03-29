@@ -1,5 +1,5 @@
-import { Industry } from 'constants/industries';
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'reinvest-app-common/src/constants/corporation';
+import { Industry } from 'reinvest-app-common/src/constants/industries';
 import {
   Address,
   CorporateCompanyType,

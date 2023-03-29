@@ -5,7 +5,6 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
-import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'constants/industries';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   CORPORATION_ANNUAL_REVENUE_AS_OPTIONS,
@@ -13,6 +12,7 @@ import {
   CORPORATION_NUMBER_OF_EMPLOYEES,
   CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS,
 } from 'reinvest-app-common/src/constants/corporation';
+import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'reinvest-app-common/src/constants/industries';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
