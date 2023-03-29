@@ -6,9 +6,9 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { Select } from 'components/Select';
-import { COUNTRIES_AS_OPTIONS } from 'constants/countries';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { COUNTRIES } from 'reinvest-app-common/src/constants/countries';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DomicileType } from 'reinvest-app-common/src/types/graphql';
@@ -78,14 +78,14 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
             <Select
               name="domicile.forGreenCard.citizenshipCountry"
               control={control}
-              options={COUNTRIES_AS_OPTIONS}
+              options={COUNTRIES}
               placeholder="Citizenship Country"
             />
 
             <Select
               name="domicile.forGreenCard.birthCountry"
               control={control}
-              options={COUNTRIES_AS_OPTIONS}
+              options={COUNTRIES}
               placeholder="Birth Country"
             />
           </div>
