@@ -153,9 +153,11 @@ export const useUpdateDataIndividualOnboarding = () => {
           address,
           idScan: idScan.length ? idScan : undefined,
           verifyAndFinish: stepId === Identifiers.EXPERIENCE,
-          dateOfBirth: {
-            dateOfBirth: dateOfBirth ? dateOfBirth : undefined,
-          },
+          dateOfBirth: dateOfBirth
+            ? {
+                dateOfBirth,
+              }
+            : undefined,
         },
       });
     }

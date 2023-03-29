@@ -74,6 +74,7 @@
     "reinvest-app-common": "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git",
     "rimraf": "4.4.1",
     "sass": "1.59.3",
+    "sharp": "^0.32.0",
     "swr": "2.1.1",
     "tailwindcss": "3.2.7",
     "tailwindcss-text-fill": "0.2.0",

@@ -11,6 +11,7 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CALLING_CODES } from 'reinvest-app-common/src/constants/country-codes';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
@@ -24,7 +25,7 @@ type Fields = Pick<OnboardingFormFields, 'phone'>;
 const schema = z.object({
   phone: z.object({
     countryCode: z.enum(CALLING_CODES),
-    number: z.string(),
+    number: formValidationRules.phoneNumber,
   }),
 });
 
