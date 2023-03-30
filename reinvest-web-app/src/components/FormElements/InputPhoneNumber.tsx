@@ -6,6 +6,8 @@ export function InputPhoneNumber<FormFields extends FieldValues>(props: CustomIn
     <InputMasked
       maskOptions={{ mask: '000-000-0000' }}
       {...props}
+      willUseUnmaskedValue={false}
+      shouldUnregister
     />
   );
 }

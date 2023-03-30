@@ -80,7 +80,6 @@ export interface OnboardingFormFields {
     countryCode?: string;
     number?: string;
   };
-  phoneNumber?: string;
   phoneNumberAuthenticationCode?: string;
   profilePicture?: File | null;
   seniorPoliticalFigure?: string;

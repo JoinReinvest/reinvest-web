@@ -99,6 +99,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
               name="passwordConfirmation"
               control={control}
               required
+              placeholder="Repeat Password"
             />
 
             <PasswordChecklist
