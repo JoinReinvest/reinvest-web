@@ -19,12 +19,14 @@ import zod, { Schema } from 'zod';
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
+type Fields = Omit<LoginFormFields, 'user'>;
+
 export const StepCheckYourPhone: StepParams<LoginFormFields> = {
   identifier: Identifiers.PHONE_AUTHENTICATION,
 
   Component: ({ storeFields }: StepComponentProps<LoginFormFields>) => {
     const context = useAuth();
-    const schema: Schema<LoginFormFields> = zod.object({
+    const schema: Schema<Fields> = zod.object({
       email: formValidationRules.email,
       password: formValidationRules.password,
       authenticationCode: formValidationRules.authenticationCode,
@@ -37,10 +39,13 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<LoginFormFields> = async fields => {
+      const { user } = storeFields;
       setIsValidatingCredentials(true);
 
       try {
-        await context.actions.confirmSignIn(fields.authenticationCode);
+        if (user) {
+          await context.actions.confirmSignIn(fields.authenticationCode, user);
+        }
       } catch (err) {
         setError((err as Error).message);
       } finally {

@@ -18,7 +18,7 @@ import zod, { Schema } from 'zod';
 import { LoginFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Omit<LoginFormFields, 'authenticationCode'>;
+type Fields = Omit<LoginFormFields, 'authenticationCode' | 'user'>;
 
 export const StepLogin: StepParams<LoginFormFields> = {
   identifier: Identifiers.CREDENTIALS,
@@ -38,7 +38,7 @@ export const StepLogin: StepParams<LoginFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       setError('');
       setIsValidatingCredentials(true);
-      updateStoreFields(fields);
+      await updateStoreFields(fields);
 
       const { email, password } = fields;
 
@@ -50,7 +50,8 @@ export const StepLogin: StepParams<LoginFormFields> = {
 
       const cognitoUser = result as CognitoUser;
 
-      if (cognitoUser.challengeName === ChallengeName.SMS_MFA) {
+      if (cognitoUser.challengeName === ChallengeName.SMS_MFA && result instanceof CognitoUser) {
+        await updateStoreFields({ user: result });
         moveToNextStep();
       }
 
