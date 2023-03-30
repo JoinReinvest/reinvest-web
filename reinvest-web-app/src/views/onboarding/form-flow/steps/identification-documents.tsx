@@ -9,6 +9,8 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputFile } from 'components/FormElements/InputFile';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
@@ -19,10 +21,14 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'identificationDocument'>;
 
+const ACCEPTED_FILE_MIME_TYPES: PartialMimeTypeKeys = ['jpeg', 'jpg', 'pdf', 'png'];
+const FILE_SIZE_LIMIT_IN_MEGA_BYTES = 5.0;
+const FILE_SCHEMA = generateFileSchema(ACCEPTED_FILE_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGA_BYTES);
+
 const schema = z.object({
   identificationDocument: z.object({
-    frontSide: z.custom<File>(),
-    backSide: z.custom<File>(),
+    front: FILE_SCHEMA,
+    back: FILE_SCHEMA,
   }),
 });
 
@@ -50,7 +56,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit, getValues } = useForm<Fields>({
-      mode: 'all',
+      mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
@@ -99,12 +105,16 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
               <InputFile
                 name="identificationDocument.front"
                 control={control}
+                accepts={ACCEPTED_FILE_MIME_TYPES}
+                sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGA_BYTES}
                 placeholder="Upload ID Front"
               />
 
               <InputFile
                 name="identificationDocument.back"
                 control={control}
+                accepts={ACCEPTED_FILE_MIME_TYPES}
+                sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGA_BYTES}
                 placeholder="Upload ID Back"
               />
             </div>
