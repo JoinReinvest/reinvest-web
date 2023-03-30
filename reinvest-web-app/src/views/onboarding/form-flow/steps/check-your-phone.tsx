@@ -40,12 +40,14 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
-    const { error: verifyPhoneNumberError, isLoading, isSuccess, mutate: verifyPhoneNumberMutate } = useVerifyPhoneNumber(getApiClient);
+    const [isInvalidVerificationCode, setIsInvalidVerificationCode] = useState(false);
+    const { data, error: verifyPhoneNumberError, isLoading, isSuccess, mutate: verifyPhoneNumberMutate } = useVerifyPhoneNumber(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ authCode }) => {
+      setIsInvalidVerificationCode(false);
       setIsValidatingCredentials(true);
       await updateStoreFields({ authCode });
       const { phone } = storeFields;
@@ -61,9 +63,13 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        moveToNextStep();
+        if (data) {
+          return moveToNextStep();
+        }
+
+        return setIsInvalidVerificationCode(true);
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isSuccess, moveToNextStep, data]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -74,6 +80,8 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
           />
 
           {verifyPhoneNumberError && <FormMessage message={verifyPhoneNumberError.message} />}
+
+          {isInvalidVerificationCode && <FormMessage message="Invalid Authentication Code" />}
 
           <div className="flex w-full flex-col gap-32">
             <InputAuthenticationCode
