@@ -96,7 +96,7 @@ export const StepCheckYourPhone: StepParams<LoginFormFields> = {
         <ButtonStack>
           <Button
             type="submit"
-            label="Sign Up"
+            label="Sign In"
             disabled={shouldButtonBeDisabled}
             loading={isValidatingCredentials}
           />
