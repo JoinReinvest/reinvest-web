@@ -121,4 +121,4 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   },
 };
 
-const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM/DD/YYYY').format('YYYY-MM-DD');
+const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM-DD-YYYY').format('YYYY-MM-DD');
