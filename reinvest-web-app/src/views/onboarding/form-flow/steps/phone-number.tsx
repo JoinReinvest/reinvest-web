@@ -13,6 +13,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { CALLING_CODES } from 'reinvest-app-common/src/constants/country-codes';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
+import { getApiClient } from 'services/getApiClient';
 import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
@@ -44,6 +46,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const { data: phoneNumberData, error: phoneNumberError, isLoading, mutate: setPhoneNumberMutate, isSuccess } = useSetPhoneNumber(getApiClient);
 
     const form = useForm<Fields>({
       mode: 'onBlur',
@@ -52,12 +55,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     });
 
     const { control, handleSubmit, getValues } = form;
-    const {
-      isLoading,
-      updateData,
-      error: { phoneNumberError },
-      data: { phoneNumberData },
-    } = useUpdateDataIndividualOnboarding();
+    const { updateData } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
@@ -71,13 +69,19 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
         ...getValues(),
         ...storeFields,
       });
+
+      const { phone } = fields;
+
+      if (phone?.number && phone.countryCode) {
+        setPhoneNumberMutate({ phoneNumber: phone.number, countryCode: phone.countryCode });
+      }
     };
 
     useEffect(() => {
-      if (phoneNumberData) {
+      if (phoneNumberData && isSuccess) {
         moveToNextStep();
       }
-    }, [phoneNumberData, moveToNextStep]);
+    }, [phoneNumberData, moveToNextStep, isSuccess]);
 
     return (
       <>

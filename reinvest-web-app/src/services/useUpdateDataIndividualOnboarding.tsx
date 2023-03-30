@@ -2,8 +2,6 @@ import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/servi
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
-import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
-import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
 import { AddressInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
@@ -59,22 +57,6 @@ export const useUpdateDataIndividualOnboarding = () => {
   } = useCompleteIndividualDraftAccount(getApiClient);
 
   const {
-    data: phoneNumberData,
-    error: phoneNumberError,
-    isLoading: isPhoneNumberLoading,
-    mutate: setPhoneNumberMutate,
-    isSuccess: isSetPhoneNumberSuccess,
-  } = useSetPhoneNumber(getApiClient);
-
-  const {
-    data: verifyPhoneNumberData,
-    error: verifyPhoneNumberError,
-    isLoading: isVerifyPhoneNumberLoading,
-    isSuccess: isVerifyPhoneNumberSuccess,
-    mutate: verifyPhoneNumberMutate,
-  } = useVerifyPhoneNumber(getApiClient);
-
-  const {
     data: createDocumentsFileLinksData,
     error: createDocumentsFileLinksError,
     isLoading: isCreateDocumentsFileLinksLoading,
@@ -91,10 +73,6 @@ export const useUpdateDataIndividualOnboarding = () => {
   const updateData = async (stepId: Identifiers, storedFields: OnboardingFormFields) => {
     if (storedFields.accountType && createIndividualDraftAccountSteps.includes(stepId)) {
       createDraftAccountMutate({ type: storedFields.accountType });
-    }
-
-    if (storedFields.phone?.countryCode && storedFields.phone?.number && stepId === Identifiers.PHONE_NUMBER) {
-      setPhoneNumberMutate({ countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
     }
 
     //complete profile details
@@ -157,11 +135,6 @@ export const useUpdateDataIndividualOnboarding = () => {
         input: { employmentStatus, employer },
       });
     }
-
-    //verify phone number
-    if (storedFields.authCode && storedFields.phone?.countryCode && storedFields.phone?.number && stepId === Identifiers.CHECK_YOUR_PHONE) {
-      verifyPhoneNumberMutate({ authCode: storedFields.authCode, countryCode: storedFields.phone.countryCode, phoneNumber: storedFields.phone.number });
-    }
   };
 
   return {
@@ -169,16 +142,12 @@ export const useUpdateDataIndividualOnboarding = () => {
       ...profileDetailsData,
       ...individualDraftAccoutntData,
       ...createDraftAccountData,
-      phoneNumberData,
-      verifyPhoneNumberData,
       ...createDocumentsFileLinksData,
     },
     error: {
       profileDetailsError,
       individualDraftAccountError,
       createDraftAccountError,
-      phoneNumberError,
-      verifyPhoneNumberError,
       createDocumentsFileLinksError,
       sendDocumentsToS3AndGetScanIdsError,
     },
@@ -186,17 +155,9 @@ export const useUpdateDataIndividualOnboarding = () => {
       isProfileDetailsLoading ||
       isIndividualDraftAccountLoading ||
       isCreateDraftAccountLoading ||
-      isPhoneNumberLoading ||
-      isVerifyPhoneNumberLoading ||
       isCreateDocumentsFileLinksLoading ||
       isSendDocumentToS3AndGetScanIdsLoading,
-    isSuccess:
-      isCreateDraftAccountSuccess ||
-      isSetPhoneNumberSuccess ||
-      isProfileDetailsSuccess ||
-      isIndividualDraftAccountSuccess ||
-      isVerifyPhoneNumberSuccess ||
-      isSendDocumentToS3AndGetScanIdsSuccess,
+    isSuccess: isCreateDraftAccountSuccess || isProfileDetailsSuccess || isIndividualDraftAccountSuccess || isSendDocumentToS3AndGetScanIdsSuccess,
     updateData,
   };
 };
