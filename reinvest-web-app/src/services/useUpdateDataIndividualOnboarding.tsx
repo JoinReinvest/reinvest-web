@@ -78,7 +78,6 @@ export const useUpdateDataIndividualOnboarding = () => {
     //complete profile details
     if (profileDetailsSteps.includes(stepId)) {
       const {
-        residency,
         statementTypes,
         finraInstitutionName,
         ssn: storedSsn,
@@ -87,9 +86,8 @@ export const useUpdateDataIndividualOnboarding = () => {
         identificationDocument,
         address: storageAddress,
         dateOfBirth,
-        domicile: storedDomicle,
       } = storedFields;
-      const domicile = residency ? { ...storedDomicle, type: residency } : undefined;
+
       const statements = getStatements(statementTypes || [], finraInstitutionName, isAccreditedInvestor);
       const ssn = storedSsn ? { ssn: storedSsn } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
@@ -105,7 +103,6 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       await completeProfileMutate({
         input: {
-          domicile,
           statements,
           ssn,
           investingExperience,
