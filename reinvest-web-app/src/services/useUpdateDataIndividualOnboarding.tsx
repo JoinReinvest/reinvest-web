@@ -1,9 +1,7 @@
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
-import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
-import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
 import { AddressInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
@@ -13,7 +11,6 @@ import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 import { getApiClient } from './getApiClient';
 import { getStatements } from './getStatements';
 import { useSendDocumentsToS3AndGetScanIds } from './queries/useSendDocumentsToS3AndGetScanIds';
-import { sendFilesToS3Bucket } from './sendFilesToS3Bucket';
 
 const profileDetailsSteps = [
   Identifiers.FULL_NAME,
@@ -85,20 +82,11 @@ export const useUpdateDataIndividualOnboarding = () => {
   } = useCreateDocumentsFileLinks(getApiClient);
 
   const {
-    error: createAvatarLinkError,
-    isLoading: isCreateAvatarLinkLoading,
-    isSuccess: isCreateAvatarLinkSuccess,
-    mutateAsync: createAvatarLinkMutate,
-  } = useCreateAvatarFileLink(getApiClient);
-
-  const {
     error: sendDocumentsToS3AndGetScanIdsError,
     isLoading: isSendDocumentToS3AndGetScanIdsLoading,
     isSuccess: isSendDocumentToS3AndGetScanIdsSuccess,
     mutateAsync: sendDocumentsToS3AndGetScanIdsMutate,
   } = useSendDocumentsToS3AndGetScanIds();
-
-  const { error: openAccountError, isLoading: isOpenAccountLoading, mutate: openAccountMutate, isSuccess: isOpenAccountSuccess } = useOpenAccount(getApiClient);
 
   const updateData = async (stepId: Identifiers, storedFields: OnboardingFormFields) => {
     if (storedFields.accountType && createIndividualDraftAccountSteps.includes(stepId)) {
@@ -157,34 +145,17 @@ export const useUpdateDataIndividualOnboarding = () => {
 
     //complete individual draft account
     if (individualDraftAccountSteps.includes(stepId) && storedFields.accountId) {
-      const { employmentStatus: storedemploymentStatus, employmentDetails, profilePicture, accountId } = storedFields;
+      const { employmentStatus: storedemploymentStatus, employmentDetails, accountId } = storedFields;
 
       const employmentStatus = storedemploymentStatus ? { status: storedemploymentStatus } : undefined;
       const employer = employmentDetails
         ? { nameOfEmployer: employmentDetails.employerName, title: employmentDetails.occupation, industry: employmentDetails.industry }
         : undefined;
 
-      let avatarId = '';
-
-      if (profilePicture && stepId === Identifiers.PROFILE_PICTURE) {
-        const avatarLink = await createAvatarLinkMutate({});
-
-        if (avatarLink?.url && avatarLink.id) {
-          await sendFilesToS3Bucket([{ file: profilePicture, url: avatarLink.url, id: avatarLink.id }]);
-          avatarId = avatarLink.id;
-        }
-      }
-
-      const avatar = avatarId ? { id: avatarId } : undefined;
-
-      const individualDraftAccount = await completeIndividualDraftAccountMutate({
+      await completeIndividualDraftAccountMutate({
         accountId,
-        input: { employmentStatus, employer, avatar, verifyAndFinish: stepId === Identifiers.PROFILE_PICTURE },
+        input: { employmentStatus, employer },
       });
-
-      if (stepId === Identifiers.PROFILE_PICTURE && individualDraftAccount?.isCompleted) {
-        openAccountMutate({ draftAccountId: accountId });
-      }
     }
 
     //verify phone number
@@ -209,8 +180,6 @@ export const useUpdateDataIndividualOnboarding = () => {
       phoneNumberError,
       verifyPhoneNumberError,
       createDocumentsFileLinksError,
-      openAccountError,
-      createAvatarLinkError,
       sendDocumentsToS3AndGetScanIdsError,
     },
     isLoading:
@@ -220,15 +189,11 @@ export const useUpdateDataIndividualOnboarding = () => {
       isPhoneNumberLoading ||
       isVerifyPhoneNumberLoading ||
       isCreateDocumentsFileLinksLoading ||
-      isOpenAccountLoading ||
-      isCreateAvatarLinkLoading ||
       isSendDocumentToS3AndGetScanIdsLoading,
     isSuccess:
       isCreateDraftAccountSuccess ||
       isSetPhoneNumberSuccess ||
       isProfileDetailsSuccess ||
-      isOpenAccountSuccess ||
-      isCreateAvatarLinkSuccess ||
       isIndividualDraftAccountSuccess ||
       isVerifyPhoneNumberSuccess ||
       isSendDocumentToS3AndGetScanIdsSuccess,
