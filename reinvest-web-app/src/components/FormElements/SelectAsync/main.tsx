@@ -36,14 +36,14 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
     field.onBlur();
   };
 
-  const onChange: ChangeHandler<Option> = (option, { action }) => {
+  const onChange: ChangeHandler<Option> = async (option, { action }) => {
     if (action === 'select-option') {
-      onOptionSelected && onOptionSelected(option);
+      onOptionSelected && (await onOptionSelected(option));
     }
 
     if (action === 'create-option') {
       field.onChange(option?.value);
-      onOptionCreated && onOptionCreated(option);
+      onOptionCreated && (await onOptionCreated(option));
     }
 
     const value = option?.value;
