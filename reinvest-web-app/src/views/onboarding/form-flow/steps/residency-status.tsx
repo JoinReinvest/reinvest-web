@@ -10,10 +10,11 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { RESIDENCY_STATUS_AS_RADIO_GROUP_OPTIONS, RESIDENCY_STATUS_VALUES } from 'reinvest-app-common/src/constants/residenty-status';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DomicileType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -40,7 +41,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = { ...storeFields };
     const form = useForm<Fields>({
       mode: 'all',
@@ -48,27 +49,25 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
+
     const { getValues, handleSubmit, formState, control } = form;
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
 
-      await updateData(Identifiers.RESIDENCY_STATUS, { ...storeFields, ...getValues() });
+      if (fields.residency === DomicileType.Citizen) {
+        return completeProfileMutate({ input: { domicile: { type: DomicileType.Citizen } } });
+      }
+
+      return moveToNextStep();
     };
 
     useEffect(() => {
       if (isSuccess) {
-        getValues().residency === DomicileType.Visa
-          ? moveToStepByIdentifier(Identifiers.RESIDENCY_VISA)
-          : moveToStepByIdentifier(Identifiers.RESIDENCY_GREEN_CARD);
+        moveToStepByIdentifier(Identifiers.COMPLIANCES);
       }
     }, [isSuccess, moveToStepByIdentifier, getValues]);
 
