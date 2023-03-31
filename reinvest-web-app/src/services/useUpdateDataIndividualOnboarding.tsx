@@ -7,17 +7,9 @@ import { OnboardingFormFields } from 'views/onboarding/form-flow/form-fields';
 import { Identifiers } from 'views/onboarding/form-flow/identifiers';
 
 import { getApiClient } from './getApiClient';
-import { getStatements } from './getStatements';
 import { useSendDocumentsToS3AndGetScanIds } from './queries/useSendDocumentsToS3AndGetScanIds';
 
 const profileDetailsSteps = [
-  Identifiers.FULL_NAME,
-  Identifiers.DATE_OF_BIRTH,
-  Identifiers.RESIDENCY_STATUS,
-  Identifiers.RESIDENCY_GREEN_CARD,
-  Identifiers.RESIDENCY_VISA,
-  Identifiers.COMPLIANCES,
-  Identifiers.FINRA_INSTITUTION,
   Identifiers.EXPERIENCE,
   Identifiers.IDENTIFICATION_DOCUMENTS,
   Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
@@ -77,18 +69,8 @@ export const useUpdateDataIndividualOnboarding = () => {
 
     //complete profile details
     if (profileDetailsSteps.includes(stepId)) {
-      const {
-        statementTypes,
-        finraInstitutionName,
-        ssn: storedSsn,
-        experience,
-        isAccreditedInvestor,
-        identificationDocument,
-        address: storageAddress,
-        dateOfBirth,
-      } = storedFields;
+      const { ssn: storedSsn, experience, identificationDocument, address: storageAddress } = storedFields;
 
-      const statements = getStatements(statementTypes || [], finraInstitutionName, isAccreditedInvestor);
       const ssn = storedSsn ? { ssn: storedSsn } : undefined;
       const investingExperience = experience ? { experience: experience } : undefined;
       const address = stepId === Identifiers.PERMANENT_ADDRESS ? ({ ...storageAddress, country: 'USA' } as AddressInput) : undefined;
@@ -103,17 +85,11 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       await completeProfileMutate({
         input: {
-          statements,
           ssn,
           investingExperience,
           address,
           idScan: idScan.length ? idScan : undefined,
           verifyAndFinish: stepId === Identifiers.EXPERIENCE,
-          dateOfBirth: dateOfBirth
-            ? {
-                dateOfBirth,
-              }
-            : undefined,
         },
       });
     }

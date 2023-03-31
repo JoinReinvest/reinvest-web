@@ -462,9 +462,9 @@
   integrity sha512-4Dx3eRTrUHLxhFdLJL8zdNGzVsJfAxtxPYYGmIddUkO2Gj3WA1TGjdfG4XN/ClI6e1XonCHafQX3UYO/mgnH3g==
 
 "@aws-sdk/types@^3.1.0":
-  version "3.296.0"
-  resolved "https://registry.yarnpkg.com/@aws-sdk/types/-/types-3.296.0.tgz#4de4a7c8e16a97e04a0cedf3c51ce96779a7f686"
-  integrity sha512-s0wIac64rrMEo2ioUxP9IarGiiCGmelCspNcoNTPSjGl25QqjhyfQqTeGgS58qJ4fHoQb07qra39930xp1IzJg==
+  version "3.303.0"
+  resolved "https://registry.yarnpkg.com/@aws-sdk/types/-/types-3.303.0.tgz#6ac0e4ea2fec9d82e4e8a18d31f5c4767b222a21"
+  integrity sha512-H+Cy8JDTsK87MID6MJbV9ad5xdS9YvaLZSeveC2Zs1WNu2Rp6X9j+mg3EqDSmBKUQVAFRy2b+CSKkH3nnBMedw==
   dependencies:
     tslib "^2.5.0"
 
@@ -1827,9 +1827,9 @@
     "@hookooekoo/configs-stylelint" "*"
 
 "@hookooekoo/ui-input-control@*":
-  version "0.4.7"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-control/-/ui-input-control-0.4.7.tgz#72bf940d222ed7630e8c35a9c67a1c2958c8afa0"
-  integrity sha512-YHATIvukNeXOxVxevjw0s4fg3clRERH3PL/zdRLFnbsKx+1Hqo0FuHpJXreVWk2s4c7Y2FgXXpIGJarET6cWUQ==
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-control/-/ui-input-control-0.4.8.tgz#031bc40658118e802aa1f542186214e19d49d5f8"
+  integrity sha512-eRPrSb7uFTYbixoncUDsEeKeO1l3LRy80eLDn6UH8Zkv1HVLuiFhTMKP/LiLeJGNnZgKkBWv3CUT/KLHKLjGEg==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
     "@radix-ui/react-label" "^2.0.0"
@@ -4147,9 +4147,9 @@ duplexer@^0.1.2:
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.345"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.345.tgz#c90b7183b39245cddf0e990337469063bfced6f0"
-  integrity sha512-znGhOQK2TUYLICgS25uaM0a7pHy66rSxbre7l762vg9AUoCcJK+Bu+HCPWpjL/U/kK8/Hf+6E0szAUJSyVYb3Q==
+  version "1.4.347"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.347.tgz#4b72564912c3456c6704d4250918aa6a105d5dc3"
+  integrity sha512-LNi3+/9nV0vT6Bz1OsSoZ/w7IgNuWdefZ7mjKNjZxyRlI/ag6uMXxsxAy5Etvuixq3Q26exw2fc4bNYvYQqXSw==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -7297,7 +7297,7 @@ regexpp@^3.0.0, regexpp@^3.2.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#9e516f10754657eb9837080147380cc89635370e"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#98fe0e600b59071c14c018e075e581ad27a44f24"
   dependencies:
     "@graphql-codegen/cli" "^3.2.2"
     "@graphql-codegen/typescript" "^3.0.2"
