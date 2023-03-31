@@ -56,9 +56,10 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      await completeProfileMutate({ input: { investingExperience: { experience: fields.experience } } });
+
+    const onSubmit: SubmitHandler<Fields> = async ({ experience }) => {
+      await updateStoreFields({ experience });
+      await completeProfileMutate({ input: { investingExperience: { experience }, verifyAndFinish: true } });
     };
 
     useEffect(() => {
