@@ -16,5 +16,6 @@ export const InputPhoneNumberCountryCode = <FormFields extends FieldValues>(prop
     options={OPTIONS}
     required
     icon="arrow"
+    willDisplayErrorMessage={false}
   />
 );

@@ -11,6 +11,7 @@ interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseContr
   className?: string;
   showArrowIcon?: boolean;
   showSearchIcon?: boolean;
+  willDisplayErrorMessage?: boolean;
 }
 
 type PrimitiveProps = Pick<PrimitiveTextInputProps, 'autoCapitalize' | 'type' | 'required' | 'disabled' | 'placeholder' | 'autoComplete'>;
@@ -28,6 +29,7 @@ export function Input<FormFields extends FieldValues>({
   showSearchIcon = false,
   autoCapitalize = false,
   autoComplete = false,
+  willDisplayErrorMessage = true,
   ...controllerProps
 }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
@@ -58,6 +60,7 @@ export function Input<FormFields extends FieldValues>({
       iconRight={showArrowIcon && !disabled ? <IconArrowDown className={iconRightClass} /> : disabled && <IconDisabled className={iconRightClass} />}
       error={fieldState.error?.message}
       ref={field.ref}
+      willDisplayErrorMessage={willDisplayErrorMessage}
     />
   );
 }
