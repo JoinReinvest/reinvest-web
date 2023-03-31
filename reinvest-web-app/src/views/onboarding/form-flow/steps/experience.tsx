@@ -10,10 +10,11 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EXPERIENCES_AS_OPTIONS } from 'reinvest-app-common/src/constants/experiences';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType, Experience } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -45,28 +46,23 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
+    const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      await updateData(Identifiers.EXPERIENCE, { ...storeFields, experience: getValues().experience });
+    const onSubmit: SubmitHandler<Fields> = async ({ experience }) => {
+      await updateStoreFields({ experience });
+      await completeProfileMutate({ input: { investingExperience: { experience }, verifyAndFinish: true } });
     };
 
-    const onSkip = () => {
-      moveToNextStep();
+    const onSkip = async () => {
+      return completeProfileMutate({ input: { verifyAndFinish: true } });
     };
 
     useEffect(() => {
