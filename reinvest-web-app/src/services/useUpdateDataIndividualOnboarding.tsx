@@ -10,11 +10,8 @@ import { getApiClient } from './getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from './queries/useSendDocumentsToS3AndGetScanIds';
 
 const profileDetailsSteps = [
-  Identifiers.EXPERIENCE,
   Identifiers.IDENTIFICATION_DOCUMENTS,
   Identifiers.IDENTIFICATION_DOCUMENTS_VALIDATION,
-  Identifiers.SOCIAL_SECURITY_NUMBER,
-  Identifiers.SOCIAL_SECURITY_NUMBER_VALIDATION,
   Identifiers.PERMANENT_ADDRESS,
   Identifiers.ACCREDITED_INVESTOR,
 ];
@@ -69,10 +66,8 @@ export const useUpdateDataIndividualOnboarding = () => {
 
     //complete profile details
     if (profileDetailsSteps.includes(stepId)) {
-      const { ssn: storedSsn, experience, identificationDocument, address: storageAddress } = storedFields;
+      const { identificationDocument, address: storageAddress } = storedFields;
 
-      const ssn = storedSsn ? { ssn: storedSsn } : undefined;
-      const investingExperience = experience ? { experience: experience } : undefined;
       const address = stepId === Identifiers.PERMANENT_ADDRESS ? ({ ...storageAddress, country: 'USA' } as AddressInput) : undefined;
       const idScan = [];
 
@@ -85,11 +80,8 @@ export const useUpdateDataIndividualOnboarding = () => {
 
       await completeProfileMutate({
         input: {
-          ssn,
-          investingExperience,
           address,
           idScan: idScan.length ? idScan : undefined,
-          verifyAndFinish: stepId === Identifiers.EXPERIENCE,
         },
       });
     }
