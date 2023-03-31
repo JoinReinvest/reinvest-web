@@ -31,7 +31,7 @@ export const BlackModal = ({ isOpen = false, onOpenChange, progressBarValue, chi
         {willShowProgressBar && <ProgressBar value={progressBarValue} />}
 
         <div className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-auto">
-          <div className="mx-auto max-w-330 grow pt-24 lg:pt-0">{children}</div>
+          <div className="mx-auto w-full max-w-330 grow pt-24 lg:pt-0">{children}</div>
 
           <Footer />
         </div>
