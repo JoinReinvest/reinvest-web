@@ -9,10 +9,11 @@ import { Input } from 'components/FormElements/Input';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { z } from 'zod';
 
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -25,9 +26,10 @@ const schema = z.object({
 export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.FINRA_INSTITUTION,
 
-  willBePartOfTheFlow: ({ compliances }) => {
-    return !!compliances?.isAssociatedWithFinra;
+  willBePartOfTheFlow: ({ statementTypes }) => {
+    return !!statementTypes?.includes(StatementType.FinraMember);
   },
+
   doesMeetConditionFields(fields) {
     const requiredFields = [
       fields.accountType,
@@ -44,24 +46,22 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
+    const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      await updateData(Identifiers.FINRA_INSTITUTION, { ...storeFields, ...getValues() });
+    const onSubmit: SubmitHandler<Fields> = async ({ finraInstitutionName }) => {
+      await updateStoreFields({ finraInstitutionName });
+
+      if (finraInstitutionName) {
+        await completeProfileMutate({ input: { statements: [{ type: StatementType.FinraMember, forFINRA: { name: finraInstitutionName } }] } });
+      }
     };
 
     useEffect(() => {

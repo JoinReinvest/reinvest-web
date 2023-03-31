@@ -5,10 +5,15 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { TextArea } from 'components/FormElements/TextArea';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
+import { FormMessage } from '../../../../components/FormElements/FormMessage';
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -21,8 +26,23 @@ const schema = z.object({
 export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SENIOR_POLITICAL_FIGURE,
 
-  willBePartOfTheFlow: ({ compliances }) => {
-    return !!compliances?.isSeniorPoliticalFigure;
+  willBePartOfTheFlow: ({ statementTypes, isCompletedProfile }) => {
+    return !!statementTypes?.includes(StatementType.Politician) && !isCompletedProfile;
+  },
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    return allRequiredFieldsExists(requiredFields) && !!fields.statementTypes?.includes(StatementType.Politician) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -32,17 +52,30 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      moveToNextStep();
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+
+    const onSubmit: SubmitHandler<Fields> = async ({ seniorPoliticalFigure }) => {
+      await updateStoreFields({ seniorPoliticalFigure });
+
+      if (seniorPoliticalFigure) {
+        await completeProfileMutate({ input: { statements: [{ type: StatementType.Politician, forPolitician: { description: seniorPoliticalFigure } }] } });
+      }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Please provide the name and position of this senior political figure." />
+
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
           <TextArea
             name="seniorPoliticalFigure"
@@ -56,6 +89,7 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>
