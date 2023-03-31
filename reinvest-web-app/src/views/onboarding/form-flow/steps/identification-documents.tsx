@@ -12,10 +12,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
+import { getApiClient } from '../../../../services/getApiClient';
+import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -55,27 +58,44 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
+    const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
     const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+      // error: createDocumentsFileLinksError,
+      isLoading: isCreateDocumentsFileLinksLoading,
+      mutateAsync: createDocumentsFileLinksMutate,
+    } = useCreateDocumentsFileLinks(getApiClient);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const {
+      // error: sendDocumentsToS3AndGetScanIdsError,
+      isLoading: isSendDocumentToS3AndGetScanIdsLoading,
+      // isSuccess: isSendDocumentToS3AndGetScanIdsSuccess,
+      mutateAsync: sendDocumentsToS3AndGetScanIdsMutate,
+    } = useSendDocumentsToS3AndGetScanIds();
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
+
+    const shouldButtonBeDisabled =
+      !formState.isValid || formState.isSubmitting || isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
+
+    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocument }) => {
+      const idScan = [];
+
+      if (identificationDocument?.front && identificationDocument?.back) {
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 2 })) as PutFileLink[];
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocument });
+        idScan.push(...scans);
+      }
+
       try {
-        await updateStoreFields(fields);
-        await updateData(Identifiers.IDENTIFICATION_DOCUMENTS, { ...storeFields, ...getValues() });
+        await updateStoreFields({ identificationDocument });
+        await completeProfileMutate({ input: { idScan } });
       } catch (error) {
-        updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
+        await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }
     };
 
@@ -85,7 +105,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       }
     }, [isSuccess, moveToNextStep]);
 
-    if (isLoading) {
+    if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
       return (
         <div className="flex items-center gap-32">
           <IconSpinner />
@@ -125,7 +145,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
               type="submit"
               label="Continue"
               disabled={shouldButtonBeDisabled}
-              loading={isLoading}
+              loading={isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading}
             />
           </ButtonStack>
         </Form>
