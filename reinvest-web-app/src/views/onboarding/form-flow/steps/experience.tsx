@@ -61,10 +61,6 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
       await completeProfileMutate({ input: { investingExperience: { experience }, verifyAndFinish: true } });
     };
 
-    const onSkip = async () => {
-      return completeProfileMutate({ input: { verifyAndFinish: true } });
-    };
-
     useEffect(() => {
       if (isSuccess) {
         moveToNextStep();
@@ -92,14 +88,6 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isLoading}
-          />
-
-          <Button
-            label="Skip"
-            variant="outlined"
-            onClick={onSkip}
-            className="text-green-frost-01"
             loading={isLoading}
           />
         </ButtonStack>
