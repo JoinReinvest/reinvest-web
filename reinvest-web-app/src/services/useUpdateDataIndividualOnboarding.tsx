@@ -85,7 +85,6 @@ export const useUpdateDataIndividualOnboarding = () => {
         isAccreditedInvestor,
         identificationDocument,
         address: storageAddress,
-        dateOfBirth,
       } = storedFields;
 
       const statements = getStatements(statementTypes || [], finraInstitutionName, isAccreditedInvestor);
@@ -109,11 +108,6 @@ export const useUpdateDataIndividualOnboarding = () => {
           address,
           idScan: idScan.length ? idScan : undefined,
           verifyAndFinish: stepId === Identifiers.EXPERIENCE,
-          dateOfBirth: dateOfBirth
-            ? {
-                dateOfBirth,
-              }
-            : undefined,
         },
       });
     }

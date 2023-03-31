@@ -12,10 +12,11 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
 
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -48,18 +49,13 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { formState, control, handleSubmit, getValues } = useForm<Fields>({
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
+
+    const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
-
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -68,11 +64,10 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
-      await updateData(Identifiers.DATE_OF_BIRTH, {
-        ...storeFields,
-        dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
-      });
+      const dateOfBirth = getDateOfBirth(fields.dateOfBirth || '');
+      await updateStoreFields({ ...fields, dateOfBirth });
+
+      await completeProfileMutate({ input: { dateOfBirth: { dateOfBirth } } });
     };
 
     useEffect(() => {
