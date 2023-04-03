@@ -85,7 +85,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             <Input
               name="addressLine2"
               control={control}
-              placeholder="Apt, suite, unit, building, floor, etc"
+              placeholder="Unit No. (Optional)"
             />
 
             <Input

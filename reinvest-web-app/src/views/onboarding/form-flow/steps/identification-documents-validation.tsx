@@ -1,5 +1,6 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { IconXCircle } from 'assets/icons/IconXCircle';
+import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Typography } from 'components/Typography';
@@ -61,10 +62,12 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
     };
 
     return (
-      <div className="relative flex flex-col items-center gap-36">
-        {iconGenerator()}
+      <BlackModalContent>
+        <div className="relative flex flex-col items-center gap-36">
+          {iconGenerator()}
 
-        <Typography variant="h5">{titleGenerator()}</Typography>
+          <Typography variant="h5">{titleGenerator()}</Typography>
+        </div>
 
         <ButtonStack>
           <Button
@@ -72,7 +75,7 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
             onClick={onContinueButtonClick}
           />
         </ButtonStack>
-      </div>
+      </BlackModalContent>
     );
   },
 };

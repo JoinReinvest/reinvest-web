@@ -14,9 +14,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService } from 'services/addresses';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { getApiClient } from 'services/getApiClient';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -55,18 +56,12 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.address || initialValues;
 
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues,
     });
-
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -88,7 +83,11 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async address => {
       await updateStoreFields({ address });
-      await updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, address });
+      const { addressLine1, addressLine2, city, zip, state } = address;
+
+      if (addressLine1 && city && state && zip) {
+        await completeProfileMutate({ input: { address: { addressLine2, addressLine1, city, country: 'USA', state, zip } } });
+      }
     };
 
     useEffect(() => {
@@ -120,7 +119,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             <Input
               name="addressLine2"
               control={control}
-              placeholder="Apt, suite, unit, building, floor, etc"
+              placeholder="Unit No. (Optional)"
             />
 
             <Input
@@ -140,6 +139,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
               name="zip"
               control={control}
               shouldUnregister
+              defaultValue={storeFields.address?.zip}
             />
           </div>
         </FormContent>

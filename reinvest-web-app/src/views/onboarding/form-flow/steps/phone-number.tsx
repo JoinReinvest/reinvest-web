@@ -15,7 +15,6 @@ import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { getApiClient } from 'services/getApiClient';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
@@ -54,8 +53,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { control, handleSubmit, getValues } = form;
-    const { updateData } = useUpdateDataIndividualOnboarding();
+    const { control, handleSubmit } = form;
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
@@ -65,10 +63,6 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.PHONE_NUMBER, {
-        ...getValues(),
-        ...storeFields,
-      });
 
       const { phone } = fields;
 
@@ -108,6 +102,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
                   <InputPhoneNumber
                     name="phone.number"
                     control={control}
+                    defaultValue={storeFields.phone?.number}
                   />
                 </div>
               </div>

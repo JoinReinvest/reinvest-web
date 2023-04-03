@@ -11,10 +11,10 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { getApiClient } from 'services/getApiClient';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
@@ -43,18 +43,21 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     });
 
     const {
-      isLoading,
-      updateData,
-      error: { createDraftAccountError },
-      isSuccess,
       data: individualAccountData,
-    } = useUpdateDataIndividualOnboarding();
+      error: createDraftAccountError,
+      isLoading,
+      mutateAsync: createDraftAccountMutate,
+      isSuccess,
+    } = useCreateDraftAccount(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
+
+      if (fields.accountType) {
+        await createDraftAccountMutate({ type: fields.accountType });
+      }
     };
 
     const onLinkClick = () => {
@@ -66,7 +69,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
         updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
-    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
+    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (createDraftAccountError && listAccounts && profileData) {
@@ -76,7 +79,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           moveToNextStep();
         }
       }
-    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields]);
+    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (profileData) {
