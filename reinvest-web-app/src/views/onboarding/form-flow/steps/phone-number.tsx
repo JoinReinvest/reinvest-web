@@ -47,15 +47,16 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
     const { data: phoneNumberData, error: phoneNumberError, isLoading, mutate: setPhoneNumberMutate, isSuccess } = useSetPhoneNumber(getApiClient);
 
-    const form = useForm<Fields>({
+    const defaultValues: Fields = { phone: { countryCode: CALLING_CODES[0], number: storeFields.phone?.number || '' } };
+    const { control, handleSubmit, formState, setError } = useForm<Fields>({
       mode: 'onBlur',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
-    const { control, handleSubmit } = form;
-
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const phoneNumberErrorMessage = formState.errors?.phone?.number?.message;
+    const errorMessage = formState.errors?.phone?.countryCode?.message || phoneNumberErrorMessage;
 
     const onMoreInformationClick = () => {
       setIsInformationModalOpen(true);
@@ -77,6 +78,11 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
       }
     }, [phoneNumberData, moveToNextStep, isSuccess]);
 
+    useEffect(() => {
+      setError('phone.countryCode', { message: phoneNumberErrorMessage });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phoneNumberErrorMessage]);
+
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -89,22 +95,27 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
             {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
 
             <div className="flex w-full flex-col gap-16">
-              <div className="flex">
-                <div className="contents child:basis-2/5">
-                  <InputPhoneNumberCountryCode
-                    name="phone.countryCode"
-                    control={control}
-                    defaultValue={CALLING_CODES[0]}
-                  />
+              <div className="flex flex-col gap-10">
+                <div className="flex">
+                  <div className="contents child:basis-2/5">
+                    <InputPhoneNumberCountryCode
+                      name="phone.countryCode"
+                      control={control}
+                      defaultValue={CALLING_CODES[0]}
+                    />
+                  </div>
+
+                  <div className="contents">
+                    <InputPhoneNumber
+                      name="phone.number"
+                      control={control}
+                      willDisplayErrorMessage={false}
+                      defaultValue={storeFields.phone?.number}
+                    />
+                  </div>
                 </div>
 
-                <div className="contents">
-                  <InputPhoneNumber
-                    name="phone.number"
-                    control={control}
-                    defaultValue={storeFields.phone?.number}
-                  />
-                </div>
+                {errorMessage && <FormMessage message={errorMessage} />}
               </div>
 
               <OpenModalLink

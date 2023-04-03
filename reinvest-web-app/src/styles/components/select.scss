@@ -62,7 +62,7 @@
   }
 
   &-content-input-container:not(:only-child) {
-     /* stylelint-disable-next-line selector-class-pattern */
+    /* stylelint-disable-next-line selector-class-pattern */
     .hkek-select__value-container {
       @apply relative top-4;
     }
@@ -85,8 +85,11 @@
   }
 
   &[data-has-error='true'] {
-    @apply bg-tertiary-error/5 shadow-transparent mb-26;
-    @apply border-tertiary-error;
+    @apply border-tertiary-error bg-tertiary-error/5 shadow-transparent;
+  }
+
+  &[data-has-error='true']:has(.hkek-select-control-error-message) {
+    @apply mb-26;
   }
 
   &[data-is-dirty='true'] {

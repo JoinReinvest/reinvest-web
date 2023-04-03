@@ -1,14 +1,14 @@
-import { InputMasked as PrimitiveInputMasked } from '@hookooekoo/ui-input-masked';
-import { ComponentPropsWithoutRef } from 'react';
+import { InputMasked as PrimitiveInputMasked, InputMaskedProps as PrimitiveInputMaskedProps } from '@hookooekoo/ui-input-masked';
 import { FieldValues } from 'react-hook-form';
 
-export type InputMaskedProps<FormFields extends FieldValues> = PrimitiveProps<FormFields>;
-type PrimitiveProps<FormFields extends FieldValues> = Omit<PrimitiveInputMaskedProps<FormFields>, 'error'>;
-type PrimitiveInputMaskedProps<FormFields extends FieldValues> = ComponentPropsWithoutRef<typeof PrimitiveInputMasked<FormFields>>;
+type PrimitiveProps<FormFields extends FieldValues> = Omit<PrimitiveInputMaskedProps<FormFields>, 'willDisplayErrorMessage'>;
+interface Props<FormFields extends FieldValues> extends PrimitiveProps<FormFields> {
+  willDisplayErrorMessage?: boolean;
+}
 
 export type CustomInputMaskedProps<FormFields extends FieldValues> = Omit<
-  InputMaskedProps<FormFields>,
-  'maskOptions' | 'willUseUnmaskedValue' | 'willTriggerChangeOnAccept' | 'willTriggerChangeOnCompletion'
+  Props<FormFields>,
+  'maskOptions' | 'willUseUnmaskedValue' | 'willTriggerChangeOnAccept' | 'willTriggerChangeOnCompletion' | 'hasFixedPlaceholder'
 >;
 
 export function InputMasked<FormFields extends FieldValues>({
@@ -20,12 +20,15 @@ export function InputMasked<FormFields extends FieldValues>({
   disabled = false,
   autoComplete = false,
   defaultValue,
-  shouldUnregister,
+  shouldUnregister = false,
   rules,
   willUseUnmaskedValue = true,
   willTriggerChangeOnAccept = true,
   willTriggerChangeOnCompletion = false,
-}: InputMaskedProps<FormFields>) {
+  willDisplayErrorMessage = true,
+  hasFixedPlaceholder = false,
+  inputPlaceholder,
+}: Props<FormFields>) {
   return (
     <PrimitiveInputMasked
       name={name}
@@ -41,6 +44,9 @@ export function InputMasked<FormFields extends FieldValues>({
       willUseUnmaskedValue={willUseUnmaskedValue}
       willTriggerChangeOnAccept={willTriggerChangeOnAccept}
       willTriggerChangeOnCompletion={willTriggerChangeOnCompletion}
+      willDisplayErrorMessage={willDisplayErrorMessage}
+      hasFixedPlaceholder={hasFixedPlaceholder}
+      inputPlaceholder={inputPlaceholder}
     />
   );
 }

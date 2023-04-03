@@ -1,11 +1,12 @@
 import { Auth } from '@aws-amplify/auth';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconXCircle } from 'assets/icons/IconXCircle';
+import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
+import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { CircleSuccess } from 'components/CircleSuccess';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Link } from 'components/Link';
-import { Title } from 'components/Title';
 import { URL } from 'constants/urls';
 import { useAuth } from 'providers/AuthProvider';
 import { useEffect, useMemo, useState } from 'react';
@@ -85,18 +86,20 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
     }, [storeFields.authenticationCode, storeFields.email]);
 
     return (
-      <div className="relative flex h-full flex-col gap-24 text-center md:justify-center">
-        <div className="flex w-full flex-col items-center gap-32">
-          {isLoading && !error && <IconSpinner />}
-          {!isLoading && !error && <CircleSuccess />}
-          {error && <IconXCircle />}
+      <BlackModalContent>
+        <div className="relative flex h-full flex-col gap-24 text-center md:justify-center">
+          <div className="flex w-full flex-col items-center gap-32">
+            {isLoading && !error && <IconSpinner />}
+            {!isLoading && !error && <CircleSuccess />}
+            {error && <IconXCircle />}
 
-          <Title
-            title={error || title}
-            isTitleCenteredOnMobile
-            subtitle={displayLoginLink && <LoginLink />}
-            className="items-center"
-          />
+            <BlackModalTitle
+              title={error || title}
+              isTitleCenteredOnMobile
+              subtitle={displayLoginLink && <LoginLink />}
+              className="items-center"
+            />
+          </div>
         </div>
 
         <ButtonStack>
@@ -106,7 +109,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
             disabled={isLoading || !!error}
           />
         </ButtonStack>
-      </div>
+      </BlackModalContent>
     );
   },
 };

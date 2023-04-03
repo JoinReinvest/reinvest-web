@@ -14,10 +14,10 @@ import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredNetWorthModal } from 'views/whyRequiredModals/WhyRequiredNetWorthModal';
 import { z } from 'zod';
 
-import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -41,13 +41,17 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
+      fields.address,
+      fields.isAccreditedInvestor,
       fields.experience,
+      fields.employmentStatus,
     ];
 
-    return (
-      fields.accountType === DraftAccountType.Individual &&
-      (fields.isCompletedProfile || (allRequiredFieldsExists(profileFields) && !fields.isCompletedProfile))
-    );
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+
+    return isAccountIndividual && (hasCompletedProfileCreation || (hasProfileFields && !hasCompletedProfileCreation));
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
