@@ -53,8 +53,13 @@
   }
 
   &[data-has-error='true'] {
-    @apply bg-tertiary-error/5 shadow-transparent mb-26;
-    @apply border-tertiary-error bg-tertiary-error/[.05];
+    @apply shadow-transparent border-tertiary-error bg-tertiary-error/5;
+  }
+
+  &[data-has-error='true']:has(.hkek-input-text-control-error-message),
+  &[data-has-error='true']:has(.hkek-input-masked-control-error-message),
+  &[data-has-error='true']:has(.hkek-input-area-control-error-message) {
+    @apply mb-26;
   }
 
   &[data-is-dirty='true'] {
