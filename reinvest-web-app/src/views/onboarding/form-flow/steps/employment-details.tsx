@@ -33,8 +33,13 @@ const schema = z.object({
 export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_DETAILS,
 
-  willBePartOfTheFlow({ accountType, employmentStatus, isCompletedProfile }) {
-    return accountType === DraftAccountType.Individual && employmentStatus === EmploymentStatus.Employed && isCompletedProfile;
+  willBePartOfTheFlow(fields) {
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+    const isEmployed = fields.employmentStatus === EmploymentStatus.Employed;
+    const meetsBaseRequirements = isAccountIndividual && isEmployed;
+
+    return meetsBaseRequirements || (meetsBaseRequirements && hasCompletedProfileCreation);
   },
 
   doesMeetConditionFields(fields) {
@@ -47,12 +52,19 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
+      fields.address,
+      fields.isAccreditedInvestor,
+      fields.experience,
+      fields.employmentStatus,
     ];
 
-    return (
-      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) ||
-      (fields.isCompletedProfile && fields.employmentStatus === EmploymentStatus.Employed)
-    );
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+    const isEmployed = fields.employmentStatus === EmploymentStatus.Employed;
+    const meetsBaseRequirements = isAccountIndividual && isEmployed;
+
+    return (meetsBaseRequirements && hasProfileFields) || (meetsBaseRequirements && hasCompletedProfileCreation);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
