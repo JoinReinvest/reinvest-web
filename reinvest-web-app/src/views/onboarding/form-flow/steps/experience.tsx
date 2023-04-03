@@ -12,9 +12,9 @@ import { EXPERIENCES_AS_OPTIONS } from 'reinvest-app-common/src/constants/experi
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType, Experience } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
-import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -28,7 +28,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EXPERIENCE,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === DraftAccountType.Individual;
+    return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile;
   },
   doesMeetConditionFields(fields) {
     const requiredFields = [
@@ -42,7 +42,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
       fields.ssn,
     ];
 
-    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -52,7 +52,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess, data } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -63,9 +63,13 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
+        if (data?.isCompleted) {
+          updateStoreFields({ isCompletedProfile: true });
+        }
+
         moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isSuccess, moveToNextStep, data, updateStoreFields]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>

@@ -12,8 +12,9 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'reinvest-app-common/src/constants/industries';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { DraftAccountType, EmploymentStatus } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -32,8 +33,8 @@ const schema = z.object({
 export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_DETAILS,
 
-  willBePartOfTheFlow(fields) {
-    return (!!fields.isCompletedProfile && fields.accountType === DraftAccountType.Individual) || fields.employmentStatus === EmploymentStatus.Employed;
+  willBePartOfTheFlow({ accountType, employmentStatus, isCompletedProfile }) {
+    return accountType === DraftAccountType.Individual && employmentStatus === EmploymentStatus.Employed && isCompletedProfile;
   },
 
   doesMeetConditionFields(fields) {
@@ -48,7 +49,10 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       fields.ssn,
     ];
 
-    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || !!fields.isCompletedProfile;
+    return (
+      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) ||
+      (fields.isCompletedProfile && fields.employmentStatus === EmploymentStatus.Employed)
+    );
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -59,22 +63,24 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
     });
 
     const {
+      error: individualDraftAccountError,
       isLoading,
-      updateData,
-      error: { individualDraftAccountError },
+      mutateAsync: completeIndividualDraftAccountMutate,
       isSuccess,
-    } = useUpdateDataIndividualOnboarding();
+    } = useCompleteIndividualDraftAccount(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
+      const { employmentDetails } = fields;
       await updateStoreFields(fields);
-      await updateData(Identifiers.EMPLOYMENT_DETAILS, { ...storeFields, ...fields });
-    };
 
-    const onSkip = () => {
-      updateStoreFields({ employmentStatus: undefined });
-      moveToNextStep();
+      if (storeFields.accountId && employmentDetails?.employerName && employmentDetails?.occupation && employmentDetails?.industry) {
+        await completeIndividualDraftAccountMutate({
+          accountId: storeFields.accountId,
+          input: { employer: { nameOfEmployer: employmentDetails.employerName, title: employmentDetails.occupation, industry: employmentDetails.industry } },
+        });
+      }
     };
 
     useEffect(() => {
@@ -119,13 +125,6 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
             label="Continue"
             disabled={shouldButtonBeDisabled}
             loading={isLoading}
-          />
-
-          <Button
-            label="Skip"
-            variant="outlined"
-            onClick={onSkip}
-            className="text-green-frost-01"
           />
         </ButtonStack>
       </Form>
