@@ -34,7 +34,7 @@ const schema = z
   })
   .superRefine((fields, context) => {
     const countOfFilledFields = fields.companyTickerSymbols.filter(({ symbol }) => symbol !== '').length;
-    const hasAtLeastThreeFilled = countOfFilledFields >= MINUMUM_COMPANY_TICKER_SYMBOLS;
+    const hasAtLeastThreeFilled = countOfFilledFields >= 1;
 
     if (!hasAtLeastThreeFilled) {
       return context.addIssue({
