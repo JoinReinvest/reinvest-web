@@ -42,8 +42,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInvalidVerificationCode, setIsInvalidVerificationCode] = useState(false);
     const { data, error: verifyPhoneNumberError, isLoading, isSuccess, mutate: verifyPhoneNumberMutate } = useVerifyPhoneNumber(getApiClient);
-    const { mutateAsync: setPhoneNumberMutate } = useSetPhoneNumber(getApiClient);
-    const [isCodeResent, setIsCodeResent] = useState(false);
+    const { mutateAsync: setPhoneNumberMutate, isSuccess: isSetPhoneNumberSuccess } = useSetPhoneNumber(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
@@ -60,9 +59,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
     const resendCodeOnClick = async () => {
       if (storeFields.phone?.number && storeFields.phone?.countryCode) {
-        setIsCodeResent(false);
         await setPhoneNumberMutate({ phoneNumber: storeFields.phone.number, countryCode: storeFields.phone.countryCode });
-        setIsCodeResent(true);
       }
     };
 
@@ -87,7 +84,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
           {verifyPhoneNumberError && <FormMessage message={verifyPhoneNumberError.message} />}
 
           {isInvalidVerificationCode && <FormMessage message="Invalid Authentication Code" />}
-          {isCodeResent && (
+          {isSetPhoneNumberSuccess && (
             <FormMessage
               message="Code resent"
               variant="info"
