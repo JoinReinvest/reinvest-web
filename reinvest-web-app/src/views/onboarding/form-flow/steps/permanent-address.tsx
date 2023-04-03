@@ -138,6 +138,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
               name="zip"
               control={control}
               shouldUnregister
+              defaultValue={storeFields.address?.zip}
             />
           </div>
         </FormContent>
