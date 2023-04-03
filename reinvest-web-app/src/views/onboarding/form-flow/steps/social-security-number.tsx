@@ -61,8 +61,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
-    console.log("isValid", formState.isValid)
-    console.log("submitting", formState.isSubmitting)
+
     const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onMoreInformationClick = () => {
@@ -89,7 +88,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         </div>
       );
     }
-  console.log(storeFields.ssn)
+
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
