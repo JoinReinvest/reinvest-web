@@ -53,7 +53,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'onBlur',
+      mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
@@ -62,7 +62,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onMoreInformationClick = () => {
       setIsInformationModalOpen(true);
@@ -102,6 +102,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
                 <InputSocialSecurityNumber
                   name="ssn"
                   control={control}
+                  defaultValue={storeFields.ssn}
                 />
 
                 <OpenModalLink

@@ -10,8 +10,9 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_VALUES } from 'reinvest-app-common/src/constants/employment_statuses';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -63,22 +64,20 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
     });
 
     const {
+      error: individualDraftAccountError,
       isLoading,
-      updateData,
-      error: { individualDraftAccountError },
+      mutateAsync: completeIndividualDraftAccountMutate,
       isSuccess,
-    } = useUpdateDataIndividualOnboarding();
+    } = useCompleteIndividualDraftAccount(getApiClient);
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.EMPLOYMENT_STATUS, { ...storeFields, ...form.getValues() });
-    };
 
-    const onSkip = () => {
-      updateStoreFields({ employmentStatus: undefined });
-      moveToNextStep();
+      if (storeFields.accountId && fields.employmentStatus) {
+        await completeIndividualDraftAccountMutate({ accountId: storeFields.accountId, input: { employmentStatus: { status: fields.employmentStatus } } });
+      }
     };
 
     useEffect(() => {
@@ -109,13 +108,6 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
             label="Continue"
             disabled={shouldButtonBeDisabled}
             loading={isLoading}
-          />
-
-          <Button
-            label="Skip"
-            variant="outlined"
-            onClick={onSkip}
-            className="text-green-frost-01"
           />
         </ButtonStack>
       </Form>

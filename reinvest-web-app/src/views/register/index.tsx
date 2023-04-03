@@ -19,7 +19,7 @@ export const RegistrationView = () => {
   return (
     <>
       {shouldDisplayFirstStep && (
-        <LoginLayout>
+        <LoginLayout className="lg:!gap-128">
           <CurrentStepView />
         </LoginLayout>
       )}
