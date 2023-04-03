@@ -117,7 +117,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
       fields.isAssociatedWithFinra && statements.push(StatementType.FinraMember);
       fields.isAssociatedWithPubliclyTradedCompany && statements.push(StatementType.TradingCompanyStakeholder);
       fields.isSeniorPoliticalFigure && statements.push(StatementType.Politician);
-      await updateStoreFields({ statementTypes: statements });
+      await updateStoreFields({ statementTypes: statements, compliances: fields });
       moveToNextStep();
     };
 
