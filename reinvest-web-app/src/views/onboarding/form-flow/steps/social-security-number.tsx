@@ -102,6 +102,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
                 <InputSocialSecurityNumber
                   name="ssn"
                   control={control}
+                  defaultValue={storeFields.ssn}
                 />
 
                 <OpenModalLink

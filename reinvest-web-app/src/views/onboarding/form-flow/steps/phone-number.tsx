@@ -102,6 +102,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
                   <InputPhoneNumber
                     name="phone.number"
                     control={control}
+                    defaultValue={storeFields.phone?.number}
                   />
                 </div>
               </div>
