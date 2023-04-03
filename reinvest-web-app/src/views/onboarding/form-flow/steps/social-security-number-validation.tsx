@@ -1,4 +1,5 @@
 import { IconXCircle } from 'assets/icons/IconXCircle';
+import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { LinkButton } from 'components/LinkButton';
 import { GetHelpLink } from 'components/Links/GetHelp';
@@ -53,7 +54,7 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
     };
 
     return (
-      <div className="relative flex h-full flex-col gap-60 lg:justify-center lg:gap-16">
+      <BlackModalContent>
         <div className="flex w-full flex-col gap-36">
           <IconXCircle className="mx-auto" />
 
@@ -81,7 +82,7 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
             label="Contact"
           />
         </ButtonStack>
-      </div>
+      </BlackModalContent>
     );
   },
 };

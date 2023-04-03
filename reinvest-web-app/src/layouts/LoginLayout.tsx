@@ -1,13 +1,18 @@
 import { LogoIcon } from 'assets/LogoIcon';
-import React from 'react';
+import cx from 'classnames';
+import { HTMLAttributes, PropsWithChildren } from 'react';
 
-export interface LoginLayoutProps {
-  children?: React.ReactNode;
-}
+type PrimitiveProps = Pick<HTMLAttributes<HTMLDivElement>, 'className'>;
+interface Props extends PrimitiveProps, PropsWithChildren {}
 
-export const LoginLayout = ({ children }: LoginLayoutProps) => {
+export const LoginLayout = ({ className, children }: Props) => {
+  const classes = cx(
+    'relative flex h-screen flex-col items-center justify-between gap-40 text-center text-white max-lg:pb-44 lg:justify-center lg:gap-84',
+    className,
+  );
+
   return (
-    <div className="relative flex h-screen flex-col items-center justify-between gap-40 text-center text-white max-lg:pb-44 lg:justify-center lg:gap-84">
+    <div className={classes}>
       <div className="absolute after:absolute after:top-0 after:left-0 after:h-full after:w-full after:bg-gradient-to-b after:from-black-01/10 after:to-black-01/50">
         <video
           autoPlay

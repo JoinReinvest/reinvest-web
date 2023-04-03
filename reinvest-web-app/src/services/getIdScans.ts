@@ -17,5 +17,5 @@ export const sendDocumentsToS3AndGetScanIds = async (
 
   await sendFilesToS3Bucket(images);
 
-  return images.map(({ id }) => ({ id }));
+  return images.map(({ id, file }) => ({ id, fileName: file.name }));
 };

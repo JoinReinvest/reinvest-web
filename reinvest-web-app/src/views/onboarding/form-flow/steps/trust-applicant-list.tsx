@@ -1,3 +1,4 @@
+import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -51,7 +52,7 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
     };
 
     return (
-      <div className="relative grid h-full grid-cols-1 grid-rows-[1fr_auto] justify-between gap-16">
+      <BlackModalContent>
         <div className="flex flex-col gap-60 lg:justify-center lg:gap-16">
           <BlackModalTitle title="Your applicants." />
 
@@ -73,7 +74,7 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
             onClick={onContinue}
           />
         </ButtonStack>
-      </div>
+      </BlackModalContent>
     );
   },
 };

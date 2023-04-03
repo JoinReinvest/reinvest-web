@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
 import { getApiClient } from 'services/getApiClient';
 import { Schema, z } from 'zod';
@@ -39,16 +40,15 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
     const [isInvalidVerificationCode, setIsInvalidVerificationCode] = useState(false);
     const { data, error: verifyPhoneNumberError, isLoading, isSuccess, mutate: verifyPhoneNumberMutate } = useVerifyPhoneNumber(getApiClient);
+    const { mutateAsync: setPhoneNumberMutate, isSuccess: isSetPhoneNumberSuccess } = useSetPhoneNumber(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ authCode }) => {
       setIsInvalidVerificationCode(false);
-      setIsValidatingCredentials(true);
       await updateStoreFields({ authCode });
       const { phone } = storeFields;
 
@@ -58,16 +58,18 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     };
 
     const resendCodeOnClick = async () => {
-      return;
+      if (storeFields.phone?.number && storeFields.phone?.countryCode) {
+        await setPhoneNumberMutate({ phoneNumber: storeFields.phone.number, countryCode: storeFields.phone.countryCode });
+      }
     };
 
     useEffect(() => {
       if (isSuccess) {
-        // if (data) { //dont push
-        return moveToNextStep();
-        // }
+        if (data) {
+          return moveToNextStep();
+        }
 
-        // return setIsInvalidVerificationCode(true);
+        return setIsInvalidVerificationCode(true);
       }
     }, [isSuccess, moveToNextStep, data]);
 
@@ -82,6 +84,12 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
           {verifyPhoneNumberError && <FormMessage message={verifyPhoneNumberError.message} />}
 
           {isInvalidVerificationCode && <FormMessage message="Invalid Authentication Code" />}
+          {isSetPhoneNumberSuccess && (
+            <FormMessage
+              message="Code resent"
+              variant="info"
+            />
+          )}
 
           <div className="flex w-full flex-col gap-32">
             <InputAuthenticationCode
@@ -106,7 +114,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isValidatingCredentials}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>

@@ -85,9 +85,9 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       const avatarLink = await createAvatarLinkMutate({});
       let avatarId = '';
 
-      if (profilePicture) {
+      if (fields.profilePicture) {
         if (avatarLink?.url && avatarLink.id) {
-          await sendFilesToS3Bucket([{ file: profilePicture, url: avatarLink.url, id: avatarLink.id }]);
+          await sendFilesToS3Bucket([{ file: fields.profilePicture, url: avatarLink.url, id: avatarLink.id }]);
           avatarId = avatarLink.id;
         }
       }
@@ -107,10 +107,14 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     const onSkip = async () => {
       if (accountId) {
-        await completeIndividualDraftAccountMutate({
+        const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
           input: { verifyAndFinish: true },
         });
+
+        if (individualDraftAccount?.isCompleted) {
+          openAccountMutate({ draftAccountId: accountId });
+        }
       }
     };
 

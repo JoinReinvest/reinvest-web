@@ -7,7 +7,7 @@ interface Props extends PrimitiveProps, PropsWithChildren {}
 export const Form = ({ onSubmit, children, className }: Props) => (
   <form
     onSubmit={onSubmit}
-    className={cx('relative h-full grid grid-rows-[1fr_auto] grid-cols-1 gap-16 justify-between', className)}
+    className={cx('relative h-full grid grid-rows-full-auto grid-cols-1 gap-16 justify-between', className)}
   >
     {children}
   </form>

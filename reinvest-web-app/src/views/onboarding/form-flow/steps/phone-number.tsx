@@ -15,7 +15,6 @@ import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { getApiClient } from 'services/getApiClient';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
@@ -48,13 +47,11 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
     const { data: phoneNumberData, error: phoneNumberError, isLoading, mutate: setPhoneNumberMutate, isSuccess } = useSetPhoneNumber(getApiClient);
 
-    const { control, handleSubmit, getValues, formState, setError } = useForm<Fields>({
+    const { control, handleSubmit, formState, setError } = useForm<Fields>({
       mode: 'onBlur',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
-
-    const { updateData } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
     const phoneNumberErrorMessage = formState.errors?.phone?.number?.message;
@@ -66,10 +63,6 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.PHONE_NUMBER, {
-        ...getValues(),
-        ...storeFields,
-      });
 
       const { phone } = fields;
 
@@ -116,6 +109,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
                       name="phone.number"
                       control={control}
                       willDisplayErrorMessage={false}
+                      defaultValue={storeFields.phone?.number}
                     />
                   </div>
                 </div>
