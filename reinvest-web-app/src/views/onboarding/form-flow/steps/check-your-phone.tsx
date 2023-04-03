@@ -63,11 +63,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        if (data) {
-          return moveToNextStep();
-        }
-
-        return setIsInvalidVerificationCode(true);
+        return moveToNextStep();
       }
     }, [isSuccess, moveToNextStep, data]);
 

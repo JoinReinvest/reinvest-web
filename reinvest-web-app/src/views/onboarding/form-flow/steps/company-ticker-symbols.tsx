@@ -4,10 +4,14 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { StatementType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
 import { CompanyTickerSymbol, OnboardingFormFields } from '../form-fields';
@@ -44,14 +48,29 @@ const schema = z
 export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.COMPANY_TICKER_SYMBOLS,
 
-  willBePartOfTheFlow: ({ compliances }) => {
-    return !!compliances?.isAssociatedWithPubliclyTradedCompany;
+  willBePartOfTheFlow: ({ statementTypes, isCompletedProfile }) => {
+    return !!statementTypes?.includes(StatementType.TradingCompanyStakeholder) && !isCompletedProfile;
+  },
+
+  doesMeetConditionFields(fields) {
+    const requiredFields = [
+      fields.accountType,
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.phone?.number,
+      fields.phone?.countryCode,
+      fields.authCode,
+      fields.dateOfBirth,
+      fields.residency,
+    ];
+
+    return allRequiredFieldsExists(requiredFields) && !!fields.statementTypes?.includes(StatementType.TradingCompanyStakeholder) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const hasStoredTickerSymbols = !!storeFields.companyTickerSymbols?.length;
     const defaultValues: Fields = { companyTickerSymbols: hasStoredTickerSymbols ? storeFields.companyTickerSymbols : initialValues };
-
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
     const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
@@ -61,7 +80,7 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
     const { fields, append } = useFieldArray({ control, name: 'companyTickerSymbols' });
 
     const [shouldAppendButtonBeDisabled, setShouldAppendButtonBeDisabled] = useState(true);
-    const shouldSubmitButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldSubmitButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     useEffect(() => {
       const { unsubscribe } = watch(({ companyTickerSymbols }) => {
@@ -82,13 +101,25 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ companyTickerSymbols }) => {
       await updateStoreFields({ companyTickerSymbols });
-      moveToNextStep();
+      const tickerSymbols = companyTickerSymbols?.map(ticker => ticker.symbol);
+
+      if (tickerSymbols) {
+        await completeProfileMutate({ input: { statements: [{ type: StatementType.TradingCompanyStakeholder, forStakeholder: { tickerSymbols } }] } });
+      }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Please list ticker symbols of the publicly traded company(s) below." />
+
+          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
 
           <div className="flex w-full flex-col gap-16">
             {fields.map((field, index) => (
@@ -116,6 +147,7 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldSubmitButtonBeDisabled}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>

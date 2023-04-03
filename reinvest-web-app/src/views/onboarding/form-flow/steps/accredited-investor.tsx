@@ -10,11 +10,12 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { AccreditedInvestorStatement, DraftAccountType, StatementType } from 'reinvest-app-common/src/types/graphql';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -62,12 +63,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -75,7 +71,20 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
       const isAccreditedInvestor = fields?.isAccreditedInvestor === 'yes' ? true : false;
 
       await updateStoreFields({ isAccreditedInvestor });
-      await updateData(Identifiers.ACCREDITED_INVESTOR, { ...storeFields, isAccreditedInvestor });
+      await completeProfileMutate({
+        input: {
+          statements: [
+            {
+              type: StatementType.AccreditedInvestor,
+              forAccreditedInvestor: {
+                statement: isAccreditedInvestor
+                  ? AccreditedInvestorStatement.IAmAnAccreditedInvestor
+                  : AccreditedInvestorStatement.IAmNotExceeding_10PercentOfMyNetWorthOrAnnualIncome,
+              },
+            },
+          ],
+        },
+      });
     };
 
     useEffect(() => {

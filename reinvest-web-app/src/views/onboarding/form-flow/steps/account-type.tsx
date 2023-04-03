@@ -66,7 +66,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
         updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
-    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
+    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (createDraftAccountError && listAccounts && profileData) {
@@ -76,7 +76,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           moveToNextStep();
         }
       }
-    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields]);
+    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (profileData) {
