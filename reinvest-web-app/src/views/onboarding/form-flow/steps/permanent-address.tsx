@@ -82,10 +82,10 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async address => {
       await updateStoreFields({ address });
-      const { addressLine1, addressLine2, city, zip, state, country } = address;
+      const { addressLine1, addressLine2, city, zip, state } = address;
 
-      if (addressLine1 && city && country && state && zip) {
-        await completeProfileMutate({ input: { address: { addressLine2, addressLine1, city, country, state, zip } } });
+      if (addressLine1 && city && state && zip) {
+        await completeProfileMutate({ input: { address: { addressLine2, addressLine1, city, country: 'USA', state, zip } } });
       }
     };
 
