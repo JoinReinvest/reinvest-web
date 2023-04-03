@@ -51,6 +51,7 @@ module.exports = {
       100: '10.0rem',
       110: '11.0rem',
       120: '12.0rem',
+      128: '12.8rem',
       144: '14.4rem',
       180: '18.0rem',
       210: '21.0rem',
@@ -198,6 +199,9 @@ module.exports = {
       },
       minHeight: {
         180: '18rem',
+      },
+      gridTemplateRows: {
+        'full-auto': '1fr auto'
       },
       lineHeight: {
         13: '1.3rem',

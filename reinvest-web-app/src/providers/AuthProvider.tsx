@@ -10,7 +10,7 @@ export enum ChallengeName {
 
 interface AuthContextInterface {
   actions: {
-    confirmSignIn: (authenticationCode: string) => Promise<CognitoUser | Error | null>;
+    confirmSignIn: (authenticationCode: string, user: CognitoUser) => Promise<CognitoUser | Error | null>;
     signIn: (email: string, password: string, redirectTo?: string) => Promise<CognitoUser | Error | null>;
     signOut: () => Promise<void>;
   };
@@ -61,7 +61,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     }
   };
 
-  const confirmSignIn = async (authenticationCode: string) => {
+  const confirmSignIn = async (authenticationCode: string, user: CognitoUser) => {
     const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
 
     setUser(confirmedUser);

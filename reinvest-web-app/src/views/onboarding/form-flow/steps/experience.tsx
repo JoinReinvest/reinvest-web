@@ -10,8 +10,9 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EXPERIENCES_AS_OPTIONS } from 'reinvest-app-common/src/constants/experiences';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType, Experience } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
@@ -27,7 +28,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EXPERIENCE,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === DraftAccountType.Individual;
+    return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile;
   },
   doesMeetConditionFields(fields) {
     const requiredFields = [
@@ -41,39 +42,34 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
       fields.ssn,
     ];
 
-    return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields);
+    return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
+    const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess, data } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      await updateData(Identifiers.EXPERIENCE, { ...storeFields, experience: getValues().experience });
-    };
-
-    const onSkip = () => {
-      moveToNextStep();
+    const onSubmit: SubmitHandler<Fields> = async ({ experience }) => {
+      await updateStoreFields({ experience });
+      await completeProfileMutate({ input: { investingExperience: { experience }, verifyAndFinish: true } });
     };
 
     useEffect(() => {
       if (isSuccess) {
+        if (data?.isCompleted) {
+          updateStoreFields({ isCompletedProfile: true });
+        }
+
         moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isSuccess, moveToNextStep, data, updateStoreFields]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -96,14 +92,6 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isLoading}
-          />
-
-          <Button
-            label="Skip"
-            variant="outlined"
-            onClick={onSkip}
-            className="text-green-frost-01"
             loading={isLoading}
           />
         </ButtonStack>

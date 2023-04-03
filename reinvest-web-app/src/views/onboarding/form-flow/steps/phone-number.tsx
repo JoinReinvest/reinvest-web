@@ -13,7 +13,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { CALLING_CODES } from 'reinvest-app-common/src/constants/country-codes';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
@@ -44,20 +45,15 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const { data: phoneNumberData, error: phoneNumberError, isLoading, mutate: setPhoneNumberMutate, isSuccess } = useSetPhoneNumber(getApiClient);
 
     const form = useForm<Fields>({
-      mode: 'all',
+      mode: 'onBlur',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const { control, handleSubmit, getValues } = form;
-    const {
-      isLoading,
-      updateData,
-      error: { phoneNumberError },
-      data: { phoneNumberData },
-    } = useUpdateDataIndividualOnboarding();
+    const { control, handleSubmit } = form;
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
@@ -67,17 +63,19 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.PHONE_NUMBER, {
-        ...getValues(),
-        ...storeFields,
-      });
+
+      const { phone } = fields;
+
+      if (phone?.number && phone.countryCode) {
+        setPhoneNumberMutate({ phoneNumber: phone.number, countryCode: phone.countryCode });
+      }
     };
 
     useEffect(() => {
-      if (phoneNumberData) {
+      if (phoneNumberData && isSuccess) {
         moveToNextStep();
       }
-    }, [phoneNumberData, moveToNextStep]);
+    }, [phoneNumberData, moveToNextStep, isSuccess]);
 
     return (
       <>
@@ -89,6 +87,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
             />
 
             {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
+
             <div className="flex w-full flex-col gap-16">
               <div className="flex">
                 <div className="contents child:basis-2/5">
@@ -103,6 +102,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
                   <InputPhoneNumber
                     name="phone.number"
                     control={control}
+                    defaultValue={storeFields.phone?.number}
                   />
                 </div>
               </div>
