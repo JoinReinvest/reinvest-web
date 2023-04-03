@@ -53,7 +53,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'onBlur',
+      mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
@@ -61,8 +61,9 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
-
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    console.log("isValid", formState.isValid)
+    console.log("submitting", formState.isSubmitting)
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onMoreInformationClick = () => {
       setIsInformationModalOpen(true);
@@ -88,7 +89,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         </div>
       );
     }
-
+  console.log(storeFields.ssn)
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
