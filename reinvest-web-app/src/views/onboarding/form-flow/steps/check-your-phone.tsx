@@ -39,7 +39,6 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const [isValidatingCredentials, setIsValidatingCredentials] = useState(false);
     const [isInvalidVerificationCode, setIsInvalidVerificationCode] = useState(false);
     const { data, error: verifyPhoneNumberError, isLoading, isSuccess, mutate: verifyPhoneNumberMutate } = useVerifyPhoneNumber(getApiClient);
 
@@ -48,7 +47,6 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ authCode }) => {
       setIsInvalidVerificationCode(false);
-      setIsValidatingCredentials(true);
       await updateStoreFields({ authCode });
       const { phone } = storeFields;
 
@@ -106,7 +104,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isValidatingCredentials}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>
