@@ -31,7 +31,8 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
     const validationSchema = schema.safeParse(file);
 
     if (!validationSchema.success) {
-      const validationErrorMessage = validationSchema.error.message;
+      const { errors } = validationSchema.error;
+      const validationErrorMessage = errors.at(0)?.message;
       setErrorMessage(validationErrorMessage);
     }
 

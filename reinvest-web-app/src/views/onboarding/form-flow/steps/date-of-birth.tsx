@@ -87,6 +87,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
               <InputBirthDate
                 name="dateOfBirth"
                 control={control}
+                defaultValue={storeFields.dateOfBirth}
               />
 
               <OpenModalLink

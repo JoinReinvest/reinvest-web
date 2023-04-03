@@ -19,7 +19,7 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
-const MINUMUM_COMPANY_TICKER_SYMBOLS = 3;
+const MINUMUM_COMPANY_TICKER_SYMBOLS = 1;
 const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
 const initialValues = new Array(MINUMUM_COMPANY_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
 

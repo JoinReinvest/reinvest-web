@@ -15,7 +15,6 @@ import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { getApiClient } from 'services/getApiClient';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
@@ -48,16 +47,15 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
     const { data: phoneNumberData, error: phoneNumberError, isLoading, mutate: setPhoneNumberMutate, isSuccess } = useSetPhoneNumber(getApiClient);
 
-    const form = useForm<Fields>({
+    const { control, handleSubmit, formState, setError } = useForm<Fields>({
       mode: 'onBlur',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const { control, handleSubmit, getValues } = form;
-    const { updateData } = useUpdateDataIndividualOnboarding();
-
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const phoneNumberErrorMessage = formState.errors?.phone?.number?.message;
+    const errorMessage = formState.errors?.phone?.countryCode?.message || phoneNumberErrorMessage;
 
     const onMoreInformationClick = () => {
       setIsInformationModalOpen(true);
@@ -65,10 +63,6 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.PHONE_NUMBER, {
-        ...getValues(),
-        ...storeFields,
-      });
 
       const { phone } = fields;
 
@@ -83,6 +77,11 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
       }
     }, [phoneNumberData, moveToNextStep, isSuccess]);
 
+    useEffect(() => {
+      setError('phone.countryCode', { message: phoneNumberErrorMessage });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phoneNumberErrorMessage]);
+
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
@@ -95,21 +94,27 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
             {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
 
             <div className="flex w-full flex-col gap-16">
-              <div className="flex">
-                <div className="contents child:basis-2/5">
-                  <InputPhoneNumberCountryCode
-                    name="phone.countryCode"
-                    control={control}
-                    defaultValue={CALLING_CODES[0]}
-                  />
+              <div className="flex flex-col gap-10">
+                <div className="flex">
+                  <div className="contents child:basis-2/5">
+                    <InputPhoneNumberCountryCode
+                      name="phone.countryCode"
+                      control={control}
+                      defaultValue={CALLING_CODES[0]}
+                    />
+                  </div>
+
+                  <div className="contents">
+                    <InputPhoneNumber
+                      name="phone.number"
+                      control={control}
+                      willDisplayErrorMessage={false}
+                      defaultValue={storeFields.phone?.number}
+                    />
+                  </div>
                 </div>
 
-                <div className="contents">
-                  <InputPhoneNumber
-                    name="phone.number"
-                    control={control}
-                  />
-                </div>
+                {errorMessage && <FormMessage message={errorMessage} />}
               </div>
 
               <OpenModalLink
