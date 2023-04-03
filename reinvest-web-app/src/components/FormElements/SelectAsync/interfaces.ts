@@ -9,7 +9,6 @@ export interface Props<FormFields extends FieldValues, Option> extends UseContro
   formatOptionsLabel?: FormatOptionLabel<ExtendedSelectOption<Option>>;
   formatSelectedOptionLabel?: (option: ExtendedSelectOption<Option>) => ReactNode;
   menuPortalTarget?: HTMLElement | null;
-  onOptionCreated?: OptionActionHandler<ExtendedSelectOption<Option>>;
   onOptionSelected?: OptionActionHandler<ExtendedSelectOption<Option>>;
   placeholder?: string;
   required?: boolean;
