@@ -2,9 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import dayjs from 'dayjs';
@@ -51,11 +51,10 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
-    const defaultValues: Fields = { dateOfBirth: storeFields.dateOfBirth || '' };
     const { formState, control, handleSubmit } = useForm<Fields>({
-      mode: 'onBlur',
+      mode: 'onChange',
       resolver: zodResolver(schema),
-      defaultValues: async () => defaultValues,
+      defaultValues: storeFields,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
@@ -83,7 +82,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="Enter your date of birth" />
 
-            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
             <div className="flex w-full flex-col gap-16">
               <InputBirthDate
                 name="dateOfBirth"

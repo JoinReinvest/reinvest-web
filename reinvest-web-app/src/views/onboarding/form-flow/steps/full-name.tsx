@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,6 +13,7 @@ import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/quer
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -67,7 +67,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle title="Enter your first and last name as it appears on your ID" />
 
-          {error && <FormMessage message={error.message} />}
+          {error && <ErrorMessagesHandler error={error} />}
           <div className="flex w-full flex-col gap-16">
             <Input
               name="name.firstName"

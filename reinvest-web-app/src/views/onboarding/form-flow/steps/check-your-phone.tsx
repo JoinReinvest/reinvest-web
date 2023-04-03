@@ -17,6 +17,7 @@ import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/v
 import { getApiClient } from 'services/getApiClient';
 import { Schema, z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -81,7 +82,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
             subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
           />
 
-          {verifyPhoneNumberError && <FormMessage message={verifyPhoneNumberError.message} />}
+          {verifyPhoneNumberError && <ErrorMessagesHandler error={verifyPhoneNumberError} />}
 
           {isInvalidVerificationCode && <FormMessage message="Invalid Authentication Code" />}
           {isSetPhoneNumberSuccess && (
