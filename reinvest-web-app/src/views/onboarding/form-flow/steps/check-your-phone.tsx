@@ -12,6 +12,7 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
 import { getApiClient } from 'services/getApiClient';
 import { Schema, z } from 'zod';
@@ -41,6 +42,8 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInvalidVerificationCode, setIsInvalidVerificationCode] = useState(false);
     const { data, error: verifyPhoneNumberError, isLoading, isSuccess, mutate: verifyPhoneNumberMutate } = useVerifyPhoneNumber(getApiClient);
+    const { mutateAsync: setPhoneNumberMutate } = useSetPhoneNumber(getApiClient);
+    const [isCodeResent, setIsCodeResent] = useState(false);
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
@@ -56,7 +59,11 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     };
 
     const resendCodeOnClick = async () => {
-      return;
+      if (storeFields.phone?.number && storeFields.phone?.countryCode) {
+        setIsCodeResent(false);
+        await setPhoneNumberMutate({ phoneNumber: storeFields.phone.number, countryCode: storeFields.phone.countryCode });
+        setIsCodeResent(true);
+      }
     };
 
     useEffect(() => {
@@ -80,6 +87,12 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
           {verifyPhoneNumberError && <FormMessage message={verifyPhoneNumberError.message} />}
 
           {isInvalidVerificationCode && <FormMessage message="Invalid Authentication Code" />}
+          {isCodeResent && (
+            <FormMessage
+              message="Code resent"
+              variant="info"
+            />
+          )}
 
           <div className="flex w-full flex-col gap-32">
             <InputAuthenticationCode
