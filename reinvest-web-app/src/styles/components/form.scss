@@ -11,7 +11,7 @@
   }
 
   &[data-is-dirty='false'] {
-    @apply opacity-0 top-0;
+    @apply opacity-0;
   }
 
   &[data-has-error='true'] {
@@ -107,6 +107,12 @@
     .hkek-input-text-control-content {
       @apply mr-44;
     }
+  }
+}
+
+.hkek-input-masked-control {
+  .hkek-input-masked[data-has-fixed-placeholder='true'] {
+    @apply opacity-100;
   }
 }
 
