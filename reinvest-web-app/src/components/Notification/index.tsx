@@ -15,7 +15,7 @@ export const Notification = ({ isOpen, title, children, actions }: NotificationP
     )}
     className='select-none" max-w-375 cursor-pointer'
   >
-    <div className="flex flex-col gap-y-8 bg-green-frost-01/[0.4] py-16 px-24">
+    <div className="flex flex-col gap-y-8 bg-green-frost-01/[0.4] px-24 py-16">
       <div>{children}</div>
 
       <footer className="flex justify-between gap-x-12">
