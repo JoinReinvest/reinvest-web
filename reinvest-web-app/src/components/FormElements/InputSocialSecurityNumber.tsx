@@ -5,17 +5,14 @@ export function InputSocialSecurityNumber<FormFields extends FieldValues>(props:
   return (
     <InputMasked
       {...props}
-      maskOptions={{
-        mask: '000-00-0000',
-        lazy: false,
-        placeholderChar: '0',
-        eager: true,
-      }}
+      maskOptions={{ mask: '000-00-0000' }}
       placeholder="SSN"
       shouldUnregister
       willUseUnmaskedValue={false}
+      willTriggerChangeOnAccept
       willTriggerChangeOnCompletion
       hasFixedPlaceholder
+      inputPlaceholder="000-00-0000"
     />
   );
 }
