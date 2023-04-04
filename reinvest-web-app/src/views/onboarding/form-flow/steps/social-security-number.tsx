@@ -3,9 +3,9 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
@@ -52,12 +52,10 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { ssn: storeFields.ssn || '' };
-
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'onBlur',
+      mode: 'onSubmit',
       resolver: zodResolver(schema),
-      defaultValues: async () => defaultValues,
+      defaultValues: storeFields,
     });
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
@@ -97,13 +95,14 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="What’s your social security number?" />
 
-            {profileDetailsError && <FormMessage message="Internall Error" />}
+            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
             <div className="flex w-full flex-col gap-24">
               <div className="flex w-full flex-col gap-16">
                 <InputSocialSecurityNumber
                   name="ssn"
                   control={control}
+                  defaultValue={storeFields.ssn}
                 />
 
                 <OpenModalLink

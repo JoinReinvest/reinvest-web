@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Select } from 'components/Select';
 import { useEffect, useState } from 'react';
@@ -18,6 +17,7 @@ import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredNetWorthModal } from 'views/whyRequiredModals/WhyRequiredNetWorthModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -89,8 +89,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
             <BlackModalTitle title="What is approximate net worth and income?" />
-
-            {error && <FormMessage message={error.message} />}
+            {error && <ErrorMessagesHandler error={error} />}
 
             <div className="flex w-full flex-col gap-16">
               <Select
