@@ -54,7 +54,12 @@ export function SelectionCards<FormFields extends FieldValues>({
             'state-unchecked:text-gray-03 state-unchecked:border-gray-03',
           )}
         >
-          <Typography variant="paragraph-large">{option.title}</Typography>
+          <Typography
+            variant="paragraph-large"
+            className="text-white"
+          >
+            {option.title}
+          </Typography>
 
           {option.description && (
             <Typography
