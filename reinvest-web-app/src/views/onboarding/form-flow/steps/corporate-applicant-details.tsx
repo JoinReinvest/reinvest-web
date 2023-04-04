@@ -39,7 +39,7 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onBlur',
       resolver: zodResolver(APPLICANT_WITHOUT_IDENTIFICATION),
-      defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;

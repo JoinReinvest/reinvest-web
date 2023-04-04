@@ -1834,19 +1834,19 @@
     "@hookooekoo/configs-stylelint" "*"
     "@radix-ui/react-label" "^2.0.0"
 
-"@hookooekoo/ui-input-masked@0.9.1":
-  version "0.9.1"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.9.1.tgz#6c6e697cf06b9050a8bc3e6804e611aa32835055"
-  integrity sha512-ePG9wRG1diVugeR8ZSlFRbJZKOMSEkbfqLewG1u37VWOYV10dimefVIfIJfV741R6df2H53xZBRv7Llv4oK7mA==
+"@hookooekoo/ui-input-masked@0.9.3":
+  version "0.9.3"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-masked/-/ui-input-masked-0.9.3.tgz#0882699c09449399b0c619d66c0c78cbdbe77845"
+  integrity sha512-JS+erKRNVcZiURFlHjT/TAQDnjZa07jI3iEKvXt5wSJNQCChsQ8lbGf4EU0CizCL15IPOikjqCZI0uURYHL8/w==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
     "@hookooekoo/ui-input-control" "*"
     react-imask "^6.4.3"
 
-"@hookooekoo/ui-input-text@0.4.1":
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-text/-/ui-input-text-0.4.1.tgz#6f7505081f7029a6051be97ffbc141c964761eee"
-  integrity sha512-1GUAoa1+1pU6FWK/0KG1x45JgB5gyu27hrVBm4mQbi+lC+c4JEgD2gM4pAOcvBrAhKOFBL5F4mtKYNLAU4dFeg==
+"@hookooekoo/ui-input-text@0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-input-text/-/ui-input-text-0.4.2.tgz#97f434337ebd348485678be9fc294b35e33fa372"
+  integrity sha512-b+8wMUjB/+wq8aRYqaOR2i/1Rrth7b/XZMnE+UycRUm6Uk1AMkZrdMV15XJJ52BrIbQ0hv/IKlepv3VYVvtVOA==
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
     "@hookooekoo/hooks-forwarded-ref" "*"
