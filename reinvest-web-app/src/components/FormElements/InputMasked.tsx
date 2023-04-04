@@ -27,6 +27,7 @@ export function InputMasked<FormFields extends FieldValues>({
   willTriggerChangeOnCompletion = false,
   willDisplayErrorMessage = true,
   hasFixedPlaceholder = false,
+  inputPlaceholder,
 }: Props<FormFields>) {
   return (
     <PrimitiveInputMasked
@@ -45,6 +46,7 @@ export function InputMasked<FormFields extends FieldValues>({
       willTriggerChangeOnCompletion={willTriggerChangeOnCompletion}
       willDisplayErrorMessage={willDisplayErrorMessage}
       hasFixedPlaceholder={hasFixedPlaceholder}
+      inputPlaceholder={inputPlaceholder}
     />
   );
 }
