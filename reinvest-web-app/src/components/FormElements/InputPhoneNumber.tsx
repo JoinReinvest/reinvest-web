@@ -9,7 +9,7 @@ export function InputPhoneNumber<FormFields extends FieldValues>(props: CustomIn
       willUseUnmaskedValue={false}
       shouldUnregister
       willTriggerChangeOnAccept
-      hasFixedPlaceholder
+      hasFixedPlaceholder={false}
       inputPlaceholder="000-000-0000"
     />
   );
