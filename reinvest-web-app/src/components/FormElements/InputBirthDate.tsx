@@ -11,7 +11,6 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
 
   return (
     <InputMasked
-      {...props}
       maskOptions={{
         mask: Date,
         pattern: 'm{-}`d{-}`Y',
@@ -20,6 +19,7 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
         format: value => dayjs(value).format(dateFormat),
         parse: value => dayjs(value, dateFormat).toDate(),
       }}
+      {...props}
       placeholder="Date of Birth"
       willTriggerChangeOnCompletion
       willUseUnmaskedValue={false}
