@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
@@ -13,12 +12,13 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AddressAsOption, addressService } from 'services/addresses';
 import { getApiClient } from 'services/getApiClient';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -57,7 +57,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     const defaultValues: Fields = storeFields.address || initialValues;
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
-    const { control, formState, setValue, handleSubmit } = useForm<Fields>({
+    const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues,
@@ -65,18 +65,19 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
-    const formatSelectedAddress = (address: AddressAsOption) => {
-      const hasStreetAddress = !!address.addressLine1;
+    const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
+      const placeId = option?.placeId;
 
-      return hasStreetAddress ? address.addressLine1 : address.label;
-    };
+      if (placeId) {
+        const address = await addressService.getAddressFromPlaceId(placeId);
 
-    const setValuesFromStreetAddress = (address: AddressAsOption | null) => {
-      if (address?.addressLine1 && address?.city && address?.state && address?.zip) {
         setValue('addressLine1', address.addressLine1);
         setValue('city', address.city);
         setValue('state', address.state);
         setValue('zip', address.zip);
+        setValue('country', address.country);
+
+        setFocus('addressLine2');
       }
     };
 
@@ -103,15 +104,15 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             informationMessage="US Residents Only"
           />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <div className="flex w-full flex-col gap-16">
             <SelectAsync
               name="addressLine1"
               control={control}
-              loadOptions={getAddresses}
+              loadOptions={addressService.getSuggestions}
               placeholder="Street Address or P.O. Box"
-              formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
-              formatSelectedOptionLabel={formatSelectedAddress}
+              formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
+              formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
             />
 

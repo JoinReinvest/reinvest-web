@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Select } from 'components/Select';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -16,6 +15,7 @@ import { DomicileType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -80,7 +80,7 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
             informationMessage="US Residents Only"
           />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <div className="flex w-full flex-col gap-16">
             <Select
               name="domicile.forGreenCard.citizenshipCountry"

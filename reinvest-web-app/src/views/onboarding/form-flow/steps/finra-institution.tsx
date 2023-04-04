@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,6 +13,7 @@ import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -74,7 +74,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Please provide name of the FINRA institution below." />
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <Input
             name="finraInstitutionName"
             control={control}

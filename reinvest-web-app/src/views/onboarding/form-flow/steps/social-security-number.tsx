@@ -3,9 +3,9 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
@@ -15,10 +15,10 @@ import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
 
-import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -95,7 +95,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="What’s your social security number?" />
 
-            {profileDetailsError && <FormMessage message="Internall Error" />}
+            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
             <div className="flex w-full flex-col gap-24">
               <div className="flex w-full flex-col gap-16">

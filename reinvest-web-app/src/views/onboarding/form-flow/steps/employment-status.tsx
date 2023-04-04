@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -15,6 +14,7 @@ import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -28,8 +28,12 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_STATUS,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === DraftAccountType.Individual && fields.isCompletedProfile;
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+
+    return isAccountIndividual && hasCompletedProfileCreation;
   },
+
   doesMeetConditionFields(fields) {
     const profileFields = [
       fields.name?.firstName,
@@ -45,7 +49,11 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       fields.experience,
     ];
 
-    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || fields.isCompletedProfile;
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+
+    return (isAccountIndividual && hasProfileFields) || (isAccountIndividual && hasCompletedProfileCreation);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -83,7 +91,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle title="Are you currently employed?" />
 
-          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+          {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           <SelectionCards
             name="employmentStatus"
             control={form.control}

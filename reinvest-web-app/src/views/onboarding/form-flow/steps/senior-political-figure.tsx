@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { TextArea } from 'components/FormElements/TextArea';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -14,6 +13,7 @@ import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -75,7 +75,7 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle title="Please provide the name and position of this senior political figure." />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
           <TextArea
             name="seniorPoliticalFigure"

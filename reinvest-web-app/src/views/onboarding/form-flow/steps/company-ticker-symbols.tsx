@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
@@ -14,12 +13,13 @@ import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { CompanyTickerSymbol, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
-const MINUMUM_COMPANY_TICKER_SYMBOLS = 1;
+const MINUMUM_COMPANY_TICKER_SYMBOLS = 3;
 const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
 const initialValues = new Array(MINUMUM_COMPANY_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
 
@@ -119,7 +119,7 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle title="Please list ticker symbols of the publicly traded company(s) below." />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
           <div className="flex w-full flex-col gap-16">
             {fields.map((field, index) => (

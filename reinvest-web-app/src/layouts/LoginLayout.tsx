@@ -13,7 +13,7 @@ export const LoginLayout = ({ className, children }: Props) => {
 
   return (
     <div className={classes}>
-      <div className="absolute after:absolute after:top-0 after:left-0 after:h-full after:w-full after:bg-gradient-to-b after:from-black-01/10 after:to-black-01/50">
+      <div className="absolute after:absolute after:left-0 after:top-0 after:h-full after:w-full after:bg-gradient-to-b after:from-black-01/10 after:to-black-01/50">
         <video
           autoPlay
           loop

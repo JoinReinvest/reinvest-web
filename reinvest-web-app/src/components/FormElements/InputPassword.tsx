@@ -48,6 +48,8 @@ export function InputPassword<FormFields extends FieldValues>({
       ref={field.ref}
       autoCapitalize={false}
       autoComplete={false}
+      willDisplayErrorMessage
+      hasFixedPlaceholder={false}
     />
   );
 }

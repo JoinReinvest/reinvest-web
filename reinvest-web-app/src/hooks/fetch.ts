@@ -6,8 +6,8 @@ type PrimitiveSWRResponse<Data, Error> = Pick<SWRResponse<AxiosResponse<Data>, A
 type Config<Data = unknown, Error = unknown> = SWRConfiguration<AxiosResponse<Data>, AxiosError<Error>>;
 
 interface Return<Data, Error> extends PrimitiveSWRResponse<Data, Error> {
-  data: Data | undefined;
-  response: AxiosResponse<Data> | undefined;
+  data?: Data;
+  response?: AxiosResponse<Data>;
 }
 
 export const useFetch = <Data = unknown, Error = unknown>(request: GetRequest, config: Config<Data, Error> = {}): Return<Data, Error> => {

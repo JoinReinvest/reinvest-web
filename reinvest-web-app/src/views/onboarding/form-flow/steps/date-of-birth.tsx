@@ -2,9 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import dayjs from 'dayjs';
@@ -13,10 +13,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
 
-import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -82,7 +82,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="Enter your date of birth" />
 
-            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
             <div className="flex w-full flex-col gap-16">
               <InputBirthDate
                 name="dateOfBirth"
