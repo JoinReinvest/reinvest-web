@@ -6,7 +6,7 @@ export function InputAuthenticationCode<FormFields extends FieldValues>(props: C
     <InputMasked
       {...props}
       placeholder="Authentication Code"
-      maskOptions={{ mask: '***-***' }}
+      maskOptions={{ mask: '******' }}
       shouldUnregister
       willUseUnmaskedValue
       hasFixedPlaceholder={false}
