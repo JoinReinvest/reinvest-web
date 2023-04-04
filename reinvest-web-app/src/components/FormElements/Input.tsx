@@ -46,6 +46,7 @@ export function Input<FormFields extends FieldValues>({
 
   return (
     <PrimitiveTextInput
+      hasFixedPlaceholder={false}
       name={field.name}
       value={field.value}
       type={type}

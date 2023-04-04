@@ -10,7 +10,7 @@ export const BlackModalDialog = ({ children, isOpen, onOpenChange }: DialogProps
     >
       <>
         <DialogClose>
-          <IconClose className="ml-auto mb-48" />
+          <IconClose className="mb-48 ml-auto" />
         </DialogClose>
         <div className="h-screen w-full max-w-720 overflow-hidden overflow-y-auto md:mx-auto">{children}</div>
       </>
