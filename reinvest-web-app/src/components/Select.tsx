@@ -45,7 +45,7 @@ export function Select<FormFields extends FieldValues>({
   );
 }
 
-const generateIcon = <FormFields extends FieldValues>(icon: Props<FormFields>['icon']) => {
+export const generateIcon = <FormFields extends FieldValues>(icon: Props<FormFields>['icon']) => {
   const className = 'h-auto w-32 stroke-white';
 
   return icon === 'arrow' ? <IconArrowDown className={className} /> : <IconSearch className={className} />;
