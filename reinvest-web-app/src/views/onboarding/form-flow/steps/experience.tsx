@@ -54,7 +54,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess, data } = useCompleteProfileDetails(getApiClient);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ experience }) => {
       await updateStoreFields({ experience });

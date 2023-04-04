@@ -110,7 +110,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
         <div className="flex items-center gap-32">
           <IconSpinner />
 
-          <BlackModalTitle title="Verifying Account Information" />
+          <BlackModalTitle title="Uploading Your Document" />
         </div>
       );
     }

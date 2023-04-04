@@ -217,7 +217,6 @@ module.exports = {
   },
   plugins: [
     require('tailwindcss-text-fill'),
-    require('@tailwindcss/line-clamp'),
     plugin(function ({ addVariant, addUtilities }) {
       addVariant('child', '& > *');
 

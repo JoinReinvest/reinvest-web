@@ -48,7 +48,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
     const { data: phoneNumberData, error: phoneNumberError, isLoading, mutate: setPhoneNumberMutate, isSuccess } = useSetPhoneNumber(getApiClient);
 
-    const defaultValues: Fields = { phone: { countryCode: CALLING_CODES[0], number: storeFields.phone?.number || '' } };
+    const defaultValues: Fields = { phone: { countryCode: storeFields.phone?.countryCode || CALLING_CODES[0], number: storeFields.phone?.number || '' } };
     const { control, handleSubmit, formState, setError } = useForm<Fields>({
       mode: 'onBlur',
       resolver: zodResolver(schema),
