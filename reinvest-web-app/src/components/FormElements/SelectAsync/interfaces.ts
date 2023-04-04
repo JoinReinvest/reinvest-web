@@ -19,7 +19,7 @@ export type ChangeHandler<Option> = (option: SingleValue<ExtendedSelectOption<Op
 export type Styles<Option> = StylesConfig<ExtendedSelectOption<Option>, false, GroupBase<ExtendedSelectOption<Option>>>;
 
 type FormatOptionLabel<Option> = (data: Option, meta: FormatOptionLabelMeta<Option>) => ReactNode;
-type OptionActionHandler<Option> = (option: SingleValue<Option>) => void;
+type OptionActionHandler<Option> = ((option: SingleValue<Option>) => void) | ((option: SingleValue<Option>) => Promise<void>);
 
 type LoadOptions<Option> = (value: string, callback?: LoadOptionsCallback<Option>) => LoadOptionsReturn<Option>;
 type LoadOptionsCallback<Option> = (options: Option[]) => void;
