@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
 import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
@@ -19,6 +18,7 @@ import { getApiClient } from 'services/getApiClient';
 import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -128,10 +128,9 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Upload Profile Picture" />
-
-          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
-          {createAvatarLinkError && <FormMessage message={createAvatarLinkError.message} />}
-          {openAccountError && <FormMessage message={openAccountError.message} />}
+          {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
+          {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
+          {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"

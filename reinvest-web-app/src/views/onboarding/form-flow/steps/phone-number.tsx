@@ -18,6 +18,7 @@ import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -92,7 +93,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
               subtitle="We'll text you a confirmation code within 10 minutes."
             />
 
-            {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
+            {phoneNumberError && <ErrorMessagesHandler error={phoneNumberError} />}
 
             <div className="flex w-full flex-col gap-16">
               <div className="flex flex-col gap-10">

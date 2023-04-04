@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
@@ -18,6 +17,7 @@ import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -73,7 +73,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (createDraftAccountError && listAccounts && profileData) {
-        if (createDraftAccountError.message.includes('already exists')) {
+        if (createDraftAccountError.response.errors[0]?.message?.includes('already exists')) {
           const account = listAccounts.find(account => account?.type === getValues().accountType);
           updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
           moveToNextStep();
@@ -105,7 +105,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="Which type of account would you like to open?" />
 
-            {createDraftAccountError && <FormMessage message={createDraftAccountError.message} />}
+            {createDraftAccountError && <ErrorMessagesHandler error={createDraftAccountError} />}
             <div className="flex w-full flex-col gap-24">
               <SelectionCards
                 name="accountType"

@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -15,6 +14,7 @@ import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -91,7 +91,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle title="Are you currently employed?" />
 
-          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+          {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           <SelectionCards
             name="employmentStatus"
             control={form.control}

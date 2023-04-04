@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { Select } from 'components/Select';
 import { useEffect } from 'react';
@@ -17,6 +16,7 @@ import { DraftAccountType, EmploymentStatus } from 'reinvest-app-common/src/type
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -105,7 +105,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Where are you employed?" />
-          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+          {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           <div className="flex w-full flex-col gap-16">
             <Input
               name="employmentDetails.employerName"

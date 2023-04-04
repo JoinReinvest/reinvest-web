@@ -16,7 +16,7 @@ interface MessageProps {
 
 export const FormMessage = ({ message, variant = MessageVariant.error }: MessageProps) => {
   const styles = cx({
-    'mb-12': true,
+    'mb-12 first-letter:capitalize': true,
     'text-tertiary-error': variant === MessageVariant.error,
     'text-green-frost-01': variant === MessageVariant.info,
   });
