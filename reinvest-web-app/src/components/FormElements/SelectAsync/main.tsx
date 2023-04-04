@@ -7,7 +7,7 @@ import { FieldValues, useController } from 'react-hook-form';
 import PrimitiveSelect from 'react-select/async';
 
 import { Input } from './Input';
-import { ChangeHandler, Props, Styles } from './interfaces';
+import { ChangeHandler, InputChangeHandler, Props, Styles } from './interfaces';
 
 export function SelectAsync<FormFields extends FieldValues, Option>({
   loadOptions,
@@ -24,7 +24,6 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
   const { field, fieldState } = useController(controllerProps);
   const menuPortalTargetMemoized = useMemo(() => menuPortalTarget, [menuPortalTarget]);
   const [focused, setFocused] = useState(false);
-  const [inputValue, setInputValue] = useState('');
   const inputRef = useRef(null);
   const controlRef = useRef<HTMLDivElement>(null);
 
@@ -37,18 +36,20 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
   };
 
   const onChange: ChangeHandler<Option> = (option, { action }) => {
-    const value = option?.value;
-
     if (action === 'select-option') {
       onOptionSelected && onOptionSelected(option);
-      setInputValue(value || '');
     }
-
-    field.onChange({ target: { value } });
   };
 
-  const isDirty = focused || field.value;
+  const onInputChange: InputChangeHandler = (value, { action }) => {
+    if (action === 'input-change') {
+      field.onChange && field.onChange({ target: { value } });
+    }
+  };
+
+  const isDirty = focused || !!field.value;
   const menuShouldScrollIntoView = !!menuPortalTargetMemoized;
+  const hasErrorMessage = !!errorMessage;
 
   return (
     <InputControl
@@ -74,11 +75,11 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
         onFocus={setFocusHandler}
         onChange={onChange}
         onBlur={onBlurHandler}
-        onInputChange={setInputValue}
+        onInputChange={onInputChange}
         required={required}
-        inputValue={inputValue}
-        data-is-dirty={!!isDirty}
-        data-has-error={!!errorMessage}
+        inputValue={field.value}
+        data-is-dirty={isDirty}
+        data-has-error={hasErrorMessage}
         classNamePrefix={Classes.SELECT}
         styles={resetStyles() as Styles<Option>}
         menuPosition="absolute"
