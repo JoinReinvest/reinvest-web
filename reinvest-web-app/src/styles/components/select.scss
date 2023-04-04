@@ -107,3 +107,10 @@
     }
   }
 }
+
+.select-phone-number-country-code {
+  /* stylelint-disable-next-line selector-class-pattern */
+  .hkek-select__menu {
+    @apply top-44;
+  }
+}
