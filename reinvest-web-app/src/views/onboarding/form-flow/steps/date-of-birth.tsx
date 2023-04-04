@@ -13,10 +13,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
 
-import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -51,10 +51,11 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
+    const defaultValues: Fields = { dateOfBirth: storeFields.dateOfBirth || '' };
     const { formState, control, handleSubmit } = useForm<Fields>({
-      mode: 'onChange',
+      mode: 'onBlur',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;

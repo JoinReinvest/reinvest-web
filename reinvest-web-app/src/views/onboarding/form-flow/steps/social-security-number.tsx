@@ -55,7 +55,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
     const defaultValues: Fields = { ssn: storeFields.ssn || '' };
 
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'onSubmit',
+      mode: 'onBlur',
       resolver: zodResolver(schema),
       defaultValues: async () => defaultValues,
     });
