@@ -13,7 +13,7 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
     <InputMasked
       maskOptions={{
         mask: Date,
-        pattern: 'm{-}`d{-}`Y',
+        pattern: 'm{/}`d{/}`Y',
         min: minDate,
         max: maxDate,
         format: value => dayjs(value).format(dateFormat),
@@ -24,7 +24,7 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
       willTriggerChangeOnCompletion
       willUseUnmaskedValue={false}
       willTriggerChangeOnAccept={false}
-      inputPlaceholder="MM / DD / YYYY"
+      inputPlaceholder="MM/DD/YYYY"
     />
   );
 }
