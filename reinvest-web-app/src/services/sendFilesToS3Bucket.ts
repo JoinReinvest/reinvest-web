@@ -1,4 +1,4 @@
-import { fetcher } from './fetcher';
+import { makeRequest } from 'services/api-request';
 
 export interface UploadFile {
   file: File;
@@ -11,8 +11,8 @@ export const sendFilesToS3Bucket = async (uploadFiles: UploadFile[]) => {
     ({ file, url }) =>
       new Promise((resolve, reject) => {
         try {
-          const repsonse = fetcher(url, 'PUT', file);
-          resolve(repsonse);
+          const response = makeRequest({ url, method: 'PUT', data: file });
+          resolve(response);
         } catch (error) {
           reject(error);
         }

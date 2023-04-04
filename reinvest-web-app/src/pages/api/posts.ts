@@ -1,7 +1,7 @@
+import { env } from 'env';
 import { NextApiRequest, NextApiResponse } from 'next';
-
-import { env } from '../../env';
-import { fetcher } from '../../services/fetcher';
+import { makeRequest } from 'services/api-request';
+import { GetPostsResponse } from 'types/site-api';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
@@ -10,12 +10,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  const response = await fetcher(`${env.site.url}/api/posts`);
+  const url = `${env.site.url}/api/posts`;
+  const response = await makeRequest<GetPostsResponse>({ url, method: 'GET' });
+  const parsedData: GetPostsResponse = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+  const hasSucceded = !!parsedData.success;
 
-  if (response.errors) {
-    res.status(500).json({ error: response.errors[0].message });
+  if (!hasSucceded) {
+    res.status(500).json({ error: response.statusText });
   } else {
-    res.status(200).json(response.data);
+    res.status(200).json(parsedData);
   }
 
   return;
