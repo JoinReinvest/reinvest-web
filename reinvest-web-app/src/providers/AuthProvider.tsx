@@ -3,6 +3,9 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
+import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+
+import { getApiClient } from '../services/getApiClient';
 
 export enum ChallengeName {
   SMS_MFA = 'SMS_MFA',
@@ -39,9 +42,12 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) => {
+  const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, URL.not_found, URL.internal_server_error];
+  const pathWithoutQuery = [URL.logout, ...notProtectedUrls];
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
+  const { data, isSuccess, isLoading } = useGetUserProfile(getApiClient);
 
   const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
     try {
@@ -86,9 +92,15 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   }, [loading, user]);
 
   useEffect(() => {
+    if (isSuccess && data && !notProtectedUrls.includes(router.pathname)) {
+      if (!data.isCompleted || data.accounts?.length === 0) {
+        router.push(URL.onboarding);
+      }
+    }
+  }, [data]);
+
+  useEffect(() => {
     const currentUser = async () => {
-      const notProtectedUrls = [URL.login, URL.register, URL.forgot_password, URL.not_found, URL.internal_server_error];
-      const pathWithoutQuery = [URL.logout, ...notProtectedUrls];
       try {
         await Auth.currentSession();
 
@@ -118,7 +130,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (((isProtectedPage && !user) || (!isProtectedPage && user)) && router.pathname !== URL.logout) {
+  if (((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading) && router.pathname !== URL.logout) {
     return <IconSpinner />;
   }
 
