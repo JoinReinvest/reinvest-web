@@ -90,7 +90,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle
               title="Enter your phone number"
-              subtitle="We'll text you a confirmation code within 10 minutes."
+              subtitle="You are consenting to be contacted at this phone number for the purpose of receiving a verification code from Reinvest. Wireless and text message fees from your carrier may apply. See Privacy Policy below."
             />
 
             {phoneNumberError && <ErrorMessagesHandler error={phoneNumberError} />}
