@@ -1,6 +1,7 @@
 import '../styles/global.scss';
 
 import { Amplify } from '@aws-amplify/core';
+import * as Sentry from '@sentry/nextjs';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { AppProps } from 'next/app';
@@ -9,6 +10,11 @@ import { AuthProvider } from 'providers/AuthProvider';
 import { useState } from 'react';
 
 import { env } from '../env';
+
+Sentry.init({
+  dsn: env.sentry.dsn,
+  tracesSampleRate: env.isProduction ? 0.2 : 1.0,
+});
 
 Amplify.configure({
   aws_cognito_region: env.aws.cognito.region,

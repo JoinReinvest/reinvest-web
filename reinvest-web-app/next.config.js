@@ -32,6 +32,7 @@ module.exports = withVideos(
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       GOOGLE_MAPS_PLACES_URL: process.env.GOOGLE_MAPS_PLACES_URL,
       GOOGLE_MAPS_AUTOCOMPLETE_URL: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL,
+      SENTRY_DSN: process.env.SENTRY_DSN,
     },
     redirects: async () => {
       return [{ source: '/referral/:id', destination: '/register/?referral=:id', permanent: true }];

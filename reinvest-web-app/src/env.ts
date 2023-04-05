@@ -26,6 +26,9 @@ const envSchema = z.object({
       }),
     }),
   }),
+  sentry: z.object({
+    dsn: z.string(),
+  }),
 });
 
 export const env: envInterface = envSchema.parse({
@@ -51,5 +54,8 @@ export const env: envInterface = envSchema.parse({
         addressSuggestions: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL,
       },
     },
+  },
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
   },
 });
