@@ -98,7 +98,7 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
             <div className="flex w-full flex-col gap-16">
               <div className="flex flex-col gap-10">
                 <div className="flex">
-                  <div className="contents child:basis-2/5">
+                  <div className="select-phone-number-country-code contents child:basis-2/5">
                     <InputPhoneNumberCountryCode
                       name="phone.countryCode"
                       control={control}

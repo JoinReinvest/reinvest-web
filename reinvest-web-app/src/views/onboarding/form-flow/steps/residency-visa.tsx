@@ -4,6 +4,7 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { SelectFilterable } from 'components/FormElements/SelectFilterable';
 import { Select } from 'components/Select';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -89,14 +90,14 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
           <div className="flex w-full flex-col gap-16">
-            <Select
+            <SelectFilterable
               name="domicile.forVisa.citizenshipCountry"
               control={control}
               options={COUNTRIES}
               placeholder="Citizenship Country"
             />
 
-            <Select
+            <SelectFilterable
               name="domicile.forVisa.birthCountry"
               control={control}
               options={COUNTRIES}

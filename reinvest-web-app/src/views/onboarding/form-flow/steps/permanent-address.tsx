@@ -8,14 +8,15 @@ import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { AddressAsOption, addressService } from 'services/addresses';
+import { Address, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
+import { makeRequest } from 'services/api-request';
 import { getApiClient } from 'services/getApiClient';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
@@ -53,6 +54,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.address || initialValues;
 
@@ -63,13 +65,17 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const shouldButtonBeLoading = isLoading || isLoadingSelectedAddress;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || shouldButtonBeLoading;
 
     const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
       const placeId = option?.placeId;
 
       if (placeId) {
-        const address = await addressService.getAddressFromPlaceId(placeId);
+        setIsLoadingSelectedAddress(true);
+        const url = `/api/address/details/${placeId}`;
+        const { data } = await makeRequest<Address>({ url });
+        const address: Address = typeof data === 'string' ? JSON.parse(data) : {};
 
         setValue('addressLine1', address.addressLine1);
         setValue('city', address.city);
@@ -77,6 +83,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
         setValue('zip', address.zip);
         setValue('country', address.country);
 
+        setIsLoadingSelectedAddress(false);
         setFocus('addressLine2');
       }
     };
@@ -109,11 +116,12 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             <SelectAsync
               name="addressLine1"
               control={control}
-              loadOptions={addressService.getSuggestions}
+              loadOptions={loadAddressesSuggestions}
               placeholder="Street Address or P.O. Box"
               formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
               formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
+              shouldUnregister
             />
 
             <Input
@@ -149,7 +157,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isLoading}
+            loading={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>

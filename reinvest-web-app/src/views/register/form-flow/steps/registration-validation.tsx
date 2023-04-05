@@ -56,7 +56,7 @@ export const StepRegistrationValidation: StepParams<RegisterFormFields> = {
       setIsLoading(true);
 
       try {
-        await authContext.actions.signIn(storeFields.email, storeFields.password);
+        await authContext.actions.signIn(storeFields.email, storeFields.password, URL.onboarding);
       } catch (err) {
         setError((err as Error).message);
       } finally {
