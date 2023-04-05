@@ -8,7 +8,6 @@ export function InputZipCode<FormFields extends FieldValues>(props: CustomInputM
       placeholder="Zip Code"
       {...props}
       shouldUnregister
-      hasFixedPlaceholder={false}
       willUseUnmaskedValue={false}
     />
   );

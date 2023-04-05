@@ -9,7 +9,6 @@ export function InputReferralCode<FormFields extends FieldValues>(props: CustomI
       {...props}
       shouldUnregister
       willUseUnmaskedValue
-      hasFixedPlaceholder={false}
     />
   );
 }

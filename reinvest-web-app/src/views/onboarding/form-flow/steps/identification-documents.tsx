@@ -119,7 +119,11 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       return (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Please upload your Driver’s License or Passport for further verification" />
+            <BlackModalTitle
+              title="Please upload your Driver’s License or Passport for further verification"
+              subtitle="Valid identification includes Driver's license, Permanent Resident card or a non-expired Passport."
+            />
+
             {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
             <div className="flex w-full flex-col gap-16">
               <InputFile
