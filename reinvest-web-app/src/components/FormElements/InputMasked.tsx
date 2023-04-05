@@ -8,7 +8,7 @@ interface Props<FormFields extends FieldValues> extends PrimitiveProps<FormField
 
 export type CustomInputMaskedProps<FormFields extends FieldValues> = Omit<
   Props<FormFields>,
-  'maskOptions' | 'willUseUnmaskedValue' | 'willTriggerChangeOnAccept' | 'willTriggerChangeOnCompletion' | 'hasFixedPlaceholder'
+  'maskOptions' | 'willUseUnmaskedValue' | 'willTriggerChangeOnAccept' | 'willTriggerChangeOnCompletion'
 >;
 
 export function InputMasked<FormFields extends FieldValues>({
@@ -26,7 +26,6 @@ export function InputMasked<FormFields extends FieldValues>({
   willTriggerChangeOnAccept = true,
   willTriggerChangeOnCompletion = false,
   willDisplayErrorMessage = true,
-  hasFixedPlaceholder = false,
   inputPlaceholder,
 }: Props<FormFields>) {
   return (
@@ -45,7 +44,6 @@ export function InputMasked<FormFields extends FieldValues>({
       willTriggerChangeOnAccept={willTriggerChangeOnAccept}
       willTriggerChangeOnCompletion={willTriggerChangeOnCompletion}
       willDisplayErrorMessage={willDisplayErrorMessage}
-      hasFixedPlaceholder={hasFixedPlaceholder}
       inputPlaceholder={inputPlaceholder}
     />
   );

@@ -10,8 +10,6 @@ export function InputSocialSecurityNumber<FormFields extends FieldValues>(props:
       shouldUnregister
       willUseUnmaskedValue={false}
       willTriggerChangeOnAccept
-      willTriggerChangeOnCompletion
-      hasFixedPlaceholder
       inputPlaceholder="000-00-0000"
     />
   );
