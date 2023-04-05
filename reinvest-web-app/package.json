@@ -35,7 +35,7 @@
     "@hookooekoo/configs-tsconfig": "0.0.16",
     "@hookooekoo/eslint-config": "0.2.1",
     "@hookooekoo/ui-avatar": "0.2.3",
-    "@hookooekoo/ui-checkbox": "3.1.0",
+    "@hookooekoo/ui-checkbox": "3.1.1",
     "@hookooekoo/ui-collapsible": "0.1.5",
     "@hookooekoo/ui-dialog": "0.2.0",
     "@hookooekoo/ui-icon": "0.0.12",
