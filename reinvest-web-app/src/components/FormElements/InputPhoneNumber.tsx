@@ -8,7 +8,6 @@ export function InputPhoneNumber<FormFields extends FieldValues>(props: CustomIn
       maskOptions={{ mask: '000-000-0000' }}
       shouldUnregister
       willTriggerChangeOnAccept
-      hasFixedPlaceholder={false}
       inputPlaceholder="000-000-0000"
     />
   );
