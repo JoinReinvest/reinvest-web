@@ -24,7 +24,7 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
       willTriggerChangeOnCompletion
       willUseUnmaskedValue={false}
       willTriggerChangeOnAccept={false}
-      inputPlaceholder="MM / DD / YYYY"
+      inputPlaceholder="MM/DD/YYYY"
     />
   );
 }
