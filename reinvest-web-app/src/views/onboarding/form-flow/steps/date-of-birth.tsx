@@ -51,10 +51,11 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
+    const defaultValues: Fields = { dateOfBirth: storeFields.dateOfBirth };
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;

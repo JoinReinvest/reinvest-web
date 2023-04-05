@@ -1764,10 +1764,10 @@
   dependencies:
     "@hookooekoo/configs-stylelint" "*"
 
-"@hookooekoo/ui-checkbox@3.1.0":
-  version "3.1.0"
-  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-checkbox/-/ui-checkbox-3.1.0.tgz#4e6ac31e9c10ce05115b740a1b68f3610127c469"
-  integrity sha512-u+rXNWWprZBDh2bM8NrBGXYfGeSs2COITa/zPU74KUJJjb2Ox5zJUf7XJ0KnU8a/lQ9sSv8CzmfQCUuNBACJoA==
+"@hookooekoo/ui-checkbox@3.1.1":
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/ui-checkbox/-/ui-checkbox-3.1.1.tgz#82bd8bcd8886aabe3fe976b755d677a120dc4fc4"
+  integrity sha512-9fCoNcz/CkbFOsZWTA8Xtz+KQbq3GrMBRlKS9XJ7Zsj3sD2e2RJvHWMKUMkJNzWbm2FnW1GeAdRqGMtTex6m4w==
   dependencies:
     "@hookooekoo/ui-icon" "*"
     "@radix-ui/react-checkbox" "^1.0.1"
