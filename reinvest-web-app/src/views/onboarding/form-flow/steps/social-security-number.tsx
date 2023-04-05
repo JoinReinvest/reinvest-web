@@ -52,10 +52,11 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { ssn: storeFields.ssn || '' };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
