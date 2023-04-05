@@ -4,7 +4,7 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { Select } from 'components/Select';
+import { SelectFilterable } from 'components/FormElements/SelectFilterable';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { COUNTRIES } from 'reinvest-app-common/src/constants/countries';
@@ -82,14 +82,14 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
 
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <div className="flex w-full flex-col gap-16">
-            <Select
+            <SelectFilterable
               name="domicile.forGreenCard.citizenshipCountry"
               control={control}
               options={COUNTRIES}
               placeholder="Citizenship Country"
             />
 
-            <Select
+            <SelectFilterable
               name="domicile.forGreenCard.birthCountry"
               control={control}
               options={COUNTRIES}
