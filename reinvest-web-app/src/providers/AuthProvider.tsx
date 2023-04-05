@@ -92,11 +92,10 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   }, [loading, user]);
 
   useEffect(() => {
-    if (isSuccess && data && !notProtectedUrls.includes(router.pathname)) {
-      if (!data.isCompleted || data.accounts?.length === 0) {
-        router.push(URL.onboarding);
-      }
+    if (isSuccess && data && !notProtectedUrls.includes(router.pathname) && (!data.isCompleted || data.accounts?.length === 0)) {
+      router.push(URL.onboarding);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
 
   useEffect(() => {

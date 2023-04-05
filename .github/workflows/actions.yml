@@ -67,6 +67,7 @@ jobs:
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
           GOOGLE_MAPS_PLACES_URL: ${{ secrets.GOOGLE_MAPS_PLACES_URL }}
           GOOGLE_MAPS_AUTOCOMPLETE_URL: ${{ secrets.GOOGLE_MAPS_AUTOCOMPLETE_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
         run: |
           environment=${{env.ENVIRONMENT}}
           yarn deploy --stage "${environment,,}"
