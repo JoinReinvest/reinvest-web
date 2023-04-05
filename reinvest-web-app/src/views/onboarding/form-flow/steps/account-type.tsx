@@ -36,7 +36,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { handleSubmit, formState, control, getValues } = useForm<Fields>({
+    const { handleSubmit, formState, control } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
@@ -55,7 +55,14 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
 
-      if (fields.accountType) {
+      const account = listAccounts?.find(account => account?.type === fields.accountType);
+
+      if (account) {
+        await updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+
+      if (fields.accountType && !account) {
         await createDraftAccountMutate({ type: fields.accountType });
       }
     };
@@ -70,16 +77,6 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
-
-    useEffect(() => {
-      if (createDraftAccountError && listAccounts && profileData) {
-        if (createDraftAccountError.response.errors[0]?.message?.includes('already exists')) {
-          const account = listAccounts.find(account => account?.type === getValues().accountType);
-          updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
-          moveToNextStep();
-        }
-      }
-    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (profileData) {
