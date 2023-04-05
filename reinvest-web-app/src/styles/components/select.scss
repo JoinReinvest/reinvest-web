@@ -54,7 +54,7 @@
 }
 
 .hkek-select-control {
-  @apply w-full relative flex items-center gap-x-10 p-14 transition-transform-color;
+  @apply w-full relative flex items-center gap-x-10 p-14 transition-transform-color h-48;
   @apply text-gray-02 border border-gray-03 hover:border-green-frost-01;
 
   &-content {
@@ -105,5 +105,12 @@
       @apply z-10;
       @apply text-gray-02;
     }
+  }
+}
+
+.select-phone-number-country-code {
+  /* stylelint-disable-next-line selector-class-pattern */
+  .hkek-select__menu {
+    @apply top-44;
   }
 }
