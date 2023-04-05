@@ -9,3 +9,9 @@
     @apply border border-gray-04;
   }
 }
+
+.checkbox-labeled .hkek-checkbox {
+  &[value="true"] {
+    @apply bg-green-frost-01;
+  }
+}
