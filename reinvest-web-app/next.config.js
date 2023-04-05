@@ -36,5 +36,15 @@ module.exports = withVideos(
     redirects: async () => {
       return [{ source: '/referral/:id', destination: '/register/?referral=:id', permanent: true }];
     },
+    experimental: {
+      headers() {
+        return [
+          {
+            source: "/.well-known/apple-app-site-association",
+            headers: [{ key: "content-type", value: "application/json" }]
+          }
+        ];
+      }
+    }
   }),
 );
