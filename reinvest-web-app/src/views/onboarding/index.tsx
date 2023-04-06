@@ -22,7 +22,7 @@ export const OnboardingFlow = () => {
 
   const onModalClickBack = () => {
     if (isFirstStep) {
-      router.push(URL.login);
+      router.push(URL.index);
     } else {
       moveToPreviousValidStep();
     }
