@@ -17,3 +17,9 @@ yarn-error.log
 ./out
 .next
 .open-next
+
+# Sentry
+.sentryclirc
+
+# Sentry
+next.config.original.js

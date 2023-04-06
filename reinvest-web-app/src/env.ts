@@ -10,6 +10,7 @@ const envSchema = z.object({
     url: z.string(),
   }),
   isProduction: z.boolean().default(false),
+  isDevelopment: z.boolean().default(true),
   aws: z.object({
     cognito: z.object({
       clientId: z.string(),
@@ -27,7 +28,7 @@ const envSchema = z.object({
     }),
   }),
   sentry: z.object({
-    dsn: z.string(),
+    dsn: z.string().optional(),
   }),
 });
 
@@ -38,6 +39,7 @@ export const env: envInterface = envSchema.parse({
     url: process.env.REINVEST_SITE_URL,
   },
   isProduction: process.env.NODE_ENV === 'production',
+  isDevelopment: process.env.NODE_ENV === 'development',
   aws: {
     cognito: {
       clientId: process.env.AWS_COGNITO_CLIENT_ID,
