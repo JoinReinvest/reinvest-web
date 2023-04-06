@@ -34,14 +34,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.accountType,
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-    ];
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
 
     return allRequiredFieldsExists(requiredFields);
   },
