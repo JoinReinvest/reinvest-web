@@ -1,7 +1,7 @@
 @import url("@hookooekoo/ui-dialog/dist/index.css");
 
 .black-modal {
-  @apply h-full max-h-full bg-black-02 text-white;
+  @apply h-full max-h-full w-full bg-black-02 text-white;
 
   &[data-state="open"] {
     animation: fade-in 500ms ease;
