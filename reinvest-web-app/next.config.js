@@ -1,3 +1,9 @@
+// This file sets a custom webpack configuration to use your Next.js app
+// with Sentry.
+// https://nextjs.org/docs/api-reference/next.config.js/introduction
+// https://docs.sentry.io/platforms/javascript/guides/nextjs/manual-setup/
+const { withSentryConfig } = require('@sentry/nextjs');
+
 // @ts-check
 
 /* eslint-disable import/no-extraneous-dependencies */
@@ -10,8 +16,8 @@ const withVideos = require('next-videos');
 /**
  * @type {import('next').NextConfig}
  **/
-module.exports = withVideos(
-  withBundleAnalyzer({
+module.exports = withSentryConfig(
+  withVideos(withBundleAnalyzer({
     transpilePackages: ['reinvest-app-common'],
     eslint: {
       dirs: ['src'],
@@ -37,15 +43,14 @@ module.exports = withVideos(
     redirects: async () => {
       return [{ source: '/referral/:id', destination: '/register/?referral=:id', permanent: true }];
     },
-    experimental: {
-      headers() {
-        return [
-          {
-            source: "/.well-known/apple-app-site-association",
-            headers: [{ key: "content-type", value: "application/json" }]
-          }
-        ];
-      }
-    }
-  }),
+    headers: async () => {
+      return [
+        {
+          source: '/.well-known/apple-app-site-association',
+          headers: [{ key: 'content-type', value: 'application/json' }],
+        },
+      ];
+    },
+  })),
+  { silent: process.env.NODE_ENV === 'development' },
 );
