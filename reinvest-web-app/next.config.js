@@ -12,7 +12,6 @@ const withBundleAnalyzer = require('@next/bundle-analyzer')({
 });
 
 const withVideos = require('next-videos');
-const { config } = require('./sentry.config');
 
 /**
  * @type {import('next').NextConfig}
@@ -54,5 +53,4 @@ module.exports = withSentryConfig(
     },
   })),
   { silent: process.env.NODE_ENV === 'development' },
-  {...config}
 );

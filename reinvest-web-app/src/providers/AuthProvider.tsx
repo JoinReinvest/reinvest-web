@@ -69,6 +69,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   useEffect(() => {
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const confirmSignIn = async (authenticationCode: string, user: CognitoUser) => {
