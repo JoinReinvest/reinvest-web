@@ -47,7 +47,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
-  const { data, isSuccess, isLoading, isRefetching } = useGetUserProfile(getApiClient);
+  const { data, isSuccess, isLoading, refetch } = useGetUserProfile(getApiClient);
 
   const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
     try {
@@ -66,6 +66,11 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const confirmSignIn = async (authenticationCode: string, user: CognitoUser) => {
     const confirmedUser: CognitoUser = await Auth.confirmSignIn(user, authenticationCode, ChallengeName.SMS_MFA);
@@ -96,7 +101,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       router.push(URL.onboarding);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, isRefetching]);
+  }, [data]);
 
   useEffect(() => {
     const currentUser = async () => {
