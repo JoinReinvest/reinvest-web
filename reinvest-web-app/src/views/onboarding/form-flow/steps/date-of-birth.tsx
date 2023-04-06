@@ -7,12 +7,12 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { formatDateForApi, formatDateFromApi, isDateFromApi } from 'reinvest-app-common/src/utilities/dates';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
@@ -44,7 +44,9 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
-    const defaultValues: Fields = { dateOfBirth: storeFields.dateOfBirth };
+    const defaultValues: Fields = {
+      dateOfBirth: isDateFromApi(storeFields.dateOfBirth || '') ? formatDateFromApi(storeFields.dateOfBirth || '') : storeFields.dateOfBirth,
+    };
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
@@ -58,7 +60,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      const dateOfBirth = getDateOfBirth(fields.dateOfBirth || '');
+      const dateOfBirth = formatDateForApi(fields.dateOfBirth || '');
       await updateStoreFields({ ...fields, dateOfBirth });
 
       await completeProfileMutate({ input: { dateOfBirth: { dateOfBirth } } });
@@ -81,7 +83,6 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
               <InputBirthDate
                 name="dateOfBirth"
                 control={control}
-                defaultValue={storeFields.dateOfBirth}
               />
 
               <OpenModalLink
@@ -110,5 +111,3 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     );
   },
 };
-
-const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM-DD-YYYY').format('YYYY-MM-DD');
