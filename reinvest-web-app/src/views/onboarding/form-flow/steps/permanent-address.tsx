@@ -35,15 +35,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-    ];
+    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
     const individualFields = [fields.ssn];
 

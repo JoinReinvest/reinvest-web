@@ -38,15 +38,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   doesMeetConditionFields(fields) {
     const isCreatingIndividualAccount = fields.accountType === DraftAccountType.Individual;
 
-    const requiredFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-    ];
+    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
     return isCreatingIndividualAccount && allRequiredFieldsExists(requiredFields);
   },

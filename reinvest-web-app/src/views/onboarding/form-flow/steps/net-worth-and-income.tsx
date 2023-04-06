@@ -35,23 +35,18 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
     const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
       fields.address,
-      fields.isAccreditedInvestor,
       fields.experience,
       fields.employmentStatus,
     ];
 
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
     const hasProfileFields = allRequiredFieldsExists(profileFields);
 
-    return isAccountIndividual && (hasCompletedProfileCreation || (hasProfileFields && !hasCompletedProfileCreation));
+    return isAccountIndividual && hasProfileFields;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

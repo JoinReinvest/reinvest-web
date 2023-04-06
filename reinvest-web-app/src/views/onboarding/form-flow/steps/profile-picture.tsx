@@ -11,6 +11,7 @@ import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
@@ -35,9 +36,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
@@ -47,10 +45,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     const individualAccountFields = [fields.netIncome, fields.netWorth];
 
-    return (
-      fields.isCompletedProfile &&
-      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || allRequiredFieldsExists(individualAccountFields))
-    );
+    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || allRequiredFieldsExists(individualAccountFields);
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
@@ -61,7 +56,11 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
-
+    const {
+      error: profileDetailsError,
+      isLoading: isCompleteProfileDetailsLoading,
+      mutateAsync: completeProfileMutate,
+    } = useCompleteProfileDetails(getApiClient);
     const { error: createAvatarLinkError, isLoading: isCreateAvatarLinkLoading, mutateAsync: createAvatarLinkMutate } = useCreateAvatarFileLink(getApiClient);
 
     const {
@@ -93,6 +92,8 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       }
 
       if (accountId && avatarId) {
+        await completeProfileMutate({ input: { verifyAndFinish: true } });
+
         const avatar = { id: avatarId };
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
@@ -131,6 +132,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"
@@ -152,7 +154,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading}
+            loading={isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading}
           />
 
           <Button

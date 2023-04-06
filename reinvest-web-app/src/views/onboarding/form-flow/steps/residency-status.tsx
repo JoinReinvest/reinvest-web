@@ -28,15 +28,7 @@ export const StepResidencyStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_STATUS,
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.accountType,
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-    ];
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth];
 
     return allRequiredFieldsExists(requiredFields);
   },

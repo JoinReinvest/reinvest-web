@@ -53,16 +53,7 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.accountType,
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-    ];
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
     return allRequiredFieldsExists(requiredFields) && !!fields.statementTypes?.includes(StatementType.TradingCompanyStakeholder) && !fields.isCompletedProfile;
   },
