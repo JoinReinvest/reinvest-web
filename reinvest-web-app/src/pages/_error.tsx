@@ -1,68 +1,39 @@
-import * as Sentry from '@sentry/node';
-import { NextPageContext } from 'next';
-import NextErrorComponent, { ErrorProps as NextErrorProps } from 'next/error';
+/**
+ * NOTE: This requires `@sentry/nextjs` version 7.3.0 or higher.
+ *
+ * NOTE: If using this with `next` version 12.2.0 or lower, uncomment the
+ * penultimate line in `CustomErrorComponent`.
+ *
+ * This page is loaded by Nextjs:
+ *  - on the server, when data-fetching methods throw or reject
+ *  - on the client, when `getInitialProps` throws or rejects
+ *  - on the client, when a React lifecycle method throws or rejects, and it's
+ *    caught by the built-in Nextjs error boundary
+ *
+ * See:
+ *  - https://nextjs.org/docs/basic-features/data-fetching/overview
+ *  - https://nextjs.org/docs/api-reference/data-fetching/get-initial-props
+ *  - https://reactjs.org/docs/error-boundaries.html
+ */
 
-import { env } from '../env';
+import * as Sentry from '@sentry/nextjs'
+import NextErrorComponent from 'next/error'
 
-export type ErrorPageProps = {
-  err: Error;
-  isReadyToRender: boolean;
-  statusCode: number;
-  children?: React.ReactElement;
-};
+const CustomErrorComponent = (props: any) => {
+  // If you're using a Nextjs version prior to 12.2.1, uncomment this to
+  // compensate for https://github.com/vercel/next.js/issues/8592
+  // Sentry.captureUnderscoreErrorException(props);
 
-export type ErrorProps = {
-  isReadyToRender: boolean;
-} & NextErrorProps;
+  return <NextErrorComponent statusCode={props.statusCode} />
+}
 
-const ErrorPage = (props: ErrorPageProps): JSX.Element => {
-  const { statusCode, isReadyToRender, err, children = null } = props;
-  // eslint-disable-next-line no-debugger
+CustomErrorComponent.getInitialProps = async (contextData: any) => {
+  // In case this is running in a serverless function, await this in order to give Sentry
+  // time to send the error before the lambda exits
+  await Sentry.captureUnderscoreErrorException(contextData)
 
-  if (!env.isDevelopment) {
-    /* eslint-disable no-console */
-    console.warn('ErrorPage - Unexpected error caught, it was captured and sent to Sentry. Error details:');
-    /* eslint-disable no-console */
-    console.error(err);
-  }
+  // This will contain the status code of the response
+  return NextErrorComponent.getInitialProps(contextData)
+}
 
-  if (!isReadyToRender && err) {
-    Sentry.captureException(err);
-  }
-
-  return <>{children ?? <NextErrorComponent statusCode={statusCode} />}</>;
-};
-
-ErrorPage.getInitialProps = async (props: NextPageContext): Promise<ErrorProps> => {
-  const { res, err, asPath } = props;
-
-  const errorInitialProps: ErrorProps = (await NextErrorComponent.getInitialProps({
-    res,
-    err,
-  } as NextPageContext)) as ErrorProps;
-
-  if (!env.isProduction) {
-    /* eslint-disable no-console */
-    console.error('ErrorPage.getInitialProps - Unexpected error caught, it was captured and sent to Sentry. Error details:', err);
-  }
-
-  errorInitialProps.isReadyToRender = true;
-
-  if (res?.statusCode === 404) {
-    return { statusCode: 404, isReadyToRender: true };
-  }
-
-  if (err) {
-    Sentry.captureException(err);
-    await Sentry.flush(2000);
-
-    return errorInitialProps;
-  }
-
-  Sentry.captureException(new Error(`_error.js getInitialProps missing data at path: ${asPath}`));
-  await Sentry.flush(2000);
-
-  return errorInitialProps;
-};
-
-export default ErrorPage;
+export default CustomErrorComponent
