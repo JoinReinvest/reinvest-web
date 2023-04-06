@@ -99,10 +99,12 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     }, [profileData, storeFields, updateStoreFields]);
 
     useEffect(() => {
-      updateStoreFields({
-        ...storeFields,
-        _isPhoneCompleted: !!phoneCompleted,
-      });
+      if (phoneCompleted) {
+        updateStoreFields({
+          ...storeFields,
+          _isPhoneCompleted: phoneCompleted,
+        });
+      }
     }, [phoneCompleted, storeFields, updateStoreFields]);
 
     return (

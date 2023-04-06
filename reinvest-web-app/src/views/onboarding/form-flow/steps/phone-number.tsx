@@ -35,11 +35,12 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PHONE_NUMBER,
 
   willBePartOfTheFlow(fields) {
-    return !fields.accountType && !fields.isCompletedProfile && !fields._isPhoneCompleted;
+    return !fields.accountType && !fields.isCompletedProfile;
   },
 
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
+    console.log('does', fields._isPhoneCompleted);
 
     return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile && !fields._isPhoneCompleted;
   },

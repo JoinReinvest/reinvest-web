@@ -34,21 +34,17 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_DETAILS,
 
   willBePartOfTheFlow(fields) {
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
     const isEmployed = fields.employmentStatus === EmploymentStatus.Employed;
     const meetsBaseRequirements = isAccountIndividual && isEmployed;
 
-    return meetsBaseRequirements || (meetsBaseRequirements && hasCompletedProfileCreation);
+    return meetsBaseRequirements || meetsBaseRequirements;
   },
 
   doesMeetConditionFields(fields) {
     const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
@@ -58,13 +54,12 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       fields.employmentStatus,
     ];
 
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
     const hasProfileFields = allRequiredFieldsExists(profileFields);
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
     const isEmployed = fields.employmentStatus === EmploymentStatus.Employed;
     const meetsBaseRequirements = isAccountIndividual && isEmployed;
 
-    return (meetsBaseRequirements && hasProfileFields) || (meetsBaseRequirements && hasCompletedProfileCreation);
+    return (meetsBaseRequirements && hasProfileFields) || meetsBaseRequirements;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

@@ -31,16 +31,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
     return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile;
   },
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-      fields.ssn,
-    ];
+    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn];
 
     return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile && allRequiredFieldsExists(requiredFields);
   },
@@ -58,7 +49,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ experience }) => {
       await updateStoreFields({ experience });
-      await completeProfileMutate({ input: { investingExperience: { experience }, verifyAndFinish: true } });
+      await completeProfileMutate({ input: { investingExperience: { experience } } });
     };
 
     useEffect(() => {
