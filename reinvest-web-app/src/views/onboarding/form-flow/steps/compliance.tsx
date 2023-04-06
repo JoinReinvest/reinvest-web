@@ -16,14 +16,14 @@ import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = OnboardingFormFields['compliances'] & {
-  doNoneApply: boolean;
+  doNoneApply?: boolean;
 };
 
 const getDefaultValues = ({ compliances }: OnboardingFormFields): Fields => {
   const hasCompliances = compliances && Object.values(compliances).some(Boolean);
 
   if (hasCompliances) {
-    return { ...compliances, doNoneApply: false };
+    return { ...compliances };
   }
 
   return {

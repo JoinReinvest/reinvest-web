@@ -108,6 +108,7 @@ interface EmploymentDetails {
 }
 
 interface Compliances {
+  doNoneApply?: boolean;
   isAssociatedWithFinra?: boolean;
   isAssociatedWithPubliclyTradedCompany?: boolean;
   isSeniorPoliticalFigure?: boolean;
