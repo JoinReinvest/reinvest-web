@@ -40,7 +40,6 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
-    console.log('does', fields._isPhoneCompleted);
 
     return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile && !fields._isPhoneCompleted;
   },
