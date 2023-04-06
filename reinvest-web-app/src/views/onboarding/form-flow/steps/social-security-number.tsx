@@ -3,9 +3,9 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
@@ -13,8 +13,9 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
 
@@ -51,22 +52,18 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, getValues } = useForm<Fields>({
-      mode: 'onBlur',
+    const defaultValues: Fields = { ssn: storeFields.ssn || '' };
+    const { control, formState, handleSubmit } = useForm<Fields>({
+      mode: 'onSubmit',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onMoreInformationClick = () => {
       setIsInformationModalOpen(true);
@@ -74,7 +71,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ ssn }) => {
       await updateStoreFields({ ssn, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
-      await updateData(Identifiers.SOCIAL_SECURITY_NUMBER, { ...storeFields, ...getValues() });
+      await completeProfileMutate({ input: { ssn: { ssn } } });
     };
 
     useEffect(() => {
@@ -88,7 +85,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         <div className="flex flex-col items-center gap-32">
           <IconSpinner />
 
-          <BlackModalTitle title="Validating yout Social Security Number" />
+          <BlackModalTitle title="Validating your Social Security Number" />
         </div>
       );
     }
@@ -99,13 +96,14 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="What’s your social security number?" />
 
-            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
             <div className="flex w-full flex-col gap-24">
               <div className="flex w-full flex-col gap-16">
                 <InputSocialSecurityNumber
                   name="ssn"
                   control={control}
+                  defaultValue={storeFields.ssn}
                 />
 
                 <OpenModalLink

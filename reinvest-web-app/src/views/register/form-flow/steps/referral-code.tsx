@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { fetcher } from 'services/fetcher';
+import { makeRequest } from 'services/api-request';
 import zod, { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
@@ -43,13 +43,14 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
         setIsValidatingReferralCode(false);
 
         if (fields.referralCode) {
-          const response = await fetcher(
-            `${env.apiUrl}/incentive-token`,
-            'POST',
-            new URLSearchParams({
-              token: fields.referralCode,
-            }),
-          );
+          const url = `${env.apiUrl}/incentive-token`;
+          const body = new URLSearchParams({ token: fields.referralCode });
+
+          const response = await makeRequest({
+            url,
+            method: 'POST',
+            data: body,
+          });
 
           if (!response.status) {
             throw new Error('Invalid referral code');

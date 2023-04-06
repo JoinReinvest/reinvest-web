@@ -1,11 +1,17 @@
 .hkek-checkbox {
   @apply h-24 w-24 p-2 flex items-center rounded-full;
 
-  &[value="true"] {
+  &[data-state="checked"] {
     @apply bg-gray-04;
   }
 
-  &[value="false"] {
+  &[data-state="unchecked"] {
     @apply border border-gray-04;
+  }
+}
+
+.checkbox-labeled .hkek-checkbox {
+  &[value="true"] {
+    @apply bg-green-frost-01;
   }
 }

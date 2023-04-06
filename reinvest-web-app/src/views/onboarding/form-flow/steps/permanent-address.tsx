@@ -4,20 +4,22 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { Address, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
+import { makeRequest } from 'services/api-request';
+import { getApiClient } from 'services/getApiClient';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -52,42 +54,47 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.address || initialValues;
 
-    const { control, formState, setValue, handleSubmit } = useForm<Fields>({
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
+    const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const shouldButtonBeLoading = isLoading || isLoadingSelectedAddress;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || shouldButtonBeLoading;
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
+      const placeId = option?.placeId;
 
-    const formatSelectedAddress = (address: AddressAsOption) => {
-      const hasStreetAddress = !!address.addressLine1;
+      if (placeId) {
+        setIsLoadingSelectedAddress(true);
+        const url = `/api/address/details/${placeId}`;
+        const { data } = await makeRequest<Address>({ url });
+        const address: Address = typeof data === 'string' ? JSON.parse(data) : {};
 
-      return hasStreetAddress ? address.addressLine1 : address.label;
-    };
-
-    const setValuesFromStreetAddress = (address: AddressAsOption | null) => {
-      if (address?.addressLine1 && address?.city && address?.state && address?.zip) {
         setValue('addressLine1', address.addressLine1);
         setValue('city', address.city);
         setValue('state', address.state);
         setValue('zip', address.zip);
+        setValue('country', address.country);
+
+        setIsLoadingSelectedAddress(false);
+        setFocus('addressLine2');
       }
     };
 
     const onSubmit: SubmitHandler<Fields> = async address => {
       await updateStoreFields({ address });
-      await updateData(Identifiers.PERMANENT_ADDRESS, { ...storeFields, address });
+      const { addressLine1, addressLine2, city, zip, state } = address;
+
+      if (addressLine1 && city && state && zip) {
+        await completeProfileMutate({ input: { address: { addressLine2, addressLine1, city, country: 'USA', state, zip } } });
+      }
     };
 
     useEffect(() => {
@@ -104,22 +111,23 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             informationMessage="US Residents Only"
           />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <div className="flex w-full flex-col gap-16">
             <SelectAsync
               name="addressLine1"
               control={control}
-              loadOptions={getAddresses}
+              loadOptions={loadAddressesSuggestions}
               placeholder="Street Address or P.O. Box"
-              formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
-              formatSelectedOptionLabel={formatSelectedAddress}
+              formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
+              formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
+              shouldUnregister
             />
 
             <Input
               name="addressLine2"
               control={control}
-              placeholder="Apt, suite, unit, building, floor, etc"
+              placeholder="Unit No. (Optional)"
             />
 
             <Input
@@ -139,6 +147,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
               name="zip"
               control={control}
               shouldUnregister
+              defaultValue={storeFields.address?.zip}
             />
           </div>
         </FormContent>
@@ -148,7 +157,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isLoading}
+            loading={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>

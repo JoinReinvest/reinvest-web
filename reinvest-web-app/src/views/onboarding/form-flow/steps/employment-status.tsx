@@ -4,16 +4,17 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_VALUES } from 'reinvest-app-common/src/constants/employment_statuses';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -27,8 +28,12 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_STATUS,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === DraftAccountType.Individual && !!fields.isCompletedProfile;
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+
+    return isAccountIndividual && hasCompletedProfileCreation;
   },
+
   doesMeetConditionFields(fields) {
     const profileFields = [
       fields.name?.firstName,
@@ -44,7 +49,11 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       fields.experience,
     ];
 
-    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || !!fields.isCompletedProfile;
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+
+    return (isAccountIndividual && hasProfileFields) || (isAccountIndividual && hasCompletedProfileCreation);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -55,22 +64,20 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
     });
 
     const {
+      error: individualDraftAccountError,
       isLoading,
-      updateData,
-      error: { individualDraftAccountError },
+      mutateAsync: completeIndividualDraftAccountMutate,
       isSuccess,
-    } = useUpdateDataIndividualOnboarding();
+    } = useCompleteIndividualDraftAccount(getApiClient);
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.EMPLOYMENT_STATUS, { ...storeFields, ...form.getValues() });
-    };
 
-    const onSkip = () => {
-      updateStoreFields({ employmentStatus: undefined });
-      moveToNextStep();
+      if (storeFields.accountId && fields.employmentStatus) {
+        await completeIndividualDraftAccountMutate({ accountId: storeFields.accountId, input: { employmentStatus: { status: fields.employmentStatus } } });
+      }
     };
 
     useEffect(() => {
@@ -84,7 +91,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle title="Are you currently employed?" />
 
-          {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+          {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           <SelectionCards
             name="employmentStatus"
             control={form.control}
@@ -101,13 +108,6 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
             label="Continue"
             disabled={shouldButtonBeDisabled}
             loading={isLoading}
-          />
-
-          <Button
-            label="Skip"
-            variant="outlined"
-            onClick={onSkip}
-            className="text-green-frost-01"
           />
         </ButtonStack>
       </Form>

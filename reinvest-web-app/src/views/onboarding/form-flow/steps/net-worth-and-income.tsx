@@ -4,7 +4,6 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Select } from 'components/Select';
 import { useEffect, useState } from 'react';
@@ -12,11 +11,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { NET_WORTHS_AS_OPTIONS } from 'reinvest-app-common/src/constants/net-worths';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType, EmploymentStatus } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredNetWorthModal } from 'views/whyRequiredModals/WhyRequiredNetWorthModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -30,9 +31,6 @@ const schema = z.object({
 export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.NET_WORTH_AND_INCOME,
 
-  willBePartOfTheFlow(fields) {
-    return fields.employmentStatus === EmploymentStatus.Employed;
-  },
   doesMeetConditionFields(fields) {
     const profileFields = [
       fields.name?.firstName,
@@ -43,15 +41,17 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
+      fields.address,
+      fields.isAccreditedInvestor,
       fields.experience,
+      fields.employmentStatus,
     ];
 
-    const individualAccountFields = [fields.employmentStatus, fields.employmentDetails];
+    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
+    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
 
-    return (
-      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields) && !fields.isCompletedProfile) ||
-      (allRequiredFieldsExists(individualAccountFields) && !!fields.isCompletedProfile)
-    );
+    return isAccountIndividual && (hasCompletedProfileCreation || (hasProfileFields && !hasCompletedProfileCreation));
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -61,12 +61,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const {
-      isLoading,
-      updateData,
-      error: { individualDraftAccountError },
-      isSuccess,
-    } = useUpdateDataIndividualOnboarding();
+    const { error, isLoading, mutateAsync: completeIndividualDraftAccountMutate, isSuccess } = useCompleteIndividualDraftAccount(getApiClient);
 
     const [isWhyRequiredOpen, setIsWhyRequiredOpen] = useState(false);
 
@@ -74,10 +69,14 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.NET_WORTH_AND_INCOME, { ...storeFields, ...fields });
+
+      const netWorth = fields.netWorth ? { range: fields.netWorth } : undefined;
+      const netIncome = fields.netIncome ? { range: fields.netIncome } : undefined;
+
+      await completeIndividualDraftAccountMutate({ accountId: storeFields.accountId || '', input: { netWorth, netIncome } });
     };
 
-    const openWhyReqiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
+    const openWhyRequiredOnClick = () => setIsWhyRequiredOpen(!isWhyRequiredOpen);
 
     useEffect(() => {
       if (isSuccess) {
@@ -90,8 +89,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
             <BlackModalTitle title="What is approximate net worth and income?" />
-
-            {individualDraftAccountError && <FormMessage message={individualDraftAccountError.message} />}
+            {error && <ErrorMessagesHandler error={error} />}
 
             <div className="flex w-full flex-col gap-16">
               <Select
@@ -113,7 +111,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
               <OpenModalLink
                 label="Required. Why?"
                 green
-                onClick={openWhyReqiredOnClick}
+                onClick={openWhyRequiredOnClick}
               />
             </div>
           </FormContent>
@@ -130,7 +128,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
 
         <WhyRequiredNetWorthModal
           isOpen={isWhyRequiredOpen}
-          onOpenChange={openWhyReqiredOnClick}
+          onOpenChange={openWhyRequiredOnClick}
         />
       </>
     );

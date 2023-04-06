@@ -4,20 +4,20 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { getApiClient } from 'services/getApiClient';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -36,25 +36,35 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { handleSubmit, formState, control, getValues } = useForm<Fields>({
+    const { handleSubmit, formState, control } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
     const {
-      isLoading,
-      updateData,
-      error: { createDraftAccountError },
-      isSuccess,
       data: individualAccountData,
-    } = useUpdateDataIndividualOnboarding();
+      error: createDraftAccountError,
+      isLoading,
+      mutateAsync: createDraftAccountMutate,
+      isSuccess,
+    } = useCreateDraftAccount(getApiClient);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.ACCOUNT_TYPE, { ...storeFields, ...getValues() });
+
+      const account = listAccounts?.find(account => account?.type === fields.accountType);
+
+      if (account) {
+        await updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+
+      if (fields.accountType && !account) {
+        await createDraftAccountMutate({ type: fields.accountType });
+      }
     };
 
     const onLinkClick = () => {
@@ -62,25 +72,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (isSuccess) {
-        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '' });
+      if (isSuccess && profileData) {
+        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
-    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields]);
-
-    useEffect(() => {
-      const updateStore = async (accountId: string) => {
-        return updateStoreFields({ ...storeFields, accountId });
-      };
-
-      if (createDraftAccountError && listAccounts) {
-        if (createDraftAccountError.message.includes('already exists')) {
-          const account = listAccounts.find(account => account?.type === getValues().accountType);
-          updateStore(account?.id || '');
-          moveToNextStep();
-        }
-      }
-    }, [createDraftAccountError, getValues, listAccounts, moveToNextStep, storeFields, updateStoreFields]);
+    }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (profileData) {
@@ -106,7 +102,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="Which type of account would you like to open?" />
 
-            {createDraftAccountError && <FormMessage message={createDraftAccountError.message} />}
+            {createDraftAccountError && <ErrorMessagesHandler error={createDraftAccountError} />}
             <div className="flex w-full flex-col gap-24">
               <SelectionCards
                 name="accountType"

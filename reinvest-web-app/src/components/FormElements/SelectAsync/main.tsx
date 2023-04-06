@@ -4,10 +4,10 @@ import { resetStyles } from '@hookooekoo/ui-select/dist/style-reset';
 import { IconSearch } from 'assets/icons/IconSearch';
 import { useMemo, useRef, useState } from 'react';
 import { FieldValues, useController } from 'react-hook-form';
-import AsyncCreatableSelect from 'react-select/async-creatable';
+import PrimitiveSelect from 'react-select/async';
 
-import { ChangeHandler, Props, Styles } from './interfaces';
-import { SingleValue } from './SingleValue';
+import { Input } from './Input';
+import { ChangeHandler, InputChangeHandler, Props, Styles } from './interfaces';
 
 export function SelectAsync<FormFields extends FieldValues, Option>({
   loadOptions,
@@ -18,7 +18,6 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
   menuPortalTarget,
   formatOptionsLabel,
   formatSelectedOptionLabel,
-  onOptionCreated,
   onOptionSelected,
   ...controllerProps
 }: Props<FormFields, Option>) {
@@ -40,18 +39,17 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
     if (action === 'select-option') {
       onOptionSelected && onOptionSelected(option);
     }
-
-    if (action === 'create-option') {
-      field.onChange(option?.value);
-      onOptionCreated && onOptionCreated(option);
-    }
-
-    const value = option?.value;
-    field.onChange({ target: { value } });
   };
 
-  const isDirty = focused || field.value;
+  const onInputChange: InputChangeHandler = (value, { action }) => {
+    if (action === 'input-change') {
+      field.onChange && field.onChange({ target: { value } });
+    }
+  };
+
+  const isDirty = focused || !!field.value;
   const menuShouldScrollIntoView = !!menuPortalTargetMemoized;
+  const hasErrorMessage = !!errorMessage;
 
   return (
     <InputControl
@@ -64,7 +62,7 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
       disabled={disabled}
       ref={controlRef}
     >
-      <AsyncCreatableSelect
+      <PrimitiveSelect
         defaultInputValue={field.value}
         loadOptions={loadOptions}
         cacheOptions={willCacheOptions}
@@ -77,26 +75,26 @@ export function SelectAsync<FormFields extends FieldValues, Option>({
         onFocus={setFocusHandler}
         onChange={onChange}
         onBlur={onBlurHandler}
+        onInputChange={onInputChange}
         required={required}
-        data-is-dirty={!!isDirty}
-        data-has-error={!!errorMessage}
+        inputValue={field.value}
+        data-is-dirty={isDirty}
+        data-has-error={hasErrorMessage}
         classNamePrefix={Classes.SELECT}
         styles={resetStyles() as Styles<Option>}
         menuPosition="absolute"
         menuPlacement="auto"
         menuShouldScrollIntoView={menuShouldScrollIntoView}
         components={{
+          Input,
           DropdownIndicator: DropdownIndicator,
           LoadingIndicator: undefined,
-          SingleValue,
         }}
         openMenuOnFocus
         menuPortalTarget={menuPortalTargetMemoized}
-        allowCreateWhileLoading={false}
-        formatCreateLabel={value => value}
-        createOptionPosition="first"
         formatOptionLabel={formatOptionsLabel}
         formatSelectedOptionLabel={formatSelectedOptionLabel}
+        controlShouldRenderValue={false}
       />
     </InputControl>
   );

@@ -1,6 +1,7 @@
 import { StepAccountType } from './account-type';
 import { StepAccreditedInvestor } from './accredited-investor';
 import { StepCheckYourPhone } from './check-your-phone';
+import { StepCompanyTickerSymbols } from './company-ticker-symbols';
 import { StepCompliances } from './compliance';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepEmploymentDetails } from './employment-details';
@@ -16,6 +17,7 @@ import { StepProfilePicture } from './profile-picture';
 import { StepResidencyGreenCard } from './residency-green-card';
 import { StepResidencyStatus } from './residency-status';
 import { StepResidencyVisa } from './residency-visa';
+import { StepSeniorPoliticalFigure } from './senior-political-figure';
 import { StepSocialSecurityNumber } from './social-security-number';
 
 export const FLOW_STEPS = [
@@ -29,6 +31,8 @@ export const FLOW_STEPS = [
   StepResidencyVisa,
   StepCompliances,
   StepFinraInstitution,
+  StepCompanyTickerSymbols,
+  StepSeniorPoliticalFigure,
   StepSocialSecurityNumber,
   StepIdentificationDocuments,
   StepPermanentAddress,

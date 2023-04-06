@@ -8,12 +8,14 @@ import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { AddressAsOption, formatAddressOptionLabel, getAddresses } from 'reinvest-app-common/src/services/addresses';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { Address, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
+import { makeRequest } from 'services/api-request';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -33,31 +35,36 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.permanentAddress || initialValues;
 
-    const { control, formState, setValue, handleSubmit } = useForm<Fields>({
+    const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoadingSelectedAddress;
 
-    const formatSelectedAddress = (address: AddressAsOption) => {
-      const hasStreetAddress = !!address.addressLine1;
+    const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
+      const placeId = option?.placeId;
 
-      return hasStreetAddress ? address.addressLine1 : address.label;
-    };
+      if (placeId) {
+        setIsLoadingSelectedAddress(true);
+        const url = `/api/address/details/${placeId}`;
+        const { data } = await makeRequest<Address>({ url });
+        const address: Address = typeof data === 'string' ? JSON.parse(data) : {};
 
-    const setValuesFromStreetAddress = (address: AddressAsOption | null) => {
-      if (address) {
         setValue('addressLine1', address.addressLine1);
         setValue('city', address.city);
         setValue('state', address.state);
         setValue('zip', address.zip);
+        setValue('country', address.country);
+
+        setIsLoadingSelectedAddress(false);
+        setFocus('addressLine2');
       }
     };
 
     const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
-      // TO-DO: Validate address using service
       await updateStoreFields({ permanentAddress });
       moveToNextStep();
     };
@@ -74,17 +81,18 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             <SelectAsync
               name="addressLine1"
               control={control}
-              loadOptions={getAddresses}
+              loadOptions={loadAddressesSuggestions}
               placeholder="Street Address or P.O. Box"
-              formatOptionsLabel={(option, meta) => formatAddressOptionLabel(option, meta.inputValue)}
-              formatSelectedOptionLabel={formatSelectedAddress}
+              formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
+              formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
+              shouldUnregister
             />
 
             <Input
               name="addressLine2"
               control={control}
-              placeholder="Apt, suite, unit, building, floor, etc"
+              placeholder="Unit No. (Optional)"
             />
 
             <Input
@@ -113,6 +121,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={isLoadingSelectedAddress}
           />
         </ButtonStack>
       </Form>

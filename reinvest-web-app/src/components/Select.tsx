@@ -9,6 +9,7 @@ type PrimitiveProps = Pick<PrimitiveSelectProps, 'placeholder' | 'disabled' | 'r
 
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
   icon?: 'arrow' | 'search';
+  willDisplayErrorMessage?: boolean;
 }
 
 export function Select<FormFields extends FieldValues>({
@@ -17,6 +18,7 @@ export function Select<FormFields extends FieldValues>({
   placeholder,
   required = false,
   icon = 'arrow',
+  willDisplayErrorMessage = true,
   ...controllerProps
 }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
@@ -38,11 +40,12 @@ export function Select<FormFields extends FieldValues>({
       onBlur={field.onBlur}
       getSelectedOption={(options, value) => options.filter(option => option.value === value)}
       dropdownIcon={generateIcon(icon)}
+      willDisplayErrorMessage={willDisplayErrorMessage}
     />
   );
 }
 
-const generateIcon = <FormFields extends FieldValues>(icon: Props<FormFields>['icon']) => {
+export const generateIcon = <FormFields extends FieldValues>(icon: Props<FormFields>['icon']) => {
   const className = 'h-auto w-32 stroke-white';
 
   return icon === 'arrow' ? <IconArrowDown className={className} /> : <IconSearch className={className} />;

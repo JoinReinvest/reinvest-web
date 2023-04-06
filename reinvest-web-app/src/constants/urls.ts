@@ -12,6 +12,7 @@ export const URL = {
   index: '/education',
   not_found: '/404',
   internal_server_error: '/500',
+  onboarding: '/onboarding',
 };
 
 export const EMAILS = {

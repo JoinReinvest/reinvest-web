@@ -11,11 +11,14 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CALLING_CODES } from 'reinvest-app-common/src/constants/country-codes';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredPhoneNumberModal } from 'views/whyRequiredModals/WhyRequiredPhoneNumberModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -24,7 +27,7 @@ type Fields = Pick<OnboardingFormFields, 'phone'>;
 const schema = z.object({
   phone: z.object({
     countryCode: z.enum(CALLING_CODES),
-    number: z.string(),
+    number: formValidationRules.phoneNumber,
   }),
 });
 
@@ -43,22 +46,18 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const { data: phoneNumberData, error: phoneNumberError, isLoading, mutate: setPhoneNumberMutate, isSuccess } = useSetPhoneNumber(getApiClient);
 
-    const form = useForm<Fields>({
-      mode: 'all',
+    const defaultValues: Fields = { phone: { countryCode: storeFields.phone?.countryCode || CALLING_CODES[0], number: storeFields.phone?.number || '' } };
+    const { control, handleSubmit, formState, setError } = useForm<Fields>({
+      mode: 'onBlur',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
-    const { control, handleSubmit, getValues } = form;
-    const {
-      isLoading,
-      updateData,
-      error: { phoneNumberError },
-      data: { phoneNumberData },
-    } = useUpdateDataIndividualOnboarding();
-
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
+    const phoneNumberErrorMessage = formState.errors?.phone?.number?.message;
+    const errorMessage = formState.errors?.phone?.countryCode?.message || phoneNumberErrorMessage;
 
     const onMoreInformationClick = () => {
       setIsInformationModalOpen(true);
@@ -66,17 +65,24 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.PHONE_NUMBER, {
-        ...getValues(),
-        ...storeFields,
-      });
+
+      const { phone } = fields;
+
+      if (phone?.number && phone.countryCode) {
+        setPhoneNumberMutate({ phoneNumber: phone.number, countryCode: phone.countryCode });
+      }
     };
 
     useEffect(() => {
-      if (phoneNumberData) {
+      if (phoneNumberData && isSuccess) {
         moveToNextStep();
       }
-    }, [phoneNumberData, moveToNextStep]);
+    }, [phoneNumberData, moveToNextStep, isSuccess]);
+
+    useEffect(() => {
+      setError('phone.countryCode', { message: phoneNumberErrorMessage });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [phoneNumberErrorMessage]);
 
     return (
       <>
@@ -84,26 +90,33 @@ export const StepPhoneNumber: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle
               title="Enter your phone number"
-              subtitle="We'll text you a confirmation code within 10 minutes."
+              subtitle="You are consenting to be contacted at this phone number for the purpose of receiving a verification code from Reinvest. Wireless and text message fees from your carrier may apply. See Privacy Policy below."
             />
 
-            {phoneNumberError && <FormMessage message={phoneNumberError.message} />}
+            {phoneNumberError && <ErrorMessagesHandler error={phoneNumberError} />}
+
             <div className="flex w-full flex-col gap-16">
-              <div className="flex">
-                <div className="contents child:basis-2/5">
-                  <InputPhoneNumberCountryCode
-                    name="phone.countryCode"
-                    control={control}
-                    defaultValue={CALLING_CODES[0]}
-                  />
+              <div className="flex flex-col gap-10">
+                <div className="flex">
+                  <div className="select-phone-number-country-code contents child:basis-2/5">
+                    <InputPhoneNumberCountryCode
+                      name="phone.countryCode"
+                      control={control}
+                      defaultValue={CALLING_CODES[0]}
+                    />
+                  </div>
+
+                  <div className="contents">
+                    <InputPhoneNumber
+                      name="phone.number"
+                      control={control}
+                      willDisplayErrorMessage={false}
+                      defaultValue={storeFields.phone?.number}
+                    />
+                  </div>
                 </div>
 
-                <div className="contents">
-                  <InputPhoneNumber
-                    name="phone.number"
-                    control={control}
-                  />
-                </div>
+                {errorMessage && <FormMessage message={errorMessage} />}
               </div>
 
               <OpenModalLink

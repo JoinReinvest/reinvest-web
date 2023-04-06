@@ -2,9 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import dayjs from 'dayjs';
@@ -12,7 +12,8 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
 
@@ -48,18 +49,14 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const { formState, control, handleSubmit, getValues } = useForm<Fields>({
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
+
+    const defaultValues: Fields = { dateOfBirth: storeFields.dateOfBirth };
+    const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
-
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -68,11 +65,10 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({ ...fields, dateOfBirth: getDateOfBirth(fields.dateOfBirth || '') });
-      await updateData(Identifiers.DATE_OF_BIRTH, {
-        ...storeFields,
-        dateOfBirth: getDateOfBirth(getValues().dateOfBirth || ''),
-      });
+      const dateOfBirth = getDateOfBirth(fields.dateOfBirth || '');
+      await updateStoreFields({ ...fields, dateOfBirth });
+
+      await completeProfileMutate({ input: { dateOfBirth: { dateOfBirth } } });
     };
 
     useEffect(() => {
@@ -87,11 +83,12 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
           <FormContent>
             <BlackModalTitle title="Enter your date of birth" />
 
-            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
             <div className="flex w-full flex-col gap-16">
               <InputBirthDate
                 name="dateOfBirth"
                 control={control}
+                defaultValue={storeFields.dateOfBirth}
               />
 
               <OpenModalLink
@@ -121,4 +118,4 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   },
 };
 
-const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM/DD/YYYY').format('YYYY-MM-DD');
+const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM-DD-YYYY').format('YYYY-MM-DD');

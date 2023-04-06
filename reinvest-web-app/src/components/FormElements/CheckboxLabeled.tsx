@@ -9,11 +9,8 @@ interface Props<FormFields extends FieldValues> extends PrimitiveProps<FormField
 
 export function CheckboxLabeled<FormFields extends FieldValues>({ children, ...props }: Props<FormFields>) {
   return (
-    <label
-      htmlFor={props.name}
-      className="flex items-start gap-16 first:flex-none"
-    >
-      <div className="pt-2">
+    <label className="checkbox-labeled flex items-start gap-16 first:flex-none">
+      <div className="p-6">
         <Checkbox
           {...props}
           shouldUnregister

@@ -4,17 +4,18 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { AccreditedInvestorStatement, DraftAccountType, StatementType } from 'reinvest-app-common/src/types/graphql';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -62,12 +63,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
@@ -75,7 +71,20 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
       const isAccreditedInvestor = fields?.isAccreditedInvestor === 'yes' ? true : false;
 
       await updateStoreFields({ isAccreditedInvestor });
-      await updateData(Identifiers.ACCREDITED_INVESTOR, { ...storeFields, isAccreditedInvestor });
+      await completeProfileMutate({
+        input: {
+          statements: [
+            {
+              type: StatementType.AccreditedInvestor,
+              forAccreditedInvestor: {
+                statement: isAccreditedInvestor
+                  ? AccreditedInvestorStatement.IAmAnAccreditedInvestor
+                  : AccreditedInvestorStatement.IAmNotExceeding_10PercentOfMyNetWorthOrAnnualIncome,
+              },
+            },
+          ],
+        },
+      });
     };
 
     useEffect(() => {
@@ -102,7 +111,7 @@ export const StepAccreditedInvestor: StepParams<OnboardingFormFields> = {
                 />
               }
             />
-            {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
             <RadioGroupOptions
               name="isAccreditedInvestor"
               control={control}

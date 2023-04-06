@@ -29,9 +29,23 @@ module.exports = withVideos(
       AWS_COGNITO_CLIENT_ID: process.env.AWS_COGNITO_CLIENT_ID,
       AWS_COGNITO_REGION: process.env.AWS_COGNITO_REGION,
       API_URL: process.env.API_URL,
+      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+      GOOGLE_MAPS_PLACES_URL: process.env.GOOGLE_MAPS_PLACES_URL,
+      GOOGLE_MAPS_AUTOCOMPLETE_URL: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL,
+      SENTRY_DSN: process.env.SENTRY_DSN,
     },
     redirects: async () => {
       return [{ source: '/referral/:id', destination: '/register/?referral=:id', permanent: true }];
     },
+    experimental: {
+      headers() {
+        return [
+          {
+            source: "/.well-known/apple-app-site-association",
+            headers: [{ key: "content-type", value: "application/json" }]
+          }
+        ];
+      }
+    }
   }),
 );

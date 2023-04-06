@@ -4,7 +4,7 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
+import { SelectFilterable } from 'components/FormElements/SelectFilterable';
 import { Select } from 'components/Select';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -12,10 +12,12 @@ import { COUNTRIES } from 'reinvest-app-common/src/constants/countries';
 import { VISAS_AS_OPTIONS } from 'reinvest-app-common/src/constants/visas';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DomicileType } from 'reinvest-app-common/src/types/graphql';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -34,35 +36,41 @@ const schema = z.object({
 export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_VISA,
   willBePartOfTheFlow(fields) {
-    return fields.residency === DomicileType.Visa;
+    return fields.residency === DomicileType.Visa && !fields.isCompletedProfile;
   },
   doesMeetConditionFields(fields) {
-    return fields.residency === DomicileType.Visa;
+    return fields.residency === DomicileType.Visa && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { formState, control, handleSubmit, getValues } = useForm<Fields>({
+    const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
       defaultValues: storeFields,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.RESIDENCY_VISA, {
-        ...storeFields,
-        ...getValues(),
-        domicile: { forVisa: getValues().domicile?.forVisa },
-      });
+      const { domicile } = fields;
+
+      if (domicile?.forVisa?.visaType && domicile?.forVisa?.birthCountry && domicile?.forVisa?.citizenshipCountry) {
+        await completeProfileMutate({
+          input: {
+            domicile: {
+              type: DomicileType.Visa,
+              forVisa: {
+                visaType: domicile.forVisa.visaType,
+                birthCountry: domicile.forVisa.birthCountry,
+                citizenshipCountry: domicile.forVisa.citizenshipCountry,
+              },
+            },
+          },
+        });
+      }
     };
 
     useEffect(() => {
@@ -79,17 +87,17 @@ export const StepResidencyVisa: StepParams<OnboardingFormFields> = {
             informationMessage="US Residents Only"
           />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
           <div className="flex w-full flex-col gap-16">
-            <Select
+            <SelectFilterable
               name="domicile.forVisa.citizenshipCountry"
               control={control}
               options={COUNTRIES}
               placeholder="Citizenship Country"
             />
 
-            <Select
+            <SelectFilterable
               name="domicile.forVisa.birthCountry"
               control={control}
               options={COUNTRIES}

@@ -4,15 +4,16 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
 import { Input } from 'components/FormElements/Input';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useUpdateDataIndividualOnboarding } from 'services/useUpdateDataIndividualOnboarding';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -46,18 +47,13 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
       defaultValues: storeFields,
     });
 
-    const {
-      isLoading,
-      updateData,
-      isSuccess,
-      error: { profileDetailsError },
-    } = useUpdateDataIndividualOnboarding();
+    const { error, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await updateData(Identifiers.FULL_NAME, { ...storeFields, ...form.getValues() });
+      await completeProfileMutate({ input: { name: fields?.name } });
     };
 
     useEffect(() => {
@@ -71,7 +67,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle title="Enter your first and last name as it appears on your ID" />
 
-          {profileDetailsError && <FormMessage message={profileDetailsError.message} />}
+          {error && <ErrorMessagesHandler error={error} />}
           <div className="flex w-full flex-col gap-16">
             <Input
               name="name.firstName"

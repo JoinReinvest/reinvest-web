@@ -17,6 +17,18 @@ const envSchema = z.object({
       region: z.string(),
     }),
   }),
+  google: z.object({
+    maps: z.object({
+      apiKey: z.string(),
+      urls: z.object({
+        placeDetails: z.string(),
+        addressSuggestions: z.string(),
+      }),
+    }),
+  }),
+  sentry: z.object({
+    dsn: z.string(),
+  }),
 });
 
 export const env: envInterface = envSchema.parse({
@@ -34,4 +46,16 @@ export const env: envInterface = envSchema.parse({
     },
   },
   apiUrl: process.env.API_URL,
+  google: {
+    maps: {
+      apiKey: process.env.GOOGLE_MAPS_API_KEY,
+      urls: {
+        placeDetails: process.env.GOOGLE_MAPS_PLACES_URL,
+        addressSuggestions: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL,
+      },
+    },
+  },
+  sentry: {
+    dsn: process.env.SENTRY_DSN,
+  },
 });

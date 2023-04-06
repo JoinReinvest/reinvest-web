@@ -19,7 +19,7 @@ type Fields = OnboardingFormFields['compliances'] & {
   doNoneApply: boolean;
 };
 
-const getInitialValues = ({ compliances }: OnboardingFormFields): Fields => {
+const getDefaultValues = ({ compliances }: OnboardingFormFields): Fields => {
   const hasCompliances = compliances && Object.values(compliances).some(Boolean);
 
   if (hasCompliances) {
@@ -84,7 +84,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
     const { control, formState, handleSubmit, setValue, getValues } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: getInitialValues(storeFields),
+      defaultValues: async () => getDefaultValues(storeFields),
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -112,12 +112,12 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
       setValue('doNoneApply', value);
     };
 
-    const onSubmit: SubmitHandler<Fields> = fields => {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
       const statements = [];
       fields.isAssociatedWithFinra && statements.push(StatementType.FinraMember);
       fields.isAssociatedWithPubliclyTradedCompany && statements.push(StatementType.TradingCompanyStakeholder);
       fields.isSeniorPoliticalFigure && statements.push(StatementType.Politician);
-      updateStoreFields({ statementTypes: [StatementType.FinraMember] });
+      await updateStoreFields({ statementTypes: statements, compliances: fields });
       moveToNextStep();
     };
 

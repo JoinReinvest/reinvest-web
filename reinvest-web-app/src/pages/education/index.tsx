@@ -5,11 +5,10 @@ import { BlogCard, BlogPostInterface } from 'components/Education/BlogCard';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
+import { useFetch } from 'hooks/fetch';
 import { MainLayout } from 'layouts/MainLayout';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { fetcher } from 'services/fetcher';
-import useSWR from 'swr';
+import { GetPostsResponse } from 'types/site-api';
 
 const educationCards: EducationCardProps[] = [
   {
@@ -43,14 +42,14 @@ const renderBlogCard = (card: BlogPostInterface) => (
 );
 
 const EducationPage = () => {
-  const [posts, setPosts] = useState<BlogPostInterface[]>([]);
-  const { data, isLoading } = useSWR<BlogPostInterface[]>(`/api/posts`, fetcher);
+  const { data, isLoading } = useFetch<GetPostsResponse>({
+    url: '/api/posts',
+  });
 
-  useEffect(() => {
-    if (data) {
-      setPosts(data);
-    }
-  }, [data]);
+  const responseWasSuccessful = data && data.success;
+  const hasPosts = responseWasSuccessful && !!data.data.length;
+  const arePostsReady = hasPosts && !isLoading;
+  const posts = data?.data || [];
 
   return (
     <MainLayout>
@@ -93,7 +92,8 @@ const EducationPage = () => {
             Loading...
           </Typography>
         )}
-        {posts.length > 0 && !isLoading && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
+
+        {arePostsReady && <div className="flex flex-col gap-16 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
       </section>
     </MainLayout>
   );
