@@ -31,13 +31,13 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CHECK_YOUR_PHONE,
 
   willBePartOfTheFlow(fields) {
-    return !fields.accountType && !fields.isCompletedProfile;
+    return !fields.accountType && !fields.isCompletedProfile && !fields._isPhoneCompleted;
   },
 
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.phone?.number, fields.phone?.countryCode];
 
-    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile && !fields._isPhoneCompleted;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

@@ -12,6 +12,7 @@ import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-com
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
+import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
@@ -33,6 +34,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { data: profileData } = useGetUserProfile(getApiClient);
     const { data: listAccounts } = useGetListAccount(getApiClient);
+    const { data: phoneCompleted } = useGetPhoneCompleted(getApiClient);
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -95,6 +97,13 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
         });
       }
     }, [profileData, storeFields, updateStoreFields]);
+
+    useEffect(() => {
+      updateStoreFields({
+        ...storeFields,
+        _isPhoneCompleted: !!phoneCompleted,
+      });
+    }, [phoneCompleted, storeFields, updateStoreFields]);
 
     return (
       <>
