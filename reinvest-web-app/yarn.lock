@@ -1699,7 +1699,17 @@
     postcss "8.4.21"
     postcss-scss "^4.0.6"
 
-"@hookooekoo/configs-stylelint@*", "@hookooekoo/configs-stylelint@0.1.4":
+"@hookooekoo/configs-stylelint@*":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@hookooekoo/configs-stylelint/-/configs-stylelint-0.1.5.tgz#0e854aa7db6b050d52d6523ac7cb8ab55c4158bc"
+  integrity sha512-yRUG5g/5LbLafE3KT/Zkin8VZzcXJDHkjyhBeF0WREo6oBPuHiocKxtuuOVFkFZwGitnrhAuTsiBU/RgMi/PhA==
+  dependencies:
+    stylelint "15.1.0"
+    stylelint-config-standard "30.0.1"
+    stylelint-order "6.0.2"
+    stylelint-scss "4.4.0"
+
+"@hookooekoo/configs-stylelint@0.1.4":
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/@hookooekoo/configs-stylelint/-/configs-stylelint-0.1.4.tgz#ce79dd7e6a2b54ea0d7bdeff7750dfe77da6d293"
   integrity sha512-VZZrGgL+WYVrwHwnGoqCX0DGAgK3A3xlvC0Bz7EX1ORJJM+8wL6VRRR8uK8AkdRfZ9i5JWBZi06TSXkks8Y4jg==
