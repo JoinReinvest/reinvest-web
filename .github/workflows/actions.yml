@@ -45,6 +45,7 @@ jobs:
           SENTRY_PROJECT: reinvest-web
         with:
           environment: ${{ env.ENVIRONMENT }}
+          ignore_empty: true
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
