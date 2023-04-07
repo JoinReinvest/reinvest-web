@@ -10,22 +10,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return;
   }
 
-  try {
-    const url = `${env.site.url}/api/posts`;
-    const response = await makeRequest<GetPostsResponse>({ url, method: 'GET' });
-    const parsedData: GetPostsResponse = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
-    const hasSucceded = !!parsedData.success;
+  const url = `${env.site.url}/api/posts`;
+  const response = await makeRequest<GetPostsResponse>({ url, method: 'GET' });
+  const parsedData: GetPostsResponse = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
+  const hasSucceded = !!parsedData.success;
 
-    if (hasSucceded) {
-      res.status(200).json(parsedData);
+  if (hasSucceded) {
+    res.status(200).json(parsedData);
 
-      return;
-    }
-
-    res.status(500).json({ error: response.statusText });
-  } catch (error) {
-    res.status(500).json({ error });
+    return;
   }
+
+  res.status(500).json({ error: response.statusText });
 
   return;
 }

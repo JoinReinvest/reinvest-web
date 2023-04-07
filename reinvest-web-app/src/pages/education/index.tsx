@@ -8,6 +8,7 @@ import { URL } from 'constants/urls';
 import { useFetch } from 'hooks/fetch';
 import { MainLayout } from 'layouts/MainLayout';
 import Image from 'next/image';
+import { useEffect, useState } from 'react';
 import { GetPostsResponse } from 'types/site-api';
 
 const educationCards: EducationCardProps[] = [
@@ -42,14 +43,20 @@ const renderBlogCard = (card: BlogPostInterface) => (
 );
 
 const EducationPage = () => {
+  const [posts, setPosts] = useState<BlogPostInterface[]>([]);
   const { data, isLoading } = useFetch<GetPostsResponse>({
     url: '/api/posts',
   });
 
+  useEffect(() => {
+    if (data) {
+      setPosts(data.data);
+    }
+  }, [data]);
+
   const responseWasSuccessful = data && data.success;
   const hasPosts = responseWasSuccessful && !!data.data.length;
   const arePostsReady = hasPosts && !isLoading;
-  const posts = data?.data || [];
 
   return (
     <MainLayout>
