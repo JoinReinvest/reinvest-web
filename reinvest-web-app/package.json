@@ -40,7 +40,7 @@
     "@hookooekoo/ui-input-text": "0.4.2",
     "@hookooekoo/ui-link": "0.1.0",
     "@hookooekoo/ui-radio-group": "1.2.0",
-    "@hookooekoo/ui-select": "0.3.6",
+    "@hookooekoo/ui-select": "0.3.7",
     "@hookooekoo/ui-stepper": "0.1.5",
     "@hookooekoo/ui-switch": "1.0.0",
     "@hookooekoo/ui-table": "0.0.15",
