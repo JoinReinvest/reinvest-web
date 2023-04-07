@@ -1,5 +1,4 @@
 import { NextjsSite, StackContext } from 'sst/constructs'
-import { stack } from 'sst/constructs/FunctionalStack'
 
 export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
     // Create the Next.js site

@@ -99,7 +99,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
       return (
-        <div className="flex items-center gap-32 flex-col h-full lg:justify-center">
+        <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
           <BlackModalTitle title="Uploading Your Document" />
