@@ -2485,10 +2485,10 @@ constructs@10.1.156:
   resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.156.tgz#3ccd82b7f07e8921d015f1ae9317f851ff6b87d4"
   integrity sha512-BTZ3Kyt++/YFlph/ioqbDhzSKVMqHRHvc99FxU4b705ZP6s2IkDxMLCMinC70USMTJWFbO1p02Egux7sk4q07A==
 
-constructs@10.1.304:
-  version "10.1.304"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.304.tgz#b9ba53e14a2f68a482ddfd7c921bc285527e6aa4"
-  integrity sha512-mYzFQ+nOCW5oOYM4OFEa66bJBfWUo+jTYUlTQm8UxSrT5RgN5dKyPOgxd3dY76MdV1BRaKXX+TiIo21LW9ORnw==
+constructs@10.1.288:
+  version "10.1.288"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.1.288.tgz#ded054f865a4a26b130dbe845a65e04eaaff8f91"
+  integrity sha512-dsCHesQ7O9Z3/k8bkQaFyC3q3Q2v+XguYr8tehIqCRfbRZr5A3cSE6Z9P7pxwvYcc56HiZ8Aw/WMoyMxhJW7mw==
 
 content-disposition@0.5.4:
   version "0.5.4"
@@ -4340,10 +4340,10 @@ sst-aws-cdk@2.62.2-3:
   optionalDependencies:
     fsevents "2.3.2"
 
-sst@2.4.3:
-  version "2.4.3"
-  resolved "https://registry.yarnpkg.com/sst/-/sst-2.4.3.tgz#46f6ccb4c4e62330dbcf33eae99df859267216d9"
-  integrity sha512-OUg+SH4MZo8M/uY7kzmIUQaBIsU9gWI9EE0UHcRg5SRkNheVIG4armnAL1/r6z1iovhQImC1ecLsULGk4FTVpw==
+sst@2.2.8:
+  version "2.2.8"
+  resolved "https://registry.yarnpkg.com/sst/-/sst-2.2.8.tgz#35d1b17bd5aaaabfda8b8609aaee546f3a39522e"
+  integrity sha512-2pglNqU2Yaw0vxx8XfeiYgXs0OjnlCEm31entG2fw5wN6ztZu8GywJ7Gx2PxoXeBjb7UNp45iImDegMl3jgkAg==
   dependencies:
     "@aws-cdk/aws-apigatewayv2-alpha" "^2.62.2-alpha.0"
     "@aws-cdk/aws-apigatewayv2-authorizers-alpha" "^2.62.2-alpha.0"
