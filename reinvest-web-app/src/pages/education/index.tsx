@@ -54,9 +54,7 @@ const EducationPage = () => {
     }
   }, [data]);
 
-  const responseWasSuccessful = data && data.success;
-  const hasPosts = responseWasSuccessful && !!data.data.length;
-  const arePostsReady = hasPosts && !isLoading;
+  const arePostsReady = posts.length > 0 && !isLoading;
 
   return (
     <MainLayout>
