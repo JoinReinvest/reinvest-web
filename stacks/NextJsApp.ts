@@ -1,4 +1,5 @@
 import { NextjsSite, StackContext } from 'sst/constructs'
+import { stack } from 'sst/constructs/FunctionalStack'
 
 export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
     // Create the Next.js site
@@ -14,6 +15,10 @@ export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
             API_URL: process.env.API_URL as string,
             ANALYZE: process.env.ANALYZE as string,
             AWS_COGNITO_REGION: process.env.AWS_COGNITO_REGION as string,
+            GOOGLE_MAPS_API_KEY: process.env.AWS_COGNITO_REGION as string,
+            GOOGLE_MAPS_PLACES_URL: process.env.AWS_COGNITO_REGION as string,
+            GOOGLE_MAPS_AUTOCOMPLETE_URL: process.env.AWS_COGNITO_REGION as string,
+            SENTRY_DSN: process.env.AWS_COGNITO_REGION as string,
         },
     })
 
