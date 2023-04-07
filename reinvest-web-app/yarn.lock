@@ -2750,9 +2750,9 @@
     "@types/google.maps" "*"
 
 "@types/google.maps@*":
-  version "3.52.4"
-  resolved "https://registry.yarnpkg.com/@types/google.maps/-/google.maps-3.52.4.tgz#01d640d7c49f153570b22fe337a35aea7ac41eb9"
-  integrity sha512-FXtZsLDX7fbxJ03zbze3MdUjaH4Y/zRmW8O65LNIWEHJ7RqddrabusRm/U3zF1ifmqe8y4oPqBvs+vBG8kv0yQ==
+  version "3.52.5"
+  resolved "https://registry.yarnpkg.com/@types/google.maps/-/google.maps-3.52.5.tgz#84322c45fcfac76ecd80afc8b6115b1be2f7dc96"
+  integrity sha512-nhFo5xLsWnjr2zuL0V5khlpo2pPFXJzYdnuIt3hLBGgcvMkLfRqKP8TdKrjh0gUuWfm55Iex+3XU1v+oAyu1jw==
 
 "@types/js-yaml@^4.0.0":
   version "4.0.5"
@@ -4247,9 +4247,9 @@ duplexer@^0.1.2:
   integrity sha512-jtD6YG370ZCIi/9GTaJKQxWTZD045+4R4hTk/x1UyoqadyJ9x9CgSi1RlVDQF8U2sxLLSnFkCaMihqljHIWgMg==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.353"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.353.tgz#20e9cb4c83a08e35b3314d3fa8988764c105e6b7"
-  integrity sha512-IdJVpMHJoBT/nn0GQ02wPfbhogDVpd1ud95lP//FTf5l35wzxKJwibB4HBdY7Q+xKPA1nkZ0UDLOMyRj5U5IAQ==
+  version "1.4.354"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.354.tgz#3433d360936c3b117fc2c8f71fd531f891b957ae"
+  integrity sha512-s0nWEXmXjr8NUTxrdoG2oNzU67Sb8JSW411Pf6Ka+jtXsGx6CCTN1bzWwqY2UB3I4ZeytKgWUM7WkrtWzb4dig==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -6428,9 +6428,9 @@ no-case@^3.0.4:
     tslib "^2.0.3"
 
 node-abi@^3.3.0:
-  version "3.34.0"
-  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-3.34.0.tgz#3bac9f69fda94ece1752515ed996ed409da4fa26"
-  integrity sha512-O5sNsdgxptez/bSXk2CfpTcVu4yTiFW1YcMHIVn2uAY8MksXWQeReMx63krFrj/QSyjRJ5/jIBkWvJ3/ZimdcA==
+  version "3.35.0"
+  resolved "https://registry.yarnpkg.com/node-abi/-/node-abi-3.35.0.tgz#c7f171af995cc5286fa95612c4ca97b3910eaa79"
+  integrity sha512-jAlSOFR1Bls963NmFwxeQkNTzqjUF0NThm8Le7eRIRGzFUVJuMOFZDLv5Y30W/Oaw+KEebEJLAigwO9gQHoEmw==
   dependencies:
     semver "^7.3.5"
 
@@ -7460,7 +7460,7 @@ regexpp@^3.0.0, regexpp@^3.2.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#0079bab0e1baea65d7c7505e21a0fd2f3b815f78"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#4e6bbfabe86216a7c2221fa9740f811a9b023fb0"
   dependencies:
     "@graphql-codegen/cli" "^3.2.2"
     "@graphql-codegen/typescript" "^3.0.2"
