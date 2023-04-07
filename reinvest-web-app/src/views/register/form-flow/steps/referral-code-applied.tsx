@@ -22,7 +22,10 @@ export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
     <BlackModalContent>
       <div className="relative flex h-full flex-col gap-24 md:justify-center">
         <IconCheckCircle className="mx-auto" />
-        <BlackModalTitle title="Referral code applied" />
+        <BlackModalTitle
+          title="Referral code applied"
+          className="flex justify-center"
+        />
       </div>
 
       <ButtonStack>
