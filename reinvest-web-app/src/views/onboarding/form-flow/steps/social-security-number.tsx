@@ -74,7 +74,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
     if (isLoading) {
       return (
-        <div className="flex flex-col items-center gap-32">
+        <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
           <BlackModalTitle title="Validating your Social Security Number" />
