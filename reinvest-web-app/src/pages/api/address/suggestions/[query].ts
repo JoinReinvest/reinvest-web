@@ -12,7 +12,7 @@ export default async function handler(apiRequest: NextApiRequest, apiResponse: N
   }
 
   const suggestions = await addressService.getSuggestions(query);
-  apiResponse.status(200).json(JSON.stringify(suggestions));
+  console.log('suggestions', suggestions);
 
-  return;
+  return apiResponse.status(200).json(JSON.stringify(suggestions));
 }
