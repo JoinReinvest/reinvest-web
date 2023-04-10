@@ -25,12 +25,16 @@ export const BlackModal = ({ isOpen = false, onOpenChange, progressBarValue, chi
       className="black-modal"
       onEscapeKeyDown={onEscapeKeyDown}
     >
-      <div className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-hidden px-20 py-40 text-white lg:py-60">
+      <div className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-hidden py-40 text-white lg:py-60">
         <Header />
 
-        {willShowProgressBar && <ProgressBar value={progressBarValue} />}
+        {willShowProgressBar && (
+          <div className="w-full md:px-20">
+            <ProgressBar value={progressBarValue} />
+          </div>
+        )}
 
-        <div className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-auto">
+        <div className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-auto px-20">
           <div className="mx-auto w-full max-w-330 grow pt-24 lg:pt-0">{children}</div>
 
           <Footer />
