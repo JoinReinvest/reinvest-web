@@ -1,7 +1,7 @@
 import { IconAdd } from 'assets/icons/IconAdd';
 import { IconFileUpload } from 'assets/icons/IconFileUpload';
 import { Typography } from 'components/Typography';
-import { ChangeEventHandler, ReactNode, useState } from 'react';
+import { ChangeEventHandler, ReactNode, useEffect, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas';
@@ -13,6 +13,7 @@ interface Props<FormFields extends FieldValues> extends UseControllerProps<FormF
   accepts?: PartialMimeTypeKeys;
   iconOnEmpty?: ReactNode;
   iconOnMeetsMinimum?: ReactNode;
+  maximumNumberOfFiles?: number;
   minimumNumberOfFiles?: number;
   placeholderOnEmpty?: string;
   placeholderOnMeetsMinimum?: string;
@@ -23,6 +24,7 @@ export function InputMultiFile<FormFields extends FieldValues>({
   accepts = ['jpeg', 'jpg', 'pdf', 'png'],
   sizeLimitInMegaBytes = 5,
   minimumNumberOfFiles = 2,
+  maximumNumberOfFiles = 5,
   placeholderOnEmpty = 'Upload Files',
   placeholderOnMeetsMinimum = 'Add Additional Files',
   iconOnEmpty = <IconFileUpload />,
@@ -32,7 +34,15 @@ export function InputMultiFile<FormFields extends FieldValues>({
   const [files, setFiles] = useState<File[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const { field } = useController(controllerProps);
-  const schema = generateMultiFileSchema(accepts, sizeLimitInMegaBytes);
+  const schema = generateMultiFileSchema(accepts, sizeLimitInMegaBytes, minimumNumberOfFiles, maximumNumberOfFiles);
+
+  useEffect(() => {
+    if (field.value) {
+      setFiles(field.value);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const hasMinimumNumberOfFiles = files.length >= minimumNumberOfFiles;
   const acceptMimeTypes = mapToMimeType(accepts).join(',');
@@ -43,10 +53,10 @@ export function InputMultiFile<FormFields extends FieldValues>({
 
   const clearFile = (index: number) => {
     const copyOfFiles = [...files];
-    const updatedFiles = copyOfFiles.splice(index, 1);
+    copyOfFiles.splice(index, 1);
 
-    field.onChange(updatedFiles);
-    setFiles(updatedFiles);
+    field.onChange(copyOfFiles);
+    setFiles(copyOfFiles);
   };
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
