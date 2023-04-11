@@ -14,6 +14,7 @@ import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/servi
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
+import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
@@ -70,14 +71,25 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     } = useCompleteIndividualDraftAccount(getApiClient);
 
     const {
+      error: removeDraftAccountError,
+      isLoading: isRemoveDraftAccountLoading,
+      mutateAsync: removeDraftAccountMutate,
+    } = useRemoveDraftAccount(getApiClient);
+
+    const {
       error: openAccountError,
       isLoading: isOpenAccountLoading,
-      mutate: openAccountMutate,
+      mutateAsync: openAccountMutate,
       isSuccess: isOpenAccountSuccess,
     } = useOpenAccount(getApiClient);
 
     const shouldButtonBeDisabled =
-      !formState.isValid || formState.isSubmitting || isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading;
+      !formState.isValid ||
+      formState.isSubmitting ||
+      isCreateAvatarLinkLoading ||
+      isIndividualDraftAccountLoading ||
+      isOpenAccountLoading ||
+      isRemoveDraftAccountLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
@@ -101,20 +113,23 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         });
 
         if (individualDraftAccount?.isCompleted) {
-          openAccountMutate({ draftAccountId: accountId });
+          await openAccountMutate({ draftAccountId: accountId });
+          await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
     };
 
     const onSkip = async () => {
       if (accountId) {
+        await completeProfileMutate({ input: { verifyAndFinish: true } });
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
           input: { verifyAndFinish: true },
         });
 
         if (individualDraftAccount?.isCompleted) {
-          openAccountMutate({ draftAccountId: accountId });
+          await openAccountMutate({ draftAccountId: accountId });
+          await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
     };
@@ -133,6 +148,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
+          {removeDraftAccountError && <ErrorMessagesHandler error={removeDraftAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"
@@ -154,7 +170,13 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading}
+            loading={
+              isCreateAvatarLinkLoading ||
+              isIndividualDraftAccountLoading ||
+              isOpenAccountLoading ||
+              isCompleteProfileDetailsLoading ||
+              isRemoveDraftAccountLoading
+            }
           />
 
           <Button
