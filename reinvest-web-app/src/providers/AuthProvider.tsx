@@ -47,7 +47,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
-  const { data, isSuccess, isLoading, refetch } = useGetUserProfile(getApiClient);
+  const { data, isSuccess, isLoading, refetch, isRefetching } = useGetUserProfile(getApiClient);
 
   const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
     try {
@@ -58,6 +58,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         setUser(user);
         router.push(redirectTo || URL.index);
       }
+
+      refetch();
 
       return user;
     } catch (error) {
@@ -78,6 +80,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     setUser(confirmedUser);
 
     router.push(URL.index);
+    refetch();
 
     return confirmedUser;
   };
@@ -90,18 +93,17 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       router.push(URL.login);
     }
   };
-
   const ctx = useMemo(() => {
     return { user, loading, actions: { signIn, confirmSignIn, signOut } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
   useEffect(() => {
-    if (isSuccess && data && !notProtectedUrls.includes(router.pathname) && (!data.isCompleted || data.accounts?.length === 0)) {
+    if (isSuccess && data && !notProtectedUrls.includes(router.pathname) && data.accounts?.length === 0) {
       router.push(URL.onboarding);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [data, isRefetching]);
 
   useEffect(() => {
     const currentUser = async () => {
