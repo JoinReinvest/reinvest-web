@@ -36,7 +36,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
 
-    return allRequiredFieldsExists(requiredFields);
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
