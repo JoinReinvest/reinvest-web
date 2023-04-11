@@ -104,7 +104,9 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       }
 
       if (accountId && avatarId) {
-        await completeProfileMutate({ input: { verifyAndFinish: true } });
+        if (!storeFields.isCompletedProfile) {
+          await completeProfileMutate({ input: { verifyAndFinish: true } });
+        }
 
         const avatar = { id: avatarId };
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
@@ -121,7 +123,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     const onSkip = async () => {
       if (accountId) {
-        await completeProfileMutate({ input: { verifyAndFinish: true } });
+        if (!storeFields.isCompletedProfile) {
+          await completeProfileMutate({ input: { verifyAndFinish: true } });
+        }
+
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
           input: { verifyAndFinish: true },
