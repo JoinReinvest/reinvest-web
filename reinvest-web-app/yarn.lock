@@ -2462,11 +2462,6 @@
   dependencies:
     remove-accents "0.4.2"
 
-"@tanstack/query-core@4.27.0":
-  version "4.27.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.27.0.tgz#96bcef499008ea080b66611d029655e3ffdf8bea"
-  integrity sha512-sm+QncWaPmM73IPwFlmWSKPqjdTXZeFf/7aEmWh00z7yl2FjqophPt0dE1EHW9P1giMC5rMviv7OUbSDmWzXXA==
-
 "@tanstack/query-core@4.29.1":
   version "4.29.1"
   resolved "https://registry.yarnpkg.com/@tanstack/query-core/-/query-core-4.29.1.tgz#62a4bc120b85e6bb3c6c0aca96346e643e232248"
@@ -2481,15 +2476,7 @@
     superjson "^1.10.0"
     use-sync-external-store "^1.2.0"
 
-"@tanstack/react-query@4.28.0":
-  version "4.28.0"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.28.0.tgz#01cb9969b15cbcbd5dcfcd4b264dc18ef0a35f86"
-  integrity sha512-8cGBV5300RHlvYdS4ea+G1JcZIt5CIuprXYFnsWggkmGoC0b5JaqG0fIX3qwDL9PTNkKvG76NGThIWbpXivMrQ==
-  dependencies:
-    "@tanstack/query-core" "4.27.0"
-    use-sync-external-store "^1.2.0"
-
-"@tanstack/react-query@^4.28.0":
+"@tanstack/react-query@4.29.1", "@tanstack/react-query@^4.28.0":
   version "4.29.1"
   resolved "https://registry.yarnpkg.com/@tanstack/react-query/-/react-query-4.29.1.tgz#5f166aca63915c52f6eda930a54d6933bfd11d1b"
   integrity sha512-/crv1v+OeuGG6EOvaQmyeo9GCKtH4jbmuhZkvk9ulufRiHcTr/A9+YP9GevEAZzUTdzXMwenpTbyxBGvG2xXvw==
@@ -7218,7 +7205,7 @@ regexpp@^3.0.0, regexpp@^3.2.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#a19731f507dab5714abbb7af5b7ea6d5e7bf7a60"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#2fa391672930fdd7219bdb8bb54eee80a200f77f"
   dependencies:
     "@graphql-codegen/cli" "^3.2.2"
     "@graphql-codegen/typescript" "^3.0.2"
