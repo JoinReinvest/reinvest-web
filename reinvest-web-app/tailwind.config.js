@@ -199,6 +199,7 @@ module.exports = {
       },
       minHeight: {
         180: '18rem',
+        240: '24.0rem',
       },
       gridTemplateRows: {
         'full-auto': '1fr auto'
