@@ -93,6 +93,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
             label="Skip"
             onClick={onSkip}
             className="text-white"
+            disabled={isValidatingReferralCode}
           />
 
           <Button
