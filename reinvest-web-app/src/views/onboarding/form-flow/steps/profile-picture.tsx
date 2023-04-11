@@ -9,6 +9,7 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
@@ -26,8 +27,10 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'profilePicture'>;
 
+const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
+
 const schema = z.object({
-  profilePicture: z.custom<File>().nullable(),
+  profilePicture: generateFileSchema(['jpeg', 'jpg', 'png'], FILE_SIZE_LIMIT_IN_MEGABYTES),
 });
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
@@ -53,7 +56,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const router = useRouter();
     const { profilePicture, accountId } = storeFields;
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'all',
+      mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
@@ -159,6 +162,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
               name="profilePicture"
               control={control}
               altText="Profile picture for account"
+              sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
             />
 
             <Typography
