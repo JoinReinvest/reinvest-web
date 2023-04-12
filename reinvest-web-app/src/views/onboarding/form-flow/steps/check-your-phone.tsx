@@ -8,13 +8,14 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
 import { getApiClient } from 'services/getApiClient';
+import { maskPhoneNumber } from 'utils/phone-number';
 import { Schema, z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
@@ -48,6 +49,15 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
 
+    const phoneNumber = storeFields.phone?.number;
+    const maskedPhoneNumber = useMemo(() => {
+      if (phoneNumber) {
+        return maskPhoneNumber(phoneNumber);
+      }
+
+      return maskPhoneNumber('');
+    }, [phoneNumber]);
+
     const onSubmit: SubmitHandler<Fields> = async ({ authCode }) => {
       setIsInvalidVerificationCode(false);
       await updateStoreFields({ authCode });
@@ -79,7 +89,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
         <FormContent>
           <BlackModalTitle
             title="Check Your Phone"
-            subtitle="Enter the SMS authentication code sent to your phone (xxx) xxxx-xx84."
+            subtitle={`Enter the SMS authentication code sent to your phone ${maskedPhoneNumber}.`}
           />
 
           {verifyPhoneNumberError && <ErrorMessagesHandler error={verifyPhoneNumberError} />}

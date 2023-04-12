@@ -1,13 +1,11 @@
 import { useMemo } from 'react';
 
-import { CheckItem } from './CheckItem';
+import { Checklist } from './Checklist';
 
 interface Props {
   password: string;
   passwordConfirmation: string;
 }
-
-const generateCheckListItem = (label: string, state: boolean) => <CheckItem isChecked={state}>{label}</CheckItem>;
 
 export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: Props) => {
   const hasLowerCaseLetter = password.toUpperCase() != password;
@@ -27,5 +25,5 @@ export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: 
     [hasLowerCaseLetter, hasUpperCaseLetter, hasNumber, hasMinumumLength, passwordsMatch],
   );
 
-  return <ul className="flex flex-col gap-8">{checks.map(([label, isChecked]) => generateCheckListItem(label, isChecked))}</ul>;
+  return <Checklist checks={checks} />;
 };

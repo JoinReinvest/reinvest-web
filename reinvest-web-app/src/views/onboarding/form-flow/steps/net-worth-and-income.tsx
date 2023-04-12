@@ -32,16 +32,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.NET_WORTH_AND_INCOME,
 
   doesMeetConditionFields(fields) {
-    const profileFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.dateOfBirth,
-      fields.residency,
-      fields.ssn,
-      fields.address,
-      fields.experience,
-      fields.employmentStatus,
-    ];
+    const profileFields = [fields.employmentStatus];
 
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
     const hasProfileFields = allRequiredFieldsExists(profileFields);
