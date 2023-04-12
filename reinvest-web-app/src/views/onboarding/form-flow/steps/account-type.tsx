@@ -14,6 +14,7 @@ import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
@@ -82,6 +83,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (profileData) {
+        const statementTypes = profileData?.details?.statements
+          ?.map(statement => statement?.type || null)
+          .filter(statementType => statementType) as StatementType[];
+        const finraInstitutionName = profileData?.details?.statements?.find(statement => statement?.type === StatementType.FinraMember)?.details;
+
         updateStoreFields({
           ...storeFields,
           address: profileData?.details?.address,
@@ -94,6 +100,10 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           residency: profileData?.details?.domicile?.type,
           experience: profileData?.details?.experience,
           isCompletedProfile: !!profileData?.isCompleted,
+          isAccreditedInvestor: statementTypes.includes(StatementType.AccreditedInvestor),
+          statementTypes: statementTypes || [],
+          finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
+          ssn: profileData?.details?.ssn || '',
         });
       }
     }, [profileData, storeFields, updateStoreFields]);
