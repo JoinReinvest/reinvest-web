@@ -7,7 +7,7 @@ interface Props extends PrimitiveProps {
 type PrimitiveProps = Pick<RootProps, 'value'>;
 
 export const ProgressBar = ({ value, maxValue = 100 }: Props) => (
-  <div className="relative max-md:w-screen md:w-full">
+  <div className="relative w-full">
     <Root
       value={value}
       max={maxValue}
