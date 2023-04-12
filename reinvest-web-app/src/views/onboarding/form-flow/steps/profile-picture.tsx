@@ -43,7 +43,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
-      fields.identificationDocument,
+      fields.identificationDocuments?.length,
       fields.accountType,
     ];
 

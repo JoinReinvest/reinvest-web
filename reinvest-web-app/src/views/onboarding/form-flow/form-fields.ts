@@ -66,7 +66,7 @@ export interface OnboardingFormFields {
   employmentStatus?: EmploymentStatus;
   finraInstitution?: string;
   finraInstitutionName?: string;
-  identificationDocument?: IdentificationDocuments;
+  identificationDocuments?: File[];
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
   name?: {
@@ -94,11 +94,6 @@ export interface OnboardingFormFields {
 
 export interface CompanyTickerSymbol {
   symbol: string;
-}
-
-export interface IdentificationDocuments {
-  back: File | null;
-  front: File | null;
 }
 
 interface EmploymentDetails {
