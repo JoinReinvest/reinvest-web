@@ -17,7 +17,7 @@ import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorM
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'name'>;
+type Fields = Required<Pick<OnboardingFormFields, 'name'>>;
 
 const schema = z.object({
   name: z.object({
@@ -41,10 +41,11 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = storeFields.name ? { name: storeFields.name } : { name: { firstName: '', middleName: '', lastName: '' } };
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: defaultValues,
     });
 
     const { error, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
