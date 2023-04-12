@@ -5,9 +5,9 @@ export type PrimitiveVariantProps = VariantProps<typeof variants>;
 export const variants = cva('text-15 font-medium w-full h-48', {
   variants: {
     variant: {
-      default: '',
-      outlined: ['border-2 border-green-frost-01'],
-      dashed: ['border border-dashed border-green-frost-01'],
+      default: ['bg-green-frost-01', 'disabled:bg-gray-04 disabled:text-gray-01'],
+      outlined: ['border-2 border-green-frost-01', 'disabled:text-gray-03 disabled:border-gray-04'],
+      dashed: ['border border-dashed border-green-frost-01', 'disabled:text-gray-03 disabled:border-gray-04'],
     },
     size: {
       sm: 'py-12 px-16',
@@ -24,27 +24,4 @@ export const variants = cva('text-15 font-medium w-full h-48', {
     size: 'sm',
     disabled: false,
   },
-
-  compoundVariants: [
-    {
-      disabled: true,
-      variant: 'default',
-      className: 'bg-gray-04 text-gray-01',
-    },
-    {
-      variant: 'default',
-      disabled: false,
-      className: 'bg-green-frost-01',
-    },
-    {
-      disabled: true,
-      variant: 'outlined',
-      className: 'text-gray-03 border-gray-04',
-    },
-    {
-      disabled: true,
-      variant: 'dashed',
-      className: 'text-gray-03 border-gray-04',
-    },
-  ],
 });

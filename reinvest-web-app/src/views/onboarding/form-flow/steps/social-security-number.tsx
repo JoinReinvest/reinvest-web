@@ -40,7 +40,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
     const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
-    return isCreatingIndividualAccount && allRequiredFieldsExists(requiredFields);
+    return isCreatingIndividualAccount && allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

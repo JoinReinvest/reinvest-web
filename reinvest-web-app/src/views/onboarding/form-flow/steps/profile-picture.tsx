@@ -9,11 +9,13 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
+import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
@@ -25,8 +27,10 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'profilePicture'>;
 
+const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
+
 const schema = z.object({
-  profilePicture: z.custom<File>().nullable(),
+  profilePicture: generateFileSchema(['jpeg', 'jpg', 'png'], FILE_SIZE_LIMIT_IN_MEGABYTES),
 });
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
@@ -52,7 +56,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const router = useRouter();
     const { profilePicture, accountId } = storeFields;
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'all',
+      mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
@@ -70,14 +74,28 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     } = useCompleteIndividualDraftAccount(getApiClient);
 
     const {
+      error: removeDraftAccountError,
+      isLoading: isRemoveDraftAccountLoading,
+      mutateAsync: removeDraftAccountMutate,
+    } = useRemoveDraftAccount(getApiClient);
+
+    const {
       error: openAccountError,
       isLoading: isOpenAccountLoading,
-      mutate: openAccountMutate,
+      mutateAsync: openAccountMutate,
       isSuccess: isOpenAccountSuccess,
     } = useOpenAccount(getApiClient);
 
     const shouldButtonBeDisabled =
-      !formState.isValid || formState.isSubmitting || isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading;
+      !formState.isValid ||
+      formState.isSubmitting ||
+      isCreateAvatarLinkLoading ||
+      isIndividualDraftAccountLoading ||
+      isOpenAccountLoading ||
+      isRemoveDraftAccountLoading;
+
+    const shouldButtonBeLoading =
+      isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading || isRemoveDraftAccountLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
@@ -92,7 +110,9 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       }
 
       if (accountId && avatarId) {
-        await completeProfileMutate({ input: { verifyAndFinish: true } });
+        if (!storeFields.isCompletedProfile) {
+          await completeProfileMutate({ input: { verifyAndFinish: true } });
+        }
 
         const avatar = { id: avatarId };
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
@@ -101,20 +121,26 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         });
 
         if (individualDraftAccount?.isCompleted) {
-          openAccountMutate({ draftAccountId: accountId });
+          await openAccountMutate({ draftAccountId: accountId });
+          await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
     };
 
     const onSkip = async () => {
       if (accountId) {
+        if (!storeFields.isCompletedProfile) {
+          await completeProfileMutate({ input: { verifyAndFinish: true } });
+        }
+
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
           input: { verifyAndFinish: true },
         });
 
         if (individualDraftAccount?.isCompleted) {
-          openAccountMutate({ draftAccountId: accountId });
+          await openAccountMutate({ draftAccountId: accountId });
+          await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
     };
@@ -133,11 +159,13 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
+          {removeDraftAccountError && <ErrorMessagesHandler error={removeDraftAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"
               control={control}
               altText="Profile picture for account"
+              sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
             />
 
             <Typography
@@ -154,7 +182,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading}
+            loading={shouldButtonBeLoading}
           />
 
           <Button
@@ -162,6 +190,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
             variant="outlined"
             onClick={onSkip}
             className="text-green-frost-01"
+            disabled={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>

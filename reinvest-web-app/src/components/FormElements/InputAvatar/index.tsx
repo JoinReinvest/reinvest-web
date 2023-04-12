@@ -28,20 +28,24 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
 
   const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
     const file = target.files?.item(0);
-    const validationSchema = schema.safeParse(file);
+    const hasFile = !!file;
 
-    if (!validationSchema.success) {
-      const { errors } = validationSchema.error;
-      const validationErrorMessage = errors.at(0)?.message;
-      setErrorMessage(validationErrorMessage);
-    }
+    if (hasFile) {
+      const validationSchema = schema.safeParse(file);
 
-    if (validationSchema.success && !!file) {
-      const fileUrl = URL.createObjectURL(file);
+      if (!validationSchema.success) {
+        const { errors } = validationSchema.error;
+        const validationErrorMessage = errors.at(0)?.message;
+        setErrorMessage(validationErrorMessage);
+      }
 
-      setImageSrc(fileUrl);
-      setErrorMessage(undefined);
-      field.onChange(file || null);
+      if (validationSchema.success) {
+        const fileUrl = URL.createObjectURL(file);
+
+        setImageSrc(fileUrl);
+        setErrorMessage(undefined);
+        field.onChange(file || null);
+      }
     }
   };
 

@@ -68,7 +68,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
-    return allRequiredFieldsExists(requiredFields);
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
