@@ -12,7 +12,6 @@ import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-com
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
-import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
@@ -35,7 +34,6 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { data: profileData } = useGetUserProfile(getApiClient);
     const { data: listAccounts } = useGetListAccount(getApiClient);
-    const { data: phoneCompleted } = useGetPhoneCompleted(getApiClient);
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -61,7 +59,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       const account = listAccounts?.find(account => account?.type === fields.accountType);
 
       if (account) {
-        await updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        await updateStoreFields({ accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
         moveToNextStep();
       }
 
@@ -76,46 +74,10 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess && profileData) {
-        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
+        updateStoreFields({ accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
-
-    useEffect(() => {
-      if (profileData) {
-        const statementTypes = profileData?.details?.statements
-          ?.map(statement => statement?.type || null)
-          .filter(statementType => statementType) as StatementType[];
-        const finraInstitutionName = profileData?.details?.statements?.find(statement => statement?.type === StatementType.FinraMember)?.details;
-
-        updateStoreFields({
-          ...storeFields,
-          address: profileData?.details?.address,
-          name: {
-            firstName: profileData?.details?.firstName || '',
-            lastName: profileData?.details?.lastName || '',
-            middleName: profileData?.details?.middleName || '',
-          },
-          dateOfBirth: profileData?.details?.dateOfBirth,
-          residency: profileData?.details?.domicile?.type,
-          experience: profileData?.details?.experience,
-          isCompletedProfile: !!profileData?.isCompleted,
-          isAccreditedInvestor: statementTypes.includes(StatementType.AccreditedInvestor),
-          statementTypes: statementTypes || [],
-          finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
-          ssn: profileData?.details?.ssn || '',
-        });
-      }
-    }, [profileData, storeFields, updateStoreFields]);
-
-    useEffect(() => {
-      if (phoneCompleted) {
-        updateStoreFields({
-          ...storeFields,
-          _isPhoneCompleted: phoneCompleted,
-        });
-      }
-    }, [phoneCompleted, storeFields, updateStoreFields]);
 
     return (
       <>
