@@ -1,6 +1,6 @@
 import { Dialog, DialogProps } from '@hookooekoo/ui-dialog';
 import { ProgressBar } from 'components/ProgressBar';
-import { PropsWithChildren } from 'react';
+import { PropsWithChildren, useRef } from 'react';
 
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -12,7 +12,10 @@ export interface Props extends PrimitiveProps, PropsWithChildren {
 type PrimitiveProps = Pick<DialogProps, 'isOpen' | 'onOpenChange'>;
 
 export const BlackModal = ({ isOpen = false, onOpenChange, progressBarValue, children }: Props) => {
+  const contentContainerRef = useRef<HTMLDivElement>(null);
   const willShowProgressBar = progressBarValue !== undefined;
+
+  contentContainerRef.current?.scrollTo({ top: 0 });
 
   const onEscapeKeyDown: DialogProps['onEscapeKeyDown'] = event => {
     event.preventDefault();
@@ -34,8 +37,11 @@ export const BlackModal = ({ isOpen = false, onOpenChange, progressBarValue, chi
           </div>
         )}
 
-        <div className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-auto px-20">
-          <div className="mx-auto w-full max-w-330 grow pt-24 lg:pt-0">{children}</div>
+        <div
+          ref={contentContainerRef}
+          className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-auto px-20"
+        >
+          <div className="mx-auto mt-24 w-full max-w-330 grow lg:mt-0">{children}</div>
 
           <Footer />
         </div>
