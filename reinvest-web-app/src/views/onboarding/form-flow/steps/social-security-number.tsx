@@ -28,6 +28,27 @@ const schema = z.object({
   ssn: formValidationRules.socialSecurityNumber,
 });
 
+const getDefaultValue = (value: string | undefined) => {
+  if (!value) {
+    return '';
+  }
+
+  const separator = '***-**-';
+
+  if (value.includes(separator)) {
+    const last4Digits = value.split(separator).pop();
+    const digits = last4Digits?.split('');
+
+    if (!digits) {
+      return '';
+    }
+
+    return `${separator}**${digits[2]}${digits[3]}`;
+  }
+
+  return value;
+};
+
 export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER,
 
@@ -44,7 +65,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { ssn: storeFields.ssn || '' };
+    const defaultValues: Fields = { ssn: getDefaultValue(storeFields.ssn) };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
