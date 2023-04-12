@@ -19,20 +19,12 @@ type Fields = OnboardingFormFields['compliances'] & {
   doNoneApply?: boolean;
 };
 
-const getDefaultValues = ({ compliances }: OnboardingFormFields): Fields => {
-  const hasCompliances = compliances && Object.values(compliances).some(Boolean);
-
-  if (hasCompliances) {
-    return { ...compliances };
-  }
-
-  return {
-    isAssociatedWithFinra: false,
-    isAssociatedWithPubliclyTradedCompany: false,
-    isSeniorPoliticalFigure: false,
-    doNoneApply: false,
-  };
-};
+const getDefaultValues = ({ statementTypes }: OnboardingFormFields): Fields => ({
+  isAssociatedWithFinra: statementTypes?.includes(StatementType.FinraMember),
+  isAssociatedWithPubliclyTradedCompany: statementTypes?.includes(StatementType.TradingCompanyStakeholder),
+  isSeniorPoliticalFigure: statementTypes?.includes(StatementType.Politician),
+  doNoneApply: false,
+});
 
 const schema = z
   .object({
