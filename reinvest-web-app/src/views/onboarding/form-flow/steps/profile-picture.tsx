@@ -16,7 +16,6 @@ import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/quer
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
 import { z } from 'zod';
@@ -43,13 +42,17 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
-      fields.identificationDocuments?.length,
+      fields.address,
+      fields.experience,
       fields.accountType,
     ];
 
-    const individualAccountFields = [fields.netIncome, fields.netWorth];
+    const individualAccountFields = [fields.netIncome, fields.netWorth, fields.employmentStatus];
+    const corporateAndTrustAccountFields = [fields.isAuthorizedSignatoryEntity];
 
-    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || allRequiredFieldsExists(individualAccountFields);
+    return (
+      allRequiredFieldsExists(profileFields) && (allRequiredFieldsExists(individualAccountFields) || allRequiredFieldsExists(corporateAndTrustAccountFields))
+    );
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {

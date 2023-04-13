@@ -1,5 +1,6 @@
 import { StepAccountType } from './account-type';
 import { StepAccreditedInvestor } from './accredited-investor';
+import { StepSignatoryEntity } from './authorized-signatory-entity';
 import { StepCheckYourPhone } from './check-your-phone';
 import { StepCompanyTickerSymbols } from './company-ticker-symbols';
 import { StepCompliances } from './compliance';
@@ -41,5 +42,6 @@ export const FLOW_STEPS = [
   StepEmploymentStatus,
   StepEmploymentDetails,
   StepNetWorthAndIncome,
+  StepSignatoryEntity,
   StepProfilePicture,
 ];

@@ -100,7 +100,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           residency: profileData?.details?.domicile?.type,
           experience: profileData?.details?.experience,
           isCompletedProfile: !!profileData?.isCompleted,
-          isAccreditedInvestor: statementTypes.includes(StatementType.AccreditedInvestor),
+          isAccreditedInvestor: statementTypes?.includes(StatementType.AccreditedInvestor),
           statementTypes: statementTypes || [],
           finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
           ssn: profileData?.details?.ssn || '',

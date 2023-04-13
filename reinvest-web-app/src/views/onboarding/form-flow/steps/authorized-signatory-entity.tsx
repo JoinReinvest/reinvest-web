@@ -6,7 +6,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
@@ -39,6 +39,25 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
     return accountType === DraftAccountType.Corporate || accountType === DraftAccountType.Trust;
   },
 
+  doesMeetConditionFields: fields => {
+    const profileFields = [
+      fields.name?.firstName,
+      fields.name?.lastName,
+      fields.dateOfBirth,
+      fields.residency,
+      fields.ssn,
+      fields.address,
+      fields.isAccreditedInvestor,
+      fields.experience,
+      fields.employmentStatus,
+    ];
+
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const isAccountCorporateOrTrust = fields.accountType === DraftAccountType.Corporate || fields.accountType === DraftAccountType.Trust;
+
+    return (isAccountCorporateOrTrust && hasProfileFields) || isAccountCorporateOrTrust;
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const hasStoredValue = storeFields.isAuthorizedSignatoryEntity !== undefined;
     const storedValue = storeFields.isAuthorizedSignatoryEntity ? 'yes' : 'no';
@@ -52,7 +71,7 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      const isAuthorizedSignatoryEntity = fields?.isAuthorizedSignatoryEntity === 'yes' ? true : false;
+      const isAuthorizedSignatoryEntity = fields?.isAuthorizedSignatoryEntity === 'yes';
 
       await updateStoreFields({ isAuthorizedSignatoryEntity });
       moveToNextStep();
