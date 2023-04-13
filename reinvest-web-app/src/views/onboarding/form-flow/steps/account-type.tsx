@@ -92,9 +92,9 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (profileData) {
-        const statementTypes = profileData?.details?.statements
-          ?.map(statement => statement?.type || null)
-          .filter(statementType => statementType) as StatementType[];
+        const statementTypes = profileData?.details?.statements?.map(statement => statement?.type).filter(statementType => statementType) as
+          | StatementType[]
+          | undefined;
         const finraInstitutionName = profileData?.details?.statements?.find(statement => statement?.type === StatementType.FinraMember)?.details;
 
         updateStoreFields({
@@ -109,7 +109,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           residency: profileData?.details?.domicile?.type,
           experience: profileData?.details?.experience,
           isCompletedProfile: !!profileData?.isCompleted,
-          isAccreditedInvestor: statementTypes.includes(StatementType.AccreditedInvestor),
+          isAccreditedInvestor: statementTypes?.includes(StatementType.AccreditedInvestor),
           statementTypes: statementTypes || [],
           finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
           ssn: profileData?.details?.ssn || '',
