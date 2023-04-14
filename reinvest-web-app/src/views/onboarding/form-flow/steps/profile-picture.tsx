@@ -97,6 +97,8 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const shouldButtonBeLoading =
       isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading || isRemoveDraftAccountLoading;
 
+    const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
+
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
       const avatarLink = await createAvatarLinkMutate({});
@@ -190,7 +192,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
             variant="outlined"
             onClick={onSkip}
             className="text-green-frost-01"
-            disabled={shouldButtonBeLoading}
+            disabled={shouldSkipButtonBeDisabled}
           />
         </ButtonStack>
       </Form>
