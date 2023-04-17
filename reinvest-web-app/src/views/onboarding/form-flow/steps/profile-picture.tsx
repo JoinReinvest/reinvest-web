@@ -104,11 +104,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
       await updateStoreFields({ profilePicture });
-      const willUploadAvatar = !profilePicture?.id;
       const hasFile = !!profilePicture?.file;
       let avatarId = '';
 
-      if (!willUploadAvatar && hasFile) {
+      if (hasFile) {
         const avatarLink = await createAvatarLinkMutate({});
 
         if (avatarLink?.url && avatarLink.id && profilePicture?.file) {
