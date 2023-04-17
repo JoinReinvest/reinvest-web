@@ -1,5 +1,6 @@
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { dateOlderThanEighteenYearsSchema, formValidationRules, generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { dateOlderThanEighteenYearsSchema, formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { z } from 'zod';
 
 export const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
