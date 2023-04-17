@@ -2,18 +2,16 @@ import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hoo
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { FormMessage } from 'components/FormElements/FormMessage';
-import { ImageProps } from 'next/image';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useMemo, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
-import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 
 import { EditAvatarButton } from './EditAvatarButton';
 
 type PrimitiveProps = Pick<AvatarProps, 'image' | 'altText'>;
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
-  onFileChange?: (previousFile: DocumentFile, file: File) => Promise<void>;
+  onFileChange?: (file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
 }
 
@@ -25,8 +23,20 @@ export function InputAvatar<FormFields extends FieldValues>({
   ...controllerProps
 }: Props<FormFields>) {
   const { field } = useController(controllerProps);
-  const [imageSrc, setImageSrc] = useState<ImageProps['src']>(image || placeholderImage);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+
+  const fieldValue = field.value;
+
+  const imageSrc = useMemo(() => {
+    if (fieldValue && fieldValue?.file) {
+      const fileUrl = URL.createObjectURL(fieldValue.file);
+
+      return fileUrl;
+    }
+
+    return image || placeholderImage;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fieldValue]);
 
   const accepts: PartialMimeTypeKeys = ['jpeg', 'jpg', 'png'];
   const schema = generateFileSchema(accepts, sizeLimitInMegaBytes);
@@ -40,7 +50,7 @@ export function InputAvatar<FormFields extends FieldValues>({
 
     if (hasFile) {
       const validationSchema = schema.safeParse({ file });
-      onFileChange && (await onFileChange(field.value, file));
+      onFileChange && (await onFileChange(file));
 
       if (!validationSchema.success) {
         const { errors } = validationSchema.error;
@@ -49,9 +59,6 @@ export function InputAvatar<FormFields extends FieldValues>({
       }
 
       if (validationSchema.success) {
-        const fileUrl = URL.createObjectURL(file);
-
-        setImageSrc(fileUrl);
         setErrorMessage(undefined);
         field.onChange({ file } || null);
       }

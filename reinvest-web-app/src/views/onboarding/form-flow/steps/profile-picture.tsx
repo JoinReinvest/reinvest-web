@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -8,16 +9,18 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
-import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
+import { z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
@@ -26,6 +29,11 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'profilePicture'>;
 
 const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
+const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
+
+const schema = z.object({
+  profilePicture: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES),
+});
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PROFILE_PICTURE,
@@ -51,8 +59,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const { profilePicture, accountId } = storeFields;
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
+      resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
+
     const {
       error: profileDetailsError,
       isLoading: isCompleteProfileDetailsLoading,
@@ -144,12 +154,8 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       }
     };
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const onFileChange = async (oldFile: DocumentFile) => {
-      // TO-DO: Check if the old file has been uploaded to S3 and
-      //    delete it if it has an `id`.
+    const onFileChange = async (file: File) => {
+      await updateStoreFields({ profilePicture: { fileName: file.name, file } });
     };
 
     useEffect(() => {
