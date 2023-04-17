@@ -6,16 +6,24 @@ import { ImageProps } from 'next/image';
 import { ChangeEventHandler, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 
 import { EditAvatarButton } from './EditAvatarButton';
 
 type PrimitiveProps = Pick<AvatarProps, 'image' | 'altText'>;
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
+  onFileChange?: (previousFile: DocumentFile, file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
 }
 
-export function InputAvatar<FormFields extends FieldValues>({ image, altText, sizeLimitInMegaBytes = 5.0, ...controllerProps }: Props<FormFields>) {
+export function InputAvatar<FormFields extends FieldValues>({
+  image,
+  altText,
+  sizeLimitInMegaBytes = 5.0,
+  onFileChange,
+  ...controllerProps
+}: Props<FormFields>) {
   const { field } = useController(controllerProps);
   const [imageSrc, setImageSrc] = useState<ImageProps['src']>(image || placeholderImage);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -26,12 +34,13 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
 
   const hasError = !!errorMessage;
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = async ({ target }) => {
     const file = target.files?.item(0);
     const hasFile = !!file;
 
     if (hasFile) {
-      const validationSchema = schema.safeParse(file);
+      const validationSchema = schema.safeParse({ file });
+      onFileChange && (await onFileChange(field.value, file));
 
       if (!validationSchema.success) {
         const { errors } = validationSchema.error;
@@ -44,7 +53,7 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
 
         setImageSrc(fileUrl);
         setErrorMessage(undefined);
-        field.onChange(file || null);
+        field.onChange({ file } || null);
       }
     }
   };
