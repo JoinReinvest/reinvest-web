@@ -5,11 +5,13 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptionItem, RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
+import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
+import { UnableCreteTrustAccount } from '../../../UnableCreteTrustAccount';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -47,19 +49,20 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
       fields.residency,
       fields.ssn,
       fields.address,
-      fields.isAccreditedInvestor,
       fields.experience,
       fields.employmentStatus,
     ];
 
     const hasProfileFields = allRequiredFieldsExists(profileFields);
     const isAccountCorporateOrTrust = fields.accountType === DraftAccountType.Corporate || fields.accountType === DraftAccountType.Trust;
+    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]);
 
-    return (isAccountCorporateOrTrust && hasProfileFields) || isAccountCorporateOrTrust;
+    return (isAccountCorporateOrTrust && hasProfileFields && hasTrustFields) || isAccountCorporateOrTrust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const hasStoredValue = storeFields.isAuthorizedSignatoryEntity !== undefined;
+    const [isUnableToCreateTrustAccount, setIsUnableToCreateTrustAccount] = useState(false);
     const storedValue = storeFields.isAuthorizedSignatoryEntity ? 'yes' : 'no';
     const defaultValues: Fields = { isAuthorizedSignatoryEntity: hasStoredValue ? storedValue : 'no' };
     const { handleSubmit, formState, control } = useForm<Fields>({
@@ -73,12 +76,25 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       const isAuthorizedSignatoryEntity = fields?.isAuthorizedSignatoryEntity === 'yes';
 
+      if (!isAuthorizedSignatoryEntity) {
+        return setIsUnableToCreateTrustAccount(true);
+      }
+
       await updateStoreFields({ isAuthorizedSignatoryEntity });
-      moveToNextStep();
+
+      return moveToNextStep();
+    };
+
+    const onOpenChange = () => {
+      setIsUnableToCreateTrustAccount(!isUnableToCreateTrustAccount);
     };
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
+        <UnableCreteTrustAccount
+          isOpen={isUnableToCreateTrustAccount}
+          onOpenChange={onOpenChange}
+        />
         <FormContent>
           <BlackModalTitle title="Are you an authorized signatory & beneficiary owner of this entity?" />
 

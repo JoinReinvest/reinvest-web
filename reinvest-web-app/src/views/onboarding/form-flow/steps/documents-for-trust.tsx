@@ -5,17 +5,24 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
+import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
+import { IconSpinner } from '../../../../assets/icons/IconSpinner';
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
+import { getApiClient } from '../../../../services/getApiClient';
+import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'documentsForTrust'>;
 
-const MINIMUM_NUMBER_OF_FILES = 2;
+const MINIMUM_NUMBER_OF_FILES = 1;
 
 const schema = z.object({
   documentsForTrust: z.custom<File>().array().min(MINIMUM_NUMBER_OF_FILES, `You must upload at least ${MINIMUM_NUMBER_OF_FILES} file(s)`),
@@ -28,7 +35,27 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     return fields.accountType === DraftAccountType.Trust;
   },
 
+  doesMeetConditionFields: fields => {
+    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const isTrustAccount = fields.accountType === DraftAccountType.Trust;
+    const hasTrustFields = allRequiredFieldsExists([
+      fields.trustType,
+      fields.trustLegalName,
+      fields.businessAddress,
+      fields.corporationIndustry,
+      fields.corporationAnnualRevenue,
+      fields.corporationNumberOfEmployees,
+    ]);
+
+    return isTrustAccount && hasProfileFields && hasTrustFields;
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
+    const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
+    const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
     const defaultValues: Fields = { documentsForTrust: storeFields.documentsForTrust || [] };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
@@ -36,12 +63,35 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ documentsForTrust }) => {
-      await updateStoreFields({ documentsForTrust });
-      moveToNextStep();
+      const idScan = [];
+      const hasDocuments = !!documentsForTrust?.length;
+
+      if (hasDocuments) {
+        const numberOfIdentificationDocuments = documentsForTrust.length;
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfIdentificationDocuments })) as PutFileLink[];
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForTrust });
+        idScan.push(...scans);
+      }
+
+      try {
+        await updateStoreFields({ documentsForTrust });
+
+        if (storeFields.accountId) {
+          await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { companyDocuments: idScan } });
+        }
+      } catch (error) {
+        await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
+      }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     const subtitle = (
       <>
@@ -49,30 +99,45 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       </>
     );
 
-    return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
-          <BlackModalTitle
-            title="Upload the following documents to verify your trust."
-            subtitle={subtitle}
-          />
+    if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
+      return (
+        <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
+          <IconSpinner />
 
-          <InputMultiFile
-            name="documentsForTrust"
-            control={control}
-            accepts={['pdf']}
-            minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
-          />
-        </FormContent>
+          <BlackModalTitle title="Uploading Your Document" />
+        </div>
+      );
+    }
 
-        <ButtonStack>
-          <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-          />
-        </ButtonStack>
-      </Form>
-    );
+    if (!isLoading) {
+      return (
+        <Form onSubmit={handleSubmit(onSubmit)}>
+          <FormContent>
+            <BlackModalTitle
+              title="Upload the following documents to verify your trust."
+              subtitle={subtitle}
+            />
+            {error && <ErrorMessagesHandler error={error} />}
+            <InputMultiFile
+              name="documentsForTrust"
+              control={control}
+              accepts={['pdf']}
+              minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+            />
+          </FormContent>
+
+          <ButtonStack>
+            <Button
+              type="submit"
+              label="Continue"
+              disabled={shouldButtonBeDisabled}
+              loading={isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading}
+            />
+          </ButtonStack>
+        </Form>
+      );
+    }
+
+    return null;
   },
 };

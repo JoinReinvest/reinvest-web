@@ -55,18 +55,9 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       defaultValues: async () => defaultValues,
     });
 
-    const {
-      // error: createDocumentsFileLinksError,
-      isLoading: isCreateDocumentsFileLinksLoading,
-      mutateAsync: createDocumentsFileLinksMutate,
-    } = useCreateDocumentsFileLinks(getApiClient);
+    const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
 
-    const {
-      // error: sendDocumentsToS3AndGetScanIdsError,
-      isLoading: isSendDocumentToS3AndGetScanIdsLoading,
-      // isSuccess: isSendDocumentToS3AndGetScanIdsSuccess,
-      mutateAsync: sendDocumentsToS3AndGetScanIdsMutate,
-    } = useSendDocumentsToS3AndGetScanIds();
+    const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 

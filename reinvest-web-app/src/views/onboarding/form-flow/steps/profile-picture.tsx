@@ -48,10 +48,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     ];
 
     const individualAccountFields = [fields.netIncome, fields.netWorth, fields.employmentStatus];
-    const corporateAndTrustAccountFields = [fields.isAuthorizedSignatoryEntity];
 
     return (
-      allRequiredFieldsExists(profileFields) && (allRequiredFieldsExists(individualAccountFields) || allRequiredFieldsExists(corporateAndTrustAccountFields))
+      allRequiredFieldsExists(profileFields) &&
+      (allRequiredFieldsExists(individualAccountFields) || !fields.isAuthorizedSignatoryEntity || fields.isAuthorizedSignatoryEntity)
     );
   },
 
@@ -120,7 +120,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         const avatar = { id: avatarId };
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { avatar, verifyAndFinish: true },
+          input: { avatar },
         });
 
         if (individualDraftAccount?.isCompleted) {
@@ -138,7 +138,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { verifyAndFinish: true },
+          input: {},
         });
 
         if (individualDraftAccount?.isCompleted) {
