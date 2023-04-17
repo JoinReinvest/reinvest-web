@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -9,17 +8,16 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
-import { z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
@@ -28,10 +26,6 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'profilePicture'>;
 
 const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
-
-const schema = z.object({
-  profilePicture: generateFileSchema(['jpeg', 'jpg', 'png'], FILE_SIZE_LIMIT_IN_MEGABYTES),
-});
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PROFILE_PICTURE,
@@ -57,7 +51,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const { profilePicture, accountId } = storeFields;
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
-      resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
     const {
@@ -99,14 +92,17 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      const avatarLink = await createAvatarLinkMutate({});
+    const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
+      await updateStoreFields({ profilePicture });
+      const willUploadAvatar = !profilePicture?.id;
+      const hasFile = !!profilePicture?.file;
       let avatarId = '';
 
-      if (fields.profilePicture) {
-        if (avatarLink?.url && avatarLink.id) {
-          await sendFilesToS3Bucket([{ file: fields.profilePicture, url: avatarLink.url, id: avatarLink.id }]);
+      if (!willUploadAvatar && hasFile) {
+        const avatarLink = await createAvatarLinkMutate({});
+
+        if (avatarLink?.url && avatarLink.id && profilePicture?.file) {
+          await sendFilesToS3Bucket([{ file: profilePicture.file, url: avatarLink.url, id: avatarLink.id }]);
           avatarId = avatarLink.id;
         }
       }
@@ -117,9 +113,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         }
 
         const avatar = { id: avatarId };
+
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { avatar, verifyAndFinish: true },
+          input: { avatar },
         });
 
         if (individualDraftAccount?.isCompleted) {
@@ -137,7 +134,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { verifyAndFinish: true },
+          input: {},
         });
 
         if (individualDraftAccount?.isCompleted) {
@@ -145,6 +142,14 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
+    };
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const onFileChange = async (oldFile: DocumentFile) => {
+      // TO-DO: Check if the old file has been uploaded to S3 and
+      //    delete it if it has an `id`.
     };
 
     useEffect(() => {
@@ -168,6 +173,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
               control={control}
               altText="Profile picture for account"
               sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
+              onFileChange={onFileChange}
             />
 
             <Typography

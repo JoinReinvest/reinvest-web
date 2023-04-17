@@ -74,6 +74,14 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
       }
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const onFileChange = async (oldFile: DocumentFile) => {
+      // TO-DO: Check if the old file has been uploaded to S3 and
+      //    delete it if it has an `id`.
+    };
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
@@ -85,6 +93,7 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
             accepts={ACCEPTED_FILES_MIME_TYPES}
             sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
             placeholder="Upload File"
+            onFileChange={onFileChange}
           />
         </FormContent>
 
