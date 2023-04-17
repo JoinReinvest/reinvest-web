@@ -1,9 +1,9 @@
 import { useMutation, UseMutationResult } from '@tanstack/react-query';
-import { PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { DocumentFileLinkInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { sendDocumentsToS3AndGetScanIds } from 'services/getIdScans';
 
 export const useSendDocumentsToS3AndGetScanIds = (): UseMutationResult<
-  { id: string }[],
+  DocumentFileLinkInput[],
   Error,
   { documentsFileLinks: PutFileLink[]; identificationDocuments: File[] }
 > =>
