@@ -13,7 +13,6 @@ import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/fi
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
-import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
@@ -102,13 +101,6 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       }
     };
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const onClearFileFromApi = async (document: DocumentFile) => {
-      // TO-DO: use mutation to remove the file from the API
-    };
-
     useEffect(() => {
       if (isSuccess) {
         moveToNextStep();
@@ -145,7 +137,6 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
                 control={control}
                 placeholderOnEmpty="Upload Files"
                 placeholderOnMeetsMinimum="Add Additional Files"
-                onClearFileFromApi={onClearFileFromApi}
               />
             </div>
           </FormContent>
