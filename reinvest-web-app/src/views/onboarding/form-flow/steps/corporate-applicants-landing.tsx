@@ -8,6 +8,7 @@ import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { MAXIMUM_NUMBER_OF_APPLICANTS } from '../schemas';
 
 export const StepCorporateApplicantsLanding: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATE_APPLICANTS_LANDING,
@@ -16,7 +17,10 @@ export const StepCorporateApplicantsLanding: StepParams<OnboardingFormFields> = 
     return accountType === DraftAccountType.Corporate;
   },
 
-  Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const applicants = storeFields?.trustTrusteesGrantorsOrProtectors || [];
+    const hasReachedMaximumNumberOfApplicants = applicants.length >= MAXIMUM_NUMBER_OF_APPLICANTS;
+
     const onAddNewApplicant = () => {
       updateStoreFields({ _willHaveMajorStakeholderApplicants: true });
       moveToNextStep();
@@ -39,14 +43,15 @@ export const StepCorporateApplicantsLanding: StepParams<OnboardingFormFields> = 
         <ButtonStack>
           <Button
             variant="outlined"
-            label="Add Applicant"
+            label="Skip"
+            onClick={onSkip}
             className="text-green-frost-01"
-            onClick={onAddNewApplicant}
           />
 
           <Button
-            label="Skip"
-            onClick={onSkip}
+            label="Add Applicant"
+            onClick={onAddNewApplicant}
+            disabled={hasReachedMaximumNumberOfApplicants}
           />
         </ButtonStack>
       </Form>
