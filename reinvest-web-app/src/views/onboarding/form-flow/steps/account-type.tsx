@@ -13,7 +13,6 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
-import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
