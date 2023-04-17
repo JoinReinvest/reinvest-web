@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
-import { getApiClient } from 'services/getApiClient';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 
 import { OnboardingFormFields } from '../form-flow/form-fields';
 
@@ -19,11 +20,11 @@ export const useInitializeFieldsFromApi = ({ updateStoreFields }: Params) => {
       if (profileData) {
         const profileDetails = profileData.details;
 
-        const statementTypes = profileDetails?.statements
-          ?.map(statement => statement?.type || null)
-          .filter(statementType => statementType) || [];
+        const statementTypes = (profileDetails?.statements?.map(statement => statement?.type || null).filter(statementType => statementType) ||
+          []) as StatementType[];
         const finraInstitutionName = profileData?.details?.statements?.find(statement => statement?.type === StatementType.FinraMember)?.details;
 
+        const identificationDocuments: DocumentFile[] = profileDetails?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
 
         await updateStoreFields({
           address: profileDetails?.address,
@@ -37,6 +38,7 @@ export const useInitializeFieldsFromApi = ({ updateStoreFields }: Params) => {
           experience: profileDetails?.experience,
           isAccreditedInvestor: statementTypes.includes(StatementType.AccreditedInvestor),
           statementTypes,
+          identificationDocuments,
           isCompletedProfile: !!profileData?.isCompleted,
           finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
         });
