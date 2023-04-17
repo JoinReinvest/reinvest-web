@@ -1,5 +1,6 @@
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { dateOlderThanEighteenYearsSchema, formValidationRules, generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { dateOlderThanEighteenYearsSchema, formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { DomicileType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
