@@ -9,7 +9,7 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
@@ -119,7 +119,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         const avatar = { id: avatarId };
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { avatar, verifyAndFinish: true },
+          input: { avatar },
         });
 
         if (individualDraftAccount?.isCompleted) {
@@ -137,7 +137,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { verifyAndFinish: true },
+          input: {},
         });
 
         if (individualDraftAccount?.isCompleted) {

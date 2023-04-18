@@ -4,7 +4,7 @@ import { Typography } from 'components/Typography';
 import { ChangeEventHandler, ReactNode, useEffect, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 
 import { FormMessage } from './FormMessage';
 import { UploadedFile } from './InputFile/UploadedFile';
