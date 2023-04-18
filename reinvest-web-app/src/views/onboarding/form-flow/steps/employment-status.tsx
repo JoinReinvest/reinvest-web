@@ -63,7 +63,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       isSuccess,
     } = useCompleteIndividualDraftAccount(getApiClient);
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !form.formState.isValid || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);

@@ -26,7 +26,9 @@ export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
   doesMeetConditionFields: fields => {
     const { _willHaveTrustTrusteesGrantorsOrProtectors } = fields;
 
-    return !!_willHaveTrustTrusteesGrantorsOrProtectors;
+    const hasProtectorsOrGrantors = !!fields.trustTrusteesGrantorsOrProtectors?.length;
+
+    return !!_willHaveTrustTrusteesGrantorsOrProtectors && !hasProtectorsOrGrantors;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
@@ -45,7 +47,7 @@ export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({ _currentTrustTrusteeGrantorOrProtector: fields });
+      await updateStoreFields({ _currentTrustTrusteeGrantorOrProtector: { ...fields, _index: storeFields._currentTrustTrusteeGrantorOrProtector?._index } });
       moveToNextStep();
     };
 

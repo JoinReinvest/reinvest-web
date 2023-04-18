@@ -41,7 +41,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
 
     return (
       (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
-      (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields))
+      (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile)
     );
   },
 

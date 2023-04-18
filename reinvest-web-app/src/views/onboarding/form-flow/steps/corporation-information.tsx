@@ -5,6 +5,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import {
   CORPORATION_ANNUAL_REVENUE_AS_OPTIONS,
@@ -13,10 +14,13 @@ import {
   CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS,
 } from 'reinvest-app-common/src/constants/corporation';
 import { INDUESTRIES_AS_OPTIONS, INDUSTRIES_VALUES } from 'reinvest-app-common/src/constants/industries';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -34,14 +38,24 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATION_INFORMATION,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    const hasAccountType = !!accountType;
-    const isCorporateOrTrust = hasAccountType && [DraftAccountType.Corporate, DraftAccountType.Trust].includes(accountType);
+    return accountType === DraftAccountType.Trust;
+  },
 
-    return isCorporateOrTrust;
+  doesMeetConditionFields: fields => {
+    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const isTrustAccount = fields.accountType === DraftAccountType.Trust;
+    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName, fields.businessAddress]);
+
+    return isTrustAccount && hasProfileFields && hasTrustFields;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { fiduciaryEntityInformation: storeFields.fiduciaryEntityInformation || {} };
+    const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
+    const defaultValues: Fields = {
+      fiduciaryEntityInformation: storeFields.fiduciaryEntityInformation || {},
+    };
 
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'all',
@@ -49,19 +63,40 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
     const fiduciaryEntityTitle = storeFields.accountType === DraftAccountType.Corporate ? 'corporation' : 'trust';
 
     const onSubmit: SubmitHandler<Fields> = async ({ fiduciaryEntityInformation }) => {
       await updateStoreFields({ fiduciaryEntityInformation });
-      moveToNextStep();
+
+      if (
+        storeFields.accountId &&
+        fiduciaryEntityInformation.annualRevenue &&
+        fiduciaryEntityInformation.numberOfEmployees &&
+        fiduciaryEntityInformation.industry
+      ) {
+        await completeTrustDraftAccount({
+          accountId: storeFields.accountId,
+          input: {
+            annualRevenue: { range: fiduciaryEntityInformation.annualRevenue },
+            industry: { value: fiduciaryEntityInformation.industry },
+            numberOfEmployees: { range: fiduciaryEntityInformation.numberOfEmployees },
+          },
+        });
+      }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title={`Please provide the following information regarding your ${fiduciaryEntityTitle}.`} />
-
+          {error && <ErrorMessagesHandler error={error} />}
           <div className="flex w-full flex-col gap-16">
             <Select
               name="fiduciaryEntityInformation.annualRevenue"
