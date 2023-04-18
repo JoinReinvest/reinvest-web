@@ -66,8 +66,10 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
       if (hasDocuments) {
         const numberOfIdentificationDocuments = documentsForTrust.length;
+
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfIdentificationDocuments })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForTrust });
+
         idScan.push(...scans);
       }
 

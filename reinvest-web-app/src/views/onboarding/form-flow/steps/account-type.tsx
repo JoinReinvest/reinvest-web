@@ -11,6 +11,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
+import { useGetIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/getIndividualDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
 import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/services/queries/getListAccountTypesUserCanOpen';
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
@@ -53,6 +54,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     const { isSuccess: isTrustDraftAccountSuccess, data: trustDraftAccountData } = useGetTrustDraftAccount(getApiClient, {
       accountId: accountId,
       config: { enabled: !!accountId && accountType === DraftAccountType.Trust },
+    });
+
+    const { isSuccess: isIndividualDraftAccountSuccess, data: individualDraftAccountData } = useGetIndividualDraftAccount(getApiClient, {
+      accountId: accountId,
+      config: { enabled: !!accountId && accountType === DraftAccountType.Individual },
     });
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
@@ -98,6 +104,14 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
         moveToNextStep();
       }
     }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData]);
+
+    useEffect(() => {
+      if (isIndividualDraftAccountSuccess && individualDraftAccountData) {
+        //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
+        updateStoreFields({ ...storeFields, accountId: individualDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+    }, [isIndividualDraftAccountSuccess, moveToNextStep, storeFields, individualDraftAccountData, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (isSuccess && profileData) {

@@ -44,7 +44,9 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
     return (
       allRequiredFieldsExists(requiredFields) &&
-      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) || fields.accountType !== DraftAccountType.Individual)
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) ||
+        fields.accountType !== DraftAccountType.Individual) &&
+      !fields.isCompletedProfile
     );
   },
 
