@@ -33,7 +33,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
   doesMeetConditionFields(fields) {
     const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
-    return allRequiredFieldsExists(requiredFields) && !!fields.statementTypes?.includes(StatementType.FinraMember);
+    return allRequiredFieldsExists(requiredFields) && !!fields.statementTypes?.includes(StatementType.FinraMember) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

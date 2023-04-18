@@ -14,7 +14,6 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
@@ -53,15 +52,13 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === DraftAccountType.Individual;
+    return !!fields.accountType;
   },
 
   doesMeetConditionFields(fields) {
-    const isCreatingIndividualAccount = fields.accountType === DraftAccountType.Individual;
+    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.accountType];
 
-    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
-
-    return isCreatingIndividualAccount && allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

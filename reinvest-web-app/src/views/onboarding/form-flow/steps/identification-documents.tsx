@@ -9,10 +9,11 @@ import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
@@ -43,7 +44,9 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
     return (
       allRequiredFieldsExists(requiredFields) &&
-      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) || fields.accountType !== DraftAccountType.Individual)
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) ||
+        fields.accountType !== DraftAccountType.Individual) &&
+      !fields.isCompletedProfile
     );
   },
 
@@ -55,18 +58,9 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       defaultValues: async () => defaultValues,
     });
 
-    const {
-      // error: createDocumentsFileLinksError,
-      isLoading: isCreateDocumentsFileLinksLoading,
-      mutateAsync: createDocumentsFileLinksMutate,
-    } = useCreateDocumentsFileLinks(getApiClient);
+    const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
 
-    const {
-      // error: sendDocumentsToS3AndGetScanIdsError,
-      isLoading: isSendDocumentToS3AndGetScanIdsLoading,
-      // isSuccess: isSendDocumentToS3AndGetScanIdsSuccess,
-      mutateAsync: sendDocumentsToS3AndGetScanIdsMutate,
-    } = useSendDocumentsToS3AndGetScanIds();
+    const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
@@ -75,18 +69,27 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const idScan = [];
-      const hasIdentificationDocuments = !!identificationDocuments?.length;
+      const hasDocuments = !!identificationDocuments?.length;
+      const hasDocumentsToUpload = identificationDocuments?.some(document => !!document.file);
+      const documentsWithoutFile = identificationDocuments?.map(({ id, fileName }) => ({ id, fileName }));
 
-      if (hasIdentificationDocuments) {
-        const numberOFIdentificationDocuments = identificationDocuments.length;
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOFIdentificationDocuments })) as PutFileLink[];
-        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments });
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = identificationDocuments.map(({ file }) => file).filter(Boolean) as DocumentFile[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsToUpload });
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ identificationDocuments });
-        await completeProfileMutate({ input: { idScan } });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ identificationDocuments: documentsWithoutFile });
+
+        if (hasIdScans) {
+          await completeProfileMutate({ input: { idScan } });
+        } else {
+          moveToNextStep();
+        }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }

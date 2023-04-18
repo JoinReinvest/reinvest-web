@@ -9,10 +9,12 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
@@ -28,9 +30,10 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'profilePicture'>;
 
 const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
+const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
 
 const schema = z.object({
-  profilePicture: generateFileSchema(['jpeg', 'jpg', 'png'], FILE_SIZE_LIMIT_IN_MEGABYTES),
+  profilePicture: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES),
 });
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
@@ -43,13 +46,17 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
-      fields.identificationDocuments?.length,
+      fields.address,
+      fields.experience,
       fields.accountType,
     ];
 
-    const individualAccountFields = [fields.netIncome, fields.netWorth];
+    const individualAccountFields = [fields.netIncome, fields.netWorth, fields.employmentStatus];
 
-    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || allRequiredFieldsExists(individualAccountFields);
+    return (
+      allRequiredFieldsExists(profileFields) &&
+      (allRequiredFieldsExists(individualAccountFields) || !fields.isAuthorizedSignatoryEntity || fields.isAuthorizedSignatoryEntity)
+    );
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
@@ -60,6 +67,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
+
     const {
       error: profileDetailsError,
       isLoading: isCompleteProfileDetailsLoading,
@@ -86,6 +94,12 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       isSuccess: isOpenAccountSuccess,
     } = useOpenAccount(getApiClient);
 
+    const {
+      mutateAsync: completeTrustDraftAccount,
+      error: completeDraftAccountError,
+      isLoading: isCompleteDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
+
     const shouldButtonBeDisabled =
       !formState.isValid ||
       formState.isSubmitting ||
@@ -95,18 +109,25 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       isRemoveDraftAccountLoading;
 
     const shouldButtonBeLoading =
-      isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading || isRemoveDraftAccountLoading;
+      isCreateAvatarLinkLoading ||
+      isIndividualDraftAccountLoading ||
+      isOpenAccountLoading ||
+      isCompleteProfileDetailsLoading ||
+      isRemoveDraftAccountLoading ||
+      isCompleteDraftAccountLoading;
 
     const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      const avatarLink = await createAvatarLinkMutate({});
+    const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
+      await updateStoreFields({ profilePicture });
+      const hasFile = !!profilePicture?.file;
       let avatarId = '';
 
-      if (fields.profilePicture) {
-        if (avatarLink?.url && avatarLink.id) {
-          await sendFilesToS3Bucket([{ file: fields.profilePicture, url: avatarLink.url, id: avatarLink.id }]);
+      if (hasFile) {
+        const avatarLink = await createAvatarLinkMutate({});
+
+        if (avatarLink?.url && avatarLink.id && profilePicture?.file) {
+          await sendFilesToS3Bucket([{ file: profilePicture.file, url: avatarLink.url, id: avatarLink.id }]);
           avatarId = avatarLink.id;
         }
       }
@@ -117,12 +138,21 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         }
 
         const avatar = { id: avatarId };
-        const individualDraftAccount = await completeIndividualDraftAccountMutate({
-          accountId,
-          input: { avatar, verifyAndFinish: true },
-        });
 
-        if (individualDraftAccount?.isCompleted) {
+        let draftAccount = null;
+
+        if (storeFields.accountType === DraftAccountType.Individual) {
+          draftAccount = await completeIndividualDraftAccountMutate({
+            accountId,
+            input: { avatar },
+          });
+        }
+
+        if (storeFields.accountType === DraftAccountType.Trust) {
+          draftAccount = await completeTrustDraftAccount({ accountId, input: { avatar } });
+        }
+
+        if (draftAccount?.isCompleted) {
           await openAccountMutate({ draftAccountId: accountId });
           await removeDraftAccountMutate({ draftAccountId: accountId });
         }
@@ -137,7 +167,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { verifyAndFinish: true },
+          input: {},
         });
 
         if (individualDraftAccount?.isCompleted) {
@@ -145,6 +175,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
+    };
+
+    const onFileChange = async (file: File) => {
+      await updateStoreFields({ profilePicture: { fileName: file.name, file } });
     };
 
     useEffect(() => {
@@ -162,12 +196,14 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           {removeDraftAccountError && <ErrorMessagesHandler error={removeDraftAccountError} />}
+          {completeDraftAccountError && <ErrorMessagesHandler error={completeDraftAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"
               control={control}
               altText="Profile picture for account"
               sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
+              onFileChange={onFileChange}
             />
 
             <Typography

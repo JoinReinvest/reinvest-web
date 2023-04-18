@@ -1,9 +1,14 @@
 import { StepAccountType } from './account-type';
 import { StepAccreditedInvestor } from './accredited-investor';
+import { StepSignatoryEntity } from './authorized-signatory-entity';
+import { StepBusinessAddress } from './business-address';
 import { StepCheckYourPhone } from './check-your-phone';
 import { StepCompanyTickerSymbols } from './company-ticker-symbols';
 import { StepCompliances } from './compliance';
+import { StepCorporationInformation } from './corporation-information';
 import { StepDateOfBirth } from './date-of-birth';
+import { StepDocumentsForTrust } from './documents-for-trust';
+import { StepEIN } from './ein';
 import { StepEmploymentDetails } from './employment-details';
 import { StepEmploymentStatus } from './employment-status';
 import { StepExperience } from './experience';
@@ -19,6 +24,12 @@ import { StepResidencyStatus } from './residency-status';
 import { StepResidencyVisa } from './residency-visa';
 import { StepSeniorPoliticalFigure } from './senior-political-figure';
 import { StepSocialSecurityNumber } from './social-security-number';
+import { StepTrustApplicantDetails } from './trust-applicant-details';
+import { StepTrustApplicantIdentification } from './trust-applicant-identification';
+import { StepTrustApplicantList } from './trust-applicant-list';
+import { StepTrustApplicantsLanding } from './trust-applicants-landing';
+import { StepTrustLegalName } from './trust-legal-name';
+import { StepTrustType } from './trust-type';
 
 export const FLOW_STEPS = [
   StepAccountType,
@@ -38,8 +49,21 @@ export const FLOW_STEPS = [
   StepPermanentAddress,
   StepAccreditedInvestor,
   StepExperience,
+  //individual steps
   StepEmploymentStatus,
   StepEmploymentDetails,
   StepNetWorthAndIncome,
+  //trust steps
+  StepTrustType,
+  StepTrustLegalName,
+  StepSignatoryEntity,
+  StepEIN,
+  StepBusinessAddress,
+  StepCorporationInformation,
+  StepDocumentsForTrust,
+  StepTrustApplicantsLanding,
+  StepTrustApplicantDetails,
+  StepTrustApplicantIdentification,
+  StepTrustApplicantList,
   StepProfilePicture,
 ];

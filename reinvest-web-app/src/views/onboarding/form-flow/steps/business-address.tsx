@@ -8,15 +8,18 @@ import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { Address, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
+import { Address, AddressInput, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
 import { makeRequest } from 'services/api-request';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -31,18 +34,28 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     return accountType === DraftAccountType.Corporate;
   },
 
+  doesMeetConditionFields: fields => {
+    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const isTrustAccount = fields.accountType === DraftAccountType.Trust;
+    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]);
+
+    return isTrustAccount && hasProfileFields && hasTrustFields;
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.permanentAddress || initialValues;
-
+    const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
-      defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoadingSelectedAddress;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading || isLoadingSelectedAddress;
 
     const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
       const placeId = option?.placeId;
@@ -65,9 +78,19 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
-      await updateStoreFields({ permanentAddress });
-      moveToNextStep();
+      await updateStoreFields({ businessAddress: permanentAddress });
+      const address = permanentAddress as AddressInput;
+
+      if (storeFields.accountId && permanentAddress.addressLine1 && permanentAddress.city && permanentAddress.state && permanentAddress.zip) {
+        await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { address: { ...address, country: 'USA' } } });
+      }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -76,7 +99,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             title="Enter the business address for your corporation."
             informationMessage="US Residents Only"
           />
-
+          {error && <ErrorMessagesHandler error={error} />}
           <div className="flex w-full flex-col gap-16">
             <SelectAsync
               name="addressLine1"
