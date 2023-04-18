@@ -51,7 +51,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
-      defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);

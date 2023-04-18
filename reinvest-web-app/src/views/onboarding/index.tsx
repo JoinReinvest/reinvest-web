@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
 import { useOnboardingFormFlow } from './form-flow';
+import { useInitializeFieldsFromApi } from './hooks/initialize-fields-from-api';
 
 export const OnboardingFlow = () => {
   const router = useRouter();
@@ -14,7 +15,10 @@ export const OnboardingFlow = () => {
     meta: { isFirstStep },
     moveToPreviousValidStep,
     progressPercentage,
+    updateStoreFields,
   } = useOnboardingFormFlow();
+
+  useInitializeFieldsFromApi({ updateStoreFields });
 
   useEffect(() => {
     setIsModalOpen(true);

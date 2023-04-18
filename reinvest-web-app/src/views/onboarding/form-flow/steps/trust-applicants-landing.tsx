@@ -8,6 +8,7 @@ import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { MAXIMUM_NUMBER_OF_APPLICANTS } from '../schemas';
 
 export const StepTrustApplicantsLanding: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_APPLICANTS_LANDING,
@@ -25,9 +26,9 @@ export const StepTrustApplicantsLanding: StepParams<OnboardingFormFields> = {
       fields.trustType,
       fields.trustLegalName,
       fields.businessAddress,
-      fields.corporationIndustry,
-      fields.corporationAnnualRevenue,
-      fields.corporationNumberOfEmployees,
+      fields.fiduciaryEntityInformation?.industry,
+      fields.fiduciaryEntityInformation?.annualRevenue,
+      fields.fiduciaryEntityInformation?.numberOfEmployees,
     ]);
 
     const hasUploadedDocuments = !!fields.documentsForTrust?.length;
@@ -36,7 +37,10 @@ export const StepTrustApplicantsLanding: StepParams<OnboardingFormFields> = {
     return isTrustAccount && hasProfileFields && hasTrustFields && hasUploadedDocuments && !hasProtectorsOrGrantors;
   },
 
-  Component: ({ updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ updateStoreFields, moveToNextStep, moveToStepByIdentifier, storeFields }: StepComponentProps<OnboardingFormFields>) => {
+    const applicants = storeFields.trustTrusteesGrantorsOrProtectors || [];
+    const hasReachedMaximumNumberOfApplicants = applicants.length >= MAXIMUM_NUMBER_OF_APPLICANTS;
+
     const onAddNewApplicant = async () => {
       await updateStoreFields({ _willHaveTrustTrusteesGrantorsOrProtectors: true });
       moveToStepByIdentifier(Identifiers.TRUST_APPLICANT_DETAILS);
@@ -59,14 +63,15 @@ export const StepTrustApplicantsLanding: StepParams<OnboardingFormFields> = {
         <ButtonStack>
           <Button
             variant="outlined"
-            label="Add Applicant"
+            label="Skip"
+            onClick={onSkip}
             className="text-green-frost-01"
-            onClick={onAddNewApplicant}
           />
 
           <Button
-            label="Skip"
-            onClick={onSkip}
+            label="Add Applicant"
+            onClick={onAddNewApplicant}
+            disabled={hasReachedMaximumNumberOfApplicants}
           />
         </ButtonStack>
       </Form>

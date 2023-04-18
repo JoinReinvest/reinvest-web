@@ -24,12 +24,14 @@ import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'corporationAnnualRevenue' | 'corporationNumberOfEmployees' | 'corporationIndustry'>;
+type Fields = Required<Pick<OnboardingFormFields, 'fiduciaryEntityInformation'>>;
 
 const schema = z.object({
-  corporationAnnualRevenue: z.enum(CORPORATION_ANNUAL_REVENUES),
-  corporationNumberOfEmployees: z.enum(CORPORATION_NUMBER_OF_EMPLOYEES),
-  corporationIndustry: z.enum(INDUSTRIES_VALUES),
+  fiduciaryEntityInformation: z.object({
+    annualRevenue: z.enum(CORPORATION_ANNUAL_REVENUES),
+    numberOfEmployees: z.enum(CORPORATION_NUMBER_OF_EMPLOYEES),
+    industry: z.enum(INDUSTRIES_VALUES),
+  }),
 });
 
 export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
@@ -52,9 +54,7 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
     const defaultValues: Fields = {
-      corporationAnnualRevenue: storeFields.corporationAnnualRevenue,
-      corporationNumberOfEmployees: storeFields.corporationNumberOfEmployees,
-      corporationIndustry: storeFields.corporationIndustry,
+      fiduciaryEntityInformation: storeFields.fiduciaryEntityInformation || {},
     };
 
     const { formState, control, handleSubmit } = useForm<Fields>({
@@ -64,17 +64,23 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
     });
 
     const shouldButtonBeDisabled = !formState.isValid || isLoading;
+    const fiduciaryEntityTitle = storeFields.accountType === DraftAccountType.Corporate ? 'corporation' : 'trust';
 
-    const onSubmit: SubmitHandler<Fields> = async ({ corporationAnnualRevenue, corporationIndustry, corporationNumberOfEmployees }) => {
-      await updateStoreFields({ corporationAnnualRevenue, corporationIndustry, corporationNumberOfEmployees });
+    const onSubmit: SubmitHandler<Fields> = async ({ fiduciaryEntityInformation }) => {
+      await updateStoreFields({ fiduciaryEntityInformation });
 
-      if (storeFields.accountId && corporationAnnualRevenue && corporationIndustry && corporationNumberOfEmployees) {
+      if (
+        storeFields.accountId &&
+        fiduciaryEntityInformation.annualRevenue &&
+        fiduciaryEntityInformation.numberOfEmployees &&
+        fiduciaryEntityInformation.industry
+      ) {
         await completeTrustDraftAccount({
           accountId: storeFields.accountId,
           input: {
-            annualRevenue: { range: corporationAnnualRevenue },
-            industry: { value: corporationIndustry },
-            numberOfEmployees: { range: corporationNumberOfEmployees },
+            annualRevenue: { range: fiduciaryEntityInformation.annualRevenue },
+            industry: { value: fiduciaryEntityInformation.industry },
+            numberOfEmployees: { range: fiduciaryEntityInformation.numberOfEmployees },
           },
         });
       }
@@ -89,25 +95,25 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Please provide  the following information regarding your corporation." />
+          <BlackModalTitle title={`Please provide the following information regarding your ${fiduciaryEntityTitle}.`} />
           {error && <ErrorMessagesHandler error={error} />}
           <div className="flex w-full flex-col gap-16">
             <Select
-              name="corporationAnnualRevenue"
+              name="fiduciaryEntityInformation.annualRevenue"
               control={control}
               options={CORPORATION_ANNUAL_REVENUE_AS_OPTIONS}
               placeholder="Annual Revenue"
             />
 
             <Select
-              name="corporationNumberOfEmployees"
+              name="fiduciaryEntityInformation.numberOfEmployees"
               control={control}
               options={CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS}
               placeholder="# of Employees"
             />
 
             <Select
-              name="corporationIndustry"
+              name="fiduciaryEntityInformation.industry"
               control={control}
               options={INDUESTRIES_AS_OPTIONS}
               placeholder="Industry"

@@ -13,6 +13,7 @@ import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/fi
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
@@ -66,18 +67,27 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const idScan = [];
-      const hasIdentificationDocuments = !!identificationDocuments?.length;
+      const hasDocuments = !!identificationDocuments?.length;
+      const hasDocumentsToUpload = identificationDocuments?.some(document => !!document.file);
+      const documentsWithoutFile = identificationDocuments?.map(({ id, fileName }) => ({ id, fileName }));
 
-      if (hasIdentificationDocuments) {
-        const numberOFIdentificationDocuments = identificationDocuments.length;
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOFIdentificationDocuments })) as PutFileLink[];
-        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments });
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = identificationDocuments.map(({ file }) => file).filter(Boolean) as DocumentFile[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsToUpload });
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ identificationDocuments });
-        await completeProfileMutate({ input: { idScan } });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ identificationDocuments: documentsWithoutFile });
+
+        if (hasIdScans) {
+          await completeProfileMutate({ input: { idScan } });
+        } else {
+          moveToNextStep();
+        }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }

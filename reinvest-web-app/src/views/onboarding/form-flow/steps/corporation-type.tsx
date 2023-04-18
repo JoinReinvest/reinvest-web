@@ -50,7 +50,7 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="What type of Corporation do you have?" />
+            <BlackModalTitle title="Which type of corporate account would you like to open?" />
 
             <div className="flex w-full flex-col gap-24">
               <SelectionCards

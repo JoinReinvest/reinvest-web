@@ -15,6 +15,7 @@ import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorM
 import { getApiClient } from '../../../../services/getApiClient';
 import { Applicant, IndexedSchema, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { MAXIMUM_NUMBER_OF_APPLICANTS } from '../schemas';
 import { generateApplicantListItem } from '../utilities';
 
 export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
@@ -36,6 +37,7 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
     const router = useRouter();
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const applicants = storeFields.trustTrusteesGrantorsOrProtectors || [];
+    const hasReachedMaximumNumberOfApplicants = applicants.length >= MAXIMUM_NUMBER_OF_APPLICANTS;
 
     const indexedApplicants: IndexedSchema<Applicant>[] = applicants.map((item, index) => ({
       ...item,
@@ -126,6 +128,7 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
             variant="outlined"
             label="Add Applicant"
             onClick={onAddNewApplication}
+            disabled={hasReachedMaximumNumberOfApplicants}
             className="text-green-frost-01"
           />
 

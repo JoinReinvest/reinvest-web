@@ -6,6 +6,7 @@ import { z } from 'zod';
 
 export const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
 export const FILE_SIZE_LIMIT_IN_MEGABYTES = 5;
+export const MAXIMUM_NUMBER_OF_APPLICANTS = 5;
 
 export const APPLICANT_WITHOUT_IDENTIFICATION = z.object({
   firstName: formValidationRules.firstName,

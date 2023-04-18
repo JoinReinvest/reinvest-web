@@ -12,14 +12,18 @@ import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-com
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
+import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/services/queries/getListAccountTypesUserCanOpen';
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
-import { DraftAccountType, StatementType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, StatementType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { SelectCardOption } from 'reinvest-app-common/src/types/select-card-option';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
+import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -36,9 +40,15 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [accountId, setAccountId] = useState(storeFields.accountId || '');
     const [accountType, setAccountType] = useState('');
+    const [accountTypesAvailableToOpen, setAccountTypesAvailableToOpen] = useState<SelectCardOption[]>([]);
     const { data: profileData } = useGetUserProfile(getApiClient);
     const { data: listAccounts } = useGetListAccount(getApiClient);
     const { data: phoneCompleted } = useGetPhoneCompleted(getApiClient);
+    const {
+      data: listAccountTypesUserCanOpen,
+      isLoading: isListAccountTypesUserCanOpenLoading,
+      isSuccess: isListAccountTypesUserCanOpenSuccess,
+    } = useGetListAccountTypesUserCanOpen(getApiClient);
 
     const { isSuccess: isTrustDraftAccountSuccess, data: trustDraftAccountData } = useGetTrustDraftAccount(getApiClient, {
       accountId: accountId,
@@ -98,9 +108,9 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (profileData) {
-        const statementTypes = profileData?.details?.statements
-          ?.map(statement => statement?.type || null)
-          .filter(statementType => statementType) as StatementType[];
+        const statementTypes = profileData?.details?.statements?.map(statement => statement?.type).filter(statementType => statementType) as
+          | StatementType[]
+          | undefined;
         const finraInstitutionName = profileData?.details?.statements?.find(statement => statement?.type === StatementType.FinraMember)?.details;
 
         updateStoreFields({
@@ -132,29 +142,46 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       }
     }, [phoneCompleted, storeFields, updateStoreFields]);
 
+    useEffect(() => {
+      if (listAccountTypesUserCanOpen) {
+        setAccountTypesAvailableToOpen(
+          ACCOUNT_TYPES_AS_OPTIONS.filter(accountType => (listAccountTypesUserCanOpen as AccountType[]).includes(accountType.value as AccountType)),
+        );
+      }
+    }, [isListAccountTypesUserCanOpenSuccess, listAccountTypesUserCanOpen]);
+
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Which type of account would you like to open?" />
+            <BlackModalTitle title={accountTypesAvailableToOpen.length ? 'Which type of account would you like to open?' : 'You cannot open any account'} />
 
             {createDraftAccountError && <ErrorMessagesHandler error={createDraftAccountError} />}
-            <div className="flex w-full flex-col gap-24">
-              <SelectionCards
-                name="accountType"
-                control={control}
-                options={ACCOUNT_TYPES_AS_OPTIONS}
-                className="flex flex-col items-stretch justify-center gap-24"
-                orientation="vertical"
-              />
 
-              <OpenModalLink
-                label="Not sure which is best for you?"
-                green
-                center
-                onClick={onLinkClick}
-              />
-            </div>
+            {isListAccountTypesUserCanOpenLoading && (
+              <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
+                {' '}
+                <IconSpinner />
+              </div>
+            )}
+            {!isListAccountTypesUserCanOpenLoading && !!accountTypesAvailableToOpen.length && (
+              <div className="flex w-full flex-col gap-24">
+                <SelectionCards
+                  name="accountType"
+                  control={control}
+                  options={accountTypesAvailableToOpen}
+                  className="flex flex-col items-stretch justify-center gap-24"
+                  orientation="vertical"
+                />
+
+                <OpenModalLink
+                  label="Not sure which is best for you?"
+                  green
+                  center
+                  onClick={onLinkClick}
+                />
+              </div>
+            )}
           </FormContent>
 
           <ButtonStack>

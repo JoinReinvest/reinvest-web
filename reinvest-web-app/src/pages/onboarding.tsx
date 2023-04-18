@@ -19,7 +19,6 @@ const OnboardingPage: NextPage = () => {
         experience: null,
         isCompletedProfile: false,
       }}
-      isResumable
     >
       <OnboardingFlow />
     </OnboardingFormFlowProvider>

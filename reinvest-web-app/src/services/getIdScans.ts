@@ -1,11 +1,12 @@
-import { PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
+import { DocumentFileLinkInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 
 import { sendFilesToS3Bucket, UploadFile } from './sendFilesToS3Bucket';
 
 export const sendDocumentsToS3AndGetScanIds = async (
   documentsFileLinks: PutFileLink[],
-  identificationDocuments: File[],
-): Promise<{ fileName: string; id: string }[]> => {
+  identificationDocuments: DocumentFile[],
+): Promise<DocumentFileLinkInput[]> => {
   const images = documentsFileLinks
     .filter(documentFileLink => documentFileLink.url)
     .map(({ url, id }, index) => {
