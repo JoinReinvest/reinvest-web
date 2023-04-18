@@ -14,7 +14,7 @@ export const APPLICANT_WITHOUT_IDENTIFICATION = z.object({
   residentialAddress: z.string().min(1),
   socialSecurityNumber: z.string().min(1),
   dateOfBirth: dateOlderThanEighteenYearsSchema,
-  domicile: z.enum([DomicileType.Citizen, DomicileType.GreenCard, DomicileType.Visa]),
+  domicile: z.enum([DomicileType.Citizen, 'RESIDENT']),
 });
 
 export const APPLICANT_IDENTIFICATION = z.object({

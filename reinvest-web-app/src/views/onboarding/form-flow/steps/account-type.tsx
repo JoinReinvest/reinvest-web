@@ -14,7 +14,8 @@ import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
-import { StatementType } from 'reinvest-app-common/src/types/graphql';
+import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
+import { DraftAccountType, StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
@@ -33,9 +34,16 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const [accountId, setAccountId] = useState(storeFields.accountId || '');
+    const [accountType, setAccountType] = useState('');
     const { data: profileData } = useGetUserProfile(getApiClient);
     const { data: listAccounts } = useGetListAccount(getApiClient);
     const { data: phoneCompleted } = useGetPhoneCompleted(getApiClient);
+
+    const { isSuccess: isTrustDraftAccountSuccess, data: trustDraftAccountData } = useGetTrustDraftAccount(getApiClient, {
+      accountId: accountId,
+      config: { enabled: !!accountId && accountType === DraftAccountType.Trust },
+    });
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -57,12 +65,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-
       const account = listAccounts?.find(account => account?.type === fields.accountType);
 
-      if (account) {
-        await updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
-        moveToNextStep();
+      if (account && fields.accountType) {
+        setAccountId(account?.id || '');
+        setAccountType(fields.accountType);
       }
 
       if (fields.accountType && !account) {
@@ -73,6 +80,14 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     const onLinkClick = () => {
       setIsInformationModalOpen(true);
     };
+
+    useEffect(() => {
+      if (isTrustDraftAccountSuccess && trustDraftAccountData) {
+        //UPDATE ALL FIELDS FOR TRUST ACCOUNT
+        updateStoreFields({ ...storeFields, accountId: trustDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+    }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData]);
 
     useEffect(() => {
       if (isSuccess && profileData) {
