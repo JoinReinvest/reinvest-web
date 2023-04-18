@@ -7,7 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
-import { SelectFilterable } from 'components/FormElements/SelectFilterable';
+import { Select } from 'components/Select';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
@@ -54,7 +54,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
-      defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeLoading = isLoading || isLoadingSelectedAddress;
@@ -128,7 +128,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
               placeholder="City"
             />
 
-            <SelectFilterable
+            <Select
               name="state"
               control={control}
               options={STATES_AS_SELECT_OPTION}

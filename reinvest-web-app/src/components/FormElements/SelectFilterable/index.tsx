@@ -3,7 +3,7 @@ import { DropdownIndicator } from '@hookooekoo/ui-select/dist/components/Dropdow
 import { Classes } from '@hookooekoo/ui-select/dist/enums/classes';
 import { resetStyles } from '@hookooekoo/ui-select/dist/style-reset';
 import { generateIcon } from 'components/Select';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import PrimitiveSelect, { ActionMeta, createFilter, GroupBase, SingleValue, StylesConfig } from 'react-select';
 import { SelectOption, SelectOptions } from 'reinvest-app-common/src/types/select-option';
@@ -36,17 +36,10 @@ export function SelectFilterable<FormFields extends FieldValues>({
   ...controllerProps
 }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
-  const [selectedOption, setSelectedOption] = useState<SelectOption[]>([]);
   const menuPortalTargetMemoized = useMemo(() => menuPortalTarget, [menuPortalTarget]);
   const [focused, setFocused] = useState(false);
   const inputRef = useRef(null);
   const controlRef = useRef<HTMLDivElement>(null);
-  const value = field.value;
-
-  useEffect(() => {
-    setSelectedOption(options.filter(option => option.value === value));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]);
 
   const setFocusHandler = () => setFocused(true);
   const errorMessage = fieldState.error?.message;
@@ -60,7 +53,6 @@ export function SelectFilterable<FormFields extends FieldValues>({
     if (action === 'select-option') {
       const value = option?.value;
       field.onChange({ target: { value } });
-      setSelectedOption(options.filter(option => option.value === value));
     }
   };
 
@@ -80,7 +72,6 @@ export function SelectFilterable<FormFields extends FieldValues>({
     >
       <PrimitiveSelect
         defaultInputValue={field.value}
-        value={selectedOption}
         ref={inputRef}
         options={options}
         className="text-black relative m-0 w-full bg-transparent p-0 outline-none"

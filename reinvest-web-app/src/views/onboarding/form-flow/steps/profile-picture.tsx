@@ -9,7 +9,8 @@ import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
@@ -28,9 +29,10 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'profilePicture'>;
 
 const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
+const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
 
 const schema = z.object({
-  profilePicture: generateFileSchema(['jpeg', 'jpg', 'png'], FILE_SIZE_LIMIT_IN_MEGABYTES),
+  profilePicture: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES),
 });
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
@@ -60,6 +62,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
+
     const {
       error: profileDetailsError,
       isLoading: isCompleteProfileDetailsLoading,
@@ -97,14 +100,18 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const shouldButtonBeLoading =
       isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading || isRemoveDraftAccountLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      const avatarLink = await createAvatarLinkMutate({});
+    const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
+
+    const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
+      await updateStoreFields({ profilePicture });
+      const hasFile = !!profilePicture?.file;
       let avatarId = '';
 
-      if (fields.profilePicture) {
-        if (avatarLink?.url && avatarLink.id) {
-          await sendFilesToS3Bucket([{ file: fields.profilePicture, url: avatarLink.url, id: avatarLink.id }]);
+      if (hasFile) {
+        const avatarLink = await createAvatarLinkMutate({});
+
+        if (avatarLink?.url && avatarLink.id && profilePicture?.file) {
+          await sendFilesToS3Bucket([{ file: profilePicture.file, url: avatarLink.url, id: avatarLink.id }]);
           avatarId = avatarLink.id;
         }
       }
@@ -115,9 +122,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         }
 
         const avatar = { id: avatarId };
+
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { avatar, verifyAndFinish: true },
+          input: { avatar },
         });
 
         if (individualDraftAccount?.isCompleted) {
@@ -135,7 +143,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         const individualDraftAccount = await completeIndividualDraftAccountMutate({
           accountId,
-          input: { verifyAndFinish: true },
+          input: {},
         });
 
         if (individualDraftAccount?.isCompleted) {
@@ -143,6 +151,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
+    };
+
+    const onFileChange = async (file: File) => {
+      await updateStoreFields({ profilePicture: { fileName: file.name, file } });
     };
 
     useEffect(() => {
@@ -166,6 +178,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
               control={control}
               altText="Profile picture for account"
               sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
+              onFileChange={onFileChange}
             />
 
             <Typography
@@ -190,7 +203,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
             variant="outlined"
             onClick={onSkip}
             className="text-green-frost-01"
-            disabled={shouldButtonBeLoading}
+            disabled={shouldSkipButtonBeDisabled}
           />
         </ButtonStack>
       </Form>
