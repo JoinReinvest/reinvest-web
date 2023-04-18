@@ -20,27 +20,28 @@ import { z } from 'zod';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'corporationAnnualRevenue' | 'corporationNumberOfEmployees' | 'corporationIndustry'>;
+type Fields = Required<Pick<OnboardingFormFields, 'fiduciaryEntityInformation'>>;
 
 const schema = z.object({
-  corporationAnnualRevenue: z.enum(CORPORATION_ANNUAL_REVENUES),
-  corporationNumberOfEmployees: z.enum(CORPORATION_NUMBER_OF_EMPLOYEES),
-  corporationIndustry: z.enum(INDUSTRIES_VALUES),
+  fiduciaryEntityInformation: z.object({
+    annualRevenue: z.enum(CORPORATION_ANNUAL_REVENUES),
+    numberOfEmployees: z.enum(CORPORATION_NUMBER_OF_EMPLOYEES),
+    industry: z.enum(INDUSTRIES_VALUES),
+  }),
 });
 
 export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATION_INFORMATION,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === DraftAccountType.Corporate;
+    const hasAccountType = !!accountType;
+    const isCorporateOrTrust = hasAccountType && [DraftAccountType.Corporate, DraftAccountType.Trust].includes(accountType);
+
+    return isCorporateOrTrust;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = {
-      corporationAnnualRevenue: storeFields.corporationAnnualRevenue,
-      corporationNumberOfEmployees: storeFields.corporationNumberOfEmployees,
-      corporationIndustry: storeFields.corporationIndustry,
-    };
+    const defaultValues: Fields = { fiduciaryEntityInformation: storeFields.fiduciaryEntityInformation || {} };
 
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'all',
@@ -49,34 +50,35 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const fiduciaryEntityTitle = storeFields.accountType === DraftAccountType.Corporate ? 'corporation' : 'trust';
 
-    const onSubmit: SubmitHandler<Fields> = async ({ corporationAnnualRevenue, corporationIndustry, corporationNumberOfEmployees }) => {
-      await updateStoreFields({ corporationAnnualRevenue, corporationIndustry, corporationNumberOfEmployees });
+    const onSubmit: SubmitHandler<Fields> = async ({ fiduciaryEntityInformation }) => {
+      await updateStoreFields({ fiduciaryEntityInformation });
       moveToNextStep();
     };
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Please provide  the following information regarding your corporation." />
+          <BlackModalTitle title={`Please provide the following information regarding your ${fiduciaryEntityTitle}.`} />
 
           <div className="flex w-full flex-col gap-16">
             <Select
-              name="corporationAnnualRevenue"
+              name="fiduciaryEntityInformation.annualRevenue"
               control={control}
               options={CORPORATION_ANNUAL_REVENUE_AS_OPTIONS}
               placeholder="Annual Revenue"
             />
 
             <Select
-              name="corporationNumberOfEmployees"
+              name="fiduciaryEntityInformation.numberOfEmployees"
               control={control}
               options={CORPORATION_NUMBER_OF_EMPLOYEES_AS_OPTIONS}
               placeholder="# of Employees"
             />
 
             <Select
-              name="corporationIndustry"
+              name="fiduciaryEntityInformation.industry"
               control={control}
               options={INDUESTRIES_AS_OPTIONS}
               placeholder="Industry"

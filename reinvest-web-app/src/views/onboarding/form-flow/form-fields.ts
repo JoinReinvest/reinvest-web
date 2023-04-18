@@ -39,10 +39,7 @@ export interface OnboardingFormFields {
   companyMajorStakeholderApplicants?: Applicant[];
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: Compliances;
-  corporationAnnualRevenue?: CorporationAnnualRevenue;
-  corporationIndustry?: Industry;
   corporationLegalName?: string;
-  corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporateCompanyType;
   documentsForCorporation?: DocumentFile[];
   documentsForTrust?: DocumentFile[];
@@ -65,6 +62,7 @@ export interface OnboardingFormFields {
   };
   employmentDetails?: EmploymentDetails;
   employmentStatus?: EmploymentStatus;
+  fiduciaryEntityInformation?: FiduciaryEntityInformation;
   finraInstitution?: string;
   finraInstitutionName?: string;
   identificationDocuments?: DocumentFile[];
@@ -108,6 +106,12 @@ interface Compliances {
   isAssociatedWithFinra?: boolean;
   isAssociatedWithPubliclyTradedCompany?: boolean;
   isSeniorPoliticalFigure?: boolean;
+}
+
+interface FiduciaryEntityInformation {
+  annualRevenue?: CorporationAnnualRevenue;
+  industry?: Industry;
+  numberOfEmployees?: CorporationNumberOfEmployees;
 }
 
 export interface Applicant {
