@@ -16,7 +16,7 @@ export const UploadedFile = ({ fileName, onRemove }: UploadedFileProps) => {
       </Typography>
       <IconTrashcan
         className="cursor-pointer stroke-white"
-        onClick={() => onRemove()}
+        onClick={onRemove}
       />
     </div>
   );
