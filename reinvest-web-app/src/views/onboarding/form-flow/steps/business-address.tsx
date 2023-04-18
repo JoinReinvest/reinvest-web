@@ -109,7 +109,6 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
               formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
               formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
-              shouldUnregister
             />
 
             <Input
@@ -134,7 +133,6 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             <InputZipCode
               name="zip"
               control={control}
-              shouldUnregister
             />
           </div>
         </FormContent>
