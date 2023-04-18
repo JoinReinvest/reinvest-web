@@ -18,7 +18,7 @@ import { z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
-import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
+import { IdScan, useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 import { FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
@@ -74,7 +74,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       !formState.isValid || formState.isSubmitting || isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
-      const idScan = [];
+      const idScan: IdScan[] = [];
       const hasIdentificationDocuments = !!identificationDocuments?.length;
 
       if (hasIdentificationDocuments) {
