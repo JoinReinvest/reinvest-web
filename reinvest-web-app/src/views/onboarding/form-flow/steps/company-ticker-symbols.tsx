@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
@@ -13,15 +14,16 @@ import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
-import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { CompanyTickerSymbol, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
-const MINUMUM_COMPANY_TICKER_SYMBOLS = 3;
+const STARTING_NUMBER_OF_TICKER_SYMBOLS = 3;
+const MINUMUM_COMPANY_TICKER_SYMBOLS = 1;
+const MAXIMUM_COMPANY_TICKER_SYMBOLS = 5;
 const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
-const initialValues = new Array(MINUMUM_COMPANY_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
+const INITIAL_VALUES = new Array(STARTING_NUMBER_OF_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
 
 const schema = z
   .object({
@@ -34,13 +36,22 @@ const schema = z
   })
   .superRefine((fields, context) => {
     const countOfFilledFields = fields.companyTickerSymbols.filter(({ symbol }) => symbol !== '').length;
-    const hasAtLeastThreeFilled = countOfFilledFields >= 1;
+    const hasMinimumFilled = countOfFilledFields >= MINUMUM_COMPANY_TICKER_SYMBOLS;
+    const hasExceededMaximum = countOfFilledFields > MAXIMUM_COMPANY_TICKER_SYMBOLS;
 
-    if (!hasAtLeastThreeFilled) {
-      return context.addIssue({
+    if (!hasMinimumFilled) {
+      context.addIssue({
         code: 'custom',
         path: ['companyTickerSymbols'],
         message: `Must have at least ${MINUMUM_COMPANY_TICKER_SYMBOLS} ticker symbols.`,
+      });
+    }
+
+    if (hasExceededMaximum) {
+      context.addIssue({
+        code: 'custom',
+        path: ['companyTickerSymbols'],
+        message: `Must have no more than ${MAXIMUM_COMPANY_TICKER_SYMBOLS} ticker symbols.`,
       });
     }
   });
@@ -60,7 +71,7 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const hasStoredTickerSymbols = !!storeFields.companyTickerSymbols?.length;
-    const defaultValues: Fields = { companyTickerSymbols: hasStoredTickerSymbols ? storeFields.companyTickerSymbols : initialValues };
+    const defaultValues: Fields = { companyTickerSymbols: hasStoredTickerSymbols ? storeFields.companyTickerSymbols : INITIAL_VALUES };
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
     const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'all',
@@ -77,8 +88,9 @@ export const StepCompanyTickerSymbols: StepParams<OnboardingFormFields> = {
       const { unsubscribe } = watch(({ companyTickerSymbols }) => {
         const hasFilledAllFields = !!companyTickerSymbols?.every(ticker => !!ticker?.symbol && ticker?.symbol !== '');
         const hasAtLeastAnElement = !!companyTickerSymbols?.length;
+        const hasMoreThanMaximum = (companyTickerSymbols?.length || 0) >= MAXIMUM_COMPANY_TICKER_SYMBOLS;
 
-        setShouldAppendButtonBeDisabled(hasAtLeastAnElement && !hasFilledAllFields);
+        setShouldAppendButtonBeDisabled((hasAtLeastAnElement && !hasFilledAllFields) || hasMoreThanMaximum);
       });
 
       return () => {
