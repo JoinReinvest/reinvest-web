@@ -1,4 +1,3 @@
-import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -7,8 +6,8 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
-import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -16,10 +15,7 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'documentsForTrust'>;
 
 const MINIMUM_NUMBER_OF_FILES = 2;
-
-const schema = z.object({
-  documentsForTrust: z.custom<File>().array().min(MINIMUM_NUMBER_OF_FILES, `You must upload at least ${MINIMUM_NUMBER_OF_FILES} file(s)`),
-});
+const MAXIMUM_NUMBER_OF_FILES = 5;
 
 export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
@@ -32,8 +28,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     const defaultValues: Fields = { documentsForTrust: storeFields.documentsForTrust || [] };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
-      resolver: zodResolver(schema),
-      defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -49,6 +44,13 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       </>
     );
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const onClearFileFromApi = async (document: DocumentFile) => {
+      // TO-DO: use mutation to remove the file from the API
+    };
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
@@ -62,6 +64,8 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
             control={control}
             accepts={['pdf']}
             minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+            maximumNumberOfFiles={MAXIMUM_NUMBER_OF_FILES}
+            onClearFileFromApi={onClearFileFromApi}
           />
         </FormContent>
 

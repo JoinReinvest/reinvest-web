@@ -1,5 +1,6 @@
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'reinvest-app-common/src/constants/corporation';
 import { Industry } from 'reinvest-app-common/src/constants/industries';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import {
   Address,
   CorporateCompanyType,
@@ -38,13 +39,10 @@ export interface OnboardingFormFields {
   companyMajorStakeholderApplicants?: Applicant[];
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: Compliances;
-  corporationAnnualRevenue?: CorporationAnnualRevenue;
-  corporationIndustry?: Industry;
   corporationLegalName?: string;
-  corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporateCompanyType;
-  documentsForCorporation?: File[];
-  documentsForTrust?: File[];
+  documentsForCorporation?: DocumentFile[];
+  documentsForTrust?: DocumentFile[];
   domicile?: {
     forGreenCard?: {
       birthCountry: string;
@@ -64,9 +62,10 @@ export interface OnboardingFormFields {
   };
   employmentDetails?: EmploymentDetails;
   employmentStatus?: EmploymentStatus;
+  fiduciaryEntityInformation?: FiduciaryEntityInformation;
   finraInstitution?: string;
   finraInstitutionName?: string;
-  identificationDocuments?: File[];
+  identificationDocuments?: DocumentFile[];
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
   name?: {
@@ -82,7 +81,7 @@ export interface OnboardingFormFields {
     number?: string;
   };
   phoneNumberAuthenticationCode?: string;
-  profilePicture?: File | null;
+  profilePicture?: DocumentFile | null;
   seniorPoliticalFigure?: string;
   ssn?: string;
   statementTypes?: StatementType[];
@@ -109,11 +108,17 @@ interface Compliances {
   isSeniorPoliticalFigure?: boolean;
 }
 
+interface FiduciaryEntityInformation {
+  annualRevenue?: CorporationAnnualRevenue;
+  industry?: Industry;
+  numberOfEmployees?: CorporationNumberOfEmployees;
+}
+
 export interface Applicant {
   dateOfBirth?: Date;
   domicile?: 'us' | 'green-card' | 'visa';
   firstName?: string;
-  identificationDocument?: File;
+  identificationDocument?: DocumentFile;
   lastName?: string;
   middleName?: string;
   residentialAddress?: string;

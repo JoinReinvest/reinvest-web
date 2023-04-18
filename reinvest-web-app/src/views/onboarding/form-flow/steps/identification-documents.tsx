@@ -18,7 +18,7 @@ import { z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
-import { IdScan, useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
+import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 import { FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
@@ -74,19 +74,28 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       !formState.isValid || formState.isSubmitting || isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
-      const idScan: IdScan[] = [];
-      const hasIdentificationDocuments = !!identificationDocuments?.length;
+      const idScan = [];
+      const hasDocuments = !!identificationDocuments?.length;
+      const hasDocumentsToUpload = identificationDocuments?.some(document => !!document.file);
+      const documentsWithoutFile = identificationDocuments?.map(({ id, fileName }) => ({ id, fileName }));
 
-      if (hasIdentificationDocuments) {
-        const numberOFIdentificationDocuments = identificationDocuments.length;
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOFIdentificationDocuments })) as PutFileLink[];
-        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments });
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = identificationDocuments.map(({ file }) => file).filter(Boolean) as File[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsToUpload });
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ identificationDocuments });
-        await completeProfileMutate({ input: { idScan } });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ identificationDocuments: documentsWithoutFile });
+
+        if (hasIdScans) {
+          await completeProfileMutate({ input: { idScan } });
+        } else {
+          moveToNextStep();
+        }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }
