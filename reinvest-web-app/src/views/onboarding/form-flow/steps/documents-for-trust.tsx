@@ -21,7 +21,7 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'documentsForTrust'>;
 
-const MINIMUM_NUMBER_OF_FILES = 2;
+const MINIMUM_NUMBER_OF_FILES = 1;
 const MAXIMUM_NUMBER_OF_FILES = 5;
 
 export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {

@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
-import { DomicileType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType, SimplifiedDomicileType } from 'reinvest-app-common/src/types/graphql';
 import { formatDateForApi } from 'reinvest-app-common/src/utilities/dates';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
@@ -85,7 +85,7 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
             ssn: applicant.socialSecurityNumber || '',
           },
           domicile: {
-            type: applicant.domicile || DomicileType.Citizen,
+            type: applicant.domicile || SimplifiedDomicileType.Citizen,
           },
         }));
 

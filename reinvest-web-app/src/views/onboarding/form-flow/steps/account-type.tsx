@@ -17,7 +17,7 @@ import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/servi
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
-import { AccountType, StatementType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { SelectCardOption } from 'reinvest-app-common/src/types/select-card-option';
 import { getApiClient } from 'services/getApiClient';
@@ -119,33 +119,6 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
-
-    useEffect(() => {
-      if (profileData) {
-        const statementTypes = profileData?.details?.statements?.map(statement => statement?.type).filter(statementType => statementType) as
-          | StatementType[]
-          | undefined;
-        const finraInstitutionName = profileData?.details?.statements?.find(statement => statement?.type === StatementType.FinraMember)?.details;
-
-        updateStoreFields({
-          ...storeFields,
-          address: profileData?.details?.address,
-          name: {
-            firstName: profileData?.details?.firstName || '',
-            lastName: profileData?.details?.lastName || '',
-            middleName: profileData?.details?.middleName || '',
-          },
-          dateOfBirth: profileData?.details?.dateOfBirth,
-          residency: profileData?.details?.domicile?.type,
-          experience: profileData?.details?.experience,
-          isCompletedProfile: !!profileData?.isCompleted,
-          isAccreditedInvestor: statementTypes?.includes(StatementType.AccreditedInvestor),
-          statementTypes: statementTypes || [],
-          finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
-          ssn: profileData?.details?.ssn || '',
-        });
-      }
-    }, [profileData, storeFields, updateStoreFields]);
 
     useEffect(() => {
       if (phoneCompleted) {
