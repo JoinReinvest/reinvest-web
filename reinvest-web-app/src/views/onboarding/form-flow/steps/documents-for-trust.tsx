@@ -4,6 +4,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { Typography } from 'components/Typography';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -91,9 +92,9 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     }, [isSuccess, moveToNextStep]);
 
     const subtitle = (
-      <>
-        <b>Required documents: </b>The Full Trust Document or Certification of Trust,List of All Trustees, Grantors and Protectors.
-      </>
+      <Typography variant="paragraph-large">
+        <b>Required documents: </b>The Full Trust Document or Certification of Trust, List of All Trustees, Grantors and Protectors.
+      </Typography>
     );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
