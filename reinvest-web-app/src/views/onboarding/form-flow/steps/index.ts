@@ -6,6 +6,8 @@ import { StepCheckYourPhone } from './check-your-phone';
 import { StepCompanyTickerSymbols } from './company-ticker-symbols';
 import { StepCompliances } from './compliance';
 import { StepCorporationInformation } from './corporation-information';
+import { StepCorporationLegalName } from './corporation-legal-name';
+import { StepCorporationType } from './corporation-type';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepDocumentsForTrust } from './documents-for-trust';
 import { StepEIN } from './ein';
@@ -53,6 +55,9 @@ export const FLOW_STEPS = [
   StepEmploymentStatus,
   StepEmploymentDetails,
   StepNetWorthAndIncome,
+  //corporation steps
+  StepCorporationType,
+  StepCorporationLegalName,
   //trust steps
   StepTrustType,
   StepTrustLegalName,

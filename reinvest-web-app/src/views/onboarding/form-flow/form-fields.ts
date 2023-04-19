@@ -3,7 +3,7 @@ import { Industry } from 'reinvest-app-common/src/constants/industries';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import {
   Address,
-  CorporateCompanyType,
+  CorporateCompanyTypeEnum,
   DomicileType,
   DraftAccountType,
   EmploymentStatus,
@@ -41,7 +41,7 @@ export interface OnboardingFormFields {
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: Compliances;
   corporationLegalName?: string;
-  corporationType?: CorporateCompanyType;
+  corporationType?: CorporateCompanyTypeEnum;
   documentsForCorporation?: DocumentFile[];
   documentsForTrust?: DocumentFile[];
   domicile?: {
