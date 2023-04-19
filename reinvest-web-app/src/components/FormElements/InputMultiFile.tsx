@@ -37,11 +37,9 @@ export function InputMultiFile<FormFields extends FieldValues>({
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const { field } = useController(controllerProps);
   const schema = generateMultiFileSchema(accepts, sizeLimitInMegaBytes, minimumNumberOfFiles, maximumNumberOfFiles);
-
   const hasMinimumNumberOfFiles = (field.value?.length || 0) >= minimumNumberOfFiles;
   const acceptMimeTypes = mapToMimeType(accepts).join(',');
   const hasErrorMessage = !!errorMessage;
-
   const placeholder = hasMinimumNumberOfFiles ? placeholderOnMeetsMinimum : placeholderOnEmpty;
   const icon = hasMinimumNumberOfFiles ? iconOnMeetsMinimum : iconOnEmpty;
 

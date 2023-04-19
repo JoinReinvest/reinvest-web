@@ -138,7 +138,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         }
 
         const avatar = { id: avatarId };
-
         let draftAccount = null;
 
         if (storeFields.accountType === DraftAccountType.Individual) {
