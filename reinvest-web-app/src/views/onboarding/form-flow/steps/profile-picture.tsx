@@ -100,21 +100,21 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       isLoading: isCompleteDraftAccountLoading,
     } = useCompleteTrustDraftAccount(getApiClient);
 
-    const shouldButtonBeDisabled =
-      !formState.isValid ||
-      formState.isSubmitting ||
-      isCreateAvatarLinkLoading ||
-      isIndividualDraftAccountLoading ||
-      isOpenAccountLoading ||
-      isRemoveDraftAccountLoading;
+    const {
+      mutateAsync: completeCorporateDraftAccount,
+      error: completeCorporateDraftAccountError,
+      isLoading: isCompleteCorporateDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
 
     const shouldButtonBeLoading =
       isCreateAvatarLinkLoading ||
-      isIndividualDraftAccountLoading ||
-      isOpenAccountLoading ||
       isCompleteProfileDetailsLoading ||
       isRemoveDraftAccountLoading ||
-      isCompleteDraftAccountLoading;
+      isCompleteDraftAccountLoading ||
+      isCompleteCorporateDraftAccountLoading;
+
+    const shouldButtonBeDisabled =
+      !formState.isValid || formState.isSubmitting || isIndividualDraftAccountLoading || isOpenAccountLoading || shouldButtonBeLoading;
 
     const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
 
@@ -152,6 +152,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           draftAccount = await completeTrustDraftAccount({ accountId, input: { avatar } });
         }
 
+        if (storeFields.accountType === DraftAccountType.Corporate) {
+          draftAccount = await completeCorporateDraftAccount({ accountId, input: { avatar } });
+        }
+
         if (draftAccount?.isCompleted) {
           await openAccountMutate({ draftAccountId: accountId });
           await removeDraftAccountMutate({ draftAccountId: accountId });
@@ -165,12 +169,24 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           await completeProfileMutate({ input: { verifyAndFinish: true } });
         }
 
-        const individualDraftAccount = await completeIndividualDraftAccountMutate({
-          accountId,
-          input: {},
-        });
+        let draftAccount = null;
 
-        if (individualDraftAccount?.isCompleted) {
+        if (storeFields.accountType === DraftAccountType.Trust) {
+          draftAccount = await completeTrustDraftAccount({ accountId, input: {} });
+        }
+
+        if (storeFields.accountType === DraftAccountType.Individual) {
+          draftAccount = await completeIndividualDraftAccountMutate({
+            accountId,
+            input: {},
+          });
+        }
+
+        if (storeFields.accountType === DraftAccountType.Corporate) {
+          draftAccount = await completeCorporateDraftAccount({ accountId, input: {} });
+        }
+
+        if (draftAccount?.isCompleted) {
           await openAccountMutate({ draftAccountId: accountId });
           await removeDraftAccountMutate({ draftAccountId: accountId });
         }
@@ -197,6 +213,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           {removeDraftAccountError && <ErrorMessagesHandler error={removeDraftAccountError} />}
           {completeDraftAccountError && <ErrorMessagesHandler error={completeDraftAccountError} />}
+          {completeCorporateDraftAccountError && <ErrorMessagesHandler error={completeCorporateDraftAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"
