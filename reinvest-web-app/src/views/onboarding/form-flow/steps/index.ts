@@ -5,10 +5,15 @@ import { StepBusinessAddress } from './business-address';
 import { StepCheckYourPhone } from './check-your-phone';
 import { StepCompanyTickerSymbols } from './company-ticker-symbols';
 import { StepCompliances } from './compliance';
+import { StepCorporateApplicantDetails } from './corporate-applicant-details';
+import { StepCorporateApplicantIdentification } from './corporate-applicant-identification';
+import { StepCorporateApplicantList } from './corporate-applicant-list';
+import { StepCorporateApplicantsLanding } from './corporate-applicants-landing';
 import { StepCorporationInformation } from './corporation-information';
 import { StepCorporationLegalName } from './corporation-legal-name';
 import { StepCorporationType } from './corporation-type';
 import { StepDateOfBirth } from './date-of-birth';
+import { StepDocumentsForCorporation } from './documents-for-corporation';
 import { StepDocumentsForTrust } from './documents-for-trust';
 import { StepEIN } from './ein';
 import { StepEmploymentDetails } from './employment-details';
@@ -35,6 +40,7 @@ import { StepTrustType } from './trust-type';
 
 export const FLOW_STEPS = [
   StepAccountType,
+  //profile steps
   StepFullName,
   StepPhoneNumber,
   StepCheckYourPhone,
@@ -61,14 +67,25 @@ export const FLOW_STEPS = [
   //trust steps
   StepTrustType,
   StepTrustLegalName,
+  //trust and corporation steps
   StepSignatoryEntity,
   StepEIN,
   StepBusinessAddress,
   StepCorporationInformation,
+  //upload trust documents step
   StepDocumentsForTrust,
+  //upload corporation documents step
+  StepDocumentsForCorporation,
+  //trust applicants steps
   StepTrustApplicantsLanding,
   StepTrustApplicantDetails,
   StepTrustApplicantIdentification,
   StepTrustApplicantList,
+  //corporate applicants steps
+  StepCorporateApplicantsLanding,
+  StepCorporateApplicantDetails,
+  StepCorporateApplicantIdentification,
+  StepCorporateApplicantList,
+  //profile picture step
   StepProfilePicture,
 ];

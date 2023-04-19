@@ -48,7 +48,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     return isTrustAccount && hasProfileFields && hasTrustFields;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
     const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
@@ -86,9 +86,13 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        moveToNextStep();
+        if (storeFields.trustTrusteesGrantorsOrProtectors?.length) {
+          return moveToStepByIdentifier(Identifiers.TRUST_APPLICANT_LIST);
+        }
+
+        return moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isSuccess, moveToNextStep, storeFields.trustTrusteesGrantorsOrProtectors?.length, moveToStepByIdentifier]);
 
     const subtitle = (
       <>
