@@ -25,8 +25,6 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Exclude<OnboardingFormFields['address'], null>;
 
-const schema = formValidationRules.address;
-
 export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PERMANENT_ADDRESS,
 
@@ -53,7 +51,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
-      resolver: zodResolver(schema),
+      resolver: zodResolver(formValidationRules.address),
       defaultValues: async () => defaultValues,
     });
 
@@ -113,7 +111,6 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
               formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
               formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
-              shouldUnregister
             />
 
             <Input
@@ -138,7 +135,6 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             <InputZipCode
               name="zip"
               control={control}
-              shouldUnregister
               defaultValue={storeFields.address?.zip}
             />
           </div>
