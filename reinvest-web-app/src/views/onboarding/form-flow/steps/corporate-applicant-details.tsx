@@ -9,7 +9,7 @@ import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { Select } from 'components/Select';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { RESIDENCY_STATUS_OPTIONS } from 'reinvest-app-common/src/constants/residenty-status';
+import { STAKEHOLDER_RESIDENCY_STATUS_OPTIONS } from 'reinvest-app-common/src/constants/residenty-status';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
@@ -25,8 +25,9 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
 
   doesMeetConditionFields: fields => {
     const { _willHaveMajorStakeholderApplicants } = fields;
+    const hasProtectorsOrGrantors = !!fields.companyMajorStakeholderApplicants?.length;
 
-    return !!_willHaveMajorStakeholderApplicants;
+    return !!_willHaveMajorStakeholderApplicants && !hasProtectorsOrGrantors;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
@@ -45,7 +46,7 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({ _currentCompanyMajorStakeholder: fields });
+      await updateStoreFields({ _currentCompanyMajorStakeholder: { ...fields, _index: storeFields._currentCompanyMajorStakeholder?._index } });
       moveToNextStep();
     };
 
@@ -93,7 +94,7 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
             <Select
               name="domicile"
               control={control}
-              options={RESIDENCY_STATUS_OPTIONS}
+              options={STAKEHOLDER_RESIDENCY_STATUS_OPTIONS}
               placeholder="Domicile"
               defaultValue={defaultValues?.domicile}
             />

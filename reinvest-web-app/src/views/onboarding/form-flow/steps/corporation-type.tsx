@@ -6,13 +6,17 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CORPORATION_TYPES_AS_OPTIONS, CORPORATION_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { WhyRequiredCorporationTypeModal } from 'views/whyRequiredModals/WhyRequiredCorporationTypeModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -25,8 +29,22 @@ const schema = z.object({
 export const StepCorporationType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATION_TYPE,
 
+  willBePartOfTheFlow: ({ accountType }) => {
+    return accountType === DraftAccountType.Corporate;
+  },
+
+  doesMeetConditionFields(fields) {
+    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const isCorporateAccount = fields.accountType === DraftAccountType.Corporate;
+
+    return hasProfileFields && isCorporateAccount;
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const { mutateAsync: completeCorporateDraftAccount, isSuccess, error, isLoading } = useCompleteCorporateDraftAccount(getApiClient);
 
     const defaultValues: Fields = { corporationType: storeFields?.corporationType };
     const { handleSubmit, formState, control } = useForm<Fields>({
@@ -35,12 +53,21 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ corporationType }) => {
       await updateStoreFields({ corporationType });
-      moveToNextStep();
+
+      if (storeFields.accountId && corporationType) {
+        await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { companyType: { type: corporationType } } });
+      }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     const onLinkClick = () => {
       setIsInformationModalOpen(true);
@@ -50,7 +77,8 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Which type of corporate account would you like to open?" />
+            <BlackModalTitle title="What type of Corporation do you have?" />
+            {error && <ErrorMessagesHandler error={error} />}
 
             <div className="flex w-full flex-col gap-24">
               <SelectionCards
@@ -76,6 +104,7 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
               type="submit"
               disabled={shouldButtonBeDisabled}
               label="Continue"
+              loading={isLoading}
             />
           </ButtonStack>
         </Form>
