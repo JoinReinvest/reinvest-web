@@ -11,11 +11,12 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { doesSocialSecurityNumberComesFromApi, maskSocialSecurityNumber } from 'utils/social-security-number';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
 import { z } from 'zod';
 
@@ -24,29 +25,31 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'ssn'>;
 
-const schema = z.object({
-  ssn: formValidationRules.socialSecurityNumber,
-});
+const generateSchema = (defaultValues: Fields) => {
+  return z
+    .object({
+      ssn: z.string(),
+    })
+    .superRefine((fields, context) => {
+      const values = [fields.ssn, defaultValues.ssn];
+      const isMaskedFromApi = values.every(doesSocialSecurityNumberComesFromApi);
+      const hasEnteredStoredValue = fields.ssn === defaultValues.ssn;
+      const matchesSecurePattern = !!fields.ssn.match(/^(\*{3}-\*{2}-\*{2}(?!0{2})\d{2})$/);
+      const matchesRegularPattern = !!fields.ssn.match(/^((?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4})|(\*{3}-\*{2}-\*{2}(?!0{2})\d{2})$/);
 
-const getDefaultValue = (value: string | undefined) => {
-  if (!value) {
-    return '';
-  }
+      const doesNotMatchApiField = isMaskedFromApi && !matchesSecurePattern && !hasEnteredStoredValue;
+      const doesNotMatchInitializedField = !defaultValues.ssn && !matchesRegularPattern;
+      const doesNotMatchFieldOnReturn = !isMaskedFromApi && !matchesRegularPattern;
 
-  const separator = '***-**-';
-
-  if (value.includes(separator)) {
-    const last4Digits = value.split(separator).pop();
-    const digits = last4Digits?.split('');
-
-    if (!digits) {
-      return '';
-    }
-
-    return `${separator}**${digits[2]}${digits[3]}`;
-  }
-
-  return value;
+      if (doesNotMatchApiField || doesNotMatchInitializedField || doesNotMatchFieldOnReturn) {
+        context.addIssue({
+          code: 'invalid_string',
+          message: 'Invalid Social Security Number',
+          path: ['ssn'],
+          validation: 'regex',
+        });
+      }
+    });
 };
 
 export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
@@ -65,10 +68,10 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { ssn: getDefaultValue(storeFields.ssn) };
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const defaultValues: Fields = { ssn: maskSocialSecurityNumber(storeFields.ssn) };
+    const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'onSubmit',
-      resolver: zodResolver(schema),
+      resolver: zodResolver(generateSchema(defaultValues)),
       defaultValues: async () => defaultValues,
     });
 
@@ -76,22 +79,23 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const shouldButtonBeDisabled = !formState.isValid || isLoading;
-
-    const onMoreInformationClick = () => {
-      setIsInformationModalOpen(true);
-    };
-
-    const onSubmit: SubmitHandler<Fields> = async ({ ssn }) => {
-      await updateStoreFields({ ssn, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
-      await completeProfileMutate({ input: { ssn: { ssn } } });
-    };
-
     useEffect(() => {
       if (isSuccess) {
         moveToNextStep();
       }
     }, [isSuccess, moveToNextStep]);
+
+    const fieldValue = watch('ssn');
+
+    useEffect(() => {
+      const hasFieldBeenCleared = fieldValue === '';
+
+      if (hasFieldBeenCleared) {
+        setHasFieldBeenClearedOnce(true);
+      }
+    }, [fieldValue]);
+
+    const [hasFieldBeenClearedOnce, setHasFieldBeenClearedOnce] = useState(false);
 
     if (isLoading) {
       return (
@@ -102,6 +106,31 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         </div>
       );
     }
+
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
+
+    const hasStoredValue = !!defaultValues.ssn;
+    const hasStoredValueAndClearedTheField = hasStoredValue && hasFieldBeenClearedOnce;
+    const willUseSecureMask = hasStoredValueAndClearedTheField ? false : hasStoredValue ? true : !hasStoredValue ? false : true;
+
+    const onMoreInformationClick = () => {
+      setIsInformationModalOpen(true);
+    };
+
+    const onSubmit: SubmitHandler<Fields> = async ({ ssn }) => {
+      const maskedSsn = maskSocialSecurityNumber(ssn);
+      const isFromApi = doesSocialSecurityNumberComesFromApi(ssn);
+
+      if (!isFromApi) {
+        await completeProfileMutate({ input: { ssn: { ssn } } });
+      }
+
+      await updateStoreFields({ ssn: maskedSsn, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
+
+      if (isFromApi) {
+        moveToNextStep();
+      }
+    };
 
     return (
       <>
@@ -116,7 +145,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
                 <InputSocialSecurityNumber
                   name="ssn"
                   control={control}
-                  defaultValue={storeFields.ssn}
+                  willUseSecureMask={willUseSecureMask}
                 />
 
                 <OpenModalLink
