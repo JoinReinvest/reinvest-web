@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { DraftAccountType, TrustCompanyTypeEnum } from 'reinvest-app-common/src/types/graphql';
 import { WhatIsEINModal } from 'views/EINModal';
@@ -37,16 +38,31 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
     const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
 
     const hasProfileFields = allRequiredFieldsExists(profileFields);
-    const isAccountCorporateOrTrust = fields.accountType === DraftAccountType.Corporate || fields.accountType === DraftAccountType.Trust;
-    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]);
+    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]) && fields.accountType === DraftAccountType.Trust;
+    const hasCorporateFields =
+      allRequiredFieldsExists([fields.corporationType, fields.corporationLegalName]) && fields.accountType === DraftAccountType.Corporate;
     const isRevocableTrust = fields.trustType !== TrustCompanyTypeEnum.Irrevocable;
 
-    return isAccountCorporateOrTrust && hasProfileFields && hasTrustFields && isRevocableTrust && isAccountCorporateOrTrust;
+    return hasProfileFields && ((hasTrustFields && isRevocableTrust) || hasCorporateFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = { ein: storeFields.ein || '' };
-    const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
+
+    const {
+      mutateAsync: completeTrustDraftAccount,
+      isSuccess: isTrustDraftAccountSuccess,
+      error: trustDraftAccountError,
+      isLoading: isTrustDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
+
+    const {
+      mutateAsync: completeCorporateDraftAccount,
+      isSuccess: isCorporateDraftAccountSuccess,
+      error: corporateDraftAccountError,
+      isLoading: isCorporateDraftAccountLoading,
+    } = useCompleteCorporateDraftAccount(getApiClient);
+
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onBlur',
       resolver: zodResolver(schema),
@@ -55,28 +71,40 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
-    const shouldButtonBeDisabled = !formState.isValid || isLoading;
+    const shouldButtonBeLoading = isTrustDraftAccountLoading || isCorporateDraftAccountLoading;
+    const shouldButtonBeDisabled = !formState.isValid || shouldButtonBeLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ ein }) => {
+      const { accountType, accountId } = storeFields;
+      const hasAccountIdAndEin = accountId && ein;
       await updateStoreFields({ ein });
 
-      if (storeFields.accountId && ein) {
-        await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { ein: { ein } } });
+      if (hasAccountIdAndEin) {
+        const variables = { accountId, input: { ein: { ein } } };
+
+        if (accountType === DraftAccountType.Trust) {
+          await completeTrustDraftAccount(variables);
+        }
+
+        if (accountType === DraftAccountType.Corporate) {
+          await completeCorporateDraftAccount(variables);
+        }
       }
     };
 
     useEffect(() => {
-      if (isSuccess) {
+      if (isTrustDraftAccountSuccess || isCorporateDraftAccountSuccess) {
         moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isTrustDraftAccountSuccess, isCorporateDraftAccountSuccess, moveToNextStep]);
 
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
             <BlackModalTitle title="Enter your EIN" />
-            {error && <ErrorMessagesHandler error={error} />}
+            {trustDraftAccountError && <ErrorMessagesHandler error={trustDraftAccountError} />}
+            {corporateDraftAccountError && <ErrorMessagesHandler error={corporateDraftAccountError} />}
             <div className="flex w-full flex-col gap-16">
               <InputEIN
                 name="ein"
@@ -104,7 +132,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
               type="submit"
               label="Continue"
               disabled={shouldButtonBeDisabled}
-              loading={isLoading}
+              loading={shouldButtonBeLoading}
             />
           </ButtonStack>
         </Form>
