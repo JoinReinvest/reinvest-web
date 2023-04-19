@@ -41,7 +41,7 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
 
       if (hasIndex) {
         // set the current major stakeholder applicant as this value
-        updateStoreFields({ _currentCompanyMajorStakeholder: applicant, _isEditingCompanyMajorStakeholderApplicant: true });
+        updateStoreFields({ _currentCompanyMajorStakeholder: { ...applicant, _index: applicant._index }, _isEditingCompanyMajorStakeholderApplicant: true });
         moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
       }
     };

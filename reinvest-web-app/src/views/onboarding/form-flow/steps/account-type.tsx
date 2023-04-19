@@ -11,11 +11,14 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
+import { useGetIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/getIndividualDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
 import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/services/queries/getListAccountTypesUserCanOpen';
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
-import { AccountType, StatementType } from 'reinvest-app-common/src/types/graphql';
+import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { SelectCardOption } from 'reinvest-app-common/src/types/select-card-option';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
@@ -36,6 +39,8 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const [accountId, setAccountId] = useState(storeFields.accountId || '');
+    const [accountType, setAccountType] = useState('');
     const [accountTypesAvailableToOpen, setAccountTypesAvailableToOpen] = useState<SelectCardOption[]>([]);
     const { data: profileData } = useGetUserProfile(getApiClient);
     const { data: listAccounts } = useGetListAccount(getApiClient);
@@ -45,6 +50,16 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       isLoading: isListAccountTypesUserCanOpenLoading,
       isSuccess: isListAccountTypesUserCanOpenSuccess,
     } = useGetListAccountTypesUserCanOpen(getApiClient);
+
+    const { isSuccess: isTrustDraftAccountSuccess, data: trustDraftAccountData } = useGetTrustDraftAccount(getApiClient, {
+      accountId: accountId,
+      config: { enabled: !!accountId && accountType === DraftAccountType.Trust },
+    });
+
+    const { isSuccess: isIndividualDraftAccountSuccess, data: individualDraftAccountData } = useGetIndividualDraftAccount(getApiClient, {
+      accountId: accountId,
+      config: { enabled: !!accountId && accountType === DraftAccountType.Individual },
+    });
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -66,12 +81,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-
       const account = listAccounts?.find(account => account?.type === fields.accountType);
 
-      if (account) {
-        await updateStoreFields({ ...storeFields, accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
-        moveToNextStep();
+      if (account && fields.accountType) {
+        setAccountId(account?.id || '');
+        setAccountType(fields.accountType);
       }
 
       if (fields.accountType && !account) {
@@ -84,38 +98,27 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
+      if (isTrustDraftAccountSuccess && trustDraftAccountData) {
+        //UPDATE ALL FIELDS FOR TRUST ACCOUNT
+        updateStoreFields({ ...storeFields, accountId: trustDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+    }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData]);
+
+    useEffect(() => {
+      if (isIndividualDraftAccountSuccess && individualDraftAccountData) {
+        //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
+        updateStoreFields({ ...storeFields, accountId: individualDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+    }, [isIndividualDraftAccountSuccess, moveToNextStep, storeFields, individualDraftAccountData, updateStoreFields, profileData]);
+
+    useEffect(() => {
       if (isSuccess && profileData) {
         updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
-
-    useEffect(() => {
-      if (profileData) {
-        const statementTypes = profileData?.details?.statements?.map(statement => statement?.type).filter(statementType => statementType) as
-          | StatementType[]
-          | undefined;
-        const finraInstitutionName = profileData?.details?.statements?.find(statement => statement?.type === StatementType.FinraMember)?.details;
-
-        updateStoreFields({
-          ...storeFields,
-          address: profileData?.details?.address,
-          name: {
-            firstName: profileData?.details?.firstName || '',
-            lastName: profileData?.details?.lastName || '',
-            middleName: profileData?.details?.middleName || '',
-          },
-          dateOfBirth: profileData?.details?.dateOfBirth,
-          residency: profileData?.details?.domicile?.type,
-          experience: profileData?.details?.experience,
-          isCompletedProfile: !!profileData?.isCompleted,
-          isAccreditedInvestor: statementTypes?.includes(StatementType.AccreditedInvestor),
-          statementTypes: statementTypes || [],
-          finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
-          ssn: profileData?.details?.ssn || '',
-        });
-      }
-    }, [profileData, storeFields, updateStoreFields]);
 
     useEffect(() => {
       if (phoneCompleted) {

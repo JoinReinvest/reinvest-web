@@ -6,14 +6,17 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { TRUST_TYPES_AS_OPTIONS, TRUST_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { WhyRequiredTrustTypeModal } from 'views/whyRequiredModals/WhyRequiredTrustTypeModal';
 import { z } from 'zod';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -30,9 +33,19 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
     return accountType === DraftAccountType.Trust;
   },
 
+  doesMeetConditionFields(fields) {
+    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const isTrustAccount = fields.accountType === DraftAccountType.Trust;
+
+    return hasProfileFields && isTrustAccount;
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = { trustType: storeFields?.trustType };
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
 
     const { handleSubmit, formState, control } = useForm<Fields>({
       mode: 'all',
@@ -40,22 +53,32 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      moveToNextStep();
+
+      if (storeFields.accountId && fields.trustType) {
+        await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { companyType: { type: fields.trustType } } });
+      }
     };
 
     const onLinkClick = () => {
       setIsInformationModalOpen(true);
     };
 
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
+
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
             <BlackModalTitle title="Which type of trust account would you like to open?" />
+            {error && <ErrorMessagesHandler error={error} />}
 
             <div className="flex w-full flex-col gap-24">
               <SelectionCards
@@ -81,6 +104,7 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
               type="submit"
               disabled={shouldButtonBeDisabled}
               label="Continue"
+              loading={isLoading}
             />
           </ButtonStack>
         </Form>

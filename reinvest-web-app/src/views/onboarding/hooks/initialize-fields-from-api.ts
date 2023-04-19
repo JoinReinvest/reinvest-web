@@ -41,6 +41,7 @@ export const useInitializeFieldsFromApi = ({ updateStoreFields }: Params) => {
           identificationDocuments,
           isCompletedProfile: !!profileData?.isCompleted,
           finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
+          ssn: profileData?.details?.ssn || '',
         });
       }
     }

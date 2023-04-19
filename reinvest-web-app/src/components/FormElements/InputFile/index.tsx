@@ -84,7 +84,7 @@ export function InputFile<FormFields extends FieldValues>({
 
       {hasFile && (
         <UploadedFile
-          fileName={field.value.name}
+          fileName={field.value.name || field.value.file.name}
           onRemove={clearFile}
         />
       )}
