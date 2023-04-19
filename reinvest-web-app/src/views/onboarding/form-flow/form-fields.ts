@@ -8,6 +8,7 @@ import {
   DraftAccountType,
   EmploymentStatus,
   Experience,
+  SimplifiedDomicileType,
   StatementType,
   TrustCompanyTypeEnum,
 } from 'reinvest-app-common/src/types/graphql';
@@ -116,7 +117,7 @@ interface FiduciaryEntityInformation {
 
 export interface Applicant {
   dateOfBirth?: Date;
-  domicile?: DomicileType.Visa | DomicileType.GreenCard | DomicileType.Citizen;
+  domicile?: SimplifiedDomicileType.Resident | SimplifiedDomicileType.Citizen;
   firstName?: string;
   idScan?: { fileName: string; id: string }[];
   identificationDocument?: DocumentFile;
