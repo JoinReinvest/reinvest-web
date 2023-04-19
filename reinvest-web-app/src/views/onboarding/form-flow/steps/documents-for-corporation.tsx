@@ -4,6 +4,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
@@ -38,9 +39,9 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
     };
 
     const subtitle = (
-      <>
+      <Typography variant="paragraph-large">
         <b>Required documents: </b>Articles of Incorporation, Certificate of Formation, By-laws, Shareholders and Authorized Signers List
-      </>
+      </Typography>
     );
 
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
