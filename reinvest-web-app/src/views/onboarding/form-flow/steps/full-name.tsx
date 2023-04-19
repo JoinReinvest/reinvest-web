@@ -10,6 +10,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { PrivacyPolicyStatement, StatementType, TermsAndConditionsStatement } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
@@ -54,7 +55,18 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await completeProfileMutate({ input: { name: fields?.name } });
+      await completeProfileMutate({
+        input: {
+          name: fields?.name,
+          statements: [
+            { type: StatementType.PrivacyPolicy, forPrivacyPolicy: { statement: PrivacyPolicyStatement.IHaveReadAndAgreeToTheReinvestPrivacyPolicy } },
+            {
+              type: StatementType.TermsAndConditions,
+              forTermsAndConditions: { statement: TermsAndConditionsStatement.IHaveReadAndAgreeToTheReinvestTermsAndConditions },
+            },
+          ],
+        },
+      });
     };
 
     useEffect(() => {

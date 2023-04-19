@@ -1,7 +1,7 @@
 import { IconAdd } from 'assets/icons/IconAdd';
 import { IconFileUpload } from 'assets/icons/IconFileUpload';
 import { Typography } from 'components/Typography';
-import { ChangeEventHandler, ReactNode, useEffect, useState } from 'react';
+import { ChangeEventHandler, ReactNode, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
@@ -34,29 +34,19 @@ export function InputMultiFile<FormFields extends FieldValues>({
   onClearFileFromApi,
   ...controllerProps
 }: Props<FormFields>) {
-  const [documentFiles, setDocumentFiles] = useState<DocumentFile[]>([]);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
   const { field } = useController(controllerProps);
   const schema = generateMultiFileSchema(accepts, sizeLimitInMegaBytes, minimumNumberOfFiles, maximumNumberOfFiles);
-  const value = field.value;
-
-  useEffect(() => {
-    setDocumentFiles(value || []);
-  }, [value]);
-
-  const hasMinimumNumberOfFiles = documentFiles.length >= minimumNumberOfFiles;
+  const hasMinimumNumberOfFiles = (field.value?.length || 0) >= minimumNumberOfFiles;
   const acceptMimeTypes = mapToMimeType(accepts).join(',');
   const hasErrorMessage = !!errorMessage;
-
   const placeholder = hasMinimumNumberOfFiles ? placeholderOnMeetsMinimum : placeholderOnEmpty;
   const icon = hasMinimumNumberOfFiles ? iconOnMeetsMinimum : iconOnEmpty;
 
   const clearFile = async (index: number, document: DocumentFile) => {
-    const copyOfFiles = [...documentFiles];
+    const copyOfFiles = [...field.value];
     copyOfFiles.splice(index, 1);
-
     field.onChange(copyOfFiles);
-    setDocumentFiles(copyOfFiles);
 
     const documentHasId = !!document.id;
     const willTriggerClearFileFromApi = !!onClearFileFromApi;
@@ -66,10 +56,12 @@ export function InputMultiFile<FormFields extends FieldValues>({
     }
   };
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
-    const uploadedFiles = Array.from(target.files || []);
+  const handleChange: ChangeEventHandler<HTMLInputElement> = event => {
+    event.preventDefault();
+
+    const uploadedFiles = Array.from(event.target.files || []);
     const mappedFiles: DocumentFile[] = uploadedFiles.map(file => ({ file, fileName: file.name }));
-    const listOfFiles = [...documentFiles, ...mappedFiles];
+    const listOfFiles = [...field.value, ...mappedFiles];
     const validationSchema = schema.safeParse(listOfFiles);
 
     if (!validationSchema.success) {
@@ -81,7 +73,8 @@ export function InputMultiFile<FormFields extends FieldValues>({
     if (validationSchema.success) {
       setErrorMessage(undefined);
       field.onChange(listOfFiles || null);
-      setDocumentFiles(listOfFiles);
+
+      event.target.value = '';
     }
   };
 
@@ -92,7 +85,9 @@ export function InputMultiFile<FormFields extends FieldValues>({
           type="file"
           id={field.name}
           name={field.name}
+          ref={field.ref}
           onChange={handleChange}
+          onBlur={field.onBlur}
           className="peer hidden"
           accept={acceptMimeTypes}
           multiple
@@ -113,7 +108,7 @@ export function InputMultiFile<FormFields extends FieldValues>({
         </label>
       </div>
 
-      {documentFiles.map((document, index) => (
+      {(field?.value || []).map((document: DocumentFile, index: number) => (
         <UploadedFile
           key={document.id || `${document.fileName}-${index}` || document.file?.name}
           fileName={document.fileName || document.file?.name || ''}

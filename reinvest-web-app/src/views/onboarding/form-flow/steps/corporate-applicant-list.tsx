@@ -8,6 +8,7 @@ import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { Applicant, IndexedSchema, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { MAXIMUM_NUMBER_OF_APPLICANTS } from '../schemas';
 import { generateApplicantListItem } from '../utilities';
 
 export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
@@ -27,6 +28,8 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
+    const numberOfApplicants = majorStakeholderApplicants.length;
+    const hasReachedMaximumNumberOfApplicants = numberOfApplicants >= MAXIMUM_NUMBER_OF_APPLICANTS;
 
     const indexedStakeholderApplicants: IndexedSchema<Applicant>[] = majorStakeholderApplicants.map((item, index) => ({
       ...item,
@@ -38,7 +41,7 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
 
       if (hasIndex) {
         // set the current major stakeholder applicant as this value
-        updateStoreFields({ _currentCompanyMajorStakeholder: applicant, _isEditingCompanyMajorStakeholderApplicant: true });
+        updateStoreFields({ _currentCompanyMajorStakeholder: { ...applicant, _index: applicant._index }, _isEditingCompanyMajorStakeholderApplicant: true });
         moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
       }
     };
@@ -68,6 +71,7 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
             label="Add Applicant"
             onClick={onAddNewApplication}
             className="text-green-frost-01"
+            disabled={hasReachedMaximumNumberOfApplicants}
           />
 
           <Button

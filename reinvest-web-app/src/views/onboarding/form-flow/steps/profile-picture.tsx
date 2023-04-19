@@ -14,6 +14,7 @@ import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
@@ -45,13 +46,17 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
-      fields.identificationDocuments?.length,
+      fields.address,
+      fields.experience,
       fields.accountType,
     ];
 
-    const individualAccountFields = [fields.netIncome, fields.netWorth];
+    const individualAccountFields = [fields.netIncome, fields.netWorth, fields.employmentStatus];
 
-    return (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || allRequiredFieldsExists(individualAccountFields);
+    return (
+      allRequiredFieldsExists(profileFields) &&
+      (allRequiredFieldsExists(individualAccountFields) || !fields.isAuthorizedSignatoryEntity || fields.isAuthorizedSignatoryEntity)
+    );
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
@@ -89,6 +94,12 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       isSuccess: isOpenAccountSuccess,
     } = useOpenAccount(getApiClient);
 
+    const {
+      mutateAsync: completeTrustDraftAccount,
+      error: completeDraftAccountError,
+      isLoading: isCompleteDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
+
     const shouldButtonBeDisabled =
       !formState.isValid ||
       formState.isSubmitting ||
@@ -98,7 +109,12 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       isRemoveDraftAccountLoading;
 
     const shouldButtonBeLoading =
-      isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading || isCompleteProfileDetailsLoading || isRemoveDraftAccountLoading;
+      isCreateAvatarLinkLoading ||
+      isIndividualDraftAccountLoading ||
+      isOpenAccountLoading ||
+      isCompleteProfileDetailsLoading ||
+      isRemoveDraftAccountLoading ||
+      isCompleteDraftAccountLoading;
 
     const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
 
@@ -122,13 +138,20 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         }
 
         const avatar = { id: avatarId };
+        let draftAccount = null;
 
-        const individualDraftAccount = await completeIndividualDraftAccountMutate({
-          accountId,
-          input: { avatar },
-        });
+        if (storeFields.accountType === DraftAccountType.Individual) {
+          draftAccount = await completeIndividualDraftAccountMutate({
+            accountId,
+            input: { avatar },
+          });
+        }
 
-        if (individualDraftAccount?.isCompleted) {
+        if (storeFields.accountType === DraftAccountType.Trust) {
+          draftAccount = await completeTrustDraftAccount({ accountId, input: { avatar } });
+        }
+
+        if (draftAccount?.isCompleted) {
           await openAccountMutate({ draftAccountId: accountId });
           await removeDraftAccountMutate({ draftAccountId: accountId });
         }
@@ -172,6 +195,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           {removeDraftAccountError && <ErrorMessagesHandler error={removeDraftAccountError} />}
+          {completeDraftAccountError && <ErrorMessagesHandler error={completeDraftAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"

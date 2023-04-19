@@ -11,12 +11,20 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
+import { useGetIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/getIndividualDraftAccount';
 import { useGetListAccount } from 'reinvest-app-common/src/services/queries/getListAccount';
+import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/services/queries/getListAccountTypesUserCanOpen';
+import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { SelectCardOption } from 'reinvest-app-common/src/types/select-card-option';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
+import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -31,8 +39,27 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.ACCOUNT_TYPE,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const [accountId, setAccountId] = useState(storeFields.accountId || '');
+    const [accountType, setAccountType] = useState('');
+    const [accountTypesAvailableToOpen, setAccountTypesAvailableToOpen] = useState<SelectCardOption[]>([]);
     const { data: profileData } = useGetUserProfile(getApiClient);
     const { data: listAccounts } = useGetListAccount(getApiClient);
+    const { data: phoneCompleted } = useGetPhoneCompleted(getApiClient);
+    const {
+      data: listAccountTypesUserCanOpen,
+      isLoading: isListAccountTypesUserCanOpenLoading,
+      isSuccess: isListAccountTypesUserCanOpenSuccess,
+    } = useGetListAccountTypesUserCanOpen(getApiClient);
+
+    const { isSuccess: isTrustDraftAccountSuccess, data: trustDraftAccountData } = useGetTrustDraftAccount(getApiClient, {
+      accountId: accountId,
+      config: { enabled: !!accountId && accountType === DraftAccountType.Trust },
+    });
+
+    const { isSuccess: isIndividualDraftAccountSuccess, data: individualDraftAccountData } = useGetIndividualDraftAccount(getApiClient, {
+      accountId: accountId,
+      config: { enabled: !!accountId && accountType === DraftAccountType.Individual },
+    });
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
 
@@ -54,12 +81,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-
       const account = listAccounts?.find(account => account?.type === fields.accountType);
 
-      if (account) {
-        await updateStoreFields({ accountId: account?.id || '', isCompletedProfile: !!profileData?.isCompleted });
-        moveToNextStep();
+      if (account && fields.accountType) {
+        setAccountId(account?.id || '');
+        setAccountType(fields.accountType);
       }
 
       if (fields.accountType && !account) {
@@ -72,35 +98,77 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
+      if (isTrustDraftAccountSuccess && trustDraftAccountData) {
+        //UPDATE ALL FIELDS FOR TRUST ACCOUNT
+        updateStoreFields({ ...storeFields, accountId: trustDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+    }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData]);
+
+    useEffect(() => {
+      if (isIndividualDraftAccountSuccess && individualDraftAccountData) {
+        //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
+        updateStoreFields({ ...storeFields, accountId: individualDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        moveToNextStep();
+      }
+    }, [isIndividualDraftAccountSuccess, moveToNextStep, storeFields, individualDraftAccountData, updateStoreFields, profileData]);
+
+    useEffect(() => {
       if (isSuccess && profileData) {
         updateStoreFields({ accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
+    useEffect(() => {
+      if (phoneCompleted) {
+        updateStoreFields({
+          ...storeFields,
+          _isPhoneCompleted: phoneCompleted,
+        });
+      }
+    }, [phoneCompleted, storeFields, updateStoreFields]);
+
+    useEffect(() => {
+      if (listAccountTypesUserCanOpen) {
+        setAccountTypesAvailableToOpen(
+          ACCOUNT_TYPES_AS_OPTIONS.filter(accountType => (listAccountTypesUserCanOpen as AccountType[]).includes(accountType.value as AccountType)),
+        );
+      }
+    }, [isListAccountTypesUserCanOpenSuccess, listAccountTypesUserCanOpen]);
+
     return (
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Which type of account would you like to open?" />
+            <BlackModalTitle title={accountTypesAvailableToOpen.length ? 'Which type of account would you like to open?' : 'You cannot open any account'} />
 
             {createDraftAccountError && <ErrorMessagesHandler error={createDraftAccountError} />}
-            <div className="flex w-full flex-col gap-24">
-              <SelectionCards
-                name="accountType"
-                control={control}
-                options={ACCOUNT_TYPES_AS_OPTIONS}
-                className="flex flex-col items-stretch justify-center gap-24"
-                orientation="vertical"
-              />
 
-              <OpenModalLink
-                label="Not sure which is best for you?"
-                green
-                center
-                onClick={onLinkClick}
-              />
-            </div>
+            {isListAccountTypesUserCanOpenLoading && (
+              <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
+                {' '}
+                <IconSpinner />
+              </div>
+            )}
+            {!isListAccountTypesUserCanOpenLoading && !!accountTypesAvailableToOpen.length && (
+              <div className="flex w-full flex-col gap-24">
+                <SelectionCards
+                  name="accountType"
+                  control={control}
+                  options={accountTypesAvailableToOpen}
+                  className="flex flex-col items-stretch justify-center gap-24"
+                  orientation="vertical"
+                />
+
+                <OpenModalLink
+                  label="Not sure which is best for you?"
+                  green
+                  center
+                  onClick={onLinkClick}
+                />
+              </div>
+            )}
           </FormContent>
 
           <ButtonStack>

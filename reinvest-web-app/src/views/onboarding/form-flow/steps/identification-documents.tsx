@@ -13,6 +13,7 @@ import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/fi
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
@@ -43,7 +44,9 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
     return (
       allRequiredFieldsExists(requiredFields) &&
-      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) || fields.accountType !== DraftAccountType.Individual)
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) ||
+        fields.accountType !== DraftAccountType.Individual) &&
+      !fields.isCompletedProfile
     );
   },
 
@@ -55,18 +58,9 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       defaultValues: async () => defaultValues,
     });
 
-    const {
-      // error: createDocumentsFileLinksError,
-      isLoading: isCreateDocumentsFileLinksLoading,
-      mutateAsync: createDocumentsFileLinksMutate,
-    } = useCreateDocumentsFileLinks(getApiClient);
+    const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
 
-    const {
-      // error: sendDocumentsToS3AndGetScanIdsError,
-      isLoading: isSendDocumentToS3AndGetScanIdsLoading,
-      // isSuccess: isSendDocumentToS3AndGetScanIdsSuccess,
-      mutateAsync: sendDocumentsToS3AndGetScanIdsMutate,
-    } = useSendDocumentsToS3AndGetScanIds();
+    const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
@@ -80,7 +74,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       const documentsWithoutFile = identificationDocuments?.map(({ id, fileName }) => ({ id, fileName }));
 
       if (hasDocuments && hasDocumentsToUpload) {
-        const documentsToUpload = identificationDocuments.map(({ file }) => file).filter(Boolean) as File[];
+        const documentsToUpload = identificationDocuments.map(({ file }) => file).filter(Boolean) as DocumentFile[];
         const numberOfDocumentsToUpload = documentsToUpload.length;
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsToUpload });

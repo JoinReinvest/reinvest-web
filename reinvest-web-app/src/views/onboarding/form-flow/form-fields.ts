@@ -8,8 +8,9 @@ import {
   DraftAccountType,
   EmploymentStatus,
   Experience,
+  SimplifiedDomicileType,
   StatementType,
-  TrustCompanyType,
+  TrustCompanyTypeEnum,
 } from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
@@ -39,10 +40,7 @@ export interface OnboardingFormFields {
   companyMajorStakeholderApplicants?: Applicant[];
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: Compliances;
-  corporationAnnualRevenue?: CorporationAnnualRevenue;
-  corporationIndustry?: Industry;
   corporationLegalName?: string;
-  corporationNumberOfEmployees?: CorporationNumberOfEmployees;
   corporationType?: CorporateCompanyType;
   documentsForCorporation?: DocumentFile[];
   documentsForTrust?: DocumentFile[];
@@ -65,6 +63,7 @@ export interface OnboardingFormFields {
   };
   employmentDetails?: EmploymentDetails;
   employmentStatus?: EmploymentStatus;
+  fiduciaryEntityInformation?: FiduciaryEntityInformation;
   finraInstitution?: string;
   finraInstitutionName?: string;
   identificationDocuments?: DocumentFile[];
@@ -89,7 +88,7 @@ export interface OnboardingFormFields {
   statementTypes?: StatementType[];
   trustLegalName?: string;
   trustTrusteesGrantorsOrProtectors?: Applicant[];
-  trustType?: TrustCompanyType;
+  trustType?: TrustCompanyTypeEnum;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
@@ -110,10 +109,17 @@ interface Compliances {
   isSeniorPoliticalFigure?: boolean;
 }
 
+interface FiduciaryEntityInformation {
+  annualRevenue?: CorporationAnnualRevenue;
+  industry?: Industry;
+  numberOfEmployees?: CorporationNumberOfEmployees;
+}
+
 export interface Applicant {
   dateOfBirth?: Date;
-  domicile?: 'us' | 'green-card' | 'visa';
+  domicile?: SimplifiedDomicileType.Resident | SimplifiedDomicileType.Citizen;
   firstName?: string;
+  idScan?: { fileName: string; id: string }[];
   identificationDocument?: DocumentFile;
   lastName?: string;
   middleName?: string;
