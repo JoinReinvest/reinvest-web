@@ -2,7 +2,6 @@ import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
@@ -32,9 +31,8 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
     return accountType === DraftAccountType.Trust;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
-    const router = useRouter();
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const applicants = storeFields.trustTrusteesGrantorsOrProtectors || [];
     const hasReachedMaximumNumberOfApplicants = applicants.length >= MAXIMUM_NUMBER_OF_APPLICANTS;
@@ -94,14 +92,10 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (isSuccess && storeFields.isCompletedProfile) {
-        router.push('/');
+      if (isSuccess) {
+        moveToStepByIdentifier(Identifiers.PROFILE_PICTURE);
       }
-
-      if (isSuccess && !storeFields.isCompletedProfile) {
-        moveToNextStep();
-      }
-    }, [isSuccess, storeFields, moveToNextStep, router]);
+    }, [isSuccess, storeFields, moveToStepByIdentifier]);
 
     if (isLoading) {
       return (

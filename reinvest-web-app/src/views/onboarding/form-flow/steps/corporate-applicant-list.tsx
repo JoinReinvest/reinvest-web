@@ -30,7 +30,7 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
     return accountType === DraftAccountType.Corporate;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
     const numberOfApplicants = majorStakeholderApplicants.length;
@@ -86,9 +86,9 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        moveToNextStep();
+        moveToStepByIdentifier(Identifiers.PROFILE_PICTURE);
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isSuccess, moveToStepByIdentifier]);
 
     return (
       <BlackModalContent>
