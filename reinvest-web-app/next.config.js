@@ -20,7 +20,7 @@ module.exports =
     trailingSlash: true,
     reactStrictMode: true,
     images: {
-      domains: ['images.ctfassets.net'],
+      domains: ['images.ctfassets.net', process.env.API_BUCKET_URL],
     },
     env: {
       SITE_NAME: process.env.SITE_NAME,
