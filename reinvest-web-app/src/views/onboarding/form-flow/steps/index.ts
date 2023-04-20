@@ -1,5 +1,6 @@
 import { StepAccountType } from './account-type';
 import { StepAccreditedInvestor } from './accredited-investor';
+import { StepApplicantAddress } from './applicant-address';
 import { StepSignatoryEntity } from './authorized-signatory-entity';
 import { StepBusinessAddress } from './business-address';
 import { StepCheckYourPhone } from './check-your-phone';
@@ -79,11 +80,13 @@ export const FLOW_STEPS = [
   //trust applicants steps
   StepTrustApplicantsLanding,
   StepTrustApplicantDetails,
+  StepApplicantAddress,
   StepTrustApplicantIdentification,
   StepTrustApplicantList,
   //corporate applicants steps
   StepCorporateApplicantsLanding,
   StepCorporateApplicantDetails,
+  StepApplicantAddress,
   StepCorporateApplicantIdentification,
   StepCorporateApplicantList,
   //profile picture step
