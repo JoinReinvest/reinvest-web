@@ -34,6 +34,7 @@ export const useInitializeFieldsFromApi = ({ updateStoreFields }: Params) => {
             middleName: profileDetails?.middleName || '',
           },
           dateOfBirth: profileDetails?.dateOfBirth,
+          ssn: profileDetails?.ssn || '',
           residency: profileDetails?.domicile?.type,
           experience: profileDetails?.experience,
           isAccreditedInvestor: statementTypes.includes(StatementType.AccreditedInvestor),
@@ -41,7 +42,6 @@ export const useInitializeFieldsFromApi = ({ updateStoreFields }: Params) => {
           identificationDocuments,
           isCompletedProfile: !!profileData?.isCompleted,
           finraInstitutionName: finraInstitutionName ? (finraInstitutionName[0] as string) : '',
-          ssn: profileData?.details?.ssn || '',
         });
       }
     }

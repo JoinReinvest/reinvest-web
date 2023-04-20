@@ -129,7 +129,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess && profileData) {
-        updateStoreFields({ ...storeFields, accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
+        updateStoreFields({ accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
