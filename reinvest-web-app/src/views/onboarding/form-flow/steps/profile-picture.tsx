@@ -17,7 +17,6 @@ import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/quer
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
-import { useRemoveDraftAccount } from 'reinvest-app-common/src/services/queries/removeDraftAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
@@ -51,12 +50,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.accountType,
     ];
 
-    const individualAccountFields = [fields.netIncome, fields.netWorth, fields.employmentStatus];
-
-    return (
-      allRequiredFieldsExists(profileFields) &&
-      (allRequiredFieldsExists(individualAccountFields) || !fields.isAuthorizedSignatoryEntity || fields.isAuthorizedSignatoryEntity)
-    );
+    return allRequiredFieldsExists(profileFields);
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
@@ -82,12 +76,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     } = useCompleteIndividualDraftAccount(getApiClient);
 
     const {
-      error: removeDraftAccountError,
-      isLoading: isRemoveDraftAccountLoading,
-      mutateAsync: removeDraftAccountMutate,
-    } = useRemoveDraftAccount(getApiClient);
-
-    const {
       error: openAccountError,
       isLoading: isOpenAccountLoading,
       mutateAsync: openAccountMutate,
@@ -107,11 +95,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     } = useCompleteTrustDraftAccount(getApiClient);
 
     const shouldButtonBeLoading =
-      isCreateAvatarLinkLoading ||
-      isCompleteProfileDetailsLoading ||
-      isRemoveDraftAccountLoading ||
-      isCompleteDraftAccountLoading ||
-      isCompleteCorporateDraftAccountLoading;
+      isCreateAvatarLinkLoading || isCompleteProfileDetailsLoading || isCompleteDraftAccountLoading || isCompleteCorporateDraftAccountLoading;
 
     const shouldButtonBeDisabled =
       !formState.isValid || formState.isSubmitting || isIndividualDraftAccountLoading || isOpenAccountLoading || shouldButtonBeLoading;
@@ -138,6 +122,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         }
 
         const avatar = { id: avatarId };
+
         let draftAccount = null;
 
         if (storeFields.accountType === DraftAccountType.Individual) {
@@ -157,7 +142,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         if (draftAccount?.isCompleted) {
           await openAccountMutate({ draftAccountId: accountId });
-          await removeDraftAccountMutate({ draftAccountId: accountId });
         }
       }
     };
@@ -168,27 +152,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           await completeProfileMutate({ input: { verifyAndFinish: true } });
         }
 
-        let draftAccount = null;
-
-        if (storeFields.accountType === DraftAccountType.Trust) {
-          draftAccount = await completeTrustDraftAccount({ accountId, input: {} });
-        }
-
-        if (storeFields.accountType === DraftAccountType.Individual) {
-          draftAccount = await completeIndividualDraftAccountMutate({
-            accountId,
-            input: {},
-          });
-        }
-
-        if (storeFields.accountType === DraftAccountType.Corporate) {
-          draftAccount = await completeCorporateDraftAccount({ accountId, input: {} });
-        }
-
-        if (draftAccount?.isCompleted) {
-          await openAccountMutate({ draftAccountId: accountId });
-          await removeDraftAccountMutate({ draftAccountId: accountId });
-        }
+        await openAccountMutate({ draftAccountId: accountId });
       }
     };
 
@@ -210,7 +174,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
-          {removeDraftAccountError && <ErrorMessagesHandler error={removeDraftAccountError} />}
           {completeDraftAccountError && <ErrorMessagesHandler error={completeDraftAccountError} />}
           {completeCorporateDraftAccountError && <ErrorMessagesHandler error={completeCorporateDraftAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
