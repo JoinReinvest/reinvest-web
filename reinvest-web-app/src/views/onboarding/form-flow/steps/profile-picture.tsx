@@ -50,8 +50,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       fields.accountType,
     ];
 
-    // const individualAccountFields = [fields.netIncome, fields.netWorth, fields.employmentStatus];
-
     return allRequiredFieldsExists(profileFields);
   },
 

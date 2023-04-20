@@ -39,12 +39,11 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
 
     const hasProfileFields = allRequiredFieldsExists(profileFields);
-    const hasCorporateAndTrustFields = allRequiredFieldsExists([fields.ein]);
     const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]) && fields.accountType === DraftAccountType.Trust;
     const hasCorporateFields =
-      allRequiredFieldsExists([fields.corporationType, fields.corporationLegalName]) && fields.accountType === DraftAccountType.Corporate;
+      allRequiredFieldsExists([fields.corporationType, fields.corporationLegalName, fields.ein]) && fields.accountType === DraftAccountType.Corporate;
 
-    return hasProfileFields && hasCorporateAndTrustFields && (hasTrustFields || hasCorporateFields);
+    return hasProfileFields && (hasTrustFields || hasCorporateFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

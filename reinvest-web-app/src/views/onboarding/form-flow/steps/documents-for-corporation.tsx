@@ -44,6 +44,7 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
       fields.fiduciaryEntityInformation?.industry,
       fields.fiduciaryEntityInformation?.annualRevenue,
       fields.fiduciaryEntityInformation?.numberOfEmployees,
+      fields.ein,
     ]);
 
     return isCorporateAccount && hasProfileFields && hasCorporateFields;
