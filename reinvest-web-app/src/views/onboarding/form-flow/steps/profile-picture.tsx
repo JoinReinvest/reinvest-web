@@ -154,26 +154,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
           await completeProfileMutate({ input: { verifyAndFinish: true } });
         }
 
-        let draftAccount = null;
-
-        if (storeFields.accountType === DraftAccountType.Trust) {
-          draftAccount = await completeTrustDraftAccount({ accountId, input: {} });
-        }
-
-        if (storeFields.accountType === DraftAccountType.Individual) {
-          draftAccount = await completeIndividualDraftAccountMutate({
-            accountId,
-            input: {},
-          });
-        }
-
-        if (storeFields.accountType === DraftAccountType.Corporate) {
-          draftAccount = await completeCorporateDraftAccount({ accountId, input: {} });
-        }
-
-        if (draftAccount?.isCompleted) {
-          await openAccountMutate({ draftAccountId: accountId });
-        }
+        await openAccountMutate({ draftAccountId: accountId });
       }
     };
 
