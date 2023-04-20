@@ -85,12 +85,6 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
               control={control}
             />
 
-            <Input
-              name="residentialAddress"
-              control={control}
-              placeholder="Residential Address"
-            />
-
             <Select
               name="domicile"
               control={control}

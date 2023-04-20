@@ -86,12 +86,6 @@ export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
               control={control}
             />
 
-            <Input
-              name="residentialAddress"
-              control={control}
-              placeholder="Residential Address"
-            />
-
             <Select
               name="domicile"
               control={control}
