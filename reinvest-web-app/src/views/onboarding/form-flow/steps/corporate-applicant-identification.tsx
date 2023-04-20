@@ -46,7 +46,11 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
       const currentMajorStakeholderApplicantIndex = currentMajorStakeholderApplicant._index;
       await updateStoreFields({ _currentCompanyMajorStakeholder: currentMajorStakeholderApplicant });
 
-      if (!!_isEditingCompanyMajorStakeholderApplicant && currentMajorStakeholderApplicantIndex) {
+      if (
+        !!_isEditingCompanyMajorStakeholderApplicant &&
+        typeof currentMajorStakeholderApplicantIndex !== 'undefined' &&
+        currentMajorStakeholderApplicantIndex >= 0
+      ) {
         const allApplicants = storeFields.companyMajorStakeholderApplicants || [];
         const updatedApplicants = allApplicants.map((applicant, index) => {
           if (index === currentMajorStakeholderApplicantIndex) {
@@ -63,8 +67,6 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
         });
 
         moveToNextStep();
-
-        return;
       } else {
         const allApplicants = storeFields.companyMajorStakeholderApplicants || [];
         const updatedApplicants = [...allApplicants, currentMajorStakeholderApplicant];

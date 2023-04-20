@@ -36,18 +36,20 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
       _index: index,
     }));
 
-    const onEditApplicant = (applicant: IndexedSchema<Applicant>) => {
+    const onEditApplicant = async (applicant: IndexedSchema<Applicant>) => {
       const hasIndex = applicant._index !== undefined;
 
       if (hasIndex) {
-        // set the current major stakeholder applicant as this value
-        updateStoreFields({ _currentCompanyMajorStakeholder: { ...applicant, _index: applicant._index }, _isEditingCompanyMajorStakeholderApplicant: true });
+        await updateStoreFields({
+          _currentCompanyMajorStakeholder: { ...applicant, _index: applicant._index },
+          _isEditingCompanyMajorStakeholderApplicant: true,
+        });
         moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
       }
     };
 
-    const onAddNewApplication = () => {
-      updateStoreFields({ _currentCompanyMajorStakeholder: undefined });
+    const onAddNewApplication = async () => {
+      await updateStoreFields({ _currentCompanyMajorStakeholder: undefined });
       moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
     };
 

@@ -42,22 +42,15 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    const profileFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.dateOfBirth,
-      fields.residency,
-      fields.ssn,
-      fields.address,
-      fields.experience,
-      fields.employmentStatus,
-    ];
+    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+
+    const { accountType } = fields;
 
     const hasProfileFields = allRequiredFieldsExists(profileFields);
-    const isAccountCorporateOrTrust = fields.accountType === DraftAccountType.Corporate || fields.accountType === DraftAccountType.Trust;
-    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]);
+    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]) && accountType === DraftAccountType.Trust;
+    const hasCorporateFields = allRequiredFieldsExists([fields.corporationType, fields.corporationLegalName]) && accountType === DraftAccountType.Corporate;
 
-    return (isAccountCorporateOrTrust && hasProfileFields && hasTrustFields) || isAccountCorporateOrTrust;
+    return hasProfileFields && (hasTrustFields || hasCorporateFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

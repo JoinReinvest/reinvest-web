@@ -13,6 +13,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { Address, AddressInput, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
@@ -31,23 +32,36 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.BUSINESS_ADDRESS,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === DraftAccountType.Corporate;
+    return accountType === DraftAccountType.Corporate || accountType === DraftAccountType.Trust;
   },
 
   doesMeetConditionFields: fields => {
     const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
 
     const hasProfileFields = allRequiredFieldsExists(profileFields);
-    const isTrustAccount = fields.accountType === DraftAccountType.Trust;
-    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]);
+    const hasCorporateAndTrustFields = allRequiredFieldsExists([fields.ein]);
+    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]) && fields.accountType === DraftAccountType.Trust;
+    const hasCorporateFields =
+      allRequiredFieldsExists([fields.corporationType, fields.corporationLegalName]) && fields.accountType === DraftAccountType.Corporate;
 
-    return isTrustAccount && hasProfileFields && hasTrustFields;
+    return hasProfileFields && hasCorporateAndTrustFields && (hasTrustFields || hasCorporateFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.permanentAddress || initialValues;
-    const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
+    const {
+      mutateAsync: completeTrustDraftAccount,
+      isSuccess: isTrustDraftAccountSuccess,
+      error: trustDraftAccountError,
+      isLoading: isTrustDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
+    const {
+      mutateAsync: completeCorporateDraftAccount,
+      isSuccess: isCorporateDraftAccountSuccess,
+      error: corporateDraftAccountError,
+      isLoading: isCorporateDraftAccountLoading,
+    } = useCompleteCorporateDraftAccount(getApiClient);
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
@@ -55,7 +69,8 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     });
 
     const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
-    const shouldButtonBeDisabled = !formState.isValid || isLoading || isLoadingSelectedAddress;
+    const shouldButtonBeLoading = isTrustDraftAccountLoading || isCorporateDraftAccountLoading;
+    const shouldButtonBeDisabled = !formState.isValid || shouldButtonBeLoading || isLoadingSelectedAddress;
 
     const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
       const placeId = option?.placeId;
@@ -80,17 +95,26 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
       await updateStoreFields({ businessAddress: permanentAddress });
       const address = permanentAddress as AddressInput;
+      const { accountId, accountType } = storeFields;
 
-      if (storeFields.accountId && permanentAddress.addressLine1 && permanentAddress.city && permanentAddress.state && permanentAddress.zip) {
-        await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { address: { ...address, country: 'USA' } } });
+      if (accountId && permanentAddress.addressLine1 && permanentAddress.city && permanentAddress.state && permanentAddress.zip) {
+        const variables = { accountId, input: { address: { ...address, country: 'USA' } } };
+
+        if (accountType === DraftAccountType.Trust) {
+          await completeTrustDraftAccount(variables);
+        }
+
+        if (accountType === DraftAccountType.Corporate) {
+          await completeCorporateDraftAccount(variables);
+        }
       }
     };
 
     useEffect(() => {
-      if (isSuccess) {
+      if (isTrustDraftAccountSuccess || isCorporateDraftAccountSuccess) {
         moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isTrustDraftAccountSuccess, isCorporateDraftAccountSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -99,7 +123,8 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             title="Enter the business address for your corporation."
             informationMessage="US Residents Only"
           />
-          {error && <ErrorMessagesHandler error={error} />}
+          {trustDraftAccountError && <ErrorMessagesHandler error={trustDraftAccountError} />}
+          {corporateDraftAccountError && <ErrorMessagesHandler error={corporateDraftAccountError} />}
           <div className="flex w-full flex-col gap-16">
             <SelectAsync
               name="addressLine1"
@@ -142,7 +167,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isLoadingSelectedAddress}
+            loading={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>
