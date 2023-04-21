@@ -18,8 +18,7 @@ import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/servi
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { SelectCardOption } from 'reinvest-app-common/src/types/select-card-option';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
@@ -104,28 +103,43 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (isTrustDraftAccountSuccess && trustDraftAccountData) {
+      if (isTrustDraftAccountSuccess && trustDraftAccountData && accountType === DraftAccountType.Trust) {
         //UPDATE ALL FIELDS FOR TRUST ACCOUNT
-        updateStoreFields({ ...storeFields, accountId: trustDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        updateStoreFields({
+          ...storeFields,
+          accountId: trustDraftAccountData?.id || '',
+          isCompletedProfile: !!profileData?.isCompleted,
+          accountType: DraftAccountType.Trust,
+        });
         moveToNextStep();
       }
-    }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData]);
+    }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData, accountType]);
 
     useEffect(() => {
-      if (isIndividualDraftAccountSuccess && individualDraftAccountData) {
+      if (isIndividualDraftAccountSuccess && individualDraftAccountData && accountType === DraftAccountType.Individual) {
         //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
-        updateStoreFields({ ...storeFields, accountId: individualDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        updateStoreFields({
+          ...storeFields,
+          accountId: individualDraftAccountData?.id || '',
+          isCompletedProfile: !!profileData?.isCompleted,
+          accountType: DraftAccountType.Individual,
+        });
         moveToNextStep();
       }
-    }, [isIndividualDraftAccountSuccess, moveToNextStep, storeFields, individualDraftAccountData, updateStoreFields, profileData]);
+    }, [isIndividualDraftAccountSuccess, moveToNextStep, storeFields, individualDraftAccountData, updateStoreFields, profileData, accountType]);
 
     useEffect(() => {
-      if (isCorporateDraftAccountSuccess && corporateDraftAccountData) {
+      if (isCorporateDraftAccountSuccess && corporateDraftAccountData && accountType === DraftAccountType.Corporate) {
         //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
-        updateStoreFields({ ...storeFields, accountId: corporateDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+        updateStoreFields({
+          ...storeFields,
+          accountId: corporateDraftAccountData?.id || '',
+          isCompletedProfile: !!profileData?.isCompleted,
+          accountType: DraftAccountType.Corporate,
+        });
         moveToNextStep();
       }
-    }, [isCorporateDraftAccountSuccess, moveToNextStep, storeFields, corporateDraftAccountData, updateStoreFields, profileData]);
+    }, [isCorporateDraftAccountSuccess, moveToNextStep, storeFields, corporateDraftAccountData, updateStoreFields, profileData, accountType]);
 
     useEffect(() => {
       if (isSuccess && profileData) {
