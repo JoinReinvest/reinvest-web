@@ -42,7 +42,7 @@ export const getDefaultValuesForApplicantWithoutIdentification: GetDefaultValues
 type GetDefaultIdentificationValueForApplicant = (
   fields: OnboardingFormFields,
   type: DraftAccountType.Corporate | DraftAccountType.Trust,
-) => Pick<Applicant, 'identificationDocument'>;
+) => Pick<Applicant, 'identificationDocuments'>;
 export const getDefaultIdentificationValueForApplicant: GetDefaultIdentificationValueForApplicant = (fields, type) => {
   const isRetrivingFieldsForCorporate = type === DraftAccountType.Corporate;
 
@@ -57,14 +57,14 @@ export const getDefaultIdentificationValueForApplicant: GetDefaultIdentification
 
   if (hasApplicants && !!isEditingAnApplicant && hasAnIndex) {
     const applicant = listOfApplicants.at(currentApplicantIndex);
-    const hasIdentificationDocument = !!applicant?.identificationDocument;
+    const hasIdentificationDocument = !!applicant?.identificationDocuments;
 
     if (hasIdentificationDocument) {
-      return { identificationDocument: applicant.identificationDocument };
+      return { identificationDocument: applicant.identificationDocuments };
     }
   }
 
-  return { identificationDocument: undefined };
+  return { identificationDocuments: [] };
 };
 
 export const generateApplicantListItem = (corporationLegalName: string, applicant: IndexedSchema<Applicant>, onIconClick: () => void) => {

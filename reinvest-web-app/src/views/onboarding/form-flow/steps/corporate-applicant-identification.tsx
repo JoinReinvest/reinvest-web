@@ -4,20 +4,26 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { InputFile } from 'components/FormElements/InputFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 
+import { InputMultiFile } from '../../../../components/FormElements/InputMultiFile';
 import { getApiClient } from '../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ACCEPTED_FILES_MIME_TYPES, APPLICANT_IDENTIFICATION, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
+import {
+  ACCEPTED_FILES_MIME_TYPES,
+  APPLICANT_IDENTIFICATION,
+  FILE_SIZE_LIMIT_IN_MEGABYTES,
+  MAXIMUM_NUMBER_OF_FILES,
+  MINIMUM_NUMBER_OF_FILES,
+} from '../schemas';
 import { getDefaultIdentificationValueForApplicant } from '../utilities';
 
-type Fields = Pick<Applicant, 'identificationDocument'>;
+type Fields = Pick<Applicant, 'identificationDocuments'>;
 
 export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATE_APPLICANT_IDENTIFICATION,
@@ -44,16 +50,16 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
 
     const shouldButtonBeDisabled = !formState.isValid || isSendDocumentToS3AndGetScanIdsLoading || isCreateDocumentsFileLinksLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocument }) => {
+    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const { _isEditingCompanyMajorStakeholderApplicant } = storeFields;
-      const currentMajorStakeholderApplicant = { ...storeFields._currentCompanyMajorStakeholder, identificationDocument };
+      const currentMajorStakeholderApplicant = { ...storeFields._currentCompanyMajorStakeholder, identificationDocuments };
       const currentMajorStakeholderApplicantIndex = currentMajorStakeholderApplicant._index;
       await updateStoreFields({ _currentCompanyMajorStakeholder: currentMajorStakeholderApplicant });
       const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 1 })) as PutFileLink[];
       const idScan: { fileName: string; id: string }[] = [];
 
-      if (identificationDocument) {
-        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: [identificationDocument] });
+      if (identificationDocuments) {
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments });
         idScan.push(...scans);
 
         if (
@@ -92,12 +98,15 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
         <FormContent>
           <BlackModalTitle title="Upload the ID of your applicant." />
 
-          <InputFile
-            name="identificationDocument"
-            control={control}
-            accepts={ACCEPTED_FILES_MIME_TYPES}
+          <InputMultiFile
+            name="identificationDocuments"
+            minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+            maximumNumberOfFiles={MAXIMUM_NUMBER_OF_FILES}
             sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
-            placeholder="Upload File"
+            accepts={ACCEPTED_FILES_MIME_TYPES}
+            control={control}
+            placeholderOnEmpty="Upload Files"
+            placeholderOnMeetsMinimum="Add Additional Files"
           />
         </FormContent>
 

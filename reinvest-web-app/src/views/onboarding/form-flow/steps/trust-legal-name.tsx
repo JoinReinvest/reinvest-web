@@ -20,7 +20,7 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'trustLegalName'>;
 
 const schema = z.object({
-  trustLegalName: z.string().min(1),
+  trustLegalName: z.string().trim().min(1),
 });
 
 export const StepTrustLegalName: StepParams<OnboardingFormFields> = {

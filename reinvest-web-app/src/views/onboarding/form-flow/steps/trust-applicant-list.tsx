@@ -5,7 +5,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
-import { DraftAccountType, SimplifiedDomicileType } from 'reinvest-app-common/src/types/graphql';
+import { AddressInput, DraftAccountType, SimplifiedDomicileType } from 'reinvest-app-common/src/types/graphql';
 import { formatDateForApi } from 'reinvest-app-common/src/utilities/dates';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
@@ -70,14 +70,7 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
           dateOfBirth: {
             dateOfBirth: formatDateForApi(applicant.dateOfBirth || ''),
           },
-          address: {
-            addressLine1: 'Address line 1',
-            addressLine2: 'Address line 2',
-            city: 'Test city',
-            zip: '11111',
-            country: 'USA',
-            state: 'California',
-          },
+          address: { ...applicant.residentialAddress, country: 'USA' } as AddressInput,
           idScan: applicant.idScan || [],
           ssn: {
             ssn: applicant.socialSecurityNumber || '',
