@@ -73,6 +73,7 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
             trustTrusteesGrantorsOrProtectors: updatedApplicants,
             _currentTrustTrusteeGrantorOrProtector: undefined,
             _isEditingTrustTrusteeGrantorOrProtector: false,
+            _willHaveTrustTrusteesGrantorsOrProtectors: false,
           });
 
           moveToNextStep();
@@ -80,7 +81,11 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
           const allApplicants = storeFields.trustTrusteesGrantorsOrProtectors || [];
           const updatedApplicants = [...allApplicants, { ...currentApplicant, idScan }];
 
-          await updateStoreFields({ trustTrusteesGrantorsOrProtectors: updatedApplicants, _isEditingTrustTrusteeGrantorOrProtector: false });
+          await updateStoreFields({
+            trustTrusteesGrantorsOrProtectors: updatedApplicants,
+            _isEditingTrustTrusteeGrantorOrProtector: false,
+            _willHaveTrustTrusteesGrantorsOrProtectors: false,
+          });
           moveToNextStep();
         }
       }

@@ -21,10 +21,9 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_APPLICANT_LIST,
 
   doesMeetConditionFields: fields => {
-    const { _willHaveTrustTrusteesGrantorsOrProtectors, trustTrusteesGrantorsOrProtectors } = fields;
-    const hasApplicants = !!trustTrusteesGrantorsOrProtectors?.length;
+    const { trustTrusteesGrantorsOrProtectors } = fields;
 
-    return !!_willHaveTrustTrusteesGrantorsOrProtectors && hasApplicants;
+    return !!trustTrusteesGrantorsOrProtectors?.length;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
@@ -49,6 +48,7 @@ export const StepTrustApplicantList: StepParams<OnboardingFormFields> = {
         await updateStoreFields({
           _currentTrustTrusteeGrantorOrProtector: { ...applicant, _index: applicant._index },
           _isEditingTrustTrusteeGrantorOrProtector: true,
+          _willHaveTrustTrusteesGrantorsOrProtectors: true,
         });
         moveToStepByIdentifier(Identifiers.TRUST_APPLICANT_DETAILS);
       }
