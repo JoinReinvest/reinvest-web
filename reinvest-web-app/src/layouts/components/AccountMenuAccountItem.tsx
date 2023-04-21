@@ -25,7 +25,12 @@ export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick 
         alt={fallbackText || ''}
       />
 
-      <Typography variant="button">{label}</Typography>
+      <Typography
+        variant="button"
+        className="capitalize"
+      >
+        {label}
+      </Typography>
     </div>
   </li>
 );

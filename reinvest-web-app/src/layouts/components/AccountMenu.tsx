@@ -13,7 +13,6 @@ import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
 import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
-import { capitalizeFirstLetter } from 'reinvest-app-common/src/utilities/strings';
 import { getApiClient } from 'services/getApiClient';
 
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
@@ -32,9 +31,6 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isMenuOpen, toggleIsMenuOpen] = useToggler(false);
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
 
-  const accountType = capitalizeFirstLetter(activeAccount.type);
-  const accountTypeLabel = `${accountType} Account`;
-
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
     toggleIsMenuOpen();
@@ -44,6 +40,8 @@ export const AccountMenu = ({ activeAccount }: Props) => {
     toggleIsMenuOpen(false);
     toggleIsModalInviteOpen(true);
   };
+
+  const hasAvailableAccounts = availableAccounts.length > 0;
 
   return (
     <>
@@ -60,11 +58,11 @@ export const AccountMenu = ({ activeAccount }: Props) => {
 
         <DropdownMenu.Portal>
           <div className="h-full w-full overflow-hidden">
-            <div className="absolute inset-0 z-30 h-full w-full max-md:bg-black-01/50" />
+            <div className="absolute inset-0 z-30 h-full w-full bg-black-01/50 md:bg-transparent" />
 
             <DropdownMenu.Content
               align="end"
-              className="z-40 max-h-full w-full overflow-auto px-24 pb-[68px] max-md:w-screen md:px-0 md:pb-0"
+              className="z-40 max-h-full w-screen overflow-auto px-24 pb-68 md:w-full md:px-0 md:pb-0"
             >
               <div className="flex w-full max-w-full flex-col gap-16 border border-gray-04 bg-white px-16 py-24 md:w-342">
                 <header className="flex flex-col gap-16 px-24 py-16 shadow-md">
@@ -81,9 +79,9 @@ export const AccountMenu = ({ activeAccount }: Props) => {
 
                       <Typography
                         variant="paragraph"
-                        className="text-gray-02"
+                        className="capitalize text-gray-02"
                       >
-                        {accountTypeLabel}
+                        {activeAccount.type} Account
                       </Typography>
                     </div>
                   </div>
@@ -92,13 +90,13 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                 </header>
 
                 <ul className="flex flex-col gap-16">
-                  <ul className="flex flex-col gap-16 max-md:max-h-146 max-md:overflow-auto">
-                    {!!availableAccounts.length &&
-                      availableAccounts.map((account, index) => (
+                  <ul className="flex max-h-146 flex-col gap-16 overflow-auto md:max-h-max">
+                    {hasAvailableAccounts &&
+                      availableAccounts.map(account => (
                         <AccountMenuAccountItem
-                          key={`${account?.id}-${index}`}
+                          key={`${account?.id}`}
                           imageSrc={account?.avatar?.url ?? undefined}
-                          label={`${capitalizeFirstLetter(account?.type)} Account`}
+                          label={`${account?.type} Account`}
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
                         />
