@@ -4,7 +4,7 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { InputFile } from 'components/FormElements/InputFile';
+import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
@@ -14,10 +14,10 @@ import { getApiClient } from '../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ACCEPTED_FILES_MIME_TYPES, APPLICANT_IDENTIFICATION, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
+import { APPLICANT_IDENTIFICATION, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
 import { getDefaultIdentificationValueForApplicant } from '../utilities';
 
-type Fields = Pick<Applicant, 'identificationDocument'>;
+type Fields = Pick<Applicant, 'identificationDocuments'>;
 
 export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.TRUST_APPLICANT_IDENTIFICATION,
@@ -46,16 +46,16 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
 
     const shouldButtonBeDisabled = !formState.isValid || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocument }) => {
+    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const { _isEditingTrustTrusteeGrantorOrProtector } = storeFields;
-      const currentApplicant = { ...storeFields._currentTrustTrusteeGrantorOrProtector, identificationDocument };
+      const currentApplicant = { ...storeFields._currentTrustTrusteeGrantorOrProtector, identificationDocuments };
       const currentApplicantIndex = currentApplicant._index;
       await updateStoreFields({ _currentTrustTrusteeGrantorOrProtector: currentApplicant });
-      const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 1 })) as PutFileLink[];
+      const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: identificationDocuments?.length || 1 })) as PutFileLink[];
       const idScan: { fileName: string; id: string }[] = [];
 
-      if (identificationDocument) {
-        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: [identificationDocument] });
+      if (identificationDocuments) {
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments });
         idScan.push(...scans);
 
         if (!!_isEditingTrustTrusteeGrantorOrProtector && typeof currentApplicantIndex !== 'undefined' && currentApplicantIndex >= 0) {
@@ -90,13 +90,15 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Upload the ID of your applicant." />
-
-          <InputFile
-            name="identificationDocument"
-            control={control}
-            accepts={ACCEPTED_FILES_MIME_TYPES}
+          <InputMultiFile
+            name="identificationDocuments"
+            minimumNumberOfFiles={1}
+            maximumNumberOfFiles={5}
             sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
-            placeholder="Upload File"
+            accepts={['jpeg', 'jpg', 'pdf', 'png']}
+            control={control}
+            placeholderOnEmpty="Upload Files"
+            placeholderOnMeetsMinimum="Add Additional Files"
           />
         </FormContent>
 
