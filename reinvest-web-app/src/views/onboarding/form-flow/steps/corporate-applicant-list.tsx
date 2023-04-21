@@ -70,7 +70,7 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
           dateOfBirth: {
             dateOfBirth: formatDateForApi(applicant.dateOfBirth || ''),
           },
-          address: applicant.residentialAddress as AddressInput,
+          address: { ...applicant.residentialAddress, country: 'USA' } as AddressInput,
           idScan: applicant.idScan || [],
           ssn: {
             ssn: applicant.socialSecurityNumber || '',
