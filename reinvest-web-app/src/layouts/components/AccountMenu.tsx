@@ -150,11 +150,13 @@ export const AccountMenu = ({ activeAccount }: Props) => {
         </DropdownMenu.Portal>
       </DropdownMenu.Root>
 
-      <ModalInvite
-        isOpen={isModalInviteOpen}
-        onOpenChange={toggleIsModalInviteOpen}
-        referralCodeUrl={invitationLink?.url}
-      />
+      {invitationLink?.url && (
+        <ModalInvite
+          isOpen={isModalInviteOpen}
+          onOpenChange={toggleIsModalInviteOpen}
+          referralCodeUrl={invitationLink.url}
+        />
+      )}
     </>
   );
 };

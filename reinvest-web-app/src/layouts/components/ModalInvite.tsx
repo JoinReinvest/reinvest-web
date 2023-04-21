@@ -7,12 +7,11 @@ import { FieldCopyText } from 'components/FieldCopyText';
 import { LinkButton } from 'components/LinkButton';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
-import { Maybe } from 'reinvest-app-common/src/types/graphql';
 
 interface Props {
   isOpen: boolean;
   onOpenChange: (state: boolean) => void;
-  referralCodeUrl?: Maybe<string>;
+  referralCodeUrl: string;
 }
 
 export const ModalInvite = ({ isOpen, onOpenChange, referralCodeUrl }: Props) => {
