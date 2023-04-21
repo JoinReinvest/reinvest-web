@@ -21,8 +21,7 @@
     "check-types": "tsc --pretty"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "13.3.0",
-    "@radix-ui/react-separator": "^1.0.2"
+    "@next/bundle-analyzer": "13.3.0"
   },
   "dependencies": {
     "@aws-amplify/auth": "5.2.3",
@@ -48,6 +47,7 @@
     "@hookooekoo/ui-typography": "0.1.5",
     "@radix-ui/react-dropdown-menu": "2.0.4",
     "@radix-ui/react-progress": "1.0.2",
+    "@radix-ui/react-separator": "^1.0.2",
     "@tanstack/eslint-plugin-query": "4.29.0",
     "@tanstack/react-query": "4.29.1",
     "@tanstack/react-query-devtools": "4.29.0",
