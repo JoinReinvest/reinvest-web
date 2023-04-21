@@ -121,7 +121,7 @@ export interface Applicant {
   domicile?: SimplifiedDomicileType.Resident | SimplifiedDomicileType.Citizen;
   firstName?: string;
   idScan?: { fileName: string; id: string }[];
-  identificationDocument?: DocumentFile;
+  identificationDocuments?: DocumentFile[];
   lastName?: string;
   middleName?: string;
   residentialAddress?: AddressInput;
