@@ -55,7 +55,7 @@ export const ModalInvite = ({ isOpen, onOpenChange, referralCodeUrl }: Props) =>
                 </div>
 
                 <div className="flex flex-col gap-16">
-                  <FieldCopyText value={referralCodeUrl || ''} />
+                  <FieldCopyText value={referralCodeUrl} />
 
                   <Typography
                     variant="paragraph"
