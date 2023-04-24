@@ -138,12 +138,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           documentsForTrust,
         };
 
-        //UPDATE ALL FIELDS FOR TRUST ACCOUNT
         updateStoreFields({
           ...storeFields,
           ...trustData,
           accountId: trustDraftAccountData?.id || '',
-          isCompletedProfile: !!profileData?.isCompleted,
+          // isCompletedProfile: !!profileData?.isCompleted,
           accountType: DraftAccountType.Trust,
         });
         moveToNextStep();
@@ -152,9 +151,21 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isIndividualDraftAccountSuccess && individualDraftAccountData && accountType === DraftAccountType.Individual) {
-        //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
+        const { details } = individualDraftAccountData;
+        const individualData = {
+          employmentStatus: details?.employmentStatus?.status || undefined,
+          employmentDetails: {
+            employerName: details?.employer?.nameOfEmployer || '',
+            industry: details?.employer?.industry || '',
+            occupation: details?.employer?.title || '',
+          },
+          netIncome: details?.netIncome?.range || undefined,
+          netWorth: details?.netWorth?.range || undefined,
+        };
+
         updateStoreFields({
           ...storeFields,
+          ...individualData,
           accountId: individualDraftAccountData?.id || '',
           isCompletedProfile: !!profileData?.isCompleted,
           accountType: DraftAccountType.Individual,
