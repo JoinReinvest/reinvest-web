@@ -1,5 +1,12 @@
+import cx from 'classnames';
 import { PropsWithChildren } from 'react';
 
-type Props = PropsWithChildren;
+interface Props extends PropsWithChildren {
+  useRowOnLgScreen?: boolean;
+}
 
-export const ButtonStack = ({ children }: Props) => <div className="flex w-full flex-col gap-16">{children}</div>;
+export const ButtonStack = ({ useRowOnLgScreen = false, children }: Props) => {
+  const className = cx('flex w-full gap-16 flex-col', { 'flex-col lg:flex-row': !!useRowOnLgScreen });
+
+  return <div className={className}>{children}</div>;
+};
