@@ -228,6 +228,10 @@ module.exports = {
       },
       animation: {
         'spin-reverse': 'spin 1s linear infinite reverse'
+      },
+      zIndex: {
+        '60': '60',
+        '70': '70',
       }
     },
   },
