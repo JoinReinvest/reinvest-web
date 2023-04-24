@@ -9,6 +9,8 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
+import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'reinvest-app-common/src/constants/corporation';
+import { Industry } from 'reinvest-app-common/src/constants/industries';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/getCorporateDraftAccount';
@@ -18,7 +20,14 @@ import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/servi
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
-import { AccountType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import {
+  AccountType,
+  CompanyTypeEnum,
+  CorporateCompanyTypeEnum,
+  DraftAccountType,
+  Stakeholder,
+  TrustCompanyTypeEnum,
+} from 'reinvest-app-common/src/types/graphql';
 import { SelectCardOption } from 'reinvest-app-common/src/types/select-card-option';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
@@ -104,9 +113,33 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isTrustDraftAccountSuccess && trustDraftAccountData && accountType === DraftAccountType.Trust) {
+        const { details } = trustDraftAccountData;
+
+        const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
+        const trustData = {
+          trustType: details?.companyType?.type === CompanyTypeEnum.Revocable ? TrustCompanyTypeEnum.Revocable : TrustCompanyTypeEnum.Irrevocable,
+          trustLegalName: details?.companyName?.name || '',
+          ein: details?.ein?.ein || '',
+          fiduciaryEntityInformation: {
+            annualRevenue: (details?.annualRevenue?.range as CorporationAnnualRevenue) || undefined,
+            numberOfEmployees: (details?.numberOfEmployees?.range as CorporationNumberOfEmployees) || undefined,
+            industry: (details?.industry?.value as Industry) || undefined,
+          },
+          businessAddress: {
+            addressLine1: details?.address?.addressLine1,
+            addressLine2: details?.address?.addressLine2,
+            city: details?.address?.city,
+            country: details?.address?.country,
+            state: details?.address?.state,
+            zip: details?.address?.zip,
+          },
+          trustTrusteesGrantorsOrProtectors: stakeholders,
+        };
+
         //UPDATE ALL FIELDS FOR TRUST ACCOUNT
         updateStoreFields({
           ...storeFields,
+          ...trustData,
           accountId: trustDraftAccountData?.id || '',
           isCompletedProfile: !!profileData?.isCompleted,
           accountType: DraftAccountType.Trust,
@@ -130,9 +163,45 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isCorporateDraftAccountSuccess && corporateDraftAccountData && accountType === DraftAccountType.Corporate) {
-        //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
+        const { details } = corporateDraftAccountData;
+
+        let companyType = undefined;
+
+        if (details?.companyType?.type) {
+          if (details?.companyType?.type === CompanyTypeEnum.Corporation) {
+            companyType = CorporateCompanyTypeEnum.Corporation;
+          } else if (details?.companyType?.type === CompanyTypeEnum.Llc) {
+            companyType = CorporateCompanyTypeEnum.Llc;
+          } else if (details?.companyType?.type === CompanyTypeEnum.Partnership) {
+            companyType = CorporateCompanyTypeEnum.Partnership;
+          }
+        }
+
+        const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
+
+        const corporateData = {
+          corporationType: companyType,
+          corporationLegalName: details?.companyName?.name || '',
+          ein: details?.ein?.ein || '',
+          fiduciaryEntityInformation: {
+            annualRevenue: (details?.annualRevenue?.range as CorporationAnnualRevenue) || undefined,
+            numberOfEmployees: (details?.numberOfEmployees?.range as CorporationNumberOfEmployees) || undefined,
+            industry: (details?.industry?.value as Industry) || undefined,
+          },
+          businessAddress: {
+            addressLine1: details?.address?.addressLine1,
+            addressLine2: details?.address?.addressLine2,
+            city: details?.address?.city,
+            country: details?.address?.country,
+            state: details?.address?.state,
+            zip: details?.address?.zip,
+          },
+          companyMajorStakeholderApplicants: stakeholders || [],
+        };
+
         updateStoreFields({
           ...storeFields,
+          ...corporateData,
           accountId: corporateDraftAccountData?.id || '',
           isCompletedProfile: !!profileData?.isCompleted,
           accountType: DraftAccountType.Corporate,
@@ -217,3 +286,21 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     );
   },
 };
+
+const formatStakeholdersForStorage = (stakeholders: Stakeholder[]) =>
+  stakeholders.map(stakeholder => ({
+    firstName: stakeholder?.name?.firstName || undefined,
+    lastName: stakeholder?.name?.lastName || undefined,
+    residentialAddress: {
+      addressLine1: stakeholder?.address?.addressLine1 || '',
+      addressLine2: stakeholder?.address?.addressLine2 || '',
+      city: stakeholder?.address?.city || '',
+      country: stakeholder?.address?.country || '',
+      state: stakeholder?.address?.state || '',
+      zip: stakeholder?.address?.zip || '',
+    },
+    dateOfBirth: stakeholder?.dateOfBirth?.dateOfBirth,
+    domicile: stakeholder?.domicile?.type || undefined,
+    middleName: stakeholder?.name?.middleName || undefined,
+    socialSecurityNumber: stakeholder?.ssn || undefined,
+  }));

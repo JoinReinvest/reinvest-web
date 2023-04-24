@@ -48,7 +48,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    const defaultValues: Fields = storeFields.permanentAddress || initialValues;
+    const defaultValues: Fields = storeFields.businessAddress || initialValues;
     const {
       mutateAsync: completeTrustDraftAccount,
       isSuccess: isTrustDraftAccountSuccess,

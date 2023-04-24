@@ -47,7 +47,13 @@ export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({ _currentTrustTrusteeGrantorOrProtector: { ...fields, _index: storeFields._currentTrustTrusteeGrantorOrProtector?._index } });
+      await updateStoreFields({
+        _currentTrustTrusteeGrantorOrProtector: {
+          ...storeFields._currentTrustTrusteeGrantorOrProtector,
+          ...fields,
+          _index: storeFields._currentTrustTrusteeGrantorOrProtector?._index,
+        },
+      });
       moveToNextStep();
     };
 

@@ -36,14 +36,18 @@ export const StepApplicantAddress: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants, _willHaveTrustTrusteesGrantorsOrProtectors } = fields;
+    const { _willHaveMajorStakeholderApplicants, _willHaveTrustTrusteesGrantorsOrProtectors, _isEditingCompanyMajorStakeholderApplicant } = fields;
 
-    return !!_willHaveMajorStakeholderApplicants || !!_willHaveTrustTrusteesGrantorsOrProtectors;
+    return !!_willHaveMajorStakeholderApplicants || !!_willHaveTrustTrusteesGrantorsOrProtectors || !!_isEditingCompanyMajorStakeholderApplicant;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    const defaultValues: Fields = storeFields._currentTrustTrusteeGrantorOrProtector?.residentialAddress || initialValues;
+    const initialValuesFromStore =
+      storeFields.accountType === DraftAccountType.Trust
+        ? storeFields._currentTrustTrusteeGrantorOrProtector?.residentialAddress
+        : storeFields._currentCompanyMajorStakeholder?.residentialAddress;
+    const defaultValues: Fields = initialValuesFromStore || initialValues;
     const {
       isSuccess: isTrustDraftAccountSuccess,
       error: trustDraftAccountError,

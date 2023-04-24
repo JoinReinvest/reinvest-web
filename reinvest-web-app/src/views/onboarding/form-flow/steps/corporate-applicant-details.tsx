@@ -46,7 +46,13 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({ _currentCompanyMajorStakeholder: { ...fields, _index: storeFields._currentCompanyMajorStakeholder?._index } });
+      await updateStoreFields({
+        _currentCompanyMajorStakeholder: {
+          ...storeFields._currentCompanyMajorStakeholder,
+          ...fields,
+          _index: storeFields._currentCompanyMajorStakeholder?._index,
+        },
+      });
       moveToNextStep();
     };
 
