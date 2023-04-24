@@ -4,7 +4,7 @@ import Image, { ImageProps } from 'next/image';
 
 type PrimitiveProps = Pick<ImageProps, 'src' | 'alt'>;
 interface Props extends PrimitiveProps {
-  fixedSize?: 'sm' | 'md' | 'lg';
+  fixedSize?: 'xs' | 'sm' | 'md' | 'lg';
   isSizeFixed?: boolean;
 }
 
@@ -14,6 +14,7 @@ export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg' }: Prop
     'h-100 w-100': isSizeFixed && fixedSize === 'lg',
     'h-72 w-72': isSizeFixed && fixedSize === 'md',
     'h-44 w-44': isSizeFixed && fixedSize === 'sm',
+    'h-28 w-28': isSizeFixed && fixedSize === 'xs',
   });
 
   return (
