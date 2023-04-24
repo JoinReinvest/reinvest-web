@@ -8,6 +8,7 @@ import { Input } from 'components/FormElements/Input';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { Select } from 'components/Select';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STAKEHOLDER_RESIDENCY_STATUS_OPTIONS } from 'reinvest-app-common/src/constants/residenty-status';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -38,13 +39,26 @@ export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues = getDefaultValuesForApplicantWithoutIdentification(storeFields, DraftAccountType.Trust);
 
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'onBlur',
       resolver: zodResolver(APPLICANT_WITHOUT_IDENTIFICATION),
       defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const fieldValue = watch('socialSecurityNumber');
+    const [hasFieldBeenClearedOnce, setHasFieldBeenClearedOnce] = useState(false);
+    const hasStoredValue = !!defaultValues.socialSecurityNumber;
+    const hasStoredValueAndClearedTheField = hasStoredValue && hasFieldBeenClearedOnce;
+    const willUseSecureMask = hasStoredValueAndClearedTheField ? false : hasStoredValue ? true : !hasStoredValue ? false : true;
+
+    useEffect(() => {
+      const hasFieldBeenCleared = fieldValue === '';
+
+      if (hasFieldBeenCleared) {
+        setHasFieldBeenClearedOnce(true);
+      }
+    }, [fieldValue]);
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields({
@@ -90,6 +104,7 @@ export const StepTrustApplicantDetails: StepParams<OnboardingFormFields> = {
             <InputSocialSecurityNumber
               name="socialSecurityNumber"
               control={control}
+              willUseSecureMask={willUseSecureMask}
             />
 
             <Select
