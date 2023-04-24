@@ -28,17 +28,17 @@ type Fields = Exclude<Applicant['residentialAddress'], undefined>;
 
 const schema = formValidationRules.address;
 
-export const StepApplicantAddress: StepParams<OnboardingFormFields> = {
+export const StepCorporateApplicantAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.APPLICANT_ADDRESS,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === DraftAccountType.Corporate || accountType === DraftAccountType.Trust;
+    return accountType === DraftAccountType.Corporate;
   },
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants, _willHaveTrustTrusteesGrantorsOrProtectors, _isEditingCompanyMajorStakeholderApplicant } = fields;
+    const { _willHaveMajorStakeholderApplicants } = fields;
 
-    return !!_willHaveMajorStakeholderApplicants || !!_willHaveTrustTrusteesGrantorsOrProtectors || !!_isEditingCompanyMajorStakeholderApplicant;
+    return !!_willHaveMajorStakeholderApplicants;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

@@ -20,6 +20,7 @@ import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/servi
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import {
   AccountType,
   CompanyTypeEnum,
@@ -35,7 +36,7 @@ import { z } from 'zod';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
-import { OnboardingFormFields } from '../form-fields';
+import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'accountType'>;
@@ -114,7 +115,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     useEffect(() => {
       if (isTrustDraftAccountSuccess && trustDraftAccountData && accountType === DraftAccountType.Trust) {
         const { details } = trustDraftAccountData;
-
+        const documentsForTrust: DocumentFile[] = details?.companyDocuments?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
         const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
         const trustData = {
           trustType: details?.companyType?.type === CompanyTypeEnum.Revocable ? TrustCompanyTypeEnum.Revocable : TrustCompanyTypeEnum.Irrevocable,
@@ -134,6 +135,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
             zip: details?.address?.zip,
           },
           trustTrusteesGrantorsOrProtectors: stakeholders,
+          documentsForTrust,
         };
 
         //UPDATE ALL FIELDS FOR TRUST ACCOUNT
@@ -177,6 +179,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           }
         }
 
+        const documentsForCorporation: DocumentFile[] = details?.companyDocuments?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
         const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
 
         const corporateData = {
@@ -196,7 +199,8 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
             state: details?.address?.state,
             zip: details?.address?.zip,
           },
-          companyMajorStakeholderApplicants: stakeholders || [],
+          companyMajorStakeholderApplicants: stakeholders,
+          documentsForCorporation,
         };
 
         updateStoreFields({
@@ -244,7 +248,6 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
             {isListAccountTypesUserCanOpenLoading && (
               <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
-                {' '}
                 <IconSpinner />
               </div>
             )}
@@ -287,8 +290,8 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
   },
 };
 
-const formatStakeholdersForStorage = (stakeholders: Stakeholder[]) =>
-  stakeholders.map(stakeholder => ({
+const formatStakeholdersForStorage = (stakeholders: Stakeholder[]): Applicant[] => {
+  return stakeholders.map(stakeholder => ({
     firstName: stakeholder?.name?.firstName || undefined,
     lastName: stakeholder?.name?.lastName || undefined,
     residentialAddress: {
@@ -303,4 +306,6 @@ const formatStakeholdersForStorage = (stakeholders: Stakeholder[]) =>
     domicile: stakeholder?.domicile?.type || undefined,
     middleName: stakeholder?.name?.middleName || undefined,
     socialSecurityNumber: stakeholder?.ssn || undefined,
+    identificationDocuments: stakeholder?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })),
   }));
+};

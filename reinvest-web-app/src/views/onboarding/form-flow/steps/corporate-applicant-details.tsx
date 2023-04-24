@@ -52,6 +52,7 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
           ...fields,
           _index: storeFields._currentCompanyMajorStakeholder?._index,
         },
+        _willHaveMajorStakeholderApplicants: true,
       });
       moveToNextStep();
     };

@@ -60,7 +60,7 @@ export const getDefaultIdentificationValueForApplicant: GetDefaultIdentification
     const hasIdentificationDocument = !!applicant?.identificationDocuments;
 
     if (hasIdentificationDocument) {
-      return { identificationDocument: applicant.identificationDocuments };
+      return { identificationDocuments: applicant.identificationDocuments };
     }
   }
 
