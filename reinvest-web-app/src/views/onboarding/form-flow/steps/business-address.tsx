@@ -109,6 +109,8 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
       }
     };
 
+    const fiduciaryEntityTitle = storeFields.accountType === DraftAccountType.Corporate ? 'corporation' : 'trust';
+
     useEffect(() => {
       if (isTrustDraftAccountSuccess || isCorporateDraftAccountSuccess) {
         moveToNextStep();
@@ -119,7 +121,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle
-            title="Enter the business address for your corporation."
+            title={`Enter the business address for your ${fiduciaryEntityTitle}.`}
             informationMessage="US Residents Only"
           />
           {trustDraftAccountError && <ErrorMessagesHandler error={trustDraftAccountError} />}
