@@ -20,10 +20,9 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATE_APPLICANT_LIST,
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants, companyMajorStakeholderApplicants } = fields;
-    const hasMajorStakeholderApplicants = !!companyMajorStakeholderApplicants?.length;
+    const { companyMajorStakeholderApplicants, accountType } = fields;
 
-    return !!_willHaveMajorStakeholderApplicants && hasMajorStakeholderApplicants;
+    return !!companyMajorStakeholderApplicants?.length && accountType === DraftAccountType.Corporate;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {

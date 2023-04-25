@@ -2,7 +2,7 @@
   @apply h-24 w-24 p-2 flex items-center rounded-full;
 
   &[data-state="checked"] {
-    @apply bg-gray-04;
+    @apply bg-green-frost-01;
   }
 
   &[data-state="unchecked"] {

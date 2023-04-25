@@ -19,11 +19,11 @@ type Fields = OnboardingFormFields['compliances'] & {
   doNoneApply?: boolean;
 };
 
-const getDefaultValues = ({ statementTypes }: OnboardingFormFields): Fields => ({
+const getDefaultValues = ({ statementTypes, compliances }: OnboardingFormFields): Fields => ({
   isAssociatedWithFinra: statementTypes?.includes(StatementType.FinraMember),
   isAssociatedWithPubliclyTradedCompany: statementTypes?.includes(StatementType.TradingCompanyStakeholder),
   isSeniorPoliticalFigure: statementTypes?.includes(StatementType.Politician),
-  doNoneApply: false,
+  doNoneApply: !!compliances?.doNoneApply,
 });
 
 const schema = z
