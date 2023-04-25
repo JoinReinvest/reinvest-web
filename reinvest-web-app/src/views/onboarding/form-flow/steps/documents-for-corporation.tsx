@@ -64,21 +64,27 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async ({ documentsForCorporation }) => {
       const idScan = [];
       const hasDocuments = !!documentsForCorporation?.length;
+      const hasDocumentsToUpload = documentsForCorporation?.some(document => !!document.file);
+      const documentsWithoutFile = documentsForCorporation?.map(({ id, fileName }) => ({ id, fileName }));
 
-      if (hasDocuments) {
-        const numberOfIdentificationDocuments = documentsForCorporation.length;
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = documentsForCorporation.map(({ file }) => file).filter(Boolean) as DocumentFile[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
 
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfIdentificationDocuments })) as PutFileLink[];
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForCorporation });
 
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ documentsForCorporation });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ documentsForCorporation: documentsWithoutFile });
 
-        if (storeFields.accountId) {
+        if (storeFields.accountId && hasIdScans) {
           await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { companyDocuments: idScan } });
+        } else {
+          moveToNextStep();
         }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });

@@ -29,10 +29,10 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
   identifier: Identifiers.CORPORATE_APPLICANT_IDENTIFICATION,
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants, _currentCompanyMajorStakeholder } = fields;
+    const { _willHaveMajorStakeholderApplicants, _currentCompanyMajorStakeholder, _isEditingCompanyMajorStakeholderApplicant } = fields;
     const hasCurrentCompanyMajorStakeholder = _currentCompanyMajorStakeholder !== undefined;
 
-    return !!_willHaveMajorStakeholderApplicants && hasCurrentCompanyMajorStakeholder;
+    return (!!_willHaveMajorStakeholderApplicants && hasCurrentCompanyMajorStakeholder) || !!_isEditingCompanyMajorStakeholderApplicant;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
