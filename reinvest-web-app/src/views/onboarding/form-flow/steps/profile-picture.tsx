@@ -111,7 +111,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         const avatarLink = await createAvatarLinkMutate({});
 
         if (avatarLink?.url && avatarLink.id && profilePicture?.file) {
-          await sendFilesToS3Bucket([{ file: profilePicture.file, url: avatarLink.url, id: avatarLink.id }]);
+          await sendFilesToS3Bucket([{ file: profilePicture.file, url: avatarLink.url, id: avatarLink.id, fileName: profilePicture.file.name }]);
           avatarId = avatarLink.id;
         }
       }

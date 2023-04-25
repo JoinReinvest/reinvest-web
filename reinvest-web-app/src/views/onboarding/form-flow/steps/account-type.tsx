@@ -36,8 +36,9 @@ import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
-import { Applicant, OnboardingFormFields } from '../form-fields';
+import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { formatStakeholdersForStorage } from '../utilities';
 
 type Fields = Pick<OnboardingFormFields, 'accountType'>;
 
@@ -117,6 +118,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
         const { details } = trustDraftAccountData;
         const documentsForTrust: DocumentFile[] = details?.companyDocuments?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
         const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
+
         const trustData = {
           trustType: details?.companyType?.type === CompanyTypeEnum.Revocable ? TrustCompanyTypeEnum.Revocable : TrustCompanyTypeEnum.Irrevocable,
           trustLegalName: details?.companyName?.name || '',
@@ -289,26 +291,6 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       </>
     );
   },
-};
-
-const formatStakeholdersForStorage = (stakeholders: Stakeholder[]): Applicant[] => {
-  return stakeholders.map(stakeholder => ({
-    firstName: stakeholder?.name?.firstName || undefined,
-    lastName: stakeholder?.name?.lastName || undefined,
-    residentialAddress: {
-      addressLine1: stakeholder?.address?.addressLine1 || '',
-      addressLine2: stakeholder?.address?.addressLine2 || '',
-      city: stakeholder?.address?.city || '',
-      country: stakeholder?.address?.country || '',
-      state: stakeholder?.address?.state || '',
-      zip: stakeholder?.address?.zip || '',
-    },
-    dateOfBirth: stakeholder?.dateOfBirth?.dateOfBirth,
-    domicile: stakeholder?.domicile?.type || undefined,
-    middleName: stakeholder?.name?.middleName || undefined,
-    socialSecurityNumber: stakeholder?.ssn || undefined,
-    identificationDocuments: stakeholder?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })),
-  }));
 };
 
 const getCorporateCompanyType = (companyType: CompanyTypeEnum): CorporateCompanyTypeEnum => {
