@@ -84,7 +84,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
         setValue('city', address.city);
         setValue('state', address.state);
         setValue('zip', address.zip);
-        setValue('country', 'USA');
+        setValue('country', address.country);
 
         setIsLoadingSelectedAddress(false);
         setFocus('addressLine2');
