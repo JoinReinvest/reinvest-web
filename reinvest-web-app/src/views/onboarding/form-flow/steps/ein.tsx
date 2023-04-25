@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputEIN } from 'components/FormElements/InputEIN';
@@ -12,12 +13,11 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinves
 import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { DraftAccountType, TrustCompanyTypeEnum } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
+import { doesEinComesFromApi, maskEin } from 'utils/ein';
 import { WhatIsEINModal } from 'views/EINModal';
 import { z } from 'zod';
 
-import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
-import { getApiClient } from '../../../../services/getApiClient';
-import { doesEinComesFromApi, maskEin } from '../../../../utils/ein';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 

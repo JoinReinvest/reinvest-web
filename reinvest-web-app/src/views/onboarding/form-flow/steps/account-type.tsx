@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
@@ -34,8 +36,6 @@ import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -241,7 +241,9 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title={accountTypesAvailableToOpen.length ? 'Which type of account would you like to open?' : 'You cannot open any account'} />
+            {!isListAccountTypesUserCanOpenLoading && (
+              <BlackModalTitle title={accountTypesAvailableToOpen.length ? 'Which type of account would you like to open?' : 'You cannot open any account'} />
+            )}
 
             {createDraftAccountError && <ErrorMessagesHandler error={createDraftAccountError} />}
 
