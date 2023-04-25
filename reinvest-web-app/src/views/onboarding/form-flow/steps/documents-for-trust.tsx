@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
@@ -14,12 +16,10 @@ import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/q
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
+import { useSendDocumentsToS3AndGetScanIds } from 'services/queries/useSendDocumentsToS3AndGetScanIds';
 import { z } from 'zod';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
-import { getApiClient } from '../../../../services/getApiClient';
-import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
@@ -88,7 +88,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
       try {
         const hasIdScans = !!idScan?.length;
-        await updateStoreFields({ documentsForCorporation: documentsWithoutFile });
+        await updateStoreFields({ documentsForTrust: documentsWithoutFile });
 
         if (storeFields.accountId && hasIdScans) {
           await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { companyDocuments: idScan } });
