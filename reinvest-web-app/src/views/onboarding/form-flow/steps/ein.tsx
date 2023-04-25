@@ -136,7 +136,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
 
     const hasStoredValue = !!defaultValues.ein;
     const hasStoredValueAndClearedTheField = hasStoredValue && hasFieldBeenClearedOnce;
-    const willUseSecureMask = hasStoredValueAndClearedTheField ? false : hasStoredValue ? true : !hasStoredValue ? false : true;
+    const willUseSecureMask = hasStoredValueAndClearedTheField ? false : hasStoredValue;
 
     useEffect(() => {
       if (isTrustDraftAccountSuccess || isCorporateDraftAccountSuccess) {
