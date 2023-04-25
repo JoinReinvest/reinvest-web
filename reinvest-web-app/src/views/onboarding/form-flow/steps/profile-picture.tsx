@@ -196,18 +196,18 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         <ButtonStack>
           <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-            loading={shouldButtonBeLoading}
-          />
-
-          <Button
             label="Skip"
             variant="outlined"
             onClick={onSkip}
             className="text-green-frost-01"
             disabled={shouldSkipButtonBeDisabled}
+          />
+
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>
