@@ -1,9 +1,9 @@
 import { makeRequest } from 'services/api-request';
-
 export interface UploadFile {
   file: File;
   id: string;
   url: string;
+  fileName?: string;
 }
 
 export const sendFilesToS3Bucket = async (uploadFiles: UploadFile[]) => {

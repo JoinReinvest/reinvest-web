@@ -5,17 +5,21 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
-import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { AddressInput, DraftAccountType, PutFileLink, SimplifiedDomicileType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
+import { formatDateForApi } from 'reinvest-app-common/src/utilities/dates';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 import { APPLICANT_IDENTIFICATION, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
-import { getDefaultIdentificationValueForApplicant } from '../utilities';
+import { formatStakeholdersForStorage, getDefaultIdentificationValueForApplicant } from '../utilities';
 
 type Fields = Pick<Applicant, 'identificationDocuments'>;
 
@@ -34,6 +38,7 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
     const defaultValues = getDefaultIdentificationValueForApplicant(storeFields, DraftAccountType.Trust);
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
 
@@ -43,8 +48,8 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
       resolver: zodResolver(APPLICANT_IDENTIFICATION),
       defaultValues,
     });
-
-    const shouldButtonBeDisabled = !formState.isValid || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
+    const shouldButtonLoading = isSendDocumentToS3AndGetScanIdsLoading || isCreateDocumentsFileLinksLoading || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || shouldButtonLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const { _isEditingTrustTrusteeGrantorOrProtector } = storeFields;
@@ -58,19 +63,28 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments });
         idScan.push(...scans);
 
-        if (!!_isEditingTrustTrusteeGrantorOrProtector && typeof currentApplicantIndex !== 'undefined' && currentApplicantIndex >= 0) {
-          const allApplicants = storeFields.trustTrusteesGrantorsOrProtectors || [];
+        if (!!_isEditingTrustTrusteeGrantorOrProtector && typeof currentApplicantIndex !== 'undefined' && currentApplicantIndex >= 0 && storeFields.accountId) {
+          const editedStakeholder = {
+            id: currentApplicant.id,
+            name: {
+              firstName: currentApplicant.firstName,
+              lastName: currentApplicant.lastName,
+              middleName: currentApplicant.middleName,
+            },
+            dateOfBirth: {
+              dateOfBirth: formatDateForApi(currentApplicant.dateOfBirth || ''),
+            },
+            address: { ...currentApplicant.residentialAddress, country: 'USA' } as AddressInput,
+            domicile: {
+              type: currentApplicant.domicile || SimplifiedDomicileType.Citizen,
+            },
+            idScan,
+          };
 
-          const updatedApplicants = allApplicants.map((applicant, index) => {
-            if (index === currentApplicantIndex) {
-              return { ...currentApplicant, idScan };
-            }
-
-            return applicant;
-          });
-
+          const data = await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [editedStakeholder] } });
+          const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
           await updateStoreFields({
-            trustTrusteesGrantorsOrProtectors: updatedApplicants,
+            trustTrusteesGrantorsOrProtectors: stakeholdersToStoreFields,
             _currentTrustTrusteeGrantorOrProtector: undefined,
             _isEditingTrustTrusteeGrantorOrProtector: false,
             _willHaveTrustTrusteesGrantorsOrProtectors: false,
@@ -78,23 +92,47 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
 
           moveToNextStep();
         } else {
-          const allApplicants = storeFields.trustTrusteesGrantorsOrProtectors || [];
-          const updatedApplicants = [...allApplicants, { ...currentApplicant, idScan }];
+          const newStakeholder = {
+            name: {
+              firstName: currentApplicant.firstName,
+              lastName: currentApplicant.lastName,
+              middleName: currentApplicant.middleName,
+            },
+            dateOfBirth: {
+              dateOfBirth: formatDateForApi(currentApplicant.dateOfBirth || ''),
+            },
+            address: { ...currentApplicant.residentialAddress, country: 'USA' } as AddressInput,
+            ssn: {
+              ssn: currentApplicant.socialSecurityNumber || '',
+            },
+            domicile: {
+              type: currentApplicant.domicile || SimplifiedDomicileType.Citizen,
+            },
+            idScan,
+          };
 
-          await updateStoreFields({
-            trustTrusteesGrantorsOrProtectors: updatedApplicants,
-            _isEditingTrustTrusteeGrantorOrProtector: false,
-            _willHaveTrustTrusteesGrantorsOrProtectors: false,
-          });
-          moveToNextStep();
+          if (storeFields.accountId) {
+            const data = await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [newStakeholder] } });
+            const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
+
+            await updateStoreFields({ trustTrusteesGrantorsOrProtectors: stakeholdersToStoreFields, _isEditingTrustTrusteeGrantorOrProtector: false });
+          }
         }
       }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
           <BlackModalTitle title="Upload the ID of your applicant." />
+          {error && <ErrorMessagesHandler error={error} />}
+
           <InputMultiFile
             name="identificationDocuments"
             minimumNumberOfFiles={1}
@@ -112,7 +150,7 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading}
+            loading={shouldButtonLoading}
           />
         </ButtonStack>
       </Form>
