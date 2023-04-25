@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -7,11 +8,13 @@ import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { Typography } from 'components/Typography';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { z } from 'zod';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
@@ -19,11 +22,16 @@ import { getApiClient } from '../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
 
 type Fields = Pick<OnboardingFormFields, 'documentsForTrust'>;
 
 const MINIMUM_NUMBER_OF_FILES = 1;
 const MAXIMUM_NUMBER_OF_FILES = 5;
+
+const schema = z.object({
+  documentsForTrust: generateMultiFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES, MINIMUM_NUMBER_OF_FILES, MAXIMUM_NUMBER_OF_FILES),
+});
 
 export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
@@ -56,6 +64,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     const defaultValues: Fields = { documentsForTrust: storeFields.documentsForTrust || [] };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
+      resolver: zodResolver(schema),
       defaultValues: async () => defaultValues,
     });
 
