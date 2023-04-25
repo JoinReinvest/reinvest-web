@@ -23,10 +23,6 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'ein'>;
 
-// const schema = z.object({
-//   ein: formValidationRules.ein,
-// });
-
 const generateSchema = (defaultValues: Fields) => {
   return z
     .object({

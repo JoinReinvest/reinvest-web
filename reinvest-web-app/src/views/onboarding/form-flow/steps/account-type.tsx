@@ -142,7 +142,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
           ...storeFields,
           ...trustData,
           accountId: trustDraftAccountData?.id || '',
-          // isCompletedProfile: !!profileData?.isCompleted,
+          isCompletedProfile: !!profileData?.isCompleted,
           accountType: DraftAccountType.Trust,
         });
         moveToNextStep();
@@ -178,23 +178,11 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       if (isCorporateDraftAccountSuccess && corporateDraftAccountData && accountType === DraftAccountType.Corporate) {
         const { details } = corporateDraftAccountData;
 
-        let companyType = undefined;
-
-        if (details?.companyType?.type) {
-          if (details?.companyType?.type === CompanyTypeEnum.Corporation) {
-            companyType = CorporateCompanyTypeEnum.Corporation;
-          } else if (details?.companyType?.type === CompanyTypeEnum.Llc) {
-            companyType = CorporateCompanyTypeEnum.Llc;
-          } else if (details?.companyType?.type === CompanyTypeEnum.Partnership) {
-            companyType = CorporateCompanyTypeEnum.Partnership;
-          }
-        }
-
         const documentsForCorporation: DocumentFile[] = details?.companyDocuments?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
         const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
 
         const corporateData = {
-          corporationType: companyType,
+          corporationType: details?.companyType?.type ? getCorporateCompanyType(details.companyType.type) : undefined,
           corporationLegalName: details?.companyName?.name || '',
           ein: details?.ein?.ein || '',
           fiduciaryEntityInformation: {
@@ -319,4 +307,16 @@ const formatStakeholdersForStorage = (stakeholders: Stakeholder[]): Applicant[] 
     socialSecurityNumber: stakeholder?.ssn || undefined,
     identificationDocuments: stakeholder?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })),
   }));
+};
+
+const getCorporateCompanyType = (companyType: CompanyTypeEnum): CorporateCompanyTypeEnum => {
+  if (companyType === CompanyTypeEnum.Corporation) {
+    return CorporateCompanyTypeEnum.Corporation;
+  }
+
+  if (companyType === CompanyTypeEnum.Llc) {
+    return CorporateCompanyTypeEnum.Llc;
+  }
+
+  return CorporateCompanyTypeEnum.Partnership;
 };
