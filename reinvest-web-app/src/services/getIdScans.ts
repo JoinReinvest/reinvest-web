@@ -12,7 +12,7 @@ export const sendDocumentsToS3AndGetScanIds = async (
     .map(({ url, id }, index) => {
       const file = identificationDocuments.at(index);
 
-      return { url, id, file: file?.file || file };
+      return { url, id, file: file?.file || { name: file?.fileName || (file as File).name } };
     }) as UploadFile[];
 
   await sendFilesToS3Bucket(images);

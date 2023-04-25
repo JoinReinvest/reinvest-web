@@ -64,21 +64,27 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async ({ documentsForTrust }) => {
       const idScan = [];
       const hasDocuments = !!documentsForTrust?.length;
+      const hasDocumentsToUpload = documentsForTrust?.some(document => !!document.file);
+      const documentsWithoutFile = documentsForTrust?.map(({ id, fileName }) => ({ id, fileName }));
 
-      if (hasDocuments) {
-        const numberOfIdentificationDocuments = documentsForTrust.length;
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = documentsForTrust.map(({ file }) => file).filter(Boolean) as DocumentFile[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
 
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfIdentificationDocuments })) as PutFileLink[];
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForTrust });
 
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ documentsForTrust });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ documentsForCorporation: documentsWithoutFile });
 
-        if (storeFields.accountId) {
+        if (storeFields.accountId && hasIdScans) {
           await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { companyDocuments: idScan } });
+        } else {
+          moveToNextStep();
         }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });

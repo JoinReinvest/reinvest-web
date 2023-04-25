@@ -36,9 +36,9 @@ export const StepTrustApplicantAddress: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    const { _willHaveTrustTrusteesGrantorsOrProtectors } = fields;
+    const { _willHaveTrustTrusteesGrantorsOrProtectors, _isEditingTrustTrusteeGrantorOrProtector } = fields;
 
-    return !!_willHaveTrustTrusteesGrantorsOrProtectors;
+    return !!_willHaveTrustTrusteesGrantorsOrProtectors || !!_isEditingTrustTrusteeGrantorOrProtector;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {

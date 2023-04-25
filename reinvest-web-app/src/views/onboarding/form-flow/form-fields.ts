@@ -120,6 +120,7 @@ export interface Applicant {
   dateOfBirth?: Date;
   domicile?: SimplifiedDomicileType.Resident | SimplifiedDomicileType.Citizen;
   firstName?: string;
+  id?: string;
   idScan?: { fileName: string; id: string }[];
   identificationDocuments?: DocumentFile[];
   lastName?: string;

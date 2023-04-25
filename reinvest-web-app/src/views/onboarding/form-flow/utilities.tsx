@@ -1,6 +1,6 @@
 import { IconPencil } from 'assets/icons/IconPencil';
 import { Typography } from 'components/Typography';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
 
 import { Applicant, IndexedSchema, OnboardingFormFields } from './form-fields';
 
@@ -84,4 +84,25 @@ export const generateApplicantListItem = (corporationLegalName: string, applican
       />
     </li>
   );
+};
+
+export const formatStakeholdersForStorage = (stakeholders: Stakeholder[]): Applicant[] => {
+  return stakeholders.map(stakeholder => ({
+    firstName: stakeholder?.name?.firstName || undefined,
+    lastName: stakeholder?.name?.lastName || undefined,
+    residentialAddress: {
+      addressLine1: stakeholder?.address?.addressLine1 || '',
+      addressLine2: stakeholder?.address?.addressLine2 || '',
+      city: stakeholder?.address?.city || '',
+      country: stakeholder?.address?.country || '',
+      state: stakeholder?.address?.state || '',
+      zip: stakeholder?.address?.zip || '',
+    },
+    dateOfBirth: stakeholder?.dateOfBirth?.dateOfBirth,
+    domicile: stakeholder?.domicile?.type || undefined,
+    middleName: stakeholder?.name?.middleName || undefined,
+    socialSecurityNumber: stakeholder?.ssn || undefined,
+    identificationDocuments: stakeholder?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })),
+    id: stakeholder?.id || undefined,
+  }));
 };
