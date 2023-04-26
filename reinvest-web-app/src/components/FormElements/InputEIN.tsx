@@ -16,6 +16,7 @@ export function InputEIN<FormFields extends FieldValues>({ willUseSecureMask = f
       willUseUnmaskedValue={false}
       willTriggerChangeOnAccept
       inputPlaceholder="00-0000000"
+      isOnlyNumeric
     />
   );
 }
