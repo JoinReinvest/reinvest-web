@@ -103,7 +103,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
 
       const { accountType, accountId } = storeFields;
       const hasAccountIdAndEin = accountId && ein;
-      await updateStoreFields({ ein: maskedEin });
+      await updateStoreFields({ ein: isFromApi ? maskedEin : ein });
 
       if (hasAccountIdAndEin && !isFromApi) {
         const variables = { accountId, input: { ein: { ein } } };
