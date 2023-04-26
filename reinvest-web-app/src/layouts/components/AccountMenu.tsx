@@ -18,6 +18,7 @@ import { getApiClient } from 'services/getApiClient';
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
 import { AccountMenuActionItem } from './AccountMenuActionItem';
 import { AccountMenuFooter } from './AccountMenuFooter';
+import { ModalAddBeneficiary } from './ModalAddBeneficiary';
 import { ModalInvite } from './ModalInvite';
 import { Separator } from './Separator';
 
@@ -30,6 +31,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const { data: invitationLink } = useGetInvitationLink(getApiClient);
   const [isMenuOpen, toggleIsMenuOpen] = useToggler(false);
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
+  const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
 
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
@@ -39,6 +41,11 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const handleModalInviteOpenChange = () => {
     toggleIsMenuOpen(false);
     toggleIsModalInviteOpen(true);
+  };
+
+  const handleModalAddBeneficiaryOpen = () => {
+    toggleIsMenuOpen(false);
+    toggleIsModalAddBeneficiaryOpen(true);
   };
 
   const hasAvailableAccounts = availableAccounts.length > 0;
@@ -104,7 +111,10 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                   </ul>
 
                   {isAbleToAddBeneficiaries && (
-                    <AccountMenuActionItem label="Add Beneficiary">
+                    <AccountMenuActionItem
+                      label="Add Beneficiary"
+                      onClick={handleModalAddBeneficiaryOpen}
+                    >
                       <IconAddBeneficiary />
                     </AccountMenuActionItem>
                   )}
@@ -157,6 +167,11 @@ export const AccountMenu = ({ activeAccount }: Props) => {
           referralCodeUrl={invitationLink.url}
         />
       )}
+
+      <ModalAddBeneficiary
+        isOpen={isModalAddBeneficiaryOpen}
+        onOpenChange={toggleIsModalAddBeneficiaryOpen}
+      />
     </>
   );
 };
