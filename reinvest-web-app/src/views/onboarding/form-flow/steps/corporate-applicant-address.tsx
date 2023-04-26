@@ -12,51 +12,48 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
-import { Address, AddressInput, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { Address, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
 import { makeRequest } from 'services/api-request';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
-import { OnboardingFormFields } from '../form-fields';
+import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Exclude<OnboardingFormFields['businessAddress'], undefined>;
+type Fields = Exclude<Applicant['residentialAddress'], undefined>;
 
 const schema = formValidationRules.address;
 
-export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.BUSINESS_ADDRESS,
+export const StepCorporateApplicantAddress: StepParams<OnboardingFormFields> = {
+  identifier: Identifiers.APPLICANT_ADDRESS,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === DraftAccountType.Corporate || accountType === DraftAccountType.Trust;
+    return accountType === DraftAccountType.Corporate;
   },
 
   doesMeetConditionFields: fields => {
-    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+    const { _willHaveMajorStakeholderApplicants } = fields;
 
-    const hasProfileFields = allRequiredFieldsExists(profileFields);
-    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]) && fields.accountType === DraftAccountType.Trust;
-    const hasCorporateFields =
-      allRequiredFieldsExists([fields.corporationType, fields.corporationLegalName, fields.ein]) && fields.accountType === DraftAccountType.Corporate;
-
-    return hasProfileFields && (hasTrustFields || hasCorporateFields);
+    return !!_willHaveMajorStakeholderApplicants;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    const defaultValues: Fields = storeFields.businessAddress || initialValues;
+    const initialValuesFromStore =
+      storeFields.accountType === DraftAccountType.Trust
+        ? storeFields._currentTrustTrusteeGrantorOrProtector?.residentialAddress
+        : storeFields._currentCompanyMajorStakeholder?.residentialAddress;
+    const defaultValues: Fields = initialValuesFromStore || initialValues;
     const {
-      mutateAsync: completeTrustDraftAccount,
       isSuccess: isTrustDraftAccountSuccess,
       error: trustDraftAccountError,
       isLoading: isTrustDraftAccountLoading,
     } = useCompleteTrustDraftAccount(getApiClient);
     const {
-      mutateAsync: completeCorporateDraftAccount,
       isSuccess: isCorporateDraftAccountSuccess,
       error: corporateDraftAccountError,
       isLoading: isCorporateDraftAccountLoading,
@@ -80,36 +77,30 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
         const { data } = await makeRequest<Address>({ url });
         const address: Address = typeof data === 'string' ? JSON.parse(data) : {};
 
-        setValue('addressLine1', address.addressLine1);
-        setValue('city', address.city);
-        setValue('state', address.state);
-        setValue('zip', address.zip);
-        setValue('country', address.country);
+        setValue('addressLine1', address.addressLine1 || '');
+        setValue('city', address.city || '');
+        setValue('state', address.state || '');
+        setValue('zip', address.zip || '');
+        setValue('country', address.country || '');
 
         setIsLoadingSelectedAddress(false);
         setFocus('addressLine2');
       }
     };
 
-    const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
-      await updateStoreFields({ businessAddress: permanentAddress });
-      const address = permanentAddress as AddressInput;
-      const { accountId, accountType } = storeFields;
-
-      if (accountId && permanentAddress.addressLine1 && permanentAddress.city && permanentAddress.state && permanentAddress.zip) {
-        const variables = { accountId, input: { address: { ...address, country: 'USA' } } };
-
-        if (accountType === DraftAccountType.Trust) {
-          await completeTrustDraftAccount(variables);
-        }
-
-        if (accountType === DraftAccountType.Corporate) {
-          await completeCorporateDraftAccount(variables);
-        }
+    const onSubmit: SubmitHandler<Fields> = async address => {
+      if (storeFields.accountType === DraftAccountType.Corporate) {
+        await updateStoreFields({ _currentCompanyMajorStakeholder: { ...storeFields._currentCompanyMajorStakeholder, residentialAddress: address } });
       }
-    };
 
-    const fiduciaryEntityTitle = storeFields.accountType === DraftAccountType.Corporate ? 'corporation' : 'trust';
+      if (storeFields.accountType === DraftAccountType.Trust) {
+        await updateStoreFields({
+          _currentTrustTrusteeGrantorOrProtector: { ...storeFields._currentTrustTrusteeGrantorOrProtector, residentialAddress: address },
+        });
+      }
+
+      moveToNextStep();
+    };
 
     useEffect(() => {
       if (isTrustDraftAccountSuccess || isCorporateDraftAccountSuccess) {
@@ -120,10 +111,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
-            title={`Enter the business address for your ${fiduciaryEntityTitle}.`}
-            informationMessage="US Residents Only"
-          />
+          <BlackModalTitle title="Enter the residential information for your applicant." />
           {trustDraftAccountError && <ErrorMessagesHandler error={trustDraftAccountError} />}
           {corporateDraftAccountError && <ErrorMessagesHandler error={corporateDraftAccountError} />}
           <div className="flex w-full flex-col gap-16">

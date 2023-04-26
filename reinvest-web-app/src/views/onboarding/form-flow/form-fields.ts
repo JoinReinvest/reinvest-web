@@ -3,6 +3,7 @@ import { Industry } from 'reinvest-app-common/src/constants/industries';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import {
   Address,
+  AddressInput,
   CorporateCompanyTypeEnum,
   DomicileType,
   DraftAccountType,
@@ -119,11 +120,12 @@ export interface Applicant {
   dateOfBirth?: Date;
   domicile?: SimplifiedDomicileType.Resident | SimplifiedDomicileType.Citizen;
   firstName?: string;
+  id?: string;
   idScan?: { fileName: string; id: string }[];
-  identificationDocument?: DocumentFile;
+  identificationDocuments?: DocumentFile[];
   lastName?: string;
   middleName?: string;
-  residentialAddress?: string;
+  residentialAddress?: AddressInput;
   socialSecurityNumber?: string;
 }
 

@@ -5,6 +5,7 @@ import { StepBusinessAddress } from './business-address';
 import { StepCheckYourPhone } from './check-your-phone';
 import { StepCompanyTickerSymbols } from './company-ticker-symbols';
 import { StepCompliances } from './compliance';
+import { StepCorporateApplicantAddress } from './corporate-applicant-address';
 import { StepCorporateApplicantDetails } from './corporate-applicant-details';
 import { StepCorporateApplicantIdentification } from './corporate-applicant-identification';
 import { StepCorporateApplicantList } from './corporate-applicant-list';
@@ -31,6 +32,7 @@ import { StepResidencyStatus } from './residency-status';
 import { StepResidencyVisa } from './residency-visa';
 import { StepSeniorPoliticalFigure } from './senior-political-figure';
 import { StepSocialSecurityNumber } from './social-security-number';
+import { StepTrustApplicantAddress } from './trust-applicant-address';
 import { StepTrustApplicantDetails } from './trust-applicant-details';
 import { StepTrustApplicantIdentification } from './trust-applicant-identification';
 import { StepTrustApplicantList } from './trust-applicant-list';
@@ -79,11 +81,13 @@ export const FLOW_STEPS = [
   //trust applicants steps
   StepTrustApplicantsLanding,
   StepTrustApplicantDetails,
+  StepTrustApplicantAddress,
   StepTrustApplicantIdentification,
   StepTrustApplicantList,
   //corporate applicants steps
   StepCorporateApplicantsLanding,
   StepCorporateApplicantDetails,
+  StepCorporateApplicantAddress,
   StepCorporateApplicantIdentification,
   StepCorporateApplicantList,
   //profile picture step

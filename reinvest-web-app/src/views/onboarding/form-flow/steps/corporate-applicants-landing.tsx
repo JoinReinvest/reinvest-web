@@ -41,13 +41,13 @@ export const StepCorporateApplicantsLanding: StepParams<OnboardingFormFields> = 
     const applicants = storeFields?.trustTrusteesGrantorsOrProtectors || [];
     const hasReachedMaximumNumberOfApplicants = applicants.length >= MAXIMUM_NUMBER_OF_APPLICANTS;
 
-    const onAddNewApplicant = () => {
-      updateStoreFields({ _willHaveMajorStakeholderApplicants: true });
+    const onAddNewApplicant = async () => {
+      await updateStoreFields({ _willHaveMajorStakeholderApplicants: true });
       moveToNextStep();
     };
 
-    const onSkip = () => {
-      updateStoreFields({ _willHaveMajorStakeholderApplicants: false });
+    const onSkip = async () => {
+      await updateStoreFields({ _willHaveMajorStakeholderApplicants: false });
       moveToNextStep();
     };
 

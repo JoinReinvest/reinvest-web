@@ -1,7 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
@@ -9,6 +11,8 @@ import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { ACCOUNT_TYPES_AS_OPTIONS, ACCOUNT_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
+import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'reinvest-app-common/src/constants/corporation';
+import { Industry } from 'reinvest-app-common/src/constants/industries';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDraftAccount } from 'reinvest-app-common/src/services/queries/createDraftAccount';
 import { useGetCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/getCorporateDraftAccount';
@@ -18,17 +22,23 @@ import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/servi
 import { useGetPhoneCompleted } from 'reinvest-app-common/src/services/queries/getPhoneCompleted';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useGetTrustDraftAccount } from 'reinvest-app-common/src/services/queries/getTrustDraftAccount';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
+import {
+  AccountType,
+  CompanyTypeEnum,
+  CorporateCompanyTypeEnum,
+  DraftAccountType,
+  Stakeholder,
+  TrustCompanyTypeEnum,
+} from 'reinvest-app-common/src/types/graphql';
 import { SelectCardOption } from 'reinvest-app-common/src/types/select-card-option';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredAccountTypeModal } from 'views/whyRequiredModals/WhyRequiredAccountTypeModal';
 import { z } from 'zod';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { formatStakeholdersForStorage } from '../utilities';
 
 type Fields = Pick<OnboardingFormFields, 'accountType'>;
 
@@ -104,28 +114,106 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     };
 
     useEffect(() => {
-      if (isTrustDraftAccountSuccess && trustDraftAccountData) {
-        //UPDATE ALL FIELDS FOR TRUST ACCOUNT
-        updateStoreFields({ ...storeFields, accountId: trustDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+      if (isTrustDraftAccountSuccess && trustDraftAccountData && accountType === DraftAccountType.Trust) {
+        const { details } = trustDraftAccountData;
+        const documentsForTrust: DocumentFile[] = details?.companyDocuments?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
+        const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
+
+        const trustData = {
+          trustType: details?.companyType?.type === CompanyTypeEnum.Revocable ? TrustCompanyTypeEnum.Revocable : TrustCompanyTypeEnum.Irrevocable,
+          trustLegalName: details?.companyName?.name || '',
+          ein: details?.ein?.ein || '',
+          fiduciaryEntityInformation: {
+            annualRevenue: (details?.annualRevenue?.range as CorporationAnnualRevenue) || undefined,
+            numberOfEmployees: (details?.numberOfEmployees?.range as CorporationNumberOfEmployees) || undefined,
+            industry: (details?.industry?.value as Industry) || undefined,
+          },
+          businessAddress: {
+            addressLine1: details?.address?.addressLine1,
+            addressLine2: details?.address?.addressLine2,
+            city: details?.address?.city,
+            country: details?.address?.country,
+            state: details?.address?.state,
+            zip: details?.address?.zip,
+          },
+          trustTrusteesGrantorsOrProtectors: stakeholders,
+          documentsForTrust,
+        };
+
+        updateStoreFields({
+          ...storeFields,
+          ...trustData,
+          accountId: trustDraftAccountData?.id || '',
+          isCompletedProfile: !!profileData?.isCompleted,
+          accountType: DraftAccountType.Trust,
+        });
         moveToNextStep();
       }
-    }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData]);
+    }, [isTrustDraftAccountSuccess, moveToNextStep, storeFields, trustDraftAccountData, updateStoreFields, profileData, accountType]);
 
     useEffect(() => {
-      if (isIndividualDraftAccountSuccess && individualDraftAccountData) {
-        //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
-        updateStoreFields({ ...storeFields, accountId: individualDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+      if (isIndividualDraftAccountSuccess && individualDraftAccountData && accountType === DraftAccountType.Individual) {
+        const { details } = individualDraftAccountData;
+        const individualData = {
+          employmentStatus: details?.employmentStatus?.status || undefined,
+          employmentDetails: {
+            employerName: details?.employer?.nameOfEmployer || '',
+            industry: details?.employer?.industry || '',
+            occupation: details?.employer?.title || '',
+          },
+          netIncome: details?.netIncome?.range || undefined,
+          netWorth: details?.netWorth?.range || undefined,
+        };
+
+        updateStoreFields({
+          ...storeFields,
+          ...individualData,
+          accountId: individualDraftAccountData?.id || '',
+          isCompletedProfile: !!profileData?.isCompleted,
+          accountType: DraftAccountType.Individual,
+        });
         moveToNextStep();
       }
-    }, [isIndividualDraftAccountSuccess, moveToNextStep, storeFields, individualDraftAccountData, updateStoreFields, profileData]);
+    }, [isIndividualDraftAccountSuccess, moveToNextStep, storeFields, individualDraftAccountData, updateStoreFields, profileData, accountType]);
 
     useEffect(() => {
-      if (isCorporateDraftAccountSuccess && corporateDraftAccountData) {
-        //UPDATE ALL FIELDS FOR INDIVIDUAL ACCOUNT
-        updateStoreFields({ ...storeFields, accountId: corporateDraftAccountData?.id || '', isCompletedProfile: !!profileData?.isCompleted });
+      if (isCorporateDraftAccountSuccess && corporateDraftAccountData && accountType === DraftAccountType.Corporate) {
+        const { details } = corporateDraftAccountData;
+
+        const documentsForCorporation: DocumentFile[] = details?.companyDocuments?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
+        const stakeholders = details?.stakeholders ? formatStakeholdersForStorage(details.stakeholders as Stakeholder[]) : undefined;
+
+        const corporateData = {
+          corporationType: details?.companyType?.type ? getCorporateCompanyType(details.companyType.type) : undefined,
+          corporationLegalName: details?.companyName?.name || '',
+          ein: details?.ein?.ein || '',
+          fiduciaryEntityInformation: {
+            annualRevenue: (details?.annualRevenue?.range as CorporationAnnualRevenue) || undefined,
+            numberOfEmployees: (details?.numberOfEmployees?.range as CorporationNumberOfEmployees) || undefined,
+            industry: (details?.industry?.value as Industry) || undefined,
+          },
+          businessAddress: {
+            addressLine1: details?.address?.addressLine1,
+            addressLine2: details?.address?.addressLine2,
+            city: details?.address?.city,
+            country: details?.address?.country,
+            state: details?.address?.state,
+            zip: details?.address?.zip,
+          },
+          companyMajorStakeholderApplicants: stakeholders,
+          documentsForCorporation,
+        };
+
+        updateStoreFields({
+          ...storeFields,
+          ...corporateData,
+          accountId: corporateDraftAccountData?.id || '',
+          isCompletedProfile: !!profileData?.isCompleted,
+          accountType: DraftAccountType.Corporate,
+        });
         moveToNextStep();
       }
-    }, [isCorporateDraftAccountSuccess, moveToNextStep, storeFields, corporateDraftAccountData, updateStoreFields, profileData]);
+    }, [isCorporateDraftAccountSuccess, moveToNextStep, storeFields, corporateDraftAccountData, updateStoreFields, profileData, accountType]);
 
     useEffect(() => {
       if (isSuccess && profileData) {
@@ -155,13 +243,14 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title={accountTypesAvailableToOpen.length ? 'Which type of account would you like to open?' : 'You cannot open any account'} />
+            {!isListAccountTypesUserCanOpenLoading && (
+              <BlackModalTitle title={accountTypesAvailableToOpen.length ? 'Which type of account would you like to open?' : 'You cannot open any account'} />
+            )}
 
             {createDraftAccountError && <ErrorMessagesHandler error={createDraftAccountError} />}
 
             {isListAccountTypesUserCanOpenLoading && (
               <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
-                {' '}
                 <IconSpinner />
               </div>
             )}
@@ -202,4 +291,16 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
       </>
     );
   },
+};
+
+const getCorporateCompanyType = (companyType: CompanyTypeEnum): CorporateCompanyTypeEnum => {
+  if (companyType === CompanyTypeEnum.Corporation) {
+    return CorporateCompanyTypeEnum.Corporation;
+  }
+
+  if (companyType === CompanyTypeEnum.Llc) {
+    return CorporateCompanyTypeEnum.Llc;
+  }
+
+  return CorporateCompanyTypeEnum.Partnership;
 };

@@ -20,11 +20,11 @@ import { z } from 'zod';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
-import { OnboardingFormFields } from '../form-fields';
+import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 import { FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
 
-type Fields = Pick<OnboardingFormFields, 'identificationDocuments'>;
+type Fields = Exclude<Applicant, undefined>;
 
 const ACCEPTED_FILE_MIME_TYPES: PartialMimeTypeKeys = ['jpeg', 'jpg', 'pdf', 'png'];
 const MINIMUM_NUMBER_OF_FILES = 1;

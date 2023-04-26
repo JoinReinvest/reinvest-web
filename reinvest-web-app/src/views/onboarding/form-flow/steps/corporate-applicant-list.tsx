@@ -15,17 +15,16 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATE_APPLICANT_LIST,
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants, companyMajorStakeholderApplicants } = fields;
-    const hasMajorStakeholderApplicants = !!companyMajorStakeholderApplicants?.length;
+    const { companyMajorStakeholderApplicants, accountType } = fields;
 
-    return !!_willHaveMajorStakeholderApplicants && hasMajorStakeholderApplicants;
+    return !!companyMajorStakeholderApplicants?.length && accountType === DraftAccountType.Corporate;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
     return accountType === DraftAccountType.Corporate;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
     const numberOfApplicants = majorStakeholderApplicants.length;
@@ -53,8 +52,8 @@ export const StepCorporateApplicantList: StepParams<OnboardingFormFields> = {
       moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
     };
 
-    const onContinue = () => {
-      moveToNextStep();
+    const onContinue = async () => {
+      moveToStepByIdentifier(Identifiers.PROFILE_PICTURE);
     };
 
     return (

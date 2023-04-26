@@ -64,7 +64,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
       const { phone } = storeFields;
 
       if (authCode && phone?.number && phone.countryCode) {
-        verifyPhoneNumberMutate({ authCode, countryCode: phone.countryCode, phoneNumber: phone.number });
+        await verifyPhoneNumberMutate({ authCode, countryCode: phone.countryCode, phoneNumber: phone.number });
       }
     };
 
@@ -79,6 +79,8 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
         if (data) {
           return moveToNextStep();
         }
+
+        updateStoreFields({ _isPhoneCompleted: true });
 
         return setIsInvalidVerificationCode(true);
       }
