@@ -98,6 +98,7 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
             companyMajorStakeholderApplicants: stakeholdersToStoreFields,
             _currentCompanyMajorStakeholder: undefined,
             _isEditingCompanyMajorStakeholderApplicant: false,
+            _willHaveMajorStakeholderApplicants: false,
           });
         } else {
           const newStakeholder = {
@@ -123,7 +124,11 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
             const data = await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [newStakeholder] } });
             const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
 
-            await updateStoreFields({ companyMajorStakeholderApplicants: stakeholdersToStoreFields, _isEditingCompanyMajorStakeholderApplicant: false });
+            await updateStoreFields({
+              companyMajorStakeholderApplicants: stakeholdersToStoreFields,
+              _isEditingCompanyMajorStakeholderApplicant: false,
+              _willHaveMajorStakeholderApplicants: false,
+            });
           }
         }
       }
