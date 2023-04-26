@@ -10,8 +10,8 @@ const withVideos = require('next-videos');
 /**
  * @type {import('next').NextConfig}
  **/
-module.exports =
-  withVideos(withBundleAnalyzer({
+module.exports = withVideos(
+  withBundleAnalyzer({
     transpilePackages: ['reinvest-app-common'],
     eslint: {
       dirs: ['src'],
@@ -20,7 +20,14 @@ module.exports =
     trailingSlash: true,
     reactStrictMode: true,
     images: {
-      domains: ['images.ctfassets.net', process.env.API_BUCKET_URL],
+      domains: ['images.ctfassets.net'],
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'reinvest-*-avatars.s3.us-east-1.amazonaws.com',
+          port: ''
+        },
+      ],
     },
     env: {
       SITE_NAME: process.env.SITE_NAME,
@@ -45,4 +52,5 @@ module.exports =
         },
       ];
     },
-  }));
+  }),
+);

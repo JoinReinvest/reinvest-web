@@ -1,29 +1,37 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { Typography } from 'components/Typography';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
+import { useSendDocumentsToS3AndGetScanIds } from 'services/queries/useSendDocumentsToS3AndGetScanIds';
+import { z } from 'zod';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
-import { getApiClient } from '../../../../services/getApiClient';
-import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
 
 type Fields = Pick<OnboardingFormFields, 'documentsForTrust'>;
 
 const MINIMUM_NUMBER_OF_FILES = 1;
 const MAXIMUM_NUMBER_OF_FILES = 5;
+
+const schema = z.object({
+  documentsForTrust: generateMultiFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES, MINIMUM_NUMBER_OF_FILES, MAXIMUM_NUMBER_OF_FILES),
+});
 
 export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
@@ -56,6 +64,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     const defaultValues: Fields = { documentsForTrust: storeFields.documentsForTrust || [] };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
+      resolver: zodResolver(schema),
       defaultValues: async () => defaultValues,
     });
 
@@ -64,21 +73,27 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async ({ documentsForTrust }) => {
       const idScan = [];
       const hasDocuments = !!documentsForTrust?.length;
+      const hasDocumentsToUpload = documentsForTrust?.some(document => !!document.file);
+      const documentsWithoutFile = documentsForTrust?.map(({ id, fileName }) => ({ id, fileName }));
 
-      if (hasDocuments) {
-        const numberOfIdentificationDocuments = documentsForTrust.length;
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = documentsForTrust.map(({ file }) => file).filter(Boolean) as DocumentFile[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
 
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfIdentificationDocuments })) as PutFileLink[];
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForTrust });
 
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ documentsForTrust });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ documentsForTrust: documentsWithoutFile });
 
-        if (storeFields.accountId) {
+        if (storeFields.accountId && hasIdScans) {
           await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { companyDocuments: idScan } });
+        } else {
+          moveToNextStep();
         }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });

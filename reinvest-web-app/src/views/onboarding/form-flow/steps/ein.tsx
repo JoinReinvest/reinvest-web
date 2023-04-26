@@ -2,30 +2,53 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputEIN } from 'components/FormElements/InputEIN';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { DraftAccountType, TrustCompanyTypeEnum } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
+import { doesEinComesFromApi, maskEin } from 'utils/ein';
 import { WhatIsEINModal } from 'views/EINModal';
 import { z } from 'zod';
 
-import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
-import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'ein'>;
 
-const schema = z.object({
-  ein: formValidationRules.ein,
-});
+const generateSchema = (defaultValues: Fields) => {
+  return z
+    .object({
+      ein: z.string(),
+    })
+    .superRefine((fields, context) => {
+      const values = [fields.ein, defaultValues.ein];
+      const isMaskedFromApi = values.every(doesEinComesFromApi);
+      const hasEnteredStoredValue = fields.ein === defaultValues.ein;
+      const matchesSecurePattern = !!fields.ein.match(/^(\*{2}-\*{3}\d{4})$/);
+      const matchesRegularPattern = !!fields.ein.match(/^[0-9]{2}-[0-9]{7}/);
+
+      const doesNotMatchApiField = isMaskedFromApi && !matchesSecurePattern && !hasEnteredStoredValue;
+      const doesNotMatchInitializedField = !defaultValues.ein && !matchesRegularPattern;
+      const doesNotMatchFieldOnReturn = !isMaskedFromApi && !matchesRegularPattern;
+
+      if (doesNotMatchApiField || doesNotMatchInitializedField || doesNotMatchFieldOnReturn) {
+        context.addIssue({
+          code: 'invalid_string',
+          message: 'Invalid EIN',
+          path: ['ein'],
+          validation: 'regex',
+        });
+      }
+    });
+};
 
 export const StepEIN: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EIN,
@@ -47,7 +70,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { ein: storeFields.ein || '' };
+    const defaultValues: Fields = { ein: maskEin(storeFields.ein) };
 
     const {
       mutateAsync: completeTrustDraftAccount,
@@ -63,10 +86,10 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
       isLoading: isCorporateDraftAccountLoading,
     } = useCompleteCorporateDraftAccount(getApiClient);
 
-    const { control, formState, handleSubmit } = useForm<Fields>({
+    const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'onBlur',
-      resolver: zodResolver(schema),
-      defaultValues,
+      resolver: zodResolver(generateSchema(defaultValues)),
+      defaultValues: async () => defaultValues,
     });
 
     const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
@@ -75,11 +98,14 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled = !formState.isValid || shouldButtonBeLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ ein }) => {
+      const maskedEin = maskEin(ein);
+      const isFromApi = doesEinComesFromApi(ein);
+
       const { accountType, accountId } = storeFields;
       const hasAccountIdAndEin = accountId && ein;
-      await updateStoreFields({ ein });
+      await updateStoreFields({ ein: maskedEin });
 
-      if (hasAccountIdAndEin) {
+      if (hasAccountIdAndEin && !isFromApi) {
         const variables = { accountId, input: { ein: { ein } } };
 
         if (accountType === DraftAccountType.Trust) {
@@ -90,7 +116,27 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
           await completeCorporateDraftAccount(variables);
         }
       }
+
+      if (isFromApi) {
+        moveToNextStep();
+      }
     };
+
+    const fieldValue = watch('ein');
+
+    useEffect(() => {
+      const hasFieldBeenCleared = fieldValue === '';
+
+      if (hasFieldBeenCleared) {
+        setHasFieldBeenClearedOnce(true);
+      }
+    }, [fieldValue]);
+
+    const [hasFieldBeenClearedOnce, setHasFieldBeenClearedOnce] = useState(false);
+
+    const hasStoredValue = !!defaultValues.ein;
+    const hasStoredValueAndClearedTheField = hasStoredValue && hasFieldBeenClearedOnce;
+    const willUseSecureMask = hasStoredValueAndClearedTheField ? false : hasStoredValue;
 
     useEffect(() => {
       if (isTrustDraftAccountSuccess || isCorporateDraftAccountSuccess) {
@@ -109,7 +155,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
               <InputEIN
                 name="ein"
                 control={control}
-                shouldUnregister
+                willUseSecureMask={willUseSecureMask}
               />
 
               <div className="flex justify-between">

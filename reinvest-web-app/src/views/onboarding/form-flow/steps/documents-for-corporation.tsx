@@ -1,3 +1,4 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -7,11 +8,13 @@ import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { Typography } from 'components/Typography';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { z } from 'zod';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
@@ -19,11 +22,16 @@ import { getApiClient } from '../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
 
 type Fields = Pick<OnboardingFormFields, 'documentsForCorporation'>;
 
 const MINIMUM_NUMBER_OF_FILES = 1;
 const MAXIMUM_NUMBER_OF_FILES = 5;
+
+const schema = z.object({
+  documentsForCorporation: generateMultiFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES, MINIMUM_NUMBER_OF_FILES, MAXIMUM_NUMBER_OF_FILES),
+});
 
 export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.DOCUMENTS_FOR_TRUST,
@@ -44,6 +52,7 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
       fields.fiduciaryEntityInformation?.industry,
       fields.fiduciaryEntityInformation?.annualRevenue,
       fields.fiduciaryEntityInformation?.numberOfEmployees,
+      fields.ein,
     ]);
 
     return isCorporateAccount && hasProfileFields && hasCorporateFields;
@@ -56,6 +65,8 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
     const defaultValues: Fields = { documentsForCorporation: storeFields.documentsForCorporation || [] };
     const { control, formState, handleSubmit } = useForm<Fields>({
       defaultValues: async () => defaultValues,
+      resolver: zodResolver(schema),
+      mode: 'all',
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -63,21 +74,27 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
     const onSubmit: SubmitHandler<Fields> = async ({ documentsForCorporation }) => {
       const idScan = [];
       const hasDocuments = !!documentsForCorporation?.length;
+      const hasDocumentsToUpload = documentsForCorporation?.some(document => !!document.file);
+      const documentsWithoutFile = documentsForCorporation?.map(({ id, fileName }) => ({ id, fileName }));
 
-      if (hasDocuments) {
-        const numberOfIdentificationDocuments = documentsForCorporation.length;
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = documentsForCorporation.map(({ file }) => file).filter(Boolean) as DocumentFile[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
 
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfIdentificationDocuments })) as PutFileLink[];
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForCorporation });
 
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ documentsForCorporation });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ documentsForCorporation: documentsWithoutFile });
 
-        if (storeFields.accountId) {
+        if (storeFields.accountId && hasIdScans) {
           await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { companyDocuments: idScan } });
+        } else {
+          moveToNextStep();
         }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });

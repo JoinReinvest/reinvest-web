@@ -7,15 +7,15 @@ export const sendDocumentsToS3AndGetScanIds = async (
   documentsFileLinks: PutFileLink[],
   identificationDocuments: DocumentFile[],
 ): Promise<DocumentFileLinkInput[]> => {
-  const images = documentsFileLinks
+  const files = documentsFileLinks
     .filter(documentFileLink => documentFileLink.url)
     .map(({ url, id }, index) => {
       const file = identificationDocuments.at(index);
 
-      return { url, id, file: file?.file || file };
+      return { url, id, file: file?.file || file, fileName: file?.fileName || file?.file?.name };
     }) as UploadFile[];
 
-  await sendFilesToS3Bucket(images);
+  await sendFilesToS3Bucket(files);
 
-  return images.map(({ id, file }) => ({ id, fileName: file.name }));
+  return files.map(({ id, file, fileName }) => ({ id, fileName: file.name || fileName }));
 };

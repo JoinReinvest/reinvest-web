@@ -77,7 +77,7 @@ export const StepTrustType: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Which type of trust account would you like to open?" />
+            <BlackModalTitle title="What type of Trust do you have?" />
             {error && <ErrorMessagesHandler error={error} />}
 
             <div className="flex w-full flex-col gap-24">

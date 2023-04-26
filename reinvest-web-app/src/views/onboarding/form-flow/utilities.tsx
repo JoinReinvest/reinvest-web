@@ -1,6 +1,6 @@
 import { IconPencil } from 'assets/icons/IconPencil';
 import { Typography } from 'components/Typography';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { DraftAccountType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
 
 import { Applicant, IndexedSchema, OnboardingFormFields } from './form-fields';
 
@@ -42,7 +42,7 @@ export const getDefaultValuesForApplicantWithoutIdentification: GetDefaultValues
 type GetDefaultIdentificationValueForApplicant = (
   fields: OnboardingFormFields,
   type: DraftAccountType.Corporate | DraftAccountType.Trust,
-) => Pick<Applicant, 'identificationDocument'>;
+) => Pick<Applicant, 'identificationDocuments'>;
 export const getDefaultIdentificationValueForApplicant: GetDefaultIdentificationValueForApplicant = (fields, type) => {
   const isRetrivingFieldsForCorporate = type === DraftAccountType.Corporate;
 
@@ -57,14 +57,14 @@ export const getDefaultIdentificationValueForApplicant: GetDefaultIdentification
 
   if (hasApplicants && !!isEditingAnApplicant && hasAnIndex) {
     const applicant = listOfApplicants.at(currentApplicantIndex);
-    const hasIdentificationDocument = !!applicant?.identificationDocument;
+    const hasIdentificationDocument = !!applicant?.identificationDocuments;
 
     if (hasIdentificationDocument) {
-      return { identificationDocument: applicant.identificationDocument };
+      return { identificationDocuments: applicant.identificationDocuments };
     }
   }
 
-  return { identificationDocument: undefined };
+  return { identificationDocuments: [] };
 };
 
 export const generateApplicantListItem = (corporationLegalName: string, applicant: IndexedSchema<Applicant>, onIconClick: () => void) => {
@@ -84,4 +84,25 @@ export const generateApplicantListItem = (corporationLegalName: string, applican
       />
     </li>
   );
+};
+
+export const formatStakeholdersForStorage = (stakeholders: Stakeholder[]): Applicant[] => {
+  return stakeholders.map(stakeholder => ({
+    firstName: stakeholder?.name?.firstName || undefined,
+    lastName: stakeholder?.name?.lastName || undefined,
+    residentialAddress: {
+      addressLine1: stakeholder?.address?.addressLine1 || '',
+      addressLine2: stakeholder?.address?.addressLine2 || '',
+      city: stakeholder?.address?.city || '',
+      country: stakeholder?.address?.country || '',
+      state: stakeholder?.address?.state || '',
+      zip: stakeholder?.address?.zip || '',
+    },
+    dateOfBirth: stakeholder?.dateOfBirth?.dateOfBirth,
+    domicile: stakeholder?.domicile?.type || undefined,
+    middleName: stakeholder?.name?.middleName || undefined,
+    socialSecurityNumber: stakeholder?.ssn || undefined,
+    identificationDocuments: stakeholder?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })),
+    id: stakeholder?.id || undefined,
+  }));
 };
