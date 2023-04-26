@@ -8,14 +8,14 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { Typography } from 'components/Typography';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
-import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { DocumentFileLinkInput, DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from 'services/queries/useSendDocumentsToS3AndGetScanIds';
 import { z } from 'zod';
@@ -58,6 +58,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
+    const [documentsToRemove, setDocumentsToRemove] = useState<DocumentFileLinkInput[]>([]);
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
     const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
@@ -72,6 +73,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ documentsForTrust }) => {
       const idScan = [];
+      const { accountId } = storeFields;
       const hasDocuments = !!documentsForTrust?.length;
       const hasDocumentsToUpload = documentsForTrust?.some(document => !!document.file);
       const documentsWithoutFile = documentsForTrust?.map(({ id, fileName }) => ({ id, fileName }));
@@ -90,9 +92,15 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
         const hasIdScans = !!idScan?.length;
         await updateStoreFields({ documentsForTrust: documentsWithoutFile });
 
-        if (storeFields.accountId && hasIdScans) {
-          await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { companyDocuments: idScan } });
-        } else {
+        if (accountId && hasIdScans) {
+          await completeTrustDraftAccount({ accountId, input: { companyDocuments: idScan, removeDocuments: documentsToRemove } });
+        }
+
+        if (accountId && documentsToRemove.length) {
+          await completeTrustDraftAccount({ accountId, input: { removeDocuments: documentsToRemove } });
+        }
+
+        if (accountId && !hasIdScans && !documentsToRemove.length) {
           moveToNextStep();
         }
       } catch (error) {
@@ -116,11 +124,8 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       </Typography>
     );
 
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const onClearFileFromApi = async (document: DocumentFile) => {
-      // TO-DO: use mutation to remove the file from the API
+      setDocumentsToRemove([...documentsToRemove, document as DocumentFileLinkInput]);
     };
 
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {

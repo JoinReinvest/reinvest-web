@@ -84,7 +84,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
 
         return setIsInvalidVerificationCode(true);
       }
-    }, [isSuccess, moveToNextStep, data]);
+    }, [isSuccess, moveToNextStep, data, updateStoreFields]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>

@@ -217,7 +217,18 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isSuccess && profileData) {
-        updateStoreFields({ accountId: individualAccountData?.id || '', isCompletedProfile: !!profileData.isCompleted });
+        updateStoreFields({
+          ...storeFields,
+          ein: undefined,
+          fiduciaryEntityInformation: undefined,
+          businessAddress: undefined,
+          trustTrusteesGrantorsOrProtectors: undefined,
+          documentsForCorporation: undefined,
+          documentsForTrust: undefined,
+          companyMajorStakeholderApplicants: undefined,
+          accountId: individualAccountData?.id || '',
+          isCompletedProfile: !!profileData.isCompleted,
+        });
         moveToNextStep();
       }
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
