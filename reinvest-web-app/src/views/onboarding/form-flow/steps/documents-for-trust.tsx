@@ -125,7 +125,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
     );
 
     const onClearFileFromApi = (document: DocumentFile) => {
-      setDocumentsToRemove([...documentsToRemove, document as DocumentFileLinkInput]);
+      setDocumentsToRemove(documentsToRemove => [...documentsToRemove, document as DocumentFileLinkInput]);
     };
 
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
