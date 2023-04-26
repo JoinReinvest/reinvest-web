@@ -1304,9 +1304,9 @@
     "@floating-ui/core" "^0.7.3"
 
 "@floating-ui/dom@^1.0.1":
-  version "1.2.6"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.2.6.tgz#bcf0c7bada97c20d9d1255b889f35bac838c63fe"
-  integrity sha512-02vxFDuvuVPs22iJICacezYJyf7zwwOCWkPNkWNBr1U0Qt1cKFYzWvxts0AmqcOQGwt/3KJWcWIgtbUU38keyw==
+  version "1.2.7"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.2.7.tgz#c123e4db014b07b97e996cd459245fa217049c6b"
+  integrity sha512-DyqylONj1ZaBnzj+uBnVfzdjjCkFCL2aA9ESHLyUOGSqb03RpbLMImP1ekIQXYs4KLk9jAjJfZAU8hXfWSahEg==
   dependencies:
     "@floating-ui/core" "^1.2.6"
 
@@ -7234,7 +7234,7 @@ regexpp@^3.0.0, regexpp@^3.2.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#6e0db5ffb6ca5840576ec747907583e622e823b9"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#07968f815081946b3f0781fb00dd387aefc87375"
   dependencies:
     "@graphql-codegen/cli" "^3.2.2"
     "@graphql-codegen/typescript" "^3.0.2"
