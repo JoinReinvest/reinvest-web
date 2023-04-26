@@ -18,6 +18,7 @@ module.exports = {
     },
     spacing: {
       0: 0,
+      1: '.1rem',
       2: '.2rem',
       3: '.3rem',
       4: '.4rem',
@@ -43,7 +44,10 @@ module.exports = {
       40: '4.0rem',
       44: '4.4rem',
       48: '4.8rem',
+      50: '5.0rem',
       60: '6.0rem',
+      64: '6.4rem',
+      68: '6.8rem',
       72: '7.2rem',
       80: '8.0rem',
       84: '8.4rem',
@@ -55,6 +59,8 @@ module.exports = {
       144: '14.4rem',
       180: '18.0rem',
       210: '21.0rem',
+      342: '34.2rem',
+      460: '46.0rem',
     },
     fontSize: {
       base: '10px',
@@ -191,15 +197,24 @@ module.exports = {
       current: 'currentColor',
       inherit: 'inherit',
     },
+
+    boxShadow: {
+      'md': '0px 4px 8px rgba(0, 0, 0, 0.08);'
+    },
+
     extend: {
       maxWidth: {
         330: '33rem',
         375: '37.5rem',
+        415: '41.5rem',
         720: '72.0rem',
       },
       minHeight: {
         180: '18rem',
         240: '24.0rem',
+      },
+      maxHeight: {
+        146: '14.6rem',
       },
       gridTemplateRows: {
         'full-auto': '1fr auto'

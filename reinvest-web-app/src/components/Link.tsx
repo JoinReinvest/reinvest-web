@@ -9,9 +9,10 @@ export interface LinkProps extends NextLinkProps {
   openInNewWindow?: boolean;
 }
 
-export const Link = ({ className, children, ...props }: LinkProps) => (
+export const Link = ({ className, children, openInNewWindow, ...props }: LinkProps) => (
   <NextLink
     {...props}
+    target={openInNewWindow ? '_blank' : '_self'}
     className={cx({ 'typo-link text-green-frost-01': !className }, className)}
   >
     {children}

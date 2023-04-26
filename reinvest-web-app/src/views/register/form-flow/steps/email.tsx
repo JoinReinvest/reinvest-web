@@ -42,7 +42,7 @@ export const StepEmail: StepParams<RegisterFormFields> = {
     return (
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="register-form z-30 flex w-full max-w-330 flex-col items-center justify-center gap-24"
+        className="register-form z-20 flex w-full max-w-330 flex-col items-center justify-center gap-24"
       >
         <div className="flex w-full flex-col items-start gap-16 lg:items-center">
           <Typography variant="h1">Sign up</Typography>
