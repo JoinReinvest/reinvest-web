@@ -124,7 +124,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       </Typography>
     );
 
-    const onClearFileFromApi = async (document: DocumentFile) => {
+    const onClearFileFromApi = (document: DocumentFile) => {
       setDocumentsToRemove([...documentsToRemove, document as DocumentFileLinkInput]);
     };
 

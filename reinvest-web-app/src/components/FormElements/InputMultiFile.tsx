@@ -16,7 +16,7 @@ interface Props<FormFields extends FieldValues> extends UseControllerProps<FormF
   iconOnMeetsMinimum?: ReactNode;
   maximumNumberOfFiles?: number;
   minimumNumberOfFiles?: number;
-  onClearFileFromApi?: (document: DocumentFile) => Promise<void>;
+  onClearFileFromApi?: (document: DocumentFile) => void;
   placeholderOnEmpty?: string;
   placeholderOnMeetsMinimum?: string;
   sizeLimitInMegaBytes?: number;

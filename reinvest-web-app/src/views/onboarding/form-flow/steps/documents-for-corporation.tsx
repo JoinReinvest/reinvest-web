@@ -125,8 +125,8 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
       </Typography>
     );
 
-    const onClearFileFromApi = async (document: DocumentFile) => {
-      setDocumentsToRemove([...documentsToRemove, document as DocumentFileLinkInput]);
+    const onClearFileFromApi = (document: DocumentFile) => {
+      setDocumentsToRemove(documentsToRemove => [...documentsToRemove, document as DocumentFileLinkInput]);
     };
 
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
