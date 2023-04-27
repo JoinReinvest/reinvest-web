@@ -103,7 +103,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                         <AccountMenuAccountItem
                           key={`${account?.id}`}
                           imageSrc={account?.avatar?.url ?? undefined}
-                          label={`${account?.type} Account`}
+                          label={`${account?.label}`.toLowerCase()}
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
                         />

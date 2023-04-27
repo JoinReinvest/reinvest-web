@@ -29,7 +29,7 @@ export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick 
         variant="button"
         className="capitalize"
       >
-        {label?.toLowerCase()}
+        {label}
       </Typography>
     </div>
   </li>
