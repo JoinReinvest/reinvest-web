@@ -107,7 +107,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         const { redirectUrl } = query;
 
         if (redirectUrl) {
-          typeof redirectUrl === 'string' ? router.push(redirectUrl) : router.push(URL.index);
+          router.push(redirectUrl as string);
+        } else {
+          router.push(URL.index);
         }
       }
     }
