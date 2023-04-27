@@ -115,7 +115,11 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
             const data = await completeTrustDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [newStakeholder] } });
             const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
 
-            await updateStoreFields({ trustTrusteesGrantorsOrProtectors: stakeholdersToStoreFields, _isEditingTrustTrusteeGrantorOrProtector: false });
+            await updateStoreFields({
+              trustTrusteesGrantorsOrProtectors: stakeholdersToStoreFields,
+              _isEditingTrustTrusteeGrantorOrProtector: false,
+              _willHaveTrustTrusteesGrantorsOrProtectors: false,
+            });
           }
         }
       }
