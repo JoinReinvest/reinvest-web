@@ -49,17 +49,17 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   const [user, setUser] = useState<CognitoUser | null>(null);
   const { data, isSuccess, isLoading, refetch, isRefetching } = useGetUserProfile(getApiClient);
 
-  const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
+  const signIn = async (email: string, password: string): Promise<CognitoUser | Error> => {
     try {
       setLoading(true);
+
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
         setUser(user);
-        router.push(redirectTo || URL.index);
-      }
 
-      refetch();
+        await refetch();
+      }
 
       return user;
     } catch (error) {
@@ -79,8 +79,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
     setUser(confirmedUser);
 
-    router.push(URL.index);
-    refetch();
+    await router.push(URL.index);
+    await refetch();
 
     return confirmedUser;
   };
@@ -99,11 +99,18 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   }, [loading, user]);
 
   useEffect(() => {
-    if (isSuccess && data && !notProtectedUrls.includes(router.pathname) && data.accounts?.length === 0) {
-      router.push(URL.onboarding);
+    if (isSuccess && data && !isRefetching) {
+      if (data.accounts?.length === 0) {
+        router.push(URL.onboarding);
+      } else {
+        const query = router.query;
+        const { redirectUrl } = query;
+
+        typeof redirectUrl === 'string' ? router.push(redirectUrl) : router.push(URL.index);
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data, isRefetching]);
+  }, [data, isRefetching, isSuccess]);
 
   useEffect(() => {
     const currentUser = async () => {
@@ -114,10 +121,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
         setLoading(false);
         setUser(user);
-
-        if (user && notProtectedUrls.includes(router.pathname)) {
-          return router.push(URL.index);
-        }
       } catch (err) {
         setLoading(false);
         setUser(null);
@@ -136,8 +139,16 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading) && router.pathname !== URL.logout) {
-    return <IconSpinner />;
+  if (
+    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || (isRefetching && !data)) &&
+    router.pathname !== URL.logout &&
+    router.pathname !== URL.onboarding
+  ) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <IconSpinner />
+      </div>
+    );
   }
 
   return <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>;

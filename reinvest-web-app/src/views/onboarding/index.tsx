@@ -16,6 +16,7 @@ export const OnboardingFlow = () => {
     moveToPreviousValidStep,
     progressPercentage,
     updateStoreFields,
+    getStoreFields,
   } = useOnboardingFormFlow();
 
   useInitializeFieldsFromApi({ updateStoreFields });
@@ -26,7 +27,9 @@ export const OnboardingFlow = () => {
 
   const onModalClickBack = () => {
     if (isFirstStep) {
-      router.push(URL.index);
+      const getStoreFieldsResult = getStoreFields();
+
+      router.push(getStoreFieldsResult?.isCompletedProfile ? URL.index : URL.logout);
     } else {
       moveToPreviousValidStep();
     }
