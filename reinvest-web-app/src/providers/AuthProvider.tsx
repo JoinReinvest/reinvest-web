@@ -106,7 +106,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         const query = router.query;
         const { redirectUrl } = query;
 
-        typeof redirectUrl === 'string' ? router.push(redirectUrl) : router.push(URL.index);
+        if (redirectUrl) {
+          typeof redirectUrl === 'string' ? router.push(redirectUrl) : router.push(URL.index);
+        }
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
