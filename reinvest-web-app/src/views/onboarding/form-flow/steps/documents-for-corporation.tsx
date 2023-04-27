@@ -60,6 +60,7 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const [documentsToRemove, setDocumentsToRemove] = useState<DocumentFileLinkInput[]>([]);
+    const [countDocumentsToUpload, setCountDocumentsToUpload] = useState<number>(0);
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
     const { mutateAsync: completeCorporateDraftAccount, isSuccess, error, isLoading } = useCompleteCorporateDraftAccount(getApiClient);
@@ -82,6 +83,7 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
       if (hasDocuments && hasDocumentsToUpload) {
         const documentsToUpload = documentsForCorporation.map(({ file }) => file).filter(Boolean) as DocumentFile[];
         const numberOfDocumentsToUpload = documentsToUpload.length;
+        setCountDocumentsToUpload(numberOfDocumentsToUpload);
 
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForCorporation });
@@ -129,12 +131,14 @@ export const StepDocumentsForCorporation: StepParams<OnboardingFormFields> = {
       setDocumentsToRemove(documentsToRemove => [...documentsToRemove, document as DocumentFileLinkInput]);
     };
 
+    const loadingDocumentTitle = countDocumentsToUpload > 1 ? 'Documents' : 'Document';
+
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
       return (
         <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <BlackModalTitle title="Uploading Your Document" />
+          <BlackModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
         </div>
       );
     }
