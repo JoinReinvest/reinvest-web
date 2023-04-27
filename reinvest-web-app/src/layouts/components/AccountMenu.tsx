@@ -88,7 +88,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                         variant="paragraph"
                         className="capitalize text-gray-02"
                       >
-                        {activeAccount.type} Account
+                        {activeAccount.type?.toLowerCase()} Account
                       </Typography>
                     </div>
                   </div>
