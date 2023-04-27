@@ -79,7 +79,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
     setUser(confirmedUser);
 
-    await router.push(URL.index);
     await refetch();
 
     return confirmedUser;
