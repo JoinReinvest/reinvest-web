@@ -6,7 +6,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
@@ -52,6 +52,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues: Fields = { identificationDocuments: storeFields.identificationDocuments || [] };
+    const [countDocumentsToUpload, setCountDocumentsToUpload] = useState<number>(0);
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
@@ -76,6 +77,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       if (hasDocuments && hasDocumentsToUpload) {
         const documentsToUpload = identificationDocuments.map(({ file }) => file).filter(Boolean) as DocumentFile[];
         const numberOfDocumentsToUpload = documentsToUpload.length;
+        setCountDocumentsToUpload(numberOfDocumentsToUpload);
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsToUpload });
         idScan.push(...scans);
@@ -101,12 +103,14 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       }
     }, [isSuccess, moveToNextStep]);
 
+    const loadingDocumentTitle = countDocumentsToUpload > 1 ? 'Documents' : 'Document';
+
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
       return (
         <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <BlackModalTitle title="Uploading Your Document" />
+          <BlackModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
         </div>
       );
     }
