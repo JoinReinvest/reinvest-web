@@ -108,7 +108,11 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         if (redirectUrl) {
           router.push(redirectUrl as string);
         } else {
-          router.push(URL.dashboard);
+          if (notProtectedUrls.includes(router.pathname)) {
+            router.push(URL.dashboard);
+          }
+
+          router.push(router.pathname || URL.dashboard);
         }
       }
     }
@@ -145,7 +149,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   if (
     ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || (isRefetching && !data)) &&
     router.pathname !== URL.logout &&
-    router.pathname !== URL.onboarding
+    router.pathname !== URL.onboarding &&
+    router.pathname !== URL.not_found
   ) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
