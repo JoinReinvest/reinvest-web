@@ -29,7 +29,7 @@ export const OnboardingFlow = () => {
     if (isFirstStep) {
       const getStoreFieldsResult = getStoreFields();
 
-      router.push(getStoreFieldsResult?.isCompletedProfile ? URL.index : URL.logout);
+      router.push(getStoreFieldsResult?.isCompletedProfile ? URL.dashboard : URL.logout);
     } else {
       moveToPreviousValidStep();
     }

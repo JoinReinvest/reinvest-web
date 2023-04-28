@@ -13,6 +13,7 @@ export const URL = {
   not_found: '/404',
   internal_server_error: '/500',
   onboarding: '/onboarding',
+  dashboard: '/dashboard',
 };
 
 export const EMAILS = {
