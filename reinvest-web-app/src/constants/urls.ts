@@ -9,11 +9,10 @@ export const URL = {
   faq: '/education/faq',
   glossary: '/education/glossary',
   calculator: '/education/calculator',
-  index: '/education',
+  index: '/',
   not_found: '/404',
   internal_server_error: '/500',
   onboarding: '/onboarding',
-  dashboard: '/dashboard',
 };
 
 export const EMAILS = {

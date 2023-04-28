@@ -35,12 +35,7 @@ const renderTotalPosition = () => {
 };
 
 export const PositionTotal = ({ className }: Props) => {
-  const styles = cx(
-    {
-      'divide-y divide-gray-04 border border-gray-04 text-gray-01': true,
-    },
-    className,
-  );
+  const styles = cx('divide-y divide-gray-04 border border-gray-04 text-gray-01', className);
 
   return (
     <div className={styles}>

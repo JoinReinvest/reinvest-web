@@ -8,12 +8,7 @@ interface Props {
   subtitle?: string;
 }
 export const SectionTitle = ({ title, subtitle, className = '' }: Props) => {
-  const styles = cx(
-    {
-      'flex flex-col gap-4': true,
-    },
-    className,
-  );
+  const styles = cx('flex flex-col gap-4', className);
 
   return (
     <div className={styles}>

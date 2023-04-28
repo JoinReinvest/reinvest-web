@@ -109,10 +109,10 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
           router.push(redirectUrl as string);
         } else {
           if (notProtectedUrls.includes(router.pathname)) {
-            router.push(URL.dashboard);
+            router.push(URL.index);
           }
 
-          router.push(router.pathname || URL.dashboard);
+          router.push(router.pathname || URL.index);
         }
       }
     }
