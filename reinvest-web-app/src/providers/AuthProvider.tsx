@@ -104,7 +104,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       } else {
         const query = router.query;
         const { redirectUrl } = query;
-        console.log(router);
 
         if (redirectUrl) {
           router.push(redirectUrl as string);
