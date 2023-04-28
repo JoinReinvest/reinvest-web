@@ -55,7 +55,7 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     const [accountTypesAvailableToOpen, setAccountTypesAvailableToOpen] = useState<SelectCardOption[]>([]);
     const { data: profileData } = useGetUserProfile(getApiClient);
     const { data: listAccounts } = useGetListAccount(getApiClient);
-    const { data: phoneCompleted } = useGetPhoneCompleted(getApiClient);
+    const { data: phoneCompleted, isSuccess: isPhoneCompletedSuccess } = useGetPhoneCompleted(getApiClient);
     const {
       data: listAccountTypesUserCanOpen,
       isLoading: isListAccountTypesUserCanOpenLoading,
@@ -234,13 +234,13 @@ export const StepAccountType: StepParams<OnboardingFormFields> = {
     }, [individualAccountData, isSuccess, moveToNextStep, storeFields, updateStoreFields, profileData]);
 
     useEffect(() => {
-      if (phoneCompleted) {
+      if (isPhoneCompletedSuccess) {
         updateStoreFields({
           ...storeFields,
-          _isPhoneCompleted: phoneCompleted,
+          _isPhoneCompleted: !!phoneCompleted,
         });
       }
-    }, [phoneCompleted, storeFields, updateStoreFields]);
+    }, [phoneCompleted, storeFields, updateStoreFields, isPhoneCompletedSuccess]);
 
     useEffect(() => {
       if (listAccountTypesUserCanOpen) {
