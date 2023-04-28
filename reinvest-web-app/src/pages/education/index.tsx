@@ -34,7 +34,7 @@ const renderCard = (card: EducationCardProps) => (
   />
 );
 
-const renderBlogCard = (card: BlogPostInterface) => (
+export const renderBlogCard = (card: BlogPostInterface) => (
   <BlogCard
     key={card.title}
     {...card}
