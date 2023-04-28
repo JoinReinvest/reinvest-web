@@ -14,7 +14,7 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinves
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
-import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { DocumentFileLinkInput, DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
@@ -69,7 +69,9 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       !formState.isValid || formState.isSubmitting || isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
-      const idScan = [];
+      const existedDocuments = identificationDocuments?.filter(document => !!document.id) as DocumentFileLinkInput[];
+      const idScan = existedDocuments?.length ? [...existedDocuments] : [];
+
       const hasDocuments = !!identificationDocuments?.length;
       const hasDocumentsToUpload = identificationDocuments?.some(document => !!document.file);
       const documentsWithoutFile = identificationDocuments?.map(({ id, fileName }) => ({ id, fileName }));
