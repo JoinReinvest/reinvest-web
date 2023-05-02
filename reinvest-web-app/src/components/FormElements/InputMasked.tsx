@@ -8,7 +8,7 @@ interface Props<FormFields extends FieldValues> extends PrimitiveProps<FormField
 
 export type CustomInputMaskedProps<FormFields extends FieldValues> = Omit<
   Props<FormFields>,
-  'maskOptions' | 'willUseUnmaskedValue' | 'willTriggerChangeOnAccept' | 'willTriggerChangeOnCompletion'
+  'maskOptions' | 'willUseUnmaskedValue' | 'willTriggerChangeOnAccept' | 'willTriggerChangeOnCompletion' | 'isOnlyNumeric'
 >;
 
 export function InputMasked<FormFields extends FieldValues>({
