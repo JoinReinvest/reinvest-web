@@ -1,46 +1,45 @@
+import cx from 'classnames';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
-import { useState } from 'react';
+import { useToggler } from 'hooks/toggler';
 import { PrivacyPolicyBlackModal } from 'views/PrivacyPolicyBlackModal';
 import { TermsAndConditioncBlackModal } from 'views/TermsAndConditioncBlackModal';
 
-export const Footer = () => {
-  const [isTermsAndConditionsOpen, setIsTermsAndConditionsOpen] = useState(false);
-  const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
+interface Props {
+  modalColor?: 'white' | 'black';
+}
 
-  const onChangeTermsAndConditions = () => {
-    setIsTermsAndConditionsOpen(!isTermsAndConditionsOpen);
-  };
+export const Footer = ({ modalColor = 'black' }: Props) => {
+  const [isTermsAndConditionsOpen, toggleIsTermsAndConditionsOpen] = useToggler(false);
+  const [isPrivacyPolicyOpen, toggleIsPrivacyPolicyOpen] = useToggler(false);
 
-  const onChangePrivacyPolicy = () => {
-    setIsPrivacyPolicyOpen(!isPrivacyPolicyOpen);
-  };
+  const className = cx({ 'text-gray-04': modalColor === 'black', 'text-gray-02': modalColor === 'white' });
 
   return (
     <footer className="w-330 mx-auto text-center">
       <TermsAndConditioncBlackModal
         isOpen={isTermsAndConditionsOpen}
-        onOpenChange={onChangeTermsAndConditions}
+        onOpenChange={toggleIsTermsAndConditionsOpen}
       />
       <PrivacyPolicyBlackModal
         isOpen={isPrivacyPolicyOpen}
-        onOpenChange={onChangePrivacyPolicy}
+        onOpenChange={toggleIsPrivacyPolicyOpen}
       />
 
       <Typography
         variant="paragraph"
-        className="text-gray-04"
+        className={className}
       >
         By continuing, you agree to the REINVEST
         <br />
         <OpenModalLink
-          onClick={onChangeTermsAndConditions}
+          onClick={toggleIsTermsAndConditionsOpen}
           green
           label="Terms of Conditions"
         />{' '}
         and{' '}
         <OpenModalLink
-          onClick={onChangePrivacyPolicy}
+          onClick={toggleIsPrivacyPolicyOpen}
           green
           label="Privacy Policy"
         />
