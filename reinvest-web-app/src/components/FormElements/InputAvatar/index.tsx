@@ -1,16 +1,20 @@
 import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
+import corporatePlaceholderImage from 'assets/images/corporate-avatar-placeholder.png';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
+import trustPlaceholderImage from 'assets/images/trust-avatar-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { ChangeEventHandler, useMemo, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { EditAvatarButton } from './EditAvatarButton';
 
 type PrimitiveProps = Pick<AvatarProps, 'image' | 'altText'>;
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
+  accountType?: DraftAccountType;
   onFileChange?: (file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
 }
@@ -20,6 +24,7 @@ export function InputAvatar<FormFields extends FieldValues>({
   altText,
   sizeLimitInMegaBytes = 5.0,
   onFileChange,
+  accountType,
   ...controllerProps
 }: Props<FormFields>) {
   const { field } = useController(controllerProps);
@@ -34,7 +39,9 @@ export function InputAvatar<FormFields extends FieldValues>({
       return fileUrl;
     }
 
-    return image || placeholderImage;
+    const avatarPlaceholderImage = getPlaceholderImage(accountType);
+
+    return image || avatarPlaceholderImage;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldValue]);
 
@@ -95,3 +102,14 @@ export function InputAvatar<FormFields extends FieldValues>({
     </div>
   );
 }
+
+const getPlaceholderImage = (accountType?: DraftAccountType) => {
+  switch (accountType) {
+    case DraftAccountType.Trust:
+      return trustPlaceholderImage;
+    case DraftAccountType.Corporate:
+      return corporatePlaceholderImage;
+    default:
+      return placeholderImage;
+  }
+};
