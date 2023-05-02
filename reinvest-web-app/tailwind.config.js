@@ -55,12 +55,15 @@ module.exports = {
       100: '10.0rem',
       110: '11.0rem',
       120: '12.0rem',
+      137: '13.7rem',
       128: '12.8rem',
       144: '14.4rem',
+      169: '16.9rem',
       180: '18.0rem',
       210: '21.0rem',
       342: '34.2rem',
       460: '46.0rem',
+      650: '65.0rem',
     },
     fontSize: {
       base: '10px',
@@ -107,6 +110,15 @@ module.exports = {
           lineHeight: '1.1em',
           letterSpacing: '-0.05em',
           fontWeight: '400',
+        },
+      ],
+
+      'h5-custom': [
+        '2.4rem',
+        {
+          fontWeight: 400,
+          lineHeight: '3.0rem',
+          letterSpacing: '-0.05em',
         },
       ],
 
@@ -166,6 +178,14 @@ module.exports = {
           fontWeight: '400',
         },
       ],
+
+      'custom-1': [
+        '4.8rem',
+        {
+          fontWeight: 500,
+          lineHeight: '4.32rem',
+        },
+      ],
     },
     colors: {
       white: '#ffffff',
@@ -199,7 +219,7 @@ module.exports = {
     },
 
     boxShadow: {
-      'md': '0px 4px 8px rgba(0, 0, 0, 0.08);'
+      md: '0px 4px 8px rgba(0, 0, 0, 0.08);',
     },
 
     extend: {
@@ -217,7 +237,7 @@ module.exports = {
         146: '14.6rem',
       },
       gridTemplateRows: {
-        'full-auto': '1fr auto'
+        'full-auto': '1fr auto',
       },
       lineHeight: {
         13: '1.3rem',
@@ -227,12 +247,12 @@ module.exports = {
         'transform-color': 'transform, color',
       },
       animation: {
-        'spin-reverse': 'spin 1s linear infinite reverse'
+        'spin-reverse': 'spin 1s linear infinite reverse',
       },
       zIndex: {
-        '60': '60',
-        '70': '70',
-      }
+        60: '60',
+        70: '70',
+      },
     },
   },
   plugins: [
