@@ -1,4 +1,8 @@
-export const IconSpinner = () => (
+interface Props {
+  color?: 'white' | 'black';
+}
+
+export const IconSpinner = ({ color = 'white' }: Props) => (
   <svg
     width="85"
     height="86"
@@ -24,12 +28,12 @@ export const IconSpinner = () => (
         <stop
           offset="0.25"
           stopOpacity="0"
-          stopColor="white"
+          stopColor={color}
         />
 
         <stop
           offset="1"
-          stopColor="white"
+          stopColor={color}
         />
       </radialGradient>
     </defs>
