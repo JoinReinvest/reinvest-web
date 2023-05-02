@@ -13,7 +13,7 @@ interface Params {
 
 export const useInitializeFieldsFromApi = ({ updateStoreFields }: Params) => {
   const { data: profileData } = useGetUserProfile(getApiClient);
-  const { data: phoneCompleted } = useGetPhoneCompleted(getApiClient);
+  const { data: phoneCompleted, isSuccess: isPhoneCompletedSuccess } = useGetPhoneCompleted(getApiClient);
 
   useEffect(() => {
     async function updateStoreFieldsWithProfileData() {
@@ -52,14 +52,14 @@ export const useInitializeFieldsFromApi = ({ updateStoreFields }: Params) => {
 
   useEffect(() => {
     async function updateStoreFieldPhoneNumber() {
-      if (phoneCompleted) {
+      if (isPhoneCompletedSuccess) {
         await updateStoreFields({
-          _isPhoneCompleted: phoneCompleted,
+          _isPhoneCompleted: !!phoneCompleted,
         });
       }
     }
 
     updateStoreFieldPhoneNumber();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [phoneCompleted]);
+  }, [phoneCompleted, isPhoneCompletedSuccess]);
 };

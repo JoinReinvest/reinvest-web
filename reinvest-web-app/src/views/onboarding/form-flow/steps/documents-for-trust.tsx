@@ -59,6 +59,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<OnboardingFormFields>) => {
     const [documentsToRemove, setDocumentsToRemove] = useState<DocumentFileLinkInput[]>([]);
+    const [countDocumentsToUpload, setCountDocumentsToUpload] = useState<number>(0);
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
     const { mutateAsync: completeTrustDraftAccount, isSuccess, error, isLoading } = useCompleteTrustDraftAccount(getApiClient);
@@ -81,7 +82,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       if (hasDocuments && hasDocumentsToUpload) {
         const documentsToUpload = documentsForTrust.map(({ file }) => file).filter(Boolean) as DocumentFile[];
         const numberOfDocumentsToUpload = documentsToUpload.length;
-
+        setCountDocumentsToUpload(numberOfDocumentsToUpload);
         const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
         const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsForTrust });
 
@@ -124,16 +125,18 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       </Typography>
     );
 
-    const onClearFileFromApi = async (document: DocumentFile) => {
-      setDocumentsToRemove([...documentsToRemove, document as DocumentFileLinkInput]);
+    const onClearFileFromApi = (document: DocumentFile) => {
+      setDocumentsToRemove(documentsToRemove => [...documentsToRemove, document as DocumentFileLinkInput]);
     };
+
+    const loadingDocumentTitle = countDocumentsToUpload > 1 ? 'Documents' : 'Document';
 
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
       return (
         <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <BlackModalTitle title="Uploading Your Document" />
+          <BlackModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
         </div>
       );
     }
