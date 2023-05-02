@@ -20,6 +20,7 @@ export interface OnboardingFormFields {
   experience: Experience | null;
   isCompletedProfile: boolean;
   residency: DomicileType | null;
+  _accountSuccesfullyCreated?: boolean;
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
   _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
   _didDocumentIdentificationValidationSucceed?: boolean;

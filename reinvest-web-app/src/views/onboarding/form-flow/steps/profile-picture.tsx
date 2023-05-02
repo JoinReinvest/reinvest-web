@@ -6,7 +6,6 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
 import { Typography } from 'components/Typography';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
@@ -53,8 +52,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     return allRequiredFieldsExists(profileFields);
   },
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
-    const router = useRouter();
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { profilePicture, accountId } = storeFields;
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
@@ -162,9 +160,10 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
     useEffect(() => {
       if (isOpenAccountSuccess) {
-        router.push('/');
+        updateStoreFields({ _accountSuccesfullyCreated: true }).then(() => moveToNextStep());
       }
-    });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpenAccountSuccess]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>

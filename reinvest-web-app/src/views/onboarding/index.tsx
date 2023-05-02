@@ -1,6 +1,7 @@
 import { BlackModal } from 'components/BlackModal';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
+import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
 import { useEffect, useState } from 'react';
 
 import { useOnboardingFormFlow } from './form-flow';
@@ -33,12 +34,14 @@ export const OnboardingFlow = () => {
   };
 
   return (
-    <BlackModal
-      isOpen={isModalOpen}
-      onOpenChange={onModalClickBack}
-      progressBarValue={progressPercentage}
-    >
-      <CurrentStepView />
-    </BlackModal>
+    <ActiveAccountProvider>
+      <BlackModal
+        isOpen={isModalOpen}
+        onOpenChange={onModalClickBack}
+        progressBarValue={progressPercentage}
+      >
+        <CurrentStepView />
+      </BlackModal>
+    </ActiveAccountProvider>
   );
 };
