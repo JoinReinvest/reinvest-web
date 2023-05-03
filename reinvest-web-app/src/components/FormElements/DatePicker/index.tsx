@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import ReactDatePicker from 'react-datepicker';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
-import { RecurringInvestmentInterval } from 'temporal/constants/recurring-investment-intervals';
+import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 
 import { useExcludedDates } from './dates-to-exclude';
 import { useHighlightedDates } from './dates-to-highlight';

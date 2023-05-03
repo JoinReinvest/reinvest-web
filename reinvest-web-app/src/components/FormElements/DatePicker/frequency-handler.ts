@@ -1,5 +1,5 @@
 import { Dayjs } from 'dayjs';
-import { countWeeksInMonth, getWeekOfMonth } from 'temporal/utilities/dates';
+import { countWeeksInMonth, getWeekOfMonth } from 'reinvest-app-common/src/utilities/dates';
 
 import { HighlightFrequency } from './interfaces';
 
