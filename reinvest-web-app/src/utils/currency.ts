@@ -1,20 +1,26 @@
 import { createMask } from 'imask';
 
-const mask = createMask({
-  mask: [
-    { mask: '' },
-    {
-      mask: '$num',
-      blocks: {
-        num: {
-          mask: Number,
-          thousandsSeparator: ',',
+interface Options {
+  addDecimalPoints?: boolean;
+}
+
+export const maskCurrency = (value: number | string, options?: Options) => {
+  const mask = createMask({
+    mask: [
+      { mask: '' },
+      {
+        mask: '$num',
+        blocks: {
+          num: {
+            scale: options?.addDecimalPoints ? 2 : 0,
+            mask: Number,
+            thousandsSeparator: ',',
+            radix: '.',
+          },
         },
       },
-    },
-  ],
-});
+    ],
+  });
 
-export const maskCurrency = (value: number | string) => {
   return mask.resolve(`${value}`);
 };
