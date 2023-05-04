@@ -24,9 +24,8 @@ export function InputPassword<FormFields extends FieldValues>({
   const [fieldType, setFieldType] = useState<'text' | 'password'>('password');
 
   const iconStyles = cx('absolute w-32 h-32 stroke-1 right-0', {
-    'stroke-gray-03': !!disabled,
+    'stroke-gray-03': !!disabled || !iconWhite,
     'stroke-white': !!iconWhite,
-    'stroke-current': !iconWhite,
   });
 
   const onIconEyeClick = () => {

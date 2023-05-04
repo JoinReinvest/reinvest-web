@@ -17,6 +17,10 @@
   &[data-has-error='true'] {
     @apply border-tertiary-error;
   }
+
+  &:-webkit-autofill {
+    background-clip: text;
+  }
 }
 
 .hkek-input-text-control,
