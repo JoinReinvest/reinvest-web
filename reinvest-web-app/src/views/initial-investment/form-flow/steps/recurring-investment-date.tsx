@@ -6,6 +6,7 @@ import { DatePicker } from 'components/FormElements/DatePicker';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { Schema, z } from 'zod';
 
@@ -13,7 +14,21 @@ import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
 const TITLE = 'Select your 1st investment date';
-const SUBTITLE = 'This will repeat on the same day each week.';
+
+const SUBTITLES = new Map<RecurringInvestmentInterval, string>([
+  [RecurringInvestmentInterval.WEEKLY, 'This will repeat on the same day each week.'],
+  [RecurringInvestmentInterval.BI_WEEKLY, 'This will repeat on the same day bi-weekly.'],
+  [RecurringInvestmentInterval.MONTHLY, 'This will repeat on the same day every month.'],
+  [RecurringInvestmentInterval.QUARTERLY, 'This will repeat on the same day quaterly.'],
+]);
+
+function getSubtitle(interval: RecurringInvestmentInterval | undefined) {
+  if (interval) {
+    return SUBTITLES.get(interval);
+  }
+
+  return undefined;
+}
 
 interface Fields {
   date?: Date;
@@ -45,6 +60,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const subtitle = getSubtitle(storeFields.recurringInvestmentInterval);
 
     const onSubmit: SubmitHandler<Fields> = async ({ date }) => {
       const recurringInvestment = storeFields.recurringInvestment ?? { type: 'recurrent' };
@@ -59,7 +75,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
         <FormContent>
           <BlackModalTitle
             title={TITLE}
-            subtitle={SUBTITLE}
+            subtitle={subtitle}
             isTitleCenteredOnMobile
           />
 
