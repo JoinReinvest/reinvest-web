@@ -25,7 +25,7 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
   const { field: presetField } = useController({ control: form.control, name: 'presetAmount' });
 
   const onPresetFieldChange = (value: string) => {
-    const numericValue = typeof value === 'string' ? parseInt(value) : value;
+    const numericValue = parseInt(value);
 
     form.setValue('customAmount', numericValue);
     presetField.onChange({ target: { value } });
