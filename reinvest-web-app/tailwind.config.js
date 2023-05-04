@@ -67,6 +67,8 @@ module.exports = {
     },
     fontSize: {
       base: '10px',
+      '18': '1.8rem',
+      '48': '4.8rem',
 
       h1: [
         '5.4rem',
@@ -189,6 +191,7 @@ module.exports = {
         '04': '#E9E9E9',
         '05': '#FCFCFC',
       },
+      gold: '#DDC59E',
 
       tertiary: {
         success: '#44CB7A',

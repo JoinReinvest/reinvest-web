@@ -12,7 +12,7 @@ import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
-import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
@@ -74,6 +74,13 @@ export const AccountMenu = ({ activeAccount }: Props) => {
               <div className="flex w-full max-w-full flex-col gap-16 border border-gray-04 bg-white px-16 py-24 md:w-342">
                 <header className="flex flex-col gap-16 px-24 py-16 shadow-md">
                   <div className="flex items-center gap-8">
+                    {/*{activeAccount.avatar?.url && <Avatar*/}
+                    {/*  src={activeAccount.avatar.url}*/}
+                    {/*  alt={activeAccount.label || ''}*/}
+                    {/*  isSizeFixed*/}
+                    {/*  fixedSize="md"*/}
+                    {/*/>}*/}
+                    {/*{!activeAccount.avatar?.url && <AvatarPlaceholder />}*/}
                     <Avatar
                       src={activeAccount.avatar?.url || placeholderPicture}
                       alt={activeAccount.label || ''}
@@ -106,6 +113,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                           label={`${account?.type} Account`}
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
+                          type={account?.type as DraftAccountType}
                         />
                       ))}
                   </ul>

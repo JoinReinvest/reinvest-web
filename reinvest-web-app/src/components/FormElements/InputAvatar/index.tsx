@@ -1,7 +1,5 @@
 import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hookooekoo/ui-avatar';
-import corporatePlaceholderImage from 'assets/images/corporate-avatar-placeholder.png';
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
-import trustPlaceholderImage from 'assets/images/trust-avatar-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { ChangeEventHandler, useMemo, useState } from 'react';
@@ -34,14 +32,10 @@ export function InputAvatar<FormFields extends FieldValues>({
 
   const imageSrc = useMemo(() => {
     if (fieldValue && fieldValue?.file) {
-      const fileUrl = URL.createObjectURL(fieldValue.file);
-
-      return fileUrl;
+      return URL.createObjectURL(fieldValue.file);
     }
 
-    const avatarPlaceholderImage = getPlaceholderImage(accountType);
-
-    return image || avatarPlaceholderImage;
+    return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldValue]);
 
@@ -72,6 +66,18 @@ export function InputAvatar<FormFields extends FieldValues>({
     }
   };
 
+  const getImageSrc = () => {
+    if (imageSrc) {
+      return imageSrc;
+    }
+
+    if (!imageSrc && accountType === DraftAccountType.Individual) {
+      return placeholderImage;
+    }
+
+    return undefined;
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <label
@@ -81,9 +87,10 @@ export function InputAvatar<FormFields extends FieldValues>({
         <PrimitiveAvatarWithButton
           avatar={
             <Avatar
-              src={imageSrc}
+              src={getImageSrc()}
               alt={altText || 'Profile picture for user'}
               isSizeFixed
+              accountType={accountType}
             />
           }
           button={
@@ -102,14 +109,3 @@ export function InputAvatar<FormFields extends FieldValues>({
     </div>
   );
 }
-
-const getPlaceholderImage = (accountType?: DraftAccountType) => {
-  switch (accountType) {
-    case DraftAccountType.Trust:
-      return trustPlaceholderImage;
-    case DraftAccountType.Corporate:
-      return corporatePlaceholderImage;
-    default:
-      return placeholderImage;
-  }
-};
