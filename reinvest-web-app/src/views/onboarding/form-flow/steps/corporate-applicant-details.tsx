@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
@@ -7,6 +6,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Select } from 'components/Select';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -74,7 +74,7 @@ export const StepCorporateApplicantDetails: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Enter the following information for your applicant." />
+          <ModalTitle title="Enter the following information for your applicant." />
 
           <div className="flex w-full flex-col gap-16">
             <Input

@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
@@ -169,7 +169,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Upload Profile Picture" />
+          <ModalTitle title="Upload Profile Picture" />
           {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}

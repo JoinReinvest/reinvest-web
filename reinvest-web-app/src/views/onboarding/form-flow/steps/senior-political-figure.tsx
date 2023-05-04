@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { TextArea } from 'components/FormElements/TextArea';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -64,7 +64,7 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Please provide the name and position of this senior political figure." />
+          <ModalTitle title="Please provide the name and position of this senior political figure." />
 
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 

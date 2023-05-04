@@ -1,5 +1,5 @@
-import { IconWarning } from '../../assets/icons/IconWarning';
-import { Typography } from '../Typography';
+import { IconWarning } from 'assets/icons/IconWarning';
+import { Typography } from 'components/Typography';
 
 interface Props {
   message: string;

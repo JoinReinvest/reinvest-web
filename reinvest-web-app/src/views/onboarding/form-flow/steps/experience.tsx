@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EXPERIENCES_AS_OPTIONS } from 'reinvest-app-common/src/constants/experiences';
@@ -65,7 +65,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="What is your experience with real estate investment?" />
+          <ModalTitle title="What is your experience with real estate investment?" />
 
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <SelectionCards

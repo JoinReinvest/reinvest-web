@@ -12,7 +12,7 @@ interface Props {
   subtitle?: ReactNode;
 }
 
-export const BlackModalTitle = ({ title, subtitle, informationMessage, className = '', isTitleCenteredOnMobile = false }: Props) => {
+export const ModalTitle = ({ title, subtitle, informationMessage, className = '', isTitleCenteredOnMobile = false }: Props) => {
   const hasSubtitle = !!subtitle;
   const isSubtitleAString = typeof subtitle === 'string';
   const hasInformationMessage = !!informationMessage;

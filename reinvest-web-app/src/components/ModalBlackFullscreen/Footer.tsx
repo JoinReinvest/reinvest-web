@@ -1,30 +1,22 @@
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { Typography } from 'components/Typography';
-import { useState } from 'react';
+import { useToggler } from 'hooks/toggler';
 import { PrivacyPolicyBlackModal } from 'views/PrivacyPolicyBlackModal';
 import { TermsAndConditioncBlackModal } from 'views/TermsAndConditioncBlackModal';
 
 export const Footer = () => {
-  const [isTermsAndConditionsOpen, setIsTermsAndConditionsOpen] = useState(false);
-  const [isPrivacyPolicyOpen, setIsPrivacyPolicyOpen] = useState(false);
-
-  const onChangeTermsAndConditions = () => {
-    setIsTermsAndConditionsOpen(!isTermsAndConditionsOpen);
-  };
-
-  const onChangePrivacyPolicy = () => {
-    setIsPrivacyPolicyOpen(!isPrivacyPolicyOpen);
-  };
+  const [isModalTermsOpen, toggleIsModalTermsOpen] = useToggler(false);
+  const [isModalPrivacyOpen, toggleIsModalPrivacyIsOpen] = useToggler(false);
 
   return (
     <footer className="w-330 mx-auto text-center">
       <TermsAndConditioncBlackModal
-        isOpen={isTermsAndConditionsOpen}
-        onOpenChange={onChangeTermsAndConditions}
+        isOpen={isModalTermsOpen}
+        onOpenChange={toggleIsModalTermsOpen}
       />
       <PrivacyPolicyBlackModal
-        isOpen={isPrivacyPolicyOpen}
-        onOpenChange={onChangePrivacyPolicy}
+        isOpen={isModalPrivacyOpen}
+        onOpenChange={toggleIsModalPrivacyIsOpen}
       />
 
       <Typography
@@ -34,13 +26,13 @@ export const Footer = () => {
         By continuing, you agree to the REINVEST
         <br />
         <OpenModalLink
-          onClick={onChangeTermsAndConditions}
+          onClick={toggleIsModalTermsOpen}
           green
           label="Terms of Conditions"
         />{' '}
         and{' '}
         <OpenModalLink
-          onClick={onChangePrivacyPolicy}
+          onClick={toggleIsModalPrivacyIsOpen}
           green
           label="Privacy Policy"
         />

@@ -1,8 +1,8 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
 import { IconXCircle } from 'assets/icons/IconXCircle';
-import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ModalContent } from 'components/ModalElements/Content';
 import { Typography } from 'components/Typography';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
@@ -35,10 +35,6 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
     return fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields);
   },
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    // TO-DO: If the documents were not valid, the text and
-    //      action for the button may be different.
-    //      https://www.figma.com/file/cNXTaZ5MhSXw4i34QJF4lv?node-id=507:85955#390094223
-
     const hasSucceded = !!storeFields._didDocumentIdentificationValidationSucceed;
 
     const titleGenerator = () => {
@@ -62,7 +58,7 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
     };
 
     return (
-      <BlackModalContent>
+      <ModalContent>
         <div className="relative flex flex-col items-center gap-36">
           {iconGenerator()}
 
@@ -75,7 +71,7 @@ export const StepIdentificationDocumentsValidation: StepParams<OnboardingFormFie
             onClick={onContinueButtonClick}
           />
         </ButtonStack>
-      </BlackModalContent>
+      </ModalContent>
     );
   },
 };

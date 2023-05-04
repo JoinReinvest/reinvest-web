@@ -1,6 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
@@ -8,6 +7,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSecurityNumber';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -99,7 +99,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
         <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <BlackModalTitle title="Validating your Social Security Number" />
+          <ModalTitle title="Validating your Social Security Number" />
         </div>
       );
     }
@@ -133,7 +133,7 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="What’s your social security number?" />
+            <ModalTitle title="What’s your social security number?" />
 
             {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
