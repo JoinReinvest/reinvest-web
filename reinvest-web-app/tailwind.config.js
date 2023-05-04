@@ -116,7 +116,7 @@ module.exports = {
         },
       ],
 
-      'h5-custom': [
+      'h5-larger': [
         '2.4rem',
         {
           fontWeight: 400,
