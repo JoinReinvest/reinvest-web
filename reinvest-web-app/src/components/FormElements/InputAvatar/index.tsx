@@ -18,7 +18,6 @@ interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseContr
 }
 
 export function InputAvatar<FormFields extends FieldValues>({
-  image,
   altText,
   sizeLimitInMegaBytes = 5.0,
   onFileChange,
