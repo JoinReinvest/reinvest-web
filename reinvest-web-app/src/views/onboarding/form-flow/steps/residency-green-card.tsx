@@ -32,18 +32,21 @@ const schema = z.object({
 
 export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_GREEN_CARD,
+
   willBePartOfTheFlow(fields) {
     return fields.residency === DomicileType.GreenCard && !fields.isCompletedProfile;
   },
+
   doesMeetConditionFields(fields) {
     return fields.residency === DomicileType.GreenCard && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { domicile: { forGreenCard: storeFields.domicile?.forGreenCard } };
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
