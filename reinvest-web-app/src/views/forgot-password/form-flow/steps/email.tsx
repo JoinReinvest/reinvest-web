@@ -1,12 +1,12 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputEmail } from 'components/FormElements/InputEmail';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
@@ -49,7 +49,7 @@ export const StepEmail: StepParams<ForgotPasswordFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="Reset Password"
             subtitle="Enter the email associated with your account and we’ll send an email with instructions to reset your password."
           />

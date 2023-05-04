@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
@@ -7,6 +6,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputEIN } from 'components/FormElements/InputEIN';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -148,7 +148,7 @@ export const StepEIN: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Enter your EIN" />
+            <ModalTitle title="Enter your EIN" />
             {trustDraftAccountError && <ErrorMessagesHandler error={trustDraftAccountError} />}
             {corporateDraftAccountError && <ErrorMessagesHandler error={corporateDraftAccountError} />}
             <div className="flex w-full flex-col gap-16">

@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_VALUES } from 'reinvest-app-common/src/constants/employment_statuses';
@@ -82,7 +82,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Are you currently employed?" />
+          <ModalTitle title="Are you currently employed?" />
 
           {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           <SelectionCards

@@ -1,19 +1,18 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
-
-import { BlackModalDialog } from '../../components/BlackModal/BlackModalDialog';
-import { Title } from '../../components/Title';
-import { Typography } from '../../components/Typography';
+import { DialogBlack } from 'components/DialogBlack';
+import { ModalTitle } from 'components/ModalElements/Title';
+import { Typography } from 'components/Typography';
 
 type WhyRequiredAccountTypeModalProps = Omit<DialogProps, 'children'>;
 
 export const WhyRequiredAccountTypeModal = ({ isOpen, onOpenChange }: WhyRequiredAccountTypeModalProps) => {
   return (
-    <BlackModalDialog
+    <DialogBlack
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
       <>
-        <Title title="[Tooltip Item Name]" />
+        <ModalTitle title="[Tooltip Item Name]" />
         <Typography variant="paragraph-large">
           Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
           veritatis et quasi architecto beatae vitae <br /> <br /> dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
@@ -26,6 +25,6 @@ export const WhyRequiredAccountTypeModal = ({ isOpen, onOpenChange }: WhyRequire
           inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia vol
         </Typography>
       </>
-    </BlackModalDialog>
+    </DialogBlack>
   );
 };

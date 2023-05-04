@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
@@ -7,6 +6,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
@@ -76,7 +76,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Enter your date of birth" />
+            <ModalTitle title="Enter your date of birth" />
 
             {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
             <div className="flex w-full flex-col gap-16">

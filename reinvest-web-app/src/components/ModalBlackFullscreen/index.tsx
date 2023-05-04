@@ -5,13 +5,13 @@ import { PropsWithChildren, useRef } from 'react';
 import { Footer } from './Footer';
 import { Header } from './Header';
 
+type PrimitiveProps = Pick<DialogProps, 'isOpen' | 'onOpenChange'>;
+
 export interface Props extends PrimitiveProps, PropsWithChildren {
   progressBarValue?: number;
 }
 
-type PrimitiveProps = Pick<DialogProps, 'isOpen' | 'onOpenChange'>;
-
-export const BlackModal = ({ isOpen = false, onOpenChange, progressBarValue, children }: Props) => {
+export const ModalBlackFullscreen = ({ isOpen = false, onOpenChange, progressBarValue, children }: Props) => {
   const contentContainerRef = useRef<HTMLDivElement>(null);
   const willShowProgressBar = progressBarValue !== undefined;
 

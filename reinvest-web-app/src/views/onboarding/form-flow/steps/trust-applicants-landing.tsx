@@ -1,8 +1,8 @@
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
@@ -54,7 +54,7 @@ export const StepTrustApplicantsLanding: StepParams<OnboardingFormFields> = {
     return (
       <Form>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="Other Trustees, Grantors and Protectors "
             subtitle="For all other  Trustees, Grantors and Protectors that are included in the same Trust, we require their information."
           />

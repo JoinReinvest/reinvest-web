@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
@@ -7,6 +6,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Select } from 'components/Select';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -120,7 +120,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title={`Enter the business address for your ${fiduciaryEntityTitle}.`}
             informationMessage="US Residents Only"
           />

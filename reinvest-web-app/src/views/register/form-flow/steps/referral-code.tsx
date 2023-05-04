@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ReferralCodeChecklist } from 'components/Checklist/ReferralCode';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -7,6 +6,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputReferralCode } from 'components/FormElements/InputReferralCode';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { env } from 'env';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -74,7 +74,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="Do you have a referral code? (optional)"
             subtitle="You and your referrer will receive $20 in dividends following your first investment!"
           />

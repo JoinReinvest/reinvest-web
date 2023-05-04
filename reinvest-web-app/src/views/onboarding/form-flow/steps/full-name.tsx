@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
@@ -78,7 +78,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Enter your first and last name as it appears on your ID" />
+          <ModalTitle title="Enter your first and last name as it appears on your ID" />
 
           {error && <ErrorMessagesHandler error={error} />}
           <div className="flex w-full flex-col gap-16">
