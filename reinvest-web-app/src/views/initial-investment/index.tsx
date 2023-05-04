@@ -1,6 +1,6 @@
 import { BlackModal } from 'components/BlackModal';
 import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
-import { ModalWhiteFullscreen2 } from 'components/ModalWhiteFullscreen2';
+import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 
 import { useInitialInvestmentFlow } from './form-flow';
@@ -48,12 +48,12 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
 
   if (currentStepIdentifier === Identifiers.INVESTMENT_COMPLETED) {
     return (
-      <ModalWhiteFullscreen2
+      <ModalWhiteWatermark
         isOpen={isOpen}
         onOpenChange={onModalLastStep}
       >
         <CurrentStepView />
-      </ModalWhiteFullscreen2>
+      </ModalWhiteWatermark>
     );
   }
 
