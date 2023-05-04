@@ -37,6 +37,7 @@ export function SelectFilterable<FormFields extends FieldValues>({
 }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
   const menuPortalTargetMemoized = useMemo(() => menuPortalTarget, [menuPortalTarget]);
+  const selectedOption = useMemo(() => options.filter(option => option.value === field.value), [field.value, options]);
   const [focused, setFocused] = useState(false);
   const inputRef = useRef(null);
   const controlRef = useRef<HTMLDivElement>(null);
@@ -71,7 +72,7 @@ export function SelectFilterable<FormFields extends FieldValues>({
       ref={controlRef}
     >
       <PrimitiveSelect
-        defaultInputValue={field.value}
+        value={selectedOption}
         ref={inputRef}
         options={options}
         className="text-black relative m-0 w-full bg-transparent p-0 outline-none"
