@@ -8,15 +8,15 @@ import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/inv
 
 interface Props {
   currentBankAccount: string;
-  onChange: (value: number | undefined) => void;
+  onChange: (value?: number) => void;
   onChangeBankAccount: () => void;
   className?: string;
   defaultValue?: number;
 }
 
 interface Fields {
-  customAmount: number | undefined;
-  presetAmount: string | undefined;
+  customAmount?: number;
+  presetAmount?: string;
 }
 
 export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankAccount, onChange, className }: Props) {
