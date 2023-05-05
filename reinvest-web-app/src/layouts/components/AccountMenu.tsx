@@ -33,6 +33,8 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
   const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
 
+  const availableAccountsWithLabels = generateLabelForAccount(availableAccounts);
+
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
     toggleIsMenuOpen();
@@ -74,13 +76,6 @@ export const AccountMenu = ({ activeAccount }: Props) => {
               <div className="flex w-full max-w-full flex-col gap-16 border border-gray-04 bg-white px-16 py-24 md:w-342">
                 <header className="flex flex-col gap-16 px-24 py-16 shadow-md">
                   <div className="flex items-center gap-8">
-                    {/*{activeAccount.avatar?.url && <Avatar*/}
-                    {/*  src={activeAccount.avatar.url}*/}
-                    {/*  alt={activeAccount.label || ''}*/}
-                    {/*  isSizeFixed*/}
-                    {/*  fixedSize="md"*/}
-                    {/*/>}*/}
-                    {/*{!activeAccount.avatar?.url && <AvatarPlaceholder />}*/}
                     <Avatar
                       src={activeAccount.avatar?.url || placeholderPicture}
                       alt={activeAccount.label || ''}
@@ -106,7 +101,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                 <ul className="flex flex-col gap-16">
                   <ul className="flex max-h-146 flex-col gap-16 overflow-auto md:max-h-max">
                     {hasAvailableAccounts &&
-                      availableAccounts.map(account => (
+                      availableAccountsWithLabels.map(account => (
                         <AccountMenuAccountItem
                           key={`${account?.id}`}
                           imageSrc={account?.avatar?.url ?? undefined}
@@ -114,6 +109,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
                           type={account?.type as DraftAccountType}
+                          labelForAvatar={account?.avatarLabel}
                         />
                       ))}
                   </ul>
@@ -182,4 +178,22 @@ export const AccountMenu = ({ activeAccount }: Props) => {
       />
     </>
   );
+};
+
+interface AccountsWithAvatarLabel extends AccountOverview {
+  avatarLabel?: string;
+}
+
+const generateLabelForAccount = (availableAccounts: Maybe<AccountOverview>[]): Maybe<AccountsWithAvatarLabel>[] => {
+  const individualAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Individual);
+  const corporateAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && account?.avatar?.url);
+  const trustAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && account?.avatar?.url);
+  const trustAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && !account?.avatar?.url);
+  const corporateAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && !account?.avatar?.url);
+
+  const trustAccountsWithLabel = trustAccountsWithoutAvatar.map((account, index) => ({ ...account, avatarLabel: `T${index + 1}` }));
+  const corporateAccountsWithLabel = corporateAccountsWithoutAvatar.map((account, index) => ({ ...account, avatarLabel: `C${index + 1}` }));
+  const individualAccountWithLabel = individualAccounts.map(account => ({ ...account, avatarLabel: account?.avatar?.initials }));
+
+  return [...trustAccountsWithLabel, ...corporateAccountsWithLabel, ...corporateAccounts, ...trustAccounts, ...individualAccountWithLabel];
 };

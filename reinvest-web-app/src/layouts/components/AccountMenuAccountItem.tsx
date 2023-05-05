@@ -6,11 +6,12 @@ interface Props {
   fallbackText?: string;
   imageSrc?: string;
   label?: string;
+  labelForAvatar?: string;
   onClick?: () => void;
   type?: DraftAccountType;
 }
 
-export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick, type }: Props) => (
+export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick, type, labelForAvatar }: Props) => (
   <li className="cursor-pointer">
     <div
       className="flex items-center gap-8"
@@ -25,6 +26,7 @@ export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick,
         fixedSize="sm"
         alt={fallbackText || ''}
         accountType={type}
+        label={labelForAvatar}
       />
 
       <Typography

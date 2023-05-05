@@ -4,17 +4,10 @@ import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 interface Props {
   accountType: DraftAccountType;
   className?: string;
+  label?: string;
 }
 
-const getTextToDisplay = (accountType: DraftAccountType) => {
-  if (accountType === DraftAccountType.Trust) {
-    return 'T';
-  }
-
-  return 'C';
-};
-
-export const AvatarPlaceholder = ({ accountType, className = '' }: Props) => {
+export const AvatarPlaceholder = ({ accountType, className = '', label }: Props) => {
   const styles = cx({
     'bg-gold': accountType === DraftAccountType.Corporate,
     'bg-gray-03': accountType === DraftAccountType.Trust,
@@ -22,5 +15,5 @@ export const AvatarPlaceholder = ({ accountType, className = '' }: Props) => {
     [className]: true,
   });
 
-  return <div className={styles}>{getTextToDisplay(accountType)}</div>;
+  return <div className={styles}>{label}</div>;
 };

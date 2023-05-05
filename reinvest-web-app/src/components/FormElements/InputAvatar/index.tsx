@@ -90,6 +90,7 @@ export function InputAvatar<FormFields extends FieldValues>({
               alt={altText || 'Profile picture for user'}
               isSizeFixed
               accountType={accountType}
+              label={getLabelToDisplay(accountType || DraftAccountType.Individual)}
             />
           }
           button={
@@ -108,3 +109,15 @@ export function InputAvatar<FormFields extends FieldValues>({
     </div>
   );
 }
+
+const getLabelToDisplay = (accountType: DraftAccountType) => {
+  if (accountType === DraftAccountType.Trust) {
+    return 'T';
+  }
+
+  if (accountType === DraftAccountType.Corporate) {
+    return 'C';
+  }
+
+  return '';
+};

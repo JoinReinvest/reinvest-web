@@ -10,10 +10,11 @@ interface Props extends PrimitiveProps {
   accountType?: DraftAccountType;
   fixedSize?: 'xs' | 'sm' | 'md' | 'lg';
   isSizeFixed?: boolean;
+  label?: string;
   src?: string;
 }
 
-export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg', accountType }: Props) => {
+export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg', accountType, label }: Props) => {
   const className = cx('relative', {
     'h-28 w-28 lg:h-44 lg:w-44': !isSizeFixed,
     'h-100 w-100 typo-48': isSizeFixed && fixedSize === 'lg',
@@ -42,6 +43,7 @@ export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg', accoun
         <AvatarPlaceholder
           accountType={accountType}
           className={className}
+          label={label}
         />
       )}
     </>
