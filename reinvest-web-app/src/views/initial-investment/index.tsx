@@ -6,6 +6,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useInitialInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
+import { ModalHandlerProvider } from './providers/modal-handler';
 
 interface Props {
   isOpen: boolean;
@@ -48,12 +49,14 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
 
   if (currentStepIdentifier === Identifiers.INVESTMENT_COMPLETED) {
     return (
-      <ModalWhiteWatermark
-        isOpen={isOpen}
-        onOpenChange={onModalLastStep}
-      >
-        <CurrentStepView />
-      </ModalWhiteWatermark>
+      <ModalHandlerProvider onModalLastStep={onModalLastStep}>
+        <ModalWhiteWatermark
+          isOpen={isOpen}
+          onOpenChange={onModalLastStep}
+        >
+          <CurrentStepView />
+        </ModalWhiteWatermark>
+      </ModalHandlerProvider>
     );
   }
 

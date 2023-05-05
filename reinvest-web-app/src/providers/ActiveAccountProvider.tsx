@@ -11,9 +11,12 @@ interface ActiveAccountState {
   arrivesFromOnboarding: boolean;
   /** Accounts that are available to be switched to. */
   availableAccounts: Maybe<AccountOverview>[];
+  /** The masked bank account of the profile */
+  bankAccount: string | null;
   isAbleToAddBeneficiaries: boolean;
   setArrivesFromOnboarding: (value: boolean) => void;
   updateActiveAccount: (account: Maybe<AccountOverview>) => void;
+  updateBankAccount: (bankAccount: string) => void;
 }
 
 enum StorageKeys {
@@ -22,6 +25,7 @@ enum StorageKeys {
 
 const Context = createContext<ActiveAccountState>({
   activeAccount: null,
+  bankAccount: null,
   allAccounts: [],
   availableAccounts: [],
   isAbleToAddBeneficiaries: false,
@@ -30,12 +34,15 @@ const Context = createContext<ActiveAccountState>({
   arrivesFromOnboarding: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setArrivesFromOnboarding: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  updateBankAccount: () => {},
 });
 
 export const useActiveAccount = () => useContext(Context);
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const [activeAccount, setActiveAccount] = useState<AccountOverview | null>(null);
+  const [bankAccount, updateBankAccount] = useState<ActiveAccountState['bankAccount']>(null);
   const { data: userProfile } = useGetUserProfile(getApiClient);
   const allAccounts = useMemo(() => userProfile?.accounts || [], [userProfile]);
   const availableAccounts = useMemo(() => allAccounts.filter(account => account?.id !== activeAccount?.id), [activeAccount, allAccounts]);
@@ -64,6 +71,8 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
         allAccounts,
         updateActiveAccount,
         availableAccounts,
+        bankAccount,
+        updateBankAccount,
         isAbleToAddBeneficiaries,
         arrivesFromOnboarding,
         setArrivesFromOnboarding,

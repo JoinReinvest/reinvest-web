@@ -1,3 +1,5 @@
+import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
+
 export interface FlowFields {
   _hasCompletedInvestment?: boolean;
   _isForIndividualAccount?: boolean;
@@ -11,8 +13,8 @@ export interface FlowFields {
   bankAccountId?: string;
   oneTimeInvestment?: Investment;
   optsInForAutomaticDividendReinvestment?: boolean;
-  recurringInvestmentAmount?: number;
-  recurringInvestmentFrequency?: 'weekly' | 'biweekly' | 'monthly' | 'quarterly';
+  recurringInvestment?: Investment;
+  recurringInvestmentInterval?: RecurringInvestmentInterval;
 }
 
 export interface Investment {
