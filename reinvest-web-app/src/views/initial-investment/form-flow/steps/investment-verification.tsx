@@ -1,6 +1,6 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -45,7 +45,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
               <Typography variant="paragraph-large">{SUBTITLE}</Typography>
             </div>
 
-            <BlackModalTitle title={TITLE} />
+            <ModalTitle title={TITLE} />
           </div>
         </FormContent>
       </div>

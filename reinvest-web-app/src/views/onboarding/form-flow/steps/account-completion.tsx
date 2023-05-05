@@ -1,9 +1,9 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
@@ -56,7 +56,7 @@ export const StepAccountCompletion: StepParams<OnboardingFormFields> = {
             <IconCheckCircle />
           </div>
 
-          <BlackModalTitle title={TITLE} />
+          <ModalTitle title={TITLE} />
         </FormContent>
 
         <ButtonStack>

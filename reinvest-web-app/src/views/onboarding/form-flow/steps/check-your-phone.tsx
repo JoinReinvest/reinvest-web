@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
@@ -8,6 +7,7 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputAuthenticationCode } from 'components/FormElements/InputAuthenticationCode';
 import { GetHelpLink } from 'components/Links/GetHelp';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect, useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
@@ -89,7 +89,7 @@ export const StepCheckYourPhone: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="Check Your Phone"
             subtitle={`Enter the SMS authentication code sent to your phone ${maskedPhoneNumber}.`}
           />

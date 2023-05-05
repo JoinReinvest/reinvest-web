@@ -1,12 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -136,7 +136,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
         <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <BlackModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
+          <ModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
         </div>
       );
     }
@@ -145,7 +145,7 @@ export const StepDocumentsForTrust: StepParams<OnboardingFormFields> = {
       return (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle
+            <ModalTitle
               title="Upload the following documents to verify your trust."
               subtitle={subtitle}
             />

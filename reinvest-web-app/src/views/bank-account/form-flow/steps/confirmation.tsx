@@ -1,9 +1,9 @@
 import { IconCheckCircleGray } from 'assets/icons/IconCheckCircleGray';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
@@ -41,7 +41,7 @@ export const StepConfirmation: StepParams<FlowFields> = {
           <div className="flex flex-col gap-32">
             {icon}
 
-            <BlackModalTitle title={title} />
+            <ModalTitle title={title} />
           </div>
         </FormContent>
 

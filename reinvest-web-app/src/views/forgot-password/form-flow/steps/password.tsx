@@ -1,6 +1,5 @@
 import { Auth } from '@aws-amplify/auth';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { PasswordChecklist } from 'components/Checklist/Password';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -8,6 +7,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputPassword } from 'components/FormElements/InputPassword';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
@@ -70,7 +70,7 @@ export const StepPassword: StepParams<ForgotPasswordFormFields> = {
         className="!gap-60"
       >
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="Create new password"
             subtitle="Your new password must be different from previous used passwords."
           />

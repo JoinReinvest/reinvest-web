@@ -3,11 +3,11 @@ import { IconChain } from 'assets/icons/IconChain';
 import { IconEyeHide } from 'assets/icons/IconEyeHide';
 import { LogoIcon2 } from 'assets/LogoIcon2';
 import { LogoPlaid } from 'assets/LogoPlaid';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -59,7 +59,7 @@ export const StepLanding: StepParams<FlowFields> = {
             </header>
 
             <div className="flex flex-col gap-40">
-              <BlackModalTitle title={TITLE} />
+              <ModalTitle title={TITLE} />
 
               <ul className="flex flex-col gap-24">
                 {LIST_ITEMS.map(({ icon, title, description }) => (

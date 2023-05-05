@@ -1,4 +1,4 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
@@ -41,9 +41,9 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
 
   if (currentStepIdentifier === Identifiers.INVESTMENT_VERIFICATION) {
     return (
-      <BlackModal isOpen={isOpen}>
+      <ModalBlackFullscreen isOpen={isOpen}>
         <CurrentStepView />
-      </BlackModal>
+      </ModalBlackFullscreen>
     );
   }
 

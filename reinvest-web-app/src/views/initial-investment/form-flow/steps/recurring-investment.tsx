@@ -1,9 +1,9 @@
 import { IconRecurrent } from 'assets/icons/IconRecurrent';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useToggler } from 'hooks/toggler';
 import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -45,7 +45,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
             <IconRecurrent />
           </div>
 
-          <BlackModalTitle
+          <ModalTitle
             title={TITLE}
             subtitle={SUBTITLE}
           />

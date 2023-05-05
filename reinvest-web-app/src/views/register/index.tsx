@@ -1,4 +1,4 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { useIsMounted } from 'hooks/is-mounted';
 import { LoginLayout } from 'layouts/LoginLayout';
 
@@ -25,12 +25,12 @@ export const RegistrationView = () => {
       )}
 
       {shouldDisplayRestOfSteps && (
-        <BlackModal
+        <ModalBlackFullscreen
           isOpen={!isFirstStep}
           onOpenChange={moveToPreviousValidStep}
         >
           <CurrentStepView />
-        </BlackModal>
+        </ModalBlackFullscreen>
       )}
     </>
   );

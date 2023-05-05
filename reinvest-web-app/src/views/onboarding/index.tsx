@@ -1,4 +1,4 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
@@ -38,13 +38,13 @@ export const OnboardingFlow = () => {
 
   return (
     <ActiveAccountProvider>
-      <BlackModal
+      <ModalBlackFullscreen
         isOpen={isModalOpen}
         onOpenChange={onModalClickBack}
         progressBarValue={progressPercentage}
       >
         <CurrentStepView />
-      </BlackModal>
+      </ModalBlackFullscreen>
     </ActiveAccountProvider>
   );
 };

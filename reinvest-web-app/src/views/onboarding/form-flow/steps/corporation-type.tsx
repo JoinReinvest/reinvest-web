@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { CORPORATION_TYPES_AS_OPTIONS, CORPORATION_TYPES_VALUES } from 'reinvest-app-common/src/constants/account-types';
@@ -77,7 +77,7 @@ export const StepCorporationType: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="What type of Corporation do you have?" />
+            <ModalTitle title="What type of Corporation do you have?" />
             {error && <ErrorMessagesHandler error={error} />}
 
             <div className="flex w-full flex-col gap-24">

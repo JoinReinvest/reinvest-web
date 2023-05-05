@@ -1,9 +1,9 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Select } from 'components/Select';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -116,7 +116,7 @@ export const StepCorporationInformation: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title={`Please provide the following information regarding your ${fiduciaryEntityTitle}.`} />
+          <ModalTitle title={`Please provide the following information regarding your ${fiduciaryEntityTitle}.`} />
           {trustDraftAccountError && <ErrorMessagesHandler error={trustDraftAccountError} />}
           {corporateDraftAccountError && <ErrorMessagesHandler error={corporateDraftAccountError} />}
           <div className="flex w-full flex-col gap-16">

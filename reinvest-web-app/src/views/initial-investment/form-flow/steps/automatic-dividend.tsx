@@ -1,9 +1,9 @@
 import { IconWarning } from 'assets/icons/IconWarning';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useToggler } from 'hooks/toggler';
 import { FormEventHandler } from 'react';
@@ -42,7 +42,7 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
       <Form onSubmit={onSubmit}>
         <FormContent>
           <div className="flex flex-col gap-36">
-            <BlackModalTitle title={TITLE} />
+            <ModalTitle title={TITLE} />
 
             <div className="flex gap-8">
               <IconWarning className="stroke-black-01" />

@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
@@ -112,7 +112,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
         <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <BlackModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
+          <ModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
         </div>
       );
     }
@@ -121,7 +121,7 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       return (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle
+            <ModalTitle
               title="Please upload your Driver’s License or Passport for further verification"
               subtitle="Valid identification includes Driver's license, Permanent Resident card or a non-expired Passport."
             />

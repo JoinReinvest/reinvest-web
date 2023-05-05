@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -64,7 +64,7 @@ export const StepFinraInstitution: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Please provide name of the FINRA institution below." />
+          <ModalTitle title="Please provide name of the FINRA institution below." />
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <Input
             name="finraInstitutionName"

@@ -1,11 +1,11 @@
 import { IconRecurrent } from 'assets/icons/IconRecurrent';
 import { IconWarning } from 'assets/icons/IconWarning';
 import cx from 'classnames';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
 import { FormEventHandler } from 'react';
@@ -62,7 +62,7 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
             <IconRecurrent />
           </div>
 
-          <BlackModalTitle title={TITLE} />
+          <ModalTitle title={TITLE} />
 
           <ul className="flex flex-col gap-16">
             {generateListItem('From', 'JPMORGAN CHASE BANK, NA ****1234', true)}

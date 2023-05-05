@@ -10,20 +10,21 @@ interface Props {
 }
 
 export const Footer = ({ modalColor = 'black' }: Props) => {
-  const [isTermsAndConditionsOpen, toggleIsTermsAndConditionsOpen] = useToggler(false);
-  const [isPrivacyPolicyOpen, toggleIsPrivacyPolicyOpen] = useToggler(false);
+  const [isModalTermsOpen, toggleIsModalTermsOpen] = useToggler(false);
+  const [isModalPrivacyOpen, toggleIsModalPrivacyIsOpen] = useToggler(false);
 
   const className = cx({ 'text-gray-04': modalColor === 'black', 'text-gray-02': modalColor === 'white' });
 
   return (
     <footer className="w-330 mx-auto text-center">
       <TermsAndConditioncBlackModal
-        isOpen={isTermsAndConditionsOpen}
-        onOpenChange={toggleIsTermsAndConditionsOpen}
+        isOpen={isModalTermsOpen}
+        onOpenChange={toggleIsModalTermsOpen}
       />
+
       <PrivacyPolicyBlackModal
-        isOpen={isPrivacyPolicyOpen}
-        onOpenChange={toggleIsPrivacyPolicyOpen}
+        isOpen={isModalPrivacyOpen}
+        onOpenChange={toggleIsModalPrivacyIsOpen}
       />
 
       <Typography
@@ -33,13 +34,13 @@ export const Footer = ({ modalColor = 'black' }: Props) => {
         By continuing, you agree to the REINVEST
         <br />
         <OpenModalLink
-          onClick={toggleIsTermsAndConditionsOpen}
+          onClick={toggleIsModalTermsOpen}
           green
           label="Terms of Conditions"
         />{' '}
         and{' '}
         <OpenModalLink
-          onClick={toggleIsPrivacyPolicyOpen}
+          onClick={toggleIsModalPrivacyIsOpen}
           green
           label="Privacy Policy"
         />
