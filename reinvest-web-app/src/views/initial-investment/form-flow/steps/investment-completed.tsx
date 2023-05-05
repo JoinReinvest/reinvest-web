@@ -57,7 +57,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
         <FormContent>
           <div className="flex flex-col gap-40">
             <Typography
-              variant="h5-custom"
+              variant="h5-larger"
               className="text-center"
             >
               {TITLE}

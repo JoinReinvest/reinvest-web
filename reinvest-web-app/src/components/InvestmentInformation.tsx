@@ -28,7 +28,7 @@ export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
       </div>
 
       <Typography
-        variant="h6-custom"
+        variant="h6-responsive"
         className="text-gray-02"
       >
         {labeledDate}

@@ -34,6 +34,7 @@ module.exports = {
       20: '2rem',
       22: '2.2rem',
       24: '2.4rem',
+      25: '2.5rem',
       26: '2.6rem',
       28: '2.8rem',
       30: '3.0rem',
@@ -118,7 +119,7 @@ module.exports = {
         },
       ],
 
-      'h5-custom': [
+      'h5-larger': [
         '2.4rem',
         {
           fontWeight: 400,

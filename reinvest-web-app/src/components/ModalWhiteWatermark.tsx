@@ -9,7 +9,7 @@ interface Props extends PropsWithChildren {
   onOpenChange: (state: boolean) => void;
 }
 
-export const ModalWhiteFullscreen2 = ({ isOpen, onOpenChange, children }: Props) => (
+export const ModalWhiteWatermark = ({ isOpen, onOpenChange, children }: Props) => (
   <Dialog.Root
     open={isOpen}
     onOpenChange={onOpenChange}

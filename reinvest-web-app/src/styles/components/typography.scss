@@ -21,15 +21,15 @@
     @apply text-h5 font-stretch-expanded;
   }
 
-  .typo-h5-custom {
-    @apply text-h5-custom lg:text-h5 font-stretch-expanded;
+  .typo-h5-larger {
+    @apply text-h5-larger lg:text-h5 font-stretch-expanded;
   }
 
   .typo-h6 {
     @apply text-h6;
   }
 
-  .typo-h6-custom {
+  .typo-h6-responsive {
     @apply text-h6 lg:text-paragraph-large;
   }
 
