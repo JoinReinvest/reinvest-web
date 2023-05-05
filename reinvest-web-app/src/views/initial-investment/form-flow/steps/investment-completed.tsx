@@ -4,10 +4,13 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
+import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
 import { FormEventHandler } from 'react';
+import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
+import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -35,12 +38,18 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    const investment = storeFields.oneTimeInvestment;
+    const { onModalLastStep } = useModalHandler();
+    const oneTimeInvestment = storeFields.oneTimeInvestment;
+    const recurrentInvestment = storeFields.recurringInvestment;
+
+    const recurrentInvestmentInterval =
+      storeFields.recurringInvestmentInterval && RECURRING_INVESTMENT_INTERVAL_LABELS.get(storeFields.recurringInvestmentInterval);
+    const recurrentInvestmentLabel = `Recurring ${recurrentInvestmentInterval} Investment`;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-
       await updateStoreFields({ _hasCompletedInvestment: true });
+      onModalLastStep && onModalLastStep();
     };
 
     return (
@@ -55,13 +64,26 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
             </Typography>
 
             <div className="flex flex-col gap-32">
-              {investment && investment.amount !== undefined && (
+              {oneTimeInvestment && oneTimeInvestment.amount !== undefined && (
                 <InvestmentInformation
-                  amount={investment.amount}
+                  amount={oneTimeInvestment.amount}
                   type="one-time"
-                  date={investment.date || new Date()}
+                  date={oneTimeInvestment.date || new Date()}
                   label="One Time Investment"
                 />
+              )}
+
+              {recurrentInvestment && recurrentInvestment.amount !== undefined && (
+                <>
+                  <Separator />
+
+                  <InvestmentInformation
+                    amount={recurrentInvestment.amount}
+                    type="recurring"
+                    date={recurrentInvestment.date || new Date()}
+                    label={recurrentInvestmentLabel}
+                  />
+                </>
               )}
 
               <div className="flex gap-8">
