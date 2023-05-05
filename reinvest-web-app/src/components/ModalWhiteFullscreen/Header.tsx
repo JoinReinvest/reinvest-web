@@ -3,7 +3,7 @@ import { IconArrowLeft } from 'assets/icons/IconArrowLeft';
 import { Logo } from 'assets/Logo';
 
 export const Header = () => (
-  <header className="white-modal-header relative hidden w-full items-center justify-center px-60 md:flex h-48">
+  <header className="white-modal-header relative hidden h-48 w-full items-center justify-center px-60 md:flex">
     <Dialog.Close>
       <IconArrowLeft className="stroke-black-01" />
     </Dialog.Close>
