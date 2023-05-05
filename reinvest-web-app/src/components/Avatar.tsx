@@ -11,8 +11,8 @@ interface Props extends PrimitiveProps {
 export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg' }: Props) => {
   const className = cx('relative', {
     'h-28 w-28 lg:h-44 lg:w-44': !isSizeFixed,
-    'h-100 w-100': isSizeFixed && fixedSize === 'lg',
-    'h-72 w-72': isSizeFixed && fixedSize === 'md',
+    'h-72 w-72': isSizeFixed && fixedSize === 'lg',
+    'h-60 w-60': isSizeFixed && fixedSize === 'md',
     'h-44 w-44': isSizeFixed && fixedSize === 'sm',
     'h-28 w-28': isSizeFixed && fixedSize === 'xs',
   });
