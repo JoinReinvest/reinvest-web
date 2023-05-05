@@ -1,9 +1,10 @@
 import dayjs from 'dayjs';
 import { Area, AreaChart as PrimitiveAreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { formatToDolars } from 'reinvest-app-common/src/utilities/currency';
 import { formatDateForChart } from 'reinvest-app-common/src/utilities/dates';
 
 import { CustomTooltip } from './Tooltip';
-const toDolars = (value: number) => `$${value.toFixed(0)}`;
+
 const currentDate = dayjs();
 
 const chartData = [
@@ -37,7 +38,7 @@ const chartData = [
   },
   {
     date: formatDateForChart(dayjs(currentDate).subtract(4, 'day').toDate()),
-    value: 2390,
+    value: 2390.788,
   },
   {
     date: formatDateForChart(dayjs(currentDate).subtract(3, 'day').toDate()),
@@ -95,7 +96,7 @@ export const AreaChart = () => {
         />
         <YAxis
           orientation="right"
-          tickFormatter={toDolars}
+          tickFormatter={formatToDolars}
           mirror
           domain={[minDomain, maxDomain]}
         />

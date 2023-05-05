@@ -7346,7 +7346,7 @@ regexpp@^3.0.0, regexpp@^3.2.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#12b2ef0e966dec18093124b17dc288979dad2600"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#af6a9b469f62ebfda07c7fc97e74292b950ad699"
   dependencies:
     "@graphql-codegen/cli" "^3.2.2"
     "@graphql-codegen/typescript" "^3.0.2"
