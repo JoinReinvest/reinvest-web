@@ -1,13 +1,11 @@
 import { Typography } from 'components/Typography';
-import dayjs from 'dayjs';
 import { ReactDatePickerCustomHeaderProps } from 'react-datepicker';
+import { formatDateForDatePicker } from 'reinvest-app-common/src/utilities/dates';
 
 type Props = Pick<ReactDatePickerCustomHeaderProps, 'date'>;
 
-const DATE_FORMAT = 'MMMM YYYY';
-
 export const Header = ({ date }: Props) => {
-  const dateFormatted = dayjs(date).format(DATE_FORMAT);
+  const dateFormatted = formatDateForDatePicker(date);
 
   return (
     <header className="flex items-start px-24 py-12">
