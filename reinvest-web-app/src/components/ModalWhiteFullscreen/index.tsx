@@ -20,7 +20,7 @@ export const ModalWhiteFullscreen = ({ isOpen, onOpenChange, activeAccount, chil
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
 
-      <Dialog.Content className="white-modal fixed inset-0 z-50 flex flex-col gap-24">
+      <Dialog.Content className="white-modal fixed inset-0 z-50 flex flex-col gap-24 md:pt-60">
         <>
           <HeaderActiveAccount activeAccount={activeAccount} />
 
