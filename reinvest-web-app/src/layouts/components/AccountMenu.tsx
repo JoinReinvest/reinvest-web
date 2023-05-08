@@ -13,7 +13,7 @@ import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
-import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
@@ -32,6 +32,8 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isMenuOpen, toggleIsMenuOpen] = useToggler(false);
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
   const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
+
+  const availableAccountsWithLabels = generateLabelForAccount(availableAccounts);
 
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
@@ -99,13 +101,15 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                 <ul className="flex flex-col gap-16">
                   <ul className="flex max-h-146 flex-col gap-16 overflow-auto md:max-h-max">
                     {hasAvailableAccounts &&
-                      availableAccounts.map(account => (
+                      availableAccountsWithLabels.map(account => (
                         <AccountMenuAccountItem
                           key={`${account?.id}`}
                           imageSrc={account?.avatar?.url ?? undefined}
                           label={`${account?.label}`.toLowerCase()}
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
+                          type={account?.type as DraftAccountType}
+                          labelForAvatar={account?.avatarLabel}
                         />
                       ))}
                   </ul>
@@ -174,4 +178,22 @@ export const AccountMenu = ({ activeAccount }: Props) => {
       />
     </>
   );
+};
+
+interface AccountsWithAvatarLabel extends AccountOverview {
+  avatarLabel?: string;
+}
+
+const generateLabelForAccount = (availableAccounts: Maybe<AccountOverview>[]): Maybe<AccountsWithAvatarLabel>[] => {
+  const individualAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Individual);
+  const corporateAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && account?.avatar?.url);
+  const trustAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && account?.avatar?.url);
+  const trustAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && !account?.avatar?.url);
+  const corporateAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && !account?.avatar?.url);
+
+  const trustAccountsWithLabel = trustAccountsWithoutAvatar.map((account, index) => ({ ...account, avatarLabel: `T${index + 1}` }));
+  const corporateAccountsWithLabel = corporateAccountsWithoutAvatar.map((account, index) => ({ ...account, avatarLabel: `C${index + 1}` }));
+  const individualAccountWithLabel = individualAccounts.map(account => ({ ...account, avatarLabel: account?.avatar?.initials }));
+
+  return [...trustAccountsWithLabel, ...corporateAccountsWithLabel, ...corporateAccounts, ...trustAccounts, ...individualAccountWithLabel];
 };
