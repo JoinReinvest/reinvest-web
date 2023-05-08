@@ -1,15 +1,17 @@
-import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { Typography } from 'components/Typography';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 interface Props {
   fallbackText?: string;
   imageSrc?: string;
   label?: string;
+  labelForAvatar?: string;
   onClick?: () => void;
+  type?: DraftAccountType;
 }
 
-export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick }: Props) => (
+export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick, type, labelForAvatar }: Props) => (
   <li className="cursor-pointer">
     <div
       className="flex items-center gap-8"
@@ -19,10 +21,12 @@ export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick 
       tabIndex={0}
     >
       <Avatar
-        src={imageSrc || placeholderPicture}
+        src={imageSrc}
         isSizeFixed
         fixedSize="sm"
         alt={fallbackText || ''}
+        accountType={type}
+        label={labelForAvatar}
       />
 
       <Typography

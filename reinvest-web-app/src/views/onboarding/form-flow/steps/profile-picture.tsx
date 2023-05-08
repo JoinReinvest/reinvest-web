@@ -182,6 +182,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
               altText="Profile picture for account"
               sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
               onFileChange={onFileChange}
+              accountType={storeFields.accountType}
             />
 
             <Typography

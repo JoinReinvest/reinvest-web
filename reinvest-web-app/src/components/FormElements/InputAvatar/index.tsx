@@ -6,20 +6,22 @@ import { ChangeEventHandler, useMemo, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
+import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { EditAvatarButton } from './EditAvatarButton';
 
 type PrimitiveProps = Pick<AvatarProps, 'image' | 'altText'>;
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
+  accountType?: DraftAccountType;
   onFileChange?: (file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
 }
 
 export function InputAvatar<FormFields extends FieldValues>({
-  image,
   altText,
   sizeLimitInMegaBytes = 5.0,
   onFileChange,
+  accountType,
   ...controllerProps
 }: Props<FormFields>) {
   const { field } = useController(controllerProps);
@@ -29,12 +31,10 @@ export function InputAvatar<FormFields extends FieldValues>({
 
   const imageSrc = useMemo(() => {
     if (fieldValue && fieldValue?.file) {
-      const fileUrl = URL.createObjectURL(fieldValue.file);
-
-      return fileUrl;
+      return URL.createObjectURL(fieldValue.file);
     }
 
-    return image || placeholderImage;
+    return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [fieldValue]);
 
@@ -65,6 +65,18 @@ export function InputAvatar<FormFields extends FieldValues>({
     }
   };
 
+  const getImageSrc = () => {
+    if (imageSrc) {
+      return imageSrc;
+    }
+
+    if (!imageSrc && accountType === DraftAccountType.Individual) {
+      return placeholderImage;
+    }
+
+    return undefined;
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <label
@@ -74,9 +86,11 @@ export function InputAvatar<FormFields extends FieldValues>({
         <PrimitiveAvatarWithButton
           avatar={
             <Avatar
-              src={imageSrc}
+              src={getImageSrc()}
               alt={altText || 'Profile picture for user'}
               isSizeFixed
+              accountType={accountType}
+              label={getLabelToDisplay(accountType || DraftAccountType.Individual)}
             />
           }
           button={
@@ -95,3 +109,15 @@ export function InputAvatar<FormFields extends FieldValues>({
     </div>
   );
 }
+
+const getLabelToDisplay = (accountType: DraftAccountType) => {
+  if (accountType === DraftAccountType.Trust) {
+    return 'T';
+  }
+
+  if (accountType === DraftAccountType.Corporate) {
+    return 'C';
+  }
+
+  return '';
+};

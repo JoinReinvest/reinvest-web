@@ -1,5 +1,5 @@
-import { IconEmptyCalendar } from 'assets/icons/Dashboard/IconEmptyCalendar';
 import { Button } from 'components/Button';
+import { AreaChart } from 'components/Charts/AreaChart';
 import { NetReturns } from 'components/Dashboard/NetReturns';
 import { PositionTotal } from 'components/Dashboard/PositionTotal';
 import { BlogPostInterface } from 'components/Education/BlogCard';
@@ -16,8 +16,6 @@ interface Props {
   posts: BlogPostInterface[];
 }
 
-const MESSAGE_EMPTY_CHART = 'Make an investment now for generating the chart';
-
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const { arrivesFromOnboarding, setArrivesFromOnboarding } = useActiveAccount();
   // Display the initial investment flow if the user arrives from the onboarding flow
@@ -31,7 +29,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   return (
     <InitialInvestmentFormFlowProvider initialStoreFields={{}}>
       <div className="flex flex-col gap-16 lg:flex-row lg:gap-24">
-        <div className="lg:flex lg:w-full lg:max-w-330 lg:flex-col lg:justify-between">
+        <div className="lg:flex lg:w-full lg:max-w-330 lg:flex-col lg:justify-between lg:gap-8">
           <Typography
             variant="h3"
             className="hidden lg:block"
@@ -45,28 +43,17 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
           >
             Account Value
           </Typography>
-          <PositionTotal className="hidden lg:block" />
-          <NetReturns className="hidden lg:block" />
+          <PositionTotal className="hidden lg:mt-8 lg:block" />
+          <NetReturns className="hidden lg:mt-8 lg:block" />
           <Button
             label="Invest"
-            className="hidden lg:mt-8 lg:block"
+            className="hidden lg:mt-16 lg:block"
           />
         </div>
-        <div className="flex flex-col gap-8 border border-gray-04 px-72 py-36 lg:w-full lg:justify-center lg:gap-24 lg:py-160">
-          <IconEmptyCalendar className="lg:max-w-342 mx-auto h-115 w-100 lg:h-full lg:max-h-300 lg:w-full" />
-          <Typography
-            variant="paragraph-emphasized"
-            className="text-center text-gray-02 lg:hidden"
-          >
-            {MESSAGE_EMPTY_CHART}
-          </Typography>
-          <Typography
-            variant="h6"
-            className="hidden text-center text-gray-02 lg:block"
-          >
-            {MESSAGE_EMPTY_CHART}
-          </Typography>
+        <div className="flex h-180 flex-col gap-8 border border-gray-04 lg:h-auto lg:w-full lg:gap-24">
+          <AreaChart />
         </div>
+
         <Button
           label="Invest"
           className="lg:hidden"
