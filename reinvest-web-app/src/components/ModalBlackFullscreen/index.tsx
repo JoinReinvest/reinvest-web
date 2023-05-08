@@ -1,8 +1,8 @@
 import { Dialog, DialogProps } from '@hookooekoo/ui-dialog';
+import { Footer } from 'components/ModalElements/Footer';
 import { ProgressBar } from 'components/ProgressBar';
 import { PropsWithChildren, useRef } from 'react';
 
-import { Footer } from './Footer';
 import { Header } from './Header';
 
 type PrimitiveProps = Pick<DialogProps, 'isOpen' | 'onOpenChange'>;

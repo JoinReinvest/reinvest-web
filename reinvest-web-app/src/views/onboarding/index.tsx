@@ -1,6 +1,7 @@
 import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
+import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
 import { useEffect, useState } from 'react';
 
 import { useOnboardingFormFlow } from './form-flow';
@@ -36,12 +37,14 @@ export const OnboardingFlow = () => {
   };
 
   return (
-    <ModalBlackFullscreen
-      isOpen={isModalOpen}
-      onOpenChange={onModalClickBack}
-      progressBarValue={progressPercentage}
-    >
-      <CurrentStepView />
-    </ModalBlackFullscreen>
+    <ActiveAccountProvider>
+      <ModalBlackFullscreen
+        isOpen={isModalOpen}
+        onOpenChange={onModalClickBack}
+        progressBarValue={progressPercentage}
+      >
+        <CurrentStepView />
+      </ModalBlackFullscreen>
+    </ActiveAccountProvider>
   );
 };

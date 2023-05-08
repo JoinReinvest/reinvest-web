@@ -1,3 +1,5 @@
+import cx from 'classnames';
+import { ButtonLink } from 'components/ButtonLink';
 import { Checkbox } from 'components/FormElements/Checkbox';
 import { Typography } from 'components/Typography';
 import { ComponentProps, PropsWithChildren } from 'react';
@@ -5,11 +7,16 @@ import { FieldValues } from 'react-hook-form';
 
 type PrimitiveProps<FormFields extends FieldValues> = ComponentProps<typeof Checkbox<FormFields>>;
 
-interface Props<FormFields extends FieldValues> extends PrimitiveProps<FormFields>, PropsWithChildren {}
+interface Props<FormFields extends FieldValues> extends PrimitiveProps<FormFields>, PropsWithChildren {
+  labelAsButtonLink?: boolean;
+  onButtonLinkClick?: () => void;
+}
 
-export function CheckboxLabeled<FormFields extends FieldValues>({ children, ...props }: Props<FormFields>) {
+export function CheckboxLabeled<FormFields extends FieldValues>({ labelAsButtonLink = false, onButtonLinkClick, children, ...props }: Props<FormFields>) {
+  const className = cx('checkbox-labeled flex gap-16 first:flex-none', { 'items-start': !labelAsButtonLink, 'items-center': labelAsButtonLink });
+
   return (
-    <label className="checkbox-labeled flex items-start gap-16 first:flex-none">
+    <label className={className}>
       <div className="p-6">
         <Checkbox
           {...props}
@@ -17,12 +24,19 @@ export function CheckboxLabeled<FormFields extends FieldValues>({ children, ...p
         />
       </div>
 
-      <Typography
-        className="contents"
-        variant="paragraph-large"
-      >
-        {children}
-      </Typography>
+      {labelAsButtonLink && typeof children === 'string' ? (
+        <ButtonLink
+          label={children}
+          onClick={onButtonLinkClick}
+        />
+      ) : (
+        <Typography
+          className="contents"
+          variant="paragraph-large"
+        >
+          {children}
+        </Typography>
+      )}
     </label>
   );
 }

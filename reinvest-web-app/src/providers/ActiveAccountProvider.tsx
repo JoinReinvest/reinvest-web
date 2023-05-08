@@ -1,50 +1,62 @@
 import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
 import { MAXIMUM_NUMBER_OF_BENEFICIARIES } from 'reinvest-app-common/src/constants/account';
-import { useGetIndividualAccount } from 'reinvest-app-common/src/services/queries/getIndividualAccount';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { useSessionStorage } from 'usehooks-ts';
 
 interface ActiveAccountState {
   activeAccount: AccountOverview | null;
   allAccounts: Maybe<AccountOverview>[];
+  arrivesFromOnboarding: boolean;
   /** Accounts that are available to be switched to. */
   availableAccounts: Maybe<AccountOverview>[];
+  /** The masked bank account of the profile */
+  bankAccount: string | null;
   isAbleToAddBeneficiaries: boolean;
+  setArrivesFromOnboarding: (value: boolean) => void;
   updateActiveAccount: (account: Maybe<AccountOverview>) => void;
+  updateBankAccount: (bankAccount: string) => void;
+}
+
+enum StorageKeys {
+  HAS_BEEN_ONBOARDED = 'active-account-has-been-onboarded',
 }
 
 const Context = createContext<ActiveAccountState>({
   activeAccount: null,
+  bankAccount: null,
   allAccounts: [],
   availableAccounts: [],
   isAbleToAddBeneficiaries: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateActiveAccount: () => {},
+  arrivesFromOnboarding: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setArrivesFromOnboarding: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  updateBankAccount: () => {},
 });
 
 export const useActiveAccount = () => useContext(Context);
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const [activeAccount, setActiveAccount] = useState<AccountOverview | null>(null);
+  const [bankAccount, updateBankAccount] = useState<ActiveAccountState['bankAccount']>(null);
   const { data: userProfile } = useGetUserProfile(getApiClient);
-  const { data: individualAccount } = useGetIndividualAccount(getApiClient);
   const allAccounts = useMemo(() => userProfile?.accounts || [], [userProfile]);
   const availableAccounts = useMemo(() => allAccounts.filter(account => account?.id !== activeAccount?.id), [activeAccount, allAccounts]);
+  const [arrivesFromOnboarding, setArrivesFromOnboarding] = useSessionStorage(StorageKeys.HAS_BEEN_ONBOARDED, false);
+
   const isAbleToAddBeneficiaries = 0 < MAXIMUM_NUMBER_OF_BENEFICIARIES;
 
   useEffect(() => {
-    if (individualAccount) {
-      setActiveAccount({
-        id: individualAccount.id,
-        label: individualAccount.label,
-        type: 'INDIVIDUAL',
-        avatar: {
-          ...individualAccount.avatar,
-        },
-      });
+    const firstAccount = userProfile?.accounts?.at(0);
+
+    if (firstAccount) {
+      setActiveAccount(firstAccount);
     }
-  }, [individualAccount]);
+  }, [userProfile]);
 
   const updateActiveAccount = (account: Maybe<AccountOverview>) => {
     if (account) {
@@ -59,7 +71,11 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
         allAccounts,
         updateActiveAccount,
         availableAccounts,
+        bankAccount,
+        updateBankAccount,
         isAbleToAddBeneficiaries,
+        arrivesFromOnboarding,
+        setArrivesFromOnboarding,
       }}
     >
       {children}

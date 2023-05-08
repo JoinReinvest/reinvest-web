@@ -7,6 +7,7 @@ import { IconSupport } from 'assets/icons/IconSupport';
 import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { Button } from 'components/Button';
+import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
 import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
@@ -20,7 +21,6 @@ import { AccountMenuActionItem } from './AccountMenuActionItem';
 import { AccountMenuFooter } from './AccountMenuFooter';
 import { ModalAddBeneficiary } from './ModalAddBeneficiary';
 import { ModalInvite } from './ModalInvite';
-import { Separator } from './Separator';
 
 interface Props {
   activeAccount: AccountOverview;
@@ -90,7 +90,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                         variant="paragraph"
                         className="capitalize text-gray-02"
                       >
-                        {activeAccount.type} Account
+                        {activeAccount.type?.toLowerCase()} Account
                       </Typography>
                     </div>
                   </div>
@@ -105,7 +105,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                         <AccountMenuAccountItem
                           key={`${account?.id}`}
                           imageSrc={account?.avatar?.url ?? undefined}
-                          label={`${account?.type} Account`}
+                          label={`${account?.label}`.toLowerCase()}
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
                           type={account?.type as DraftAccountType}

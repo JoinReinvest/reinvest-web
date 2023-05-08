@@ -1,3 +1,4 @@
+import { StepAccountCompletion } from './account-completion';
 import { StepAccountType } from './account-type';
 import { StepAccreditedInvestor } from './accredited-investor';
 import { StepSignatoryEntity } from './authorized-signatory-entity';
@@ -92,4 +93,5 @@ export const FLOW_STEPS = [
   StepCorporateApplicantList,
   //profile picture step
   StepProfilePicture,
+  StepAccountCompletion,
 ];
