@@ -15,8 +15,7 @@ import {
   RecurringInvestmentInterval,
 } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { formatDateForRecurrentInvestmentDisplay } from 'reinvest-app-common/src/utilities/dates';
-import { formatInvestmentDateFrequency } from 'reinvest-app-common/src/utilities/dates';
+import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 import { maskCurrency } from 'utils/currency';
 
 import { FlowFields } from '../fields';
@@ -48,7 +47,7 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
     const frequencyLabel = getFrequencyLabel(storeFields.recurringInvestmentInterval, storeFields.recurringInvestment?.date);
     const investmentAmount = storeFields.recurringInvestment?.amount || '';
     const investmentAmountForDisplay = maskCurrency(investmentAmount, { addDecimalPoints: true });
-    const startingOnDate = formatDateForRecurrentInvestmentDisplay(storeFields.recurringInvestment?.date || new Date());
+    const startingOnDate = formatDate(storeFields.recurringInvestment?.date || new Date(), 'INVESTMENT_RECURRENT');
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
@@ -115,7 +114,7 @@ function getFrequencyLabel(frequency: RecurringInvestmentInterval | undefined, i
     const label = RECURRING_INVESTMENT_INTERVAL_LABELS.get(frequency);
     const date = new Date(investmentDate);
     const isFrequencyWithinMonth = RECURRING_INVESTMENT_INTERVALS_WITHIN_MONTH.includes(frequency);
-    const dateDisplay = formatInvestmentDateFrequency(date, !isFrequencyWithinMonth);
+    const dateDisplay = formatDate(date, !isFrequencyWithinMonth ? 'INVESTMENT_FREQUENCY_SHORT' : 'INVESTMENT_FREQUENCY_LONG');
 
     return `${label}: ${dateDisplay}`;
   }
