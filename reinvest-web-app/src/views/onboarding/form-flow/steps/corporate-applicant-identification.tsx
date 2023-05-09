@@ -12,7 +12,7 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { AddressInput, DraftAccountType, PutFileLink, SimplifiedDomicileType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
-import { formatDateForApi } from 'reinvest-app-common/src/utilities/dates';
+import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 import { getApiClient } from 'services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from 'services/queries/useSendDocumentsToS3AndGetScanIds';
 
@@ -82,7 +82,7 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
               middleName: currentMajorStakeholderApplicant.middleName,
             },
             dateOfBirth: {
-              dateOfBirth: formatDateForApi(currentMajorStakeholderApplicant.dateOfBirth || ''),
+              dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
             },
             address: { ...currentMajorStakeholderApplicant.residentialAddress, country: 'USA' } as AddressInput,
             domicile: {
@@ -107,9 +107,7 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
               lastName: currentMajorStakeholderApplicant.lastName,
               middleName: currentMajorStakeholderApplicant.middleName,
             },
-            dateOfBirth: {
-              dateOfBirth: formatDateForApi(currentMajorStakeholderApplicant.dateOfBirth || ''),
-            },
+            dateOfBirth: { dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }) },
             address: { ...currentMajorStakeholderApplicant.residentialAddress, country: 'USA' } as AddressInput,
             ssn: {
               ssn: currentMajorStakeholderApplicant.socialSecurityNumber || '',

@@ -1,7 +1,7 @@
 import { CustomInputMaskedProps, InputMasked } from 'components/FormElements/InputMasked';
 import dayjs from 'dayjs';
 import { FieldValues } from 'react-hook-form';
-import { DATE_FORMAT } from 'reinvest-app-common/src/constants/date-formats';
+import { DateFormats } from 'reinvest-app-common/src/constants/date-formats';
 
 type Props<FormFields extends FieldValues> = CustomInputMaskedProps<FormFields>;
 
@@ -16,15 +16,15 @@ export function InputBirthDate<FormFields extends FieldValues>(props: Props<Form
         pattern: 'm{/}`d{/}`Y',
         min: minDate,
         max: maxDate,
-        format: value => dayjs(value).format(DATE_FORMAT),
-        parse: value => dayjs(value, DATE_FORMAT).toDate(),
+        format: value => dayjs(value).format(DateFormats.DEFAULT),
+        parse: value => dayjs(value, DateFormats.DEFAULT).toDate(),
       }}
       {...props}
       placeholder="Date of Birth"
       willTriggerChangeOnCompletion
       willUseUnmaskedValue={false}
       willTriggerChangeOnAccept={false}
-      inputPlaceholder={DATE_FORMAT}
+      inputPlaceholder={DateFormats.DEFAULT}
       isOnlyNumeric
     />
   );

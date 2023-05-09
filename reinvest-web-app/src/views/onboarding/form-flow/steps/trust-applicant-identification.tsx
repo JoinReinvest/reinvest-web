@@ -11,7 +11,7 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { AddressInput, DraftAccountType, PutFileLink, SimplifiedDomicileType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
-import { formatDateForApi } from 'reinvest-app-common/src/utilities/dates';
+import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
@@ -72,7 +72,7 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
               middleName: currentApplicant.middleName,
             },
             dateOfBirth: {
-              dateOfBirth: formatDateForApi(currentApplicant.dateOfBirth || ''),
+              dateOfBirth: formatDate(currentApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
             },
             address: { ...currentApplicant.residentialAddress, country: 'USA' } as AddressInput,
             domicile: {
@@ -99,7 +99,7 @@ export const StepTrustApplicantIdentification: StepParams<OnboardingFormFields> 
               middleName: currentApplicant.middleName,
             },
             dateOfBirth: {
-              dateOfBirth: formatDateForApi(currentApplicant.dateOfBirth || ''),
+              dateOfBirth: formatDate(currentApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
             },
             address: { ...currentApplicant.residentialAddress, country: 'USA' } as AddressInput,
             ssn: {
