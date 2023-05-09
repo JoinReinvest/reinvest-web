@@ -12,7 +12,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
-import { formatDateForApi, formatDateFromApi, isDateFromApi } from 'reinvest-app-common/src/utilities/dates';
+import { formatDate, isDateFromApi } from 'reinvest-app-common/src/utilities/dates';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
@@ -45,7 +45,9 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const defaultValues: Fields = {
-      dateOfBirth: isDateFromApi(storeFields.dateOfBirth || '') ? formatDateFromApi(storeFields.dateOfBirth || '') : storeFields.dateOfBirth,
+      dateOfBirth: isDateFromApi(storeFields.dateOfBirth || '')
+        ? formatDate(storeFields.dateOfBirth || '', 'DEFAULT', { currentFormat: 'API' })
+        : storeFields.dateOfBirth,
     };
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
@@ -60,7 +62,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      const dateOfBirth = formatDateForApi(fields.dateOfBirth || '');
+      const dateOfBirth = formatDate(fields.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' });
       await updateStoreFields({ ...fields, dateOfBirth });
 
       await completeProfileMutate({ input: { dateOfBirth: { dateOfBirth } } });

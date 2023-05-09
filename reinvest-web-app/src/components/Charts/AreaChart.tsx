@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { Area, AreaChart as PrimitiveAreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import { formatToDolars } from 'reinvest-app-common/src/utilities/currency';
-import { formatDateForChart } from 'reinvest-app-common/src/utilities/dates';
+import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 
 import { CustomTooltip } from './Tooltip';
 
@@ -9,51 +9,51 @@ const currentDate = dayjs();
 
 const chartData = [
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(111, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(111, 'day').toDate(), 'CHART'),
     value: 100,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(10, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(10, 'day').toDate(), 'CHART'),
     value: 200,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(9, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(9, 'day').toDate(), 'CHART'),
     value: 500,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(8, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(8, 'day').toDate(), 'CHART'),
     value: 1500,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(7, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(7, 'day').toDate(), 'CHART'),
     value: 2000,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(6, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(6, 'day').toDate(), 'CHART'),
     value: 1500,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(5, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(5, 'day').toDate(), 'CHART'),
     value: 1890,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(4, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(4, 'day').toDate(), 'CHART'),
     value: 2390.788,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(3, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(3, 'day').toDate(), 'CHART'),
     value: 3490,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(2, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(2, 'day').toDate(), 'CHART'),
     value: 2590,
   },
   {
-    date: formatDateForChart(dayjs(currentDate).subtract(1, 'day').toDate()),
+    date: formatDate(dayjs(currentDate).subtract(1, 'day').toDate(), 'CHART'),
     value: 2010,
   },
   {
-    date: formatDateForChart(currentDate.toDate()),
+    date: formatDate(currentDate.toDate(), 'CHART'),
     value: 3123,
   },
 ];
