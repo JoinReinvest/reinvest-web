@@ -29,10 +29,15 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => !!fields.email,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
+    const defaultValues: Fields = { referralCode: storeFields.referralCode || '' };
+    const { handleSubmit, control, formState, watch } = useForm<Fields>({
+      mode: 'onBlur',
+      defaultValues: async () => defaultValues,
+      resolver: zodResolver(schema),
+    });
+
     const [isValidatingReferralCode, setIsValidatingReferralCode] = useState(false);
     const [error, setError] = useState<string | undefined>('');
-
-    const { handleSubmit, control, formState, watch } = useForm<Fields>({ mode: 'onBlur', defaultValues: storeFields, resolver: zodResolver(schema) });
     const referralCode = watch('referralCode');
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
