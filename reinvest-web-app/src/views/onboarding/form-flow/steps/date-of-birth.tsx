@@ -49,6 +49,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
         ? formatDate(storeFields.dateOfBirth || '', 'DEFAULT', { currentFormat: 'API' })
         : storeFields.dateOfBirth,
     };
+
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
