@@ -16,6 +16,7 @@ interface ActiveAccountState {
   bankAccount: string | null;
   individualAccount: AccountOverview | null;
   isAbleToAddBeneficiaries: boolean;
+  refetchUserProfile: () => void;
   setArrivesFromOnboarding: (value: boolean) => void;
   updateActiveAccount: (account: Maybe<AccountOverview>) => void;
   updateBankAccount: (bankAccount: string) => void;
@@ -39,21 +40,24 @@ const Context = createContext<ActiveAccountState>({
   setArrivesFromOnboarding: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateBankAccount: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  refetchUserProfile: () => {},
 });
 
 export const useActiveAccount = () => useContext(Context);
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
-  const { allAccounts, activeAccount, updateActiveAccount } = useProfileAccounts();
+  const { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile } = useProfileAccounts();
+  const { isAbleToAddBeneficiaries } = useBeneficiaries({ allAccounts });
+  const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts });
   const [bankAccount, updateBankAccount] = useState<ActiveAccountState['bankAccount']>(null);
-  const { isAbleToAddBeneficiaries, beneficiaryAccounts } = useBeneficiaries({ allAccounts });
   const [arrivesFromOnboarding, setArrivesFromOnboarding] = useSessionStorage(StorageKeys.HAS_BEEN_ONBOARDED, false);
-  const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts, beneficiaryAccounts });
 
   return (
     <Context.Provider
       value={{
         activeAccount,
+        refetchUserProfile,
         individualAccount,
         allAccounts,
         updateActiveAccount,

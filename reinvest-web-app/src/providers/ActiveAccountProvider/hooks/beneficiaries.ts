@@ -7,7 +7,6 @@ interface Params {
 }
 
 interface Return {
-  beneficiaryAccounts: Maybe<AccountOverview>[];
   isAbleToAddBeneficiaries: boolean;
 }
 
@@ -21,5 +20,5 @@ export function useBeneficiaries({ allAccounts }: Params): Return {
     return hasIndividualAccount && numberOfBeneficiaries < MAXIMUM_NUMBER_OF_BENEFICIARIES;
   }, [beneficiaryAccounts, allAccounts]);
 
-  return { beneficiaryAccounts, isAbleToAddBeneficiaries };
+  return { isAbleToAddBeneficiaries };
 }

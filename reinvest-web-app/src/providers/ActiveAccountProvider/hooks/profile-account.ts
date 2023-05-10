@@ -6,11 +6,12 @@ import { getApiClient } from 'services/getApiClient';
 interface Return {
   activeAccount: AccountOverview | null;
   allAccounts: Maybe<AccountOverview>[];
+  refetchUserProfile: () => void;
   updateActiveAccount: (account: Maybe<AccountOverview>) => void;
 }
 
 export function useProfileAccounts(): Return {
-  const { data: userProfile } = useGetUserProfile(getApiClient);
+  const { data: userProfile, refetch: refetchUserProfile } = useGetUserProfile(getApiClient);
   const [activeAccount, setActiveAccount] = useState<AccountOverview | null>(null);
   const allAccounts = useMemo(() => userProfile?.accounts || [], [userProfile]);
 
@@ -34,5 +35,5 @@ export function useProfileAccounts(): Return {
     }
   };
 
-  return { allAccounts, activeAccount, updateActiveAccount };
+  return { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile };
 }
