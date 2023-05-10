@@ -6,15 +6,15 @@ import { maskCurrency } from 'utils/currency';
 
 interface Props {
   amount: number;
-  date: Date;
   label: string;
   type: 'one-time' | 'recurring';
+  date?: Date;
 }
 
 export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
   const isRecurrent = type === 'recurring';
   const maskedAmount = maskCurrency(amount);
-  const dateForDisplay = formatDateForInvestmentDisplay(date);
+  const dateForDisplay = date && formatDateForInvestmentDisplay(date);
   const labeledDate = isRecurrent ? `Starting ${dateForDisplay}` : dateForDisplay;
 
   return (
@@ -27,12 +27,14 @@ export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
         <Typography variant="custom-1">{maskedAmount}</Typography>
       </div>
 
-      <Typography
-        variant="h6-responsive"
-        className="text-gray-02"
-      >
-        {labeledDate}
-      </Typography>
+      {labeledDate && (
+        <Typography
+          variant="h6-responsive"
+          className="text-gray-02"
+        >
+          {labeledDate}
+        </Typography>
+      )}
     </div>
   );
 };
