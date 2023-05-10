@@ -27,8 +27,9 @@ export const ModalTitle = ({ title, subtitle, informationMessage, className = ''
   );
 
   const titleClassname = cx({
-    'text-center': isTitleCenteredOnMobile,
-    'text-left lg:text-center': !isTitleCenteredOnMobile,
+    'text-center': !!isTitleCenteredOnMobile,
+    'text-left lg:text-center': isTitleCenteredOnMobile === undefined,
+    'text-left': isTitleCenteredOnMobile === false,
   });
 
   return (
