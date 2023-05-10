@@ -107,7 +107,9 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
               lastName: currentMajorStakeholderApplicant.lastName,
               middleName: currentMajorStakeholderApplicant.middleName,
             },
-            dateOfBirth: { dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }) },
+            dateOfBirth: {
+              dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
+            },
             address: { ...currentMajorStakeholderApplicant.residentialAddress, country: 'USA' } as AddressInput,
             ssn: {
               ssn: currentMajorStakeholderApplicant.socialSecurityNumber || '',
