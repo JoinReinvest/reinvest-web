@@ -110,7 +110,7 @@ export function InputAvatar<FormFields extends FieldValues>({
   );
 }
 
-const getLabelToDisplay = (accountType: DraftAccountType) => {
+export const getLabelToDisplay = (accountType: DraftAccountType | string) => {
   if (accountType === DraftAccountType.Trust) {
     return 'T';
   }
