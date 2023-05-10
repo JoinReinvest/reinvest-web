@@ -28,6 +28,7 @@ const App = ({ Component, pageProps }: AppProps) => {
       new QueryClient({
         defaultOptions: {
           queries: {
+            refetchOnWindowFocus: false,
             suspense: false,
           },
         },

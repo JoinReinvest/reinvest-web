@@ -3,9 +3,14 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCreateBankAccount } from 'reinvest-app-common/src/services/queries/createBankAccount';
+import { useFulfillBankAccount } from 'reinvest-app-common/src/services/queries/fulfillBankAccount';
+import { FulfillBankAccountInput } from 'reinvest-app-common/src/types/graphql';
 
+import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
+import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -15,26 +20,105 @@ const BUTTON_LABEL = 'Continue';
 export const StepBankSelection: StepParams<FlowFields> = {
   identifier: Identifiers.BANK_SELECTION,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+  doesMeetConditionFields: fields => {
+    return !fields.bankAccount;
+  },
+
+  Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+    const { activeAccount } = useActiveAccount();
+    const [plaidDataForApi, setPlaidDataForApi] = useState<FulfillBankAccountInput>();
+
+    const {
+      mutate: createBankAccountMutation,
+      isLoading: isCreateBankAccountLoading,
+      data: createBankAccountData,
+      isSuccess: isCreateBankAccountSuccess,
+    } = useCreateBankAccount(getApiClient);
+    const { mutate: fulfillBankAccountMutation, isSuccess: isFulfillBankAccountSuccess } = useFulfillBankAccount(getApiClient);
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
 
       moveToNextStep();
     };
 
+    useEffect(() => {
+      if (activeAccount?.id) {
+        createBankAccountMutation({ accountId: activeAccount.id });
+      }
+    }, [createBankAccountMutation, activeAccount?.id]);
+
+    useEffect(() => {
+      const handler = (event: any) => {
+        const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
+
+        if (data.plaidAccountDetails?.length) {
+          const dataForApi = mapPlaidDataForApi(data.plaidAccountDetails[0]);
+          setPlaidDataForApi(dataForApi);
+        }
+      };
+
+      window.addEventListener('message', handler);
+
+      return () => window.removeEventListener('message', handler);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      if (plaidDataForApi && activeAccount?.id) {
+        fulfillBankAccountMutation({ accountId: activeAccount.id, input: plaidDataForApi });
+      }
+    }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation]);
+
+    useEffect(() => {
+      if (isFulfillBankAccountSuccess) {
+        updateStoreFields({ bankAccount: plaidDataForApi?.accountNumber });
+        moveToNextStep();
+      }
+    }, [isFulfillBankAccountSuccess, moveToNextStep, updateStoreFields, plaidDataForApi?.accountNumber]);
+
     return (
       <Form onSubmit={onSubmit}>
-        <FormContent>
-          <Typography variant="h3">{TITLE}</Typography>
-        </FormContent>
+        {!isCreateBankAccountLoading && isCreateBankAccountSuccess && createBankAccountData?.link && (
+          <>
+            <FormContent>
+              <Typography variant="h3">{TITLE}</Typography>
+              <iframe
+                className="h-650 w-full"
+                src={createBankAccountData.link}
+                title="plaid connection"
+              />
+            </FormContent>
 
-        <ButtonStack>
-          <Button
-            type="submit"
-            label={BUTTON_LABEL}
-          />
-        </ButtonStack>
+            <ButtonStack>
+              <Button
+                type="submit"
+                label={BUTTON_LABEL}
+              />
+            </ButtonStack>
+          </>
+        )}
       </Form>
     );
   },
 };
+
+interface DataFromPlaid {
+  accountId: string;
+  account_name: string;
+  account_number: string;
+  account_type: string;
+  institutionId: string;
+  institution_name: string;
+  refNum: string;
+  routing_number: string;
+}
+
+const mapPlaidDataForApi = (plaidData: DataFromPlaid): FulfillBankAccountInput => ({
+  accountName: plaidData.account_name,
+  accountNumber: plaidData.account_number,
+  accountType: plaidData.account_type,
+  institutionId: plaidData.institutionId,
+  institutionName: plaidData.institution_name,
+  refNumber: plaidData.refNum,
+  routingNumber: plaidData.routing_number,
+});

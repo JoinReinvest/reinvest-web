@@ -38,7 +38,7 @@ export const StepConfirmation: StepParams<FlowFields> = {
     return (
       <Form onSubmit={onSubmit}>
         <FormContent>
-          <div className="flex flex-col gap-32">
+          <div className="flex flex-col items-center gap-32">
             {icon}
 
             <ModalTitle title={title} />
