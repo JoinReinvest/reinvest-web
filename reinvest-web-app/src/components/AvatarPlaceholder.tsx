@@ -2,7 +2,7 @@ import cx from 'classnames';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 interface Props {
-  accountType: DraftAccountType;
+  accountType: DraftAccountType | string;
   className?: string;
   label?: string;
 }

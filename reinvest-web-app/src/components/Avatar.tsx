@@ -7,7 +7,7 @@ import { AvatarPlaceholder } from './AvatarPlaceholder';
 
 type PrimitiveProps = Pick<ImageProps, 'alt'>;
 interface Props extends PrimitiveProps {
-  accountType?: DraftAccountType;
+  accountType?: DraftAccountType | string;
   fixedSize?: 'xs' | 'sm' | 'md' | 'lg';
   isSizeFixed?: boolean;
   label?: string;
