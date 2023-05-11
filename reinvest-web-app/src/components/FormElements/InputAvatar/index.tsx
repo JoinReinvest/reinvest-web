@@ -6,13 +6,13 @@ import { ChangeEventHandler, useMemo, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { EditAvatarButton } from './EditAvatarButton';
 
 type PrimitiveProps = Pick<AvatarProps, 'image' | 'altText'>;
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
-  accountType?: DraftAccountType;
+  accountType?: DraftAccountType | AccountType;
   onFileChange?: (file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
 }
@@ -70,7 +70,9 @@ export function InputAvatar<FormFields extends FieldValues>({
       return imageSrc;
     }
 
-    if (!imageSrc && accountType === DraftAccountType.Individual) {
+    const isIndividualOrBeneficiary = accountType && [AccountType.Individual, AccountType.Beneficiary, DraftAccountType.Individual].includes(accountType);
+
+    if (!imageSrc && isIndividualOrBeneficiary) {
       return placeholderImage;
     }
 
@@ -110,7 +112,7 @@ export function InputAvatar<FormFields extends FieldValues>({
   );
 }
 
-const getLabelToDisplay = (accountType: DraftAccountType) => {
+const getLabelToDisplay = (accountType: DraftAccountType | AccountType) => {
   if (accountType === DraftAccountType.Trust) {
     return 'T';
   }
