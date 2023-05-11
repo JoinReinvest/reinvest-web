@@ -10,13 +10,15 @@ type FlowsManagerProviderProps = ComponentProps<typeof FlowsManagerProvider>;
 type PrimitiveProps = Pick<FlowsManagerProviderProps, 'isModalOpen' | 'toggleIsModalOpen'>;
 type Props = PrimitiveProps;
 
+const MODAL_TITLE = 'Manage Account';
+
 const AccountManagement = () => {
   const { activeAccount } = useActiveAccount();
   const { isModalOpen, toggleIsModalOpen } = useFlowsManager();
 
   return (
     <ModalWhite
-      title="Manage Account"
+      title={MODAL_TITLE}
       isOpen={isModalOpen}
       onOpenChange={toggleIsModalOpen}
       activeAccount={activeAccount}
