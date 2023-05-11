@@ -12,6 +12,7 @@ import { FulfillBankAccountInput } from 'reinvest-app-common/src/types/graphql';
 import { mapPlaidDataForApi, PlaidEvent } from 'reinvest-app-common/src/utilities/plaid';
 import { getApiClient } from 'services/getApiClient';
 
+import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -79,12 +80,17 @@ export const StepBankSelection: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
+        {isCreateBankAccountLoading && (
+          <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
+            <IconSpinner />
+          </div>
+        )}
         {!isCreateBankAccountLoading && isCreateBankAccountSuccess && createBankAccountData?.link && (
           <>
             <FormContent>
               <Typography variant="h3">{TITLE}</Typography>
               <iframe
-                className="h-650 w-full"
+                className="h-full w-full"
                 src={createBankAccountData.link}
                 title="plaid connection"
               />
