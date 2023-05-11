@@ -13,7 +13,7 @@ import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
-import { AccountOverview, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, AccountType, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
@@ -188,6 +188,8 @@ const generateLabelForAccount = (availableAccounts: Maybe<AccountOverview>[]): M
   const individualAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Individual);
   const corporateAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && account?.avatar?.url);
   const trustAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && account?.avatar?.url);
+  const beneficiaryAccounts = availableAccounts.filter(account => account?.type === AccountType.Beneficiary);
+
   const trustAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && !account?.avatar?.url);
   const corporateAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && !account?.avatar?.url);
 
@@ -195,5 +197,12 @@ const generateLabelForAccount = (availableAccounts: Maybe<AccountOverview>[]): M
   const corporateAccountsWithLabel = corporateAccountsWithoutAvatar.map((account, index) => ({ ...account, avatarLabel: `C${index + 1}` }));
   const individualAccountWithLabel = individualAccounts.map(account => ({ ...account, avatarLabel: account?.avatar?.initials }));
 
-  return [...trustAccountsWithLabel, ...corporateAccountsWithLabel, ...corporateAccounts, ...trustAccounts, ...individualAccountWithLabel];
+  return [
+    ...trustAccountsWithLabel,
+    ...corporateAccountsWithLabel,
+    ...corporateAccounts,
+    ...trustAccounts,
+    ...individualAccountWithLabel,
+    ...beneficiaryAccounts,
+  ];
 };

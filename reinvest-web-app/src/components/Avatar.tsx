@@ -1,13 +1,13 @@
 import { Avatar as PrimitiveAvatar } from '@hookooekoo/ui-avatar';
 import cx from 'classnames';
 import Image, { ImageProps } from 'next/image';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { AvatarPlaceholder } from './AvatarPlaceholder';
 
 type PrimitiveProps = Pick<ImageProps, 'alt'>;
 interface Props extends PrimitiveProps {
-  accountType?: DraftAccountType | string;
+  accountType?: DraftAccountType | AccountType | string;
   fixedSize?: 'xs' | 'sm' | 'md' | 'lg';
   isSizeFixed?: boolean;
   label?: string;
