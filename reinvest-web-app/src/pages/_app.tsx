@@ -30,6 +30,7 @@ const App = ({ Component, pageProps }: AppProps) => {
           queries: {
             refetchOnWindowFocus: false,
             suspense: false,
+            retry: false,
           },
         },
       }),

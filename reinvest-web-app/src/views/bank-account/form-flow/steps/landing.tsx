@@ -38,17 +38,21 @@ const LIST_ITEMS = [
 export const StepLanding: StepParams<FlowFields> = {
   identifier: Identifiers.LANDING,
 
-  // isAValidationView: true,
-
   Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const {
       refetch,
-      // isError,
+      isError,
       data: readBankAccountData,
       isSuccess: isReadBankAccountSuccess,
       isLoading: isReadBankAccountLoading,
-    } = useReadBankAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false, retry: 1 } });
+    } = useReadBankAccount(getApiClient, {
+      accountId: activeAccount?.id || '',
+      config: {
+        enabled: false,
+        retry: false,
+      },
+    });
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
@@ -67,6 +71,12 @@ export const StepLanding: StepParams<FlowFields> = {
         moveToNextStep();
       }
     }, [isReadBankAccountSuccess, moveToNextStep, updateStoreFields, readBankAccountData?.accountNumber]);
+
+    useEffect(() => {
+      if (isError) {
+        updateStoreFields({ bankAccount: '' });
+      }
+    }, [isError, moveToNextStep, updateStoreFields]);
 
     return (
       <Form onSubmit={onSubmit}>

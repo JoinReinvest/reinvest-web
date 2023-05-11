@@ -8,7 +8,6 @@ import { renderBlogCard } from 'pages/education';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect } from 'react';
 import { useToggle } from 'usehooks-ts';
-import { InitialInvestmentView } from 'views/initial-investment';
 import { InitialInvestmentFormFlowProvider } from 'views/initial-investment/form-flow';
 
 import { BankAccountFlow } from '../bank-account';
@@ -23,7 +22,6 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const { arrivesFromOnboarding, setArrivesFromOnboarding } = useActiveAccount();
   // Display the initial investment flow if the user arrives from the onboarding flow
   const [displayInitialInvestmentFlow, toggleDisplayInitialInvestmentFlow] = useToggle(arrivesFromOnboarding);
-  const [displayBankAccountFlow, toggleDisplayBankAccountFlow] = useToggle(true);
 
   useEffect(() => {
     setArrivesFromOnboarding(false);
@@ -53,6 +51,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
             <Button
               label="Invest"
               className="hidden lg:mt-16 lg:block"
+              onClick={toggleDisplayInitialInvestmentFlow}
             />
           </div>
           <div className="flex h-180 flex-col gap-8 border border-gray-04 lg:h-auto lg:w-full lg:gap-24">
@@ -62,6 +61,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
           <Button
             label="Invest"
             className="lg:hidden"
+            onClick={toggleDisplayInitialInvestmentFlow}
           />
           <PositionTotal className="lg:hidden" />
           <NetReturns className="lg:hidden" />
@@ -69,11 +69,6 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         {arePostsReady && <div className="mt-16 flex flex-col gap-16 lg:mt-24 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
 
         <BankAccountFlow
-          isOpen={displayBankAccountFlow}
-          toggleIsOpen={toggleDisplayBankAccountFlow}
-        />
-
-        <InitialInvestmentView
           isOpen={displayInitialInvestmentFlow}
           toggleIsOpen={toggleDisplayInitialInvestmentFlow}
         />

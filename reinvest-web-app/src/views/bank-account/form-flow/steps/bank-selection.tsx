@@ -3,14 +3,15 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateBankAccount } from 'reinvest-app-common/src/services/queries/createBankAccount';
 import { useFulfillBankAccount } from 'reinvest-app-common/src/services/queries/fulfillBankAccount';
 import { FulfillBankAccountInput } from 'reinvest-app-common/src/types/graphql';
+import { mapPlaidDataForApi, PlaidEvent } from 'reinvest-app-common/src/utilities/plaid';
+import { getApiClient } from 'services/getApiClient';
 
-import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
-import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -48,7 +49,7 @@ export const StepBankSelection: StepParams<FlowFields> = {
     }, [createBankAccountMutation, activeAccount?.id]);
 
     useEffect(() => {
-      const handler = (event: any) => {
+      const handler = (event: PlaidEvent) => {
         const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
 
         if (data.plaidAccountDetails?.length) {
@@ -101,24 +102,3 @@ export const StepBankSelection: StepParams<FlowFields> = {
     );
   },
 };
-
-interface DataFromPlaid {
-  accountId: string;
-  account_name: string;
-  account_number: string;
-  account_type: string;
-  institutionId: string;
-  institution_name: string;
-  refNum: string;
-  routing_number: string;
-}
-
-const mapPlaidDataForApi = (plaidData: DataFromPlaid): FulfillBankAccountInput => ({
-  accountName: plaidData.account_name,
-  accountNumber: plaidData.account_number,
-  accountType: plaidData.account_type,
-  institutionId: plaidData.institutionId,
-  institutionName: plaidData.institution_name,
-  refNumber: plaidData.refNum,
-  routingNumber: plaidData.routing_number,
-});
