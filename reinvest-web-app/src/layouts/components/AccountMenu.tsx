@@ -15,6 +15,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
 import { AccountOverview, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { ViewAccountManagement } from 'views/account-management';
 
 import { getAccountsWithLabel } from '../utilities/accounts';
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
@@ -33,12 +34,18 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isMenuOpen, toggleIsMenuOpen] = useToggler(false);
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
   const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
+  const [isModalManageAccount, toggleIsModalManageAccount] = useToggler(false);
 
-  const availableAccountsWithLabels = generateLabelForAccount(availableAccounts);
+  const availableAccountsWithLabels = getAccountsWithLabel(availableAccounts);
 
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
     toggleIsMenuOpen();
+  };
+
+  const handleModalManageAccountOpenChange = () => {
+    toggleIsMenuOpen(false);
+    toggleIsModalManageAccount(true);
   };
 
   const handleModalInviteOpenChange = () => {
@@ -96,7 +103,10 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                     </div>
                   </div>
 
-                  <Button label="Manage Account" />
+                  <Button
+                    label="Manage Account"
+                    onClick={handleModalManageAccountOpenChange}
+                  />
                 </header>
 
                 <ul className="flex flex-col gap-16">
