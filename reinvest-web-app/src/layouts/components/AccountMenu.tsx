@@ -13,9 +13,11 @@ import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
-import { AccountOverview, AccountType, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { ViewAccountManagement } from 'views/account-management';
 
+import { getAccountsWithLabel } from '../utilities/accounts';
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
 import { AccountMenuActionItem } from './AccountMenuActionItem';
 import { AccountMenuFooter } from './AccountMenuFooter';
@@ -32,12 +34,18 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isMenuOpen, toggleIsMenuOpen] = useToggler(false);
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
   const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
+  const [isModalManageAccount, toggleIsModalManageAccount] = useToggler(false);
 
-  const availableAccountsWithLabels = generateLabelForAccount(availableAccounts);
+  const availableAccountsWithLabels = getAccountsWithLabel(availableAccounts);
 
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
     toggleIsMenuOpen();
+  };
+
+  const handleModalManageAccountOpenChange = () => {
+    toggleIsMenuOpen(false);
+    toggleIsModalManageAccount(true);
   };
 
   const handleModalInviteOpenChange = () => {
@@ -95,7 +103,10 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                     </div>
                   </div>
 
-                  <Button label="Manage Account" />
+                  <Button
+                    label="Manage Account"
+                    onClick={handleModalManageAccountOpenChange}
+                  />
                 </header>
 
                 <ul className="flex flex-col gap-16">
@@ -176,33 +187,11 @@ export const AccountMenu = ({ activeAccount }: Props) => {
         isOpen={isModalAddBeneficiaryOpen}
         onOpenChange={toggleIsModalAddBeneficiaryOpen}
       />
+
+      <ViewAccountManagement
+        isModalOpen={isModalManageAccount}
+        toggleIsModalOpen={toggleIsModalManageAccount}
+      />
     </>
   );
-};
-
-interface AccountsWithAvatarLabel extends AccountOverview {
-  avatarLabel?: string;
-}
-
-const generateLabelForAccount = (availableAccounts: Maybe<AccountOverview>[]): Maybe<AccountsWithAvatarLabel>[] => {
-  const individualAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Individual);
-  const corporateAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && account?.avatar?.url);
-  const trustAccounts = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && account?.avatar?.url);
-  const beneficiaryAccounts = availableAccounts.filter(account => account?.type === AccountType.Beneficiary);
-
-  const trustAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Trust && !account?.avatar?.url);
-  const corporateAccountsWithoutAvatar = availableAccounts.filter(account => account?.type === DraftAccountType.Corporate && !account?.avatar?.url);
-
-  const trustAccountsWithLabel = trustAccountsWithoutAvatar.map((account, index) => ({ ...account, avatarLabel: `T${index + 1}` }));
-  const corporateAccountsWithLabel = corporateAccountsWithoutAvatar.map((account, index) => ({ ...account, avatarLabel: `C${index + 1}` }));
-  const individualAccountWithLabel = individualAccounts.map(account => ({ ...account, avatarLabel: account?.avatar?.initials }));
-
-  return [
-    ...trustAccountsWithLabel,
-    ...corporateAccountsWithLabel,
-    ...corporateAccounts,
-    ...trustAccounts,
-    ...individualAccountWithLabel,
-    ...beneficiaryAccounts,
-  ];
 };
