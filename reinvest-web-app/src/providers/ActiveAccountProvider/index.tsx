@@ -1,9 +1,10 @@
-import { createContext, PropsWithChildren, useContext, useEffect, useMemo, useState } from 'react';
-import { MAXIMUM_NUMBER_OF_BENEFICIARIES } from 'reinvest-app-common/src/constants/account';
-import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
-import { getApiClient } from 'services/getApiClient';
 import { useSessionStorage } from 'usehooks-ts';
+
+import { useAvailableAccounts } from './hooks/available-accounts';
+import { useBeneficiaries } from './hooks/beneficiaries';
+import { useProfileAccounts } from './hooks/profile-account';
 
 interface ActiveAccountState {
   activeAccount: AccountOverview | null;
@@ -13,7 +14,9 @@ interface ActiveAccountState {
   availableAccounts: Maybe<AccountOverview>[];
   /** The masked bank account of the profile */
   bankAccount: string | null;
+  individualAccount: AccountOverview | null;
   isAbleToAddBeneficiaries: boolean;
+  refetchUserProfile: () => void;
   setArrivesFromOnboarding: (value: boolean) => void;
   updateActiveAccount: (account: Maybe<AccountOverview>) => void;
   updateBankAccount: (bankAccount: string) => void;
@@ -25,6 +28,7 @@ enum StorageKeys {
 
 const Context = createContext<ActiveAccountState>({
   activeAccount: null,
+  individualAccount: null,
   bankAccount: null,
   allAccounts: [],
   availableAccounts: [],
@@ -36,38 +40,25 @@ const Context = createContext<ActiveAccountState>({
   setArrivesFromOnboarding: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateBankAccount: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  refetchUserProfile: () => {},
 });
 
 export const useActiveAccount = () => useContext(Context);
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
-  const [activeAccount, setActiveAccount] = useState<AccountOverview | null>(null);
+  const { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile } = useProfileAccounts();
+  const { isAbleToAddBeneficiaries } = useBeneficiaries({ allAccounts });
+  const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts });
   const [bankAccount, updateBankAccount] = useState<ActiveAccountState['bankAccount']>(null);
-  const { data: userProfile } = useGetUserProfile(getApiClient);
-  const allAccounts = useMemo(() => userProfile?.accounts || [], [userProfile]);
-  const availableAccounts = useMemo(() => allAccounts.filter(account => account?.id !== activeAccount?.id), [activeAccount, allAccounts]);
   const [arrivesFromOnboarding, setArrivesFromOnboarding] = useSessionStorage(StorageKeys.HAS_BEEN_ONBOARDED, false);
-
-  const isAbleToAddBeneficiaries = 0 < MAXIMUM_NUMBER_OF_BENEFICIARIES;
-
-  useEffect(() => {
-    const firstAccount = userProfile?.accounts?.at(0);
-
-    if (firstAccount) {
-      setActiveAccount(firstAccount);
-    }
-  }, [userProfile]);
-
-  const updateActiveAccount = (account: Maybe<AccountOverview>) => {
-    if (account) {
-      setActiveAccount(account);
-    }
-  };
 
   return (
     <Context.Provider
       value={{
         activeAccount,
+        refetchUserProfile,
+        individualAccount,
         allAccounts,
         updateActiveAccount,
         availableAccounts,
