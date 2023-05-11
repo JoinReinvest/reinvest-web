@@ -80,7 +80,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                       src={activeAccount.avatar?.url || placeholderPicture}
                       alt={activeAccount.label || ''}
                       isSizeFixed
-                      fixedSize="md"
+                      fixedSize="lg"
                     />
 
                     <div>

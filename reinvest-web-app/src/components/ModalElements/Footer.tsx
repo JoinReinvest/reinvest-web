@@ -7,16 +7,18 @@ import { TermsAndConditioncBlackModal } from 'views/TermsAndConditioncBlackModal
 
 interface Props {
   modalColor?: 'white' | 'black';
+  width?: 'md' | 'lg';
 }
 
-export const Footer = ({ modalColor = 'black' }: Props) => {
+export const ModalFooter = ({ modalColor = 'black', width = 'md' }: Props) => {
   const [isModalTermsOpen, toggleIsModalTermsOpen] = useToggler(false);
   const [isModalPrivacyOpen, toggleIsModalPrivacyIsOpen] = useToggler(false);
 
-  const className = cx({ 'text-gray-04': modalColor === 'black', 'text-gray-02': modalColor === 'white' });
+  const className = cx('mx-auto text-center', { 'w-330': width === 'md', 'w-415': width === 'lg' });
+  const textClassName = cx({ 'text-gray-04': modalColor === 'black', 'text-gray-02': modalColor === 'white' });
 
   return (
-    <footer className="w-330 mx-auto text-center">
+    <footer className={className}>
       <TermsAndConditioncBlackModal
         isOpen={isModalTermsOpen}
         onOpenChange={toggleIsModalTermsOpen}
@@ -29,19 +31,19 @@ export const Footer = ({ modalColor = 'black' }: Props) => {
 
       <Typography
         variant="paragraph"
-        className={className}
+        className={textClassName}
       >
         By continuing, you agree to the REINVEST
         <br />
         <OpenModalLink
           onClick={toggleIsModalTermsOpen}
-          green
+          green={modalColor === 'black'}
           label="Terms of Conditions"
         />{' '}
         and{' '}
         <OpenModalLink
           onClick={toggleIsModalPrivacyIsOpen}
-          green
+          green={modalColor === 'black'}
           label="Privacy Policy"
         />
         .
