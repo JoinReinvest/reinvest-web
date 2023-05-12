@@ -9,10 +9,10 @@ interface Props {
 }
 
 export function GroupItem({ item }: Props) {
-  const { setCurrentFlow } = useFlowsManager();
+  const { setCurrentFlowIdentifier } = useFlowsManager();
 
   const onClick = () => {
-    setCurrentFlow(item.identifier);
+    setCurrentFlowIdentifier(item.identifier);
   };
 
   return (

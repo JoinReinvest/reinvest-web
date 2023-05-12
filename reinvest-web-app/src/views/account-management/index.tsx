@@ -14,16 +14,24 @@ const MODAL_TITLE = 'Manage Account';
 
 const AccountManagement = () => {
   const { activeAccount } = useActiveAccount();
-  const { isModalOpen, toggleIsModalOpen } = useFlowsManager();
+  const { isModalOpen, toggleIsModalOpen, currentFlow, setCurrentFlowIdentifier } = useFlowsManager();
+
+  const onOpenChange = (willBeOpen: boolean) => {
+    if (!willBeOpen) {
+      setCurrentFlowIdentifier(null);
+    }
+
+    toggleIsModalOpen(willBeOpen);
+  };
 
   return (
     <ModalWhite
       title={MODAL_TITLE}
       isOpen={isModalOpen}
-      onOpenChange={toggleIsModalOpen}
+      onOpenChange={onOpenChange}
       activeAccount={activeAccount}
     >
-      <Menu groups={MENU_GROUPS} />
+      {currentFlow ? currentFlow.flow : <Menu groups={MENU_GROUPS} />}
     </ModalWhite>
   );
 };
