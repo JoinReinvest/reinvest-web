@@ -1,5 +1,6 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useState } from 'react';
 import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
 import { useSessionStorage } from 'usehooks-ts';
 
 import { useAvailableAccounts } from './hooks/available-accounts';
@@ -44,7 +45,7 @@ const Context = createContext<ActiveAccountState>({
   refetchUserProfile: () => {},
 });
 
-export const useActiveAccount = () => useContext(Context);
+export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountProvider');
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile } = useProfileAccounts();
