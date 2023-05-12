@@ -21,10 +21,11 @@ const getSchema = ({ _shouldAgreeToOneTimeInvestment, _shouldAgreeToRecurringInv
       agreesToRecurringInvestment: z.boolean(),
     })
     .superRefine((fields, context) => {
-      const shouldHaveAgreedToOneTimeStatement = _shouldAgreeToOneTimeInvestment && !!fields.agreesToOneTimeInvestment;
-      const shouldHaveAgreedToRecurringStatement = _shouldAgreeToRecurringInvestment && !!fields.agreesToRecurringInvestment;
+      const agreedToOneTimeStatement = _shouldAgreeToOneTimeInvestment ? !!fields.agreesToOneTimeInvestment : true;
+      const agreedToRecurringStatement = _shouldAgreeToRecurringInvestment ? !!fields.agreesToRecurringInvestment : true;
+      const missedAnAgreement = [agreedToOneTimeStatement, agreedToRecurringStatement].some(agreement => !agreement);
 
-      if (shouldHaveAgreedToOneTimeStatement === false || shouldHaveAgreedToRecurringStatement === false) {
+      if (missedAnAgreement) {
         context.addIssue({ code: 'custom' });
       }
     });
