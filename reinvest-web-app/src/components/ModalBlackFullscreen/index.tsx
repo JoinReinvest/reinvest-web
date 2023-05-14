@@ -1,5 +1,5 @@
 import { Dialog, DialogProps } from '@hookooekoo/ui-dialog';
-import { Footer } from 'components/ModalElements/Footer';
+import { ModalFooter } from 'components/ModalElements/Footer';
 import { ProgressBar } from 'components/ProgressBar';
 import { PropsWithChildren, useRef } from 'react';
 
@@ -43,7 +43,7 @@ export const ModalBlackFullscreen = ({ isOpen = false, onOpenChange, progressBar
         >
           <div className="mx-auto mt-24 w-full max-w-330 grow lg:mt-0">{children}</div>
 
-          <Footer />
+          <ModalFooter />
         </div>
       </div>
     </Dialog>

@@ -15,7 +15,7 @@ interface Props extends PropsWithChildren {
   title: string;
 }
 
-export const WhiteModal = ({ isOpen, onOpenChange, title, activeAccount, children }: Props) => (
+export const ModalWhite = ({ isOpen, onOpenChange, title, activeAccount, children }: Props) => (
   <Dialog.Root
     open={isOpen}
     onOpenChange={onOpenChange}
@@ -23,7 +23,7 @@ export const WhiteModal = ({ isOpen, onOpenChange, title, activeAccount, childre
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
 
-      <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24">
+      <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 md:max-w-415">
         <>
           <header className="flex items-center justify-between px-24 pb-22 pt-12 text-black-01 md:hidden md:px-44">
             <Dialog.Close>
@@ -48,14 +48,14 @@ export const WhiteModal = ({ isOpen, onOpenChange, title, activeAccount, childre
               fixedSize="xs"
             />
 
-            <Dialog.Title>
+            <Dialog.Title asChild>
               <Typography variant="h3">{title}</Typography>
             </Dialog.Title>
           </div>
 
           <Separator className="h-1 w-full bg-gray-04 md:h-0" />
 
-          <div className="h-full px-24 pb-24 md:px-44">{children}</div>
+          <div className="h-full overflow-y-auto px-24 pb-24 md:px-44">{children}</div>
         </>
       </Dialog.Content>
     </Dialog.Portal>

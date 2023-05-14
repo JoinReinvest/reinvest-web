@@ -68,6 +68,7 @@ module.exports = {
       210: '21.0rem',
       300: '30.0rem',
       342: '34.2rem',
+      415: '41.5rem',
       460: '46.0rem',
       650: '65.0rem',
     },
@@ -173,6 +174,13 @@ module.exports = {
         },
       ],
 
+      'paragraph-emphasized-regular': [
+        '1.4rem',
+        {
+          fontWeight: '400',
+        },
+      ],
+
       paragraph: [
         '1.2rem',
         {
@@ -244,6 +252,8 @@ module.exports = {
       },
       maxHeight: {
         146: '14.6rem',
+        284: '28.4rem',
+        570: '57.0rem',
       },
       gridTemplateRows: {
         'full-auto': '1fr auto',
