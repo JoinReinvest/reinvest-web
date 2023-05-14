@@ -1,11 +1,14 @@
-import { createContext, PropsWithChildren, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useMemo, useState } from 'react';
 
-import { MenuItemIdentifiers } from '../enums/menu';
+import { FlowIdentifiers } from '../enums/flow';
+import { FLOWS } from '../flows';
+import { SubFlow } from '../interfaces/flows';
 
 interface State {
-  currentFlow: MenuItemIdentifiers | null;
+  currentFlow: SubFlow | null;
+  currentFlowIdentifier: FlowIdentifiers | null;
   isModalOpen: boolean;
-  setCurrentFlow: (state: MenuItemIdentifiers | null) => void;
+  setCurrentFlowIdentifier: (state: FlowIdentifiers | null) => void;
   toggleIsModalOpen: (state: boolean) => void;
 }
 
@@ -17,14 +20,27 @@ const Context = createContext<State>({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   toggleIsModalOpen: () => {},
   currentFlow: null,
+  currentFlowIdentifier: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setCurrentFlow: () => {},
+  setCurrentFlowIdentifier: () => {},
 });
 
 export const useFlowsManager = () => useContext(Context);
 
 export const FlowsManagerProvider = ({ isModalOpen, toggleIsModalOpen, children }: Props) => {
-  const [currentFlow, setCurrentFlow] = useState<State['currentFlow']>(null);
+  const [currentFlowIdentifier, setCurrentFlowIdentifier] = useState<State['currentFlowIdentifier']>(null);
 
-  return <Context.Provider value={{ currentFlow, setCurrentFlow, isModalOpen, toggleIsModalOpen }}>{children}</Context.Provider>;
+  const currentFlow: State['currentFlow'] = useMemo(() => {
+    if (currentFlowIdentifier) {
+      const flow = FLOWS.get(currentFlowIdentifier);
+
+      return flow || null;
+    }
+
+    return null;
+  }, [currentFlowIdentifier]);
+
+  return (
+    <Context.Provider value={{ currentFlow, currentFlowIdentifier, setCurrentFlowIdentifier, isModalOpen, toggleIsModalOpen }}>{children}</Context.Provider>
+  );
 };

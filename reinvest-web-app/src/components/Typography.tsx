@@ -14,6 +14,7 @@ type Variants =
   | 'button'
   | 'paragraph-large'
   | 'paragraph-emphasized'
+  | 'paragraph-emphasized-regular'
   | 'paragraph'
   | 'paragraph-small'
   | 'link'
@@ -35,6 +36,7 @@ const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
   ['bonus-heading', 'h5'],
   ['paragraph-large', 'p'],
   ['paragraph-emphasized', 'p'],
+  ['paragraph-emphasized-regular', 'p'],
   ['paragraph', 'p'],
   ['paragraph-small', 'p'],
   ['link', 'div'],
@@ -56,6 +58,7 @@ const variants = cva(undefined, {
       button: 'typo-button',
       'paragraph-large': 'typo-paragraph-large',
       'paragraph-emphasized': 'typo-paragraph-emphasized',
+      'paragraph-emphasized-regular': 'typo-paragraph-emphasized-regular',
       paragraph: 'typo-paragraph',
       'paragraph-small': 'typo-paragraph-small',
       link: 'typo-link',
