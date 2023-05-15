@@ -1,4 +1,5 @@
-import { MenuGroupIdentifiers, MenuItemIdentifiers } from '../enums/menu';
+import { FlowIdentifiers } from '../enums/flow';
+import { MenuGroupIdentifiers } from '../enums/menu';
 
 export interface MenuGroup {
   identifier: MenuGroupIdentifiers;
@@ -7,6 +8,6 @@ export interface MenuGroup {
 }
 
 export interface MenuItem {
-  identifier: MenuItemIdentifiers;
+  identifier: FlowIdentifiers;
   label: string;
 }

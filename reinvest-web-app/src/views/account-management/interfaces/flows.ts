@@ -1,10 +1,8 @@
-import { ContextProvider } from 'reinvest-app-common/src/services/form-flow';
+import { ReactNode } from 'react';
 
-import { MenuItemIdentifiers } from '../enums/menu';
+import { FlowIdentifiers } from '../enums/flow';
 
-export type SubFlowsByIdentifier = Record<MenuItemIdentifiers, SubFlow<unknown>>;
-
-export interface SubFlow<FormFields> {
-  identifier: MenuItemIdentifiers;
-  provider: ContextProvider<FormFields>;
+export interface SubFlow {
+  flow: ReactNode;
+  identifier: FlowIdentifiers;
 }
