@@ -1,4 +1,5 @@
-import { PropsWithChildren, useContext, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
+import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
 import { useSessionStorage } from 'usehooks-ts';
 
 import { Context } from './context';
@@ -8,7 +9,7 @@ import { useBeneficiaries } from './hooks/beneficiaries';
 import { useProfileAccounts } from './hooks/profile-account';
 import { State } from './interfaces';
 
-export const useActiveAccount = () => useContext(Context);
+export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountProvider');
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile } = useProfileAccounts();

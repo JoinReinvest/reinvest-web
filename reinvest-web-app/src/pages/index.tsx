@@ -1,6 +1,7 @@
 import { useFetch } from 'hooks/fetch';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
+import { ActiveAccountChartProvider } from 'providers/ActiveAccountChart';
 import { GetPostsResponse } from 'types/site-api';
 import { DashboardView } from 'views/dashboard';
 
@@ -16,10 +17,12 @@ const DashboardPage: NextPage = () => {
 
   return (
     <MainLayout>
-      <DashboardView
-        arePostsReady={arePostsReady}
-        posts={posts}
-      />
+      <ActiveAccountChartProvider>
+        <DashboardView
+          arePostsReady={arePostsReady}
+          posts={posts}
+        />
+      </ActiveAccountChartProvider>
     </MainLayout>
   );
 };
