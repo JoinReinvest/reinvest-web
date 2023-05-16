@@ -6,21 +6,21 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateInvestment } from 'reinvest-app-common/src/services/queries/createInvestment';
+import { getApiClient } from 'services/getApiClient';
 import { maskCurrency } from 'utils/currency';
 import { Schema, z } from 'zod';
 
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { getApiClient } from 'services/getApiClient';
 import { MINIMUM_INVESTMENT_AMOUNT_FOR_CORPORATE_OR_TRUST, MINIMUM_INVESTMENT_AMOUNT_FOR_INDIVIDUAL } from '../../constants/investment-amounts';
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
 
 interface Fields {
-  investmentAmount?: number;
+  investmentAmount?: string;
 }
 
 const getSchema = ({ _isForIndividualAccount }: FlowFields): Schema<Fields> => {
@@ -28,7 +28,7 @@ const getSchema = ({ _isForIndividualAccount }: FlowFields): Schema<Fields> => {
   const maskedMinimum = maskCurrency(minimum);
 
   return z.object({
-    investmentAmount: z.number().min(minimum, `Minimum investment amount is ${maskedMinimum}`),
+    investmentAmount: z.string().min(minimum, `Minimum investment amount is ${maskedMinimum}`),
   });
 };
 
@@ -89,7 +89,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
           <InvestmentCard
             defaultValue={defaultValues.investmentAmount}
-            onChange={value => setValue('investmentAmount', value, { shouldValidate: true })}
+            onChange={value => setValue('investmentAmount', value?.toString(), { shouldValidate: true })}
             currentBankAccount="Checking **** **** **** 0000"
             onChangeBankAccount={() => {
               // eslint-disable-next-line no-console

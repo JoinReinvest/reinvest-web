@@ -8,14 +8,14 @@ import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/inv
 
 interface Props {
   currentBankAccount: string;
-  onChange: (value?: number) => void;
+  onChange: (value?: string) => void;
   onChangeBankAccount: () => void;
   className?: string;
-  defaultValue?: number;
+  defaultValue?: string;
 }
 
 interface Fields {
-  customAmount?: number;
+  customAmount?: string;
   presetAmount?: string;
 }
 
@@ -25,25 +25,22 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
   const { field: presetField } = useController({ control: form.control, name: 'presetAmount' });
 
   const onPresetFieldChange = (value: string) => {
-    const numericValue = parseInt(value);
-
-    form.setValue('customAmount', numericValue);
+    form.setValue('customAmount', value);
     presetField.onChange({ target: { value } });
 
-    onChange(numericValue);
+    onChange(value);
   };
 
-  const onCustomFieldChange = (event: { target: { value: number | string } }) => {
+  const onCustomFieldChange = (event: { target: { value: string } }) => {
     if (event.target.value !== '') {
       const { value } = event.target;
-      const numericValue = typeof value === 'string' ? parseInt(value) : value;
 
       if (`${value}` !== presetField.value) {
         presetField.onChange({ target: { value: '' } });
       }
 
-      form.setValue('customAmount', numericValue);
-      onChange(numericValue);
+      form.setValue('customAmount', value);
+      onChange(value);
     }
   };
 

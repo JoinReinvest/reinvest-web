@@ -20,11 +20,11 @@ const MINIMUM_AMOUNT = 100;
 const MASKED_MINIMUM_AMOUNT = maskCurrency(MINIMUM_AMOUNT);
 
 interface Fields {
-  investmentAmount?: number;
+  investmentAmount?: string;
 }
 
 const schema: Schema<Fields> = z.object({
-  investmentAmount: z.number().min(MINIMUM_AMOUNT, `Minimum investment amount is ${MASKED_MINIMUM_AMOUNT}`),
+  investmentAmount: z.string().min(MINIMUM_AMOUNT, `Minimum investment amount is ${MASKED_MINIMUM_AMOUNT}`),
 });
 
 const getDefaultValues = ({ recurringInvestment }: FlowFields): Fields => ({

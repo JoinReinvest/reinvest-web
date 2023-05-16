@@ -26,7 +26,7 @@ const getSchema = ({ _selectedAccount }: FlowFields): Schema<Fields> => {
   const maskedMinimum = maskCurrency(minimum);
 
   return z.object({
-    investmentAmount: z.number().min(minimum, `Minimum investment amount is ${maskedMinimum}`),
+    investmentAmount: z.string().min(minimum, `Minimum investment amount is ${maskedMinimum}`),
   });
 };
 

@@ -21,7 +21,7 @@ const MASKED_MINIMUM_AMOUNT = maskCurrency(MINIMUM_AMOUNT);
 type Fields = Pick<FlowFields, 'recurringInvestmentAmount'>;
 
 const schema: Schema<Fields> = z.object({
-  recurringInvestmentAmount: z.number().min(MINIMUM_AMOUNT, `Minimum investment amount is ${MASKED_MINIMUM_AMOUNT}`),
+  recurringInvestmentAmount: z.string().min(MINIMUM_AMOUNT, `Minimum investment amount is ${MASKED_MINIMUM_AMOUNT}`),
 });
 
 export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
@@ -61,8 +61,8 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
           />
 
           <InvestmentCard
-            defaultValue={defaultValues.recurringInvestmentAmount}
-            onChange={value => setValue('recurringInvestmentAmount', value, { shouldValidate: true })}
+            defaultValue={defaultValues.recurringInvestmentAmount || ''}
+            onChange={value => setValue('recurringInvestmentAmount', value?.toString(), { shouldValidate: true })}
             currentBankAccount="Checking **** **** **** 0000"
             onChangeBankAccount={() => {
               // eslint-disable-next-line no-console

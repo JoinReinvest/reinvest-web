@@ -9,14 +9,14 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useReadBankAccount } from 'reinvest-app-common/src/services/queries/readBankAccount';
+import { getApiClient } from 'services/getApiClient';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { getApiClient } from 'services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 

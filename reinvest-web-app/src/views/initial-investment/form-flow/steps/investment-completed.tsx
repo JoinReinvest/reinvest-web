@@ -12,9 +12,9 @@ import { useGetInvestmentSummary } from 'reinvest-app-common/src/services/querie
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { getApiClient } from '../../../../services/getApiClient';
+import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
-import { useModalHandler } from '../../providers/modal-handler';
 
 const TITLE = 'Thank you for investing in Community REIT';
 const MESSAGE_INFORMATION = 'Please expect funds to be drawn from your bank account within 3 days.';

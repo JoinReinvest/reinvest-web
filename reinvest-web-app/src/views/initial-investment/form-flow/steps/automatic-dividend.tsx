@@ -6,14 +6,14 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useToggler } from 'hooks/toggler';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetAccountConfiguration } from 'reinvest-app-common/src/services/queries/getAccountConfiguration';
 import { useSetAutomaticDividendReinvestmentAgreement } from 'reinvest-app-common/src/services/queries/setAutomaticDividendReinvestmentAgreement';
+import { getApiClient } from 'services/getApiClient';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { getApiClient } from 'services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
