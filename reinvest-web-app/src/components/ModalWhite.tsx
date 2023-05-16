@@ -62,7 +62,7 @@ export const ModalWhite = ({ isOpen, onOpenChange, title, activeAccount, addPadd
               </Dialog.Title>
             </div>
 
-            <div className="overflow-y-hidden">
+            <div className="h-full overflow-y-hidden">
               <Separator className="h-1 w-full bg-gray-04 md:h-0" />
 
               <div className={contentClassName}>{children}</div>
