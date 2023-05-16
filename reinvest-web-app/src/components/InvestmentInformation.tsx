@@ -12,7 +12,6 @@ interface Props {
 
 export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
   const isRecurrent = type === 'recurring';
-  // const maskedAmount = maskCurrency(amount);
   const dateForDisplay = date && formatDate(date, 'INVESTMENT');
   const labeledDate = isRecurrent ? `Starting ${dateForDisplay}` : dateForDisplay;
 
