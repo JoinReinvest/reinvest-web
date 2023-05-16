@@ -174,6 +174,13 @@ module.exports = {
         },
       ],
 
+      'paragraph-emphasized-regular': [
+        '1.4rem',
+        {
+          fontWeight: '400',
+        },
+      ],
+
       paragraph: [
         '1.2rem',
         {

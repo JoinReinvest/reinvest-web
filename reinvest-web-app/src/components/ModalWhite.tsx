@@ -55,7 +55,7 @@ export const ModalWhite = ({ isOpen, onOpenChange, title, activeAccount, childre
 
           <Separator className="h-1 w-full bg-gray-04 md:h-0" />
 
-          <div className="h-full px-24 pb-24 md:px-44">{children}</div>
+          <div className="h-full overflow-y-auto px-24 pb-24 md:px-44">{children}</div>
         </>
       </Dialog.Content>
     </Dialog.Portal>

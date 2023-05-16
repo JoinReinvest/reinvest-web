@@ -1,5 +1,4 @@
 import { Button } from 'components/Button';
-import { AreaChart } from 'components/Charts/AreaChart';
 import { NetReturns } from 'components/Dashboard/NetReturns';
 import { PositionTotal } from 'components/Dashboard/PositionTotal';
 import { BlogPostInterface } from 'components/Education/BlogCard';
@@ -11,8 +10,9 @@ import { useEffect } from 'react';
 import { InitialInvestmentFormFlowProvider } from 'views/initial-investment/form-flow';
 import { InvestmentFlowProvider } from 'views/investment/form-flow';
 
-// import { BankAccountFlow } from '../bank-account';
 import {InitialInvestmentView} from "../initial-investment";
+
+import { EvsChart } from './components/EvsChart';
 
 interface Props {
   arePostsReady: boolean;
@@ -55,9 +55,8 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
                 className="hidden lg:mt-16 lg:block"
               />
             </div>
-            <div className="flex h-180 flex-col gap-8 border border-gray-04 lg:h-auto lg:w-full lg:gap-24">
-              <AreaChart />
-            </div>
+
+            <EvsChart />
 
             <Button
               label="Invest"
