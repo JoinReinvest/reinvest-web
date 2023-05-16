@@ -5,7 +5,7 @@ import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 import { maskCurrency } from 'utils/currency';
 
 interface Props {
-  amount: number;
+  amount: number | string;
   label: string;
   type: 'one-time' | 'recurring';
   date?: Date;
@@ -13,7 +13,7 @@ interface Props {
 
 export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
   const isRecurrent = type === 'recurring';
-  const maskedAmount = maskCurrency(amount);
+  const maskedAmount = typeof amount === 'number' ? maskCurrency(amount) : amount;
   const dateForDisplay = date && formatDate(date, 'INVESTMENT');
   const labeledDate = isRecurrent ? `Starting ${dateForDisplay}` : dateForDisplay;
 
