@@ -1,29 +1,64 @@
 import { ModalWhite } from 'components/ModalWhite';
+import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { ModalProps } from 'types/modal';
 
-import { EmptyListMessage } from './components/EmptyListMessage';
-import { NotificationsList } from './components/NotificationList';
+import { Notifications } from './components/Notifications';
 import { SAMPLE_NOTIFICATIONS } from './constants';
-
-type Props = ModalProps;
+import { FlowsManagerProvider, useFlowsManagerContext } from './providers/flows-manager';
+import { ModalManagerProvider, useModalManagerContext } from './providers/modal-manager';
 
 const TITLE = 'Notifications';
 
-export function ViewNotifications({ isModalOpen, onModalOpenChange }: Props) {
+export function InnerViewNotifications() {
   const { activeAccount } = useActiveAccount();
-  const hasItems = SAMPLE_NOTIFICATIONS.length > 0;
+  const { currentFlowIdentifier, currentFlow, updateCurrentFlow } = useFlowsManagerContext();
+  const { modalTitle, updateModalTitle, isModalOpen, onModalOpenChange, showModalWithWatermark } = useModalManagerContext();
+
+  const onOpenChange = (state: boolean) => {
+    if (!state) {
+      updateCurrentFlow({ identifier: null });
+      updateModalTitle(null);
+    }
+
+    onModalOpenChange(state);
+  };
+
+  if (showModalWithWatermark) {
+    return (
+      <ModalWhiteWatermarkSide
+        title={modalTitle}
+        isOpen={isModalOpen}
+        onOpenChange={onOpenChange}
+      >
+        {currentFlowIdentifier ? currentFlow?.Component : <Notifications notifications={SAMPLE_NOTIFICATIONS} />}
+      </ModalWhiteWatermarkSide>
+    );
+  }
 
   return (
     <ModalWhite
-      title={TITLE}
+      title={modalTitle}
       activeAccount={activeAccount}
       isOpen={isModalOpen}
-      onOpenChange={onModalOpenChange}
+      onOpenChange={onOpenChange}
       addPaddingBottom={false}
       hideAvatarNextToTitle
     >
-      {hasItems ? <NotificationsList notifications={SAMPLE_NOTIFICATIONS} /> : <EmptyListMessage />}
+      {currentFlowIdentifier ? currentFlow?.Component : <Notifications notifications={SAMPLE_NOTIFICATIONS} />}
     </ModalWhite>
   );
 }
+
+type Props = ModalProps;
+
+export const ViewNotifications = (props: Props) => (
+  <ModalManagerProvider
+    {...props}
+    initialModalTitle={TITLE}
+  >
+    <FlowsManagerProvider>
+      <InnerViewNotifications />
+    </FlowsManagerProvider>
+  </ModalManagerProvider>
+);
