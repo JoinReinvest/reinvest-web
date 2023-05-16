@@ -1,5 +1,0 @@
-export enum Identifiers {
-  LANDING = 'LANDING',
-  BANK_SELECTION = 'BANK_SELECTION',
-  CONFIRMATION = 'CONFIRMATION',
-}

@@ -6,12 +6,15 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCreateInvestment } from 'reinvest-app-common/src/services/queries/createInvestment';
 import { maskCurrency } from 'utils/currency';
 import { Schema, z } from 'zod';
 
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { getApiClient } from 'services/getApiClient';
 import { MINIMUM_INVESTMENT_AMOUNT_FOR_CORPORATE_OR_TRUST, MINIMUM_INVESTMENT_AMOUNT_FOR_INDIVIDUAL } from '../../constants/investment-amounts';
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -37,7 +40,9 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.INITIAL_INVESTMENT,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { activeAccount } = useActiveAccount();
     const schema = useMemo(() => getSchema(storeFields), [storeFields]);
+    const { mutate, isSuccess, data } = useCreateInvestment(getApiClient);
     const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
     const { handleSubmit, setValue, formState } = useForm<Fields>({
       mode: 'onChange',
@@ -55,10 +60,24 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         date: new Date(),
       };
 
-      await updateStoreFields({ oneTimeInvestment: investment });
+      if (activeAccount?.id && investmentAmount) {
+        await mutate({ accountId: activeAccount?.id, amount: { value: investmentAmount } });
+        await updateStoreFields({ oneTimeInvestment: investment, _shouldAgreeToOneTimeInvestment: true });
+      }
+    };
+
+    const onSkipButtonClick = async () => {
+      await updateStoreFields({ _willSetUpOneTimeInvestments: false, _shouldAgreeToOneTimeInvestment: false });
 
       moveToNextStep();
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        updateStoreFields({ investmentId: data, _shouldAgreeToOneTimeInvestment: true });
+        moveToNextStep();
+      }
+    }, [isSuccess, data, moveToNextStep, updateStoreFields]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -83,6 +102,11 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         </FormContent>
 
         <ButtonStack>
+          <Button
+            label="Skip"
+            variant="outlined"
+            onClick={onSkipButtonClick}
+          />
           <Button
             type="submit"
             label="Invest Now"

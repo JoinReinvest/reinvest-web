@@ -11,8 +11,8 @@ import { useEffect } from 'react';
 import { InitialInvestmentFormFlowProvider } from 'views/initial-investment/form-flow';
 import { InvestmentFlowProvider } from 'views/investment/form-flow';
 
-import { BankAccountFlow } from '../bank-account';
-import { BankAccountFlowProvider } from '../bank-account/form-flow';
+// import { BankAccountFlow } from '../bank-account';
+import {InitialInvestmentView} from "../initial-investment";
 
 interface Props {
   arePostsReady: boolean;
@@ -30,8 +30,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   }, []);
 
   return (
-    <BankAccountFlowProvider initialStoreFields={{ _hasCompletedFlow: false, bankAccount: '' }}>
-      <InitialInvestmentFormFlowProvider initialStoreFields={{}}>
+      <InitialInvestmentFormFlowProvider initialStoreFields={{ _hasCompletedFlow: false, bankAccount: '' }}>
         <InvestmentFlowProvider initialStoreFields={{}}>
           <div className="flex flex-col gap-16 lg:flex-row lg:gap-24">
             <div className="lg:flex lg:w-full lg:max-w-330 lg:flex-col lg:justify-between lg:gap-8">
@@ -70,12 +69,11 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
           </div>
           {arePostsReady && <div className="mt-16 flex flex-col gap-16 lg:mt-24 lg:grid lg:grid-cols-3 lg:gap-y-36">{posts.map(renderBlogCard)}</div>}
 
-          <BankAccountFlow
+          <InitialInvestmentView
             isOpen={displayInitialInvestmentFlow}
             toggleIsOpen={toggleDisplayInitialInvestmentFlow}
           />
         </InvestmentFlowProvider>
       </InitialInvestmentFormFlowProvider>
-    </BankAccountFlowProvider>
   );
 };

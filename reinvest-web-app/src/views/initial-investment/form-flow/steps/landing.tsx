@@ -15,8 +15,8 @@ import { useReadBankAccount } from 'reinvest-app-common/src/services/queries/rea
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
-import { getApiClient } from '../../../../services/getApiClient';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { getApiClient } from 'services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 

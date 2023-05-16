@@ -5,10 +5,14 @@ import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCreateSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/createSubscriptionAgreement';
+import { useSignSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/signSubscriptionAgreement';
 import { Schema, z } from 'zod';
 
+import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -21,10 +25,10 @@ const getSchema = ({ _shouldAgreeToOneTimeInvestment, _shouldAgreeToRecurringInv
       agreesToRecurringInvestment: z.boolean(),
     })
     .superRefine((fields, context) => {
-      const shouldHaveAgreedToOneTimeStatement = _shouldAgreeToOneTimeInvestment && !!fields.agreesToOneTimeInvestment;
-      const shouldHaveAgreedToRecurringStatement = _shouldAgreeToRecurringInvestment && !!fields.agreesToRecurringInvestment;
+      const shouldHaveAgreedToOneTimeStatement = _shouldAgreeToOneTimeInvestment && fields.agreesToOneTimeInvestment;
+      const shouldHaveAgreedToRecurringStatement = _shouldAgreeToRecurringInvestment && fields.agreesToRecurringInvestment;
 
-      if (shouldHaveAgreedToOneTimeStatement === false || shouldHaveAgreedToRecurringStatement === false) {
+      if (shouldHaveAgreedToOneTimeStatement === false && shouldHaveAgreedToRecurringStatement === false) {
         context.addIssue({ code: 'custom' });
       }
     });
@@ -45,10 +49,17 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { investmentId } = storeFields;
     const defaultValues: Fields = {
       agreesToOneTimeInvestment: !!storeFields.agreesToOneTimeInvestment,
       agreesToRecurringInvestment: !!storeFields.agreesToRecurringInvestment,
     };
+    const {
+      mutate: createSubscriptionAgreementMutation,
+      isSuccess: isCreateSubscriptionAgreementSuccess,
+      data: createSubscriptionAgreementData,
+    } = useCreateSubscriptionAgreement(getApiClient);
+    const { mutate: signSubscriptionAgreement } = useSignSubscriptionAgreement(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
@@ -63,8 +74,26 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
     const onSubmit: SubmitHandler<Fields> = async fields => {
       const { agreesToOneTimeInvestment, agreesToRecurringInvestment } = fields;
       await updateStoreFields({ agreesToOneTimeInvestment, agreesToRecurringInvestment });
-      moveToNextStep();
+
+      if (investmentId) {
+        await signSubscriptionAgreement({ investmentId });
+        moveToNextStep();
+      }
     };
+
+    useEffect(() => {
+      if (isCreateSubscriptionAgreementSuccess) {
+        //TODO: we should render view based on content from API from mutation signSubscriptionAgreement
+      }
+    }, [isCreateSubscriptionAgreementSuccess, createSubscriptionAgreementData]);
+
+    useEffect(() => {
+      const { investmentId } = storeFields;
+
+      if (investmentId) {
+        createSubscriptionAgreementMutation({ investmentId });
+      }
+    }, [createSubscriptionAgreementMutation, storeFields]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
