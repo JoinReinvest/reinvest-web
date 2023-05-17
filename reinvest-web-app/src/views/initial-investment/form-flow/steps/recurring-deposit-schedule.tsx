@@ -15,8 +15,8 @@ import {
   RecurringInvestmentInterval,
 } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { maskCurrency } from 'reinvest-app-common/src/utilities/currency';
 import { formatDate } from 'reinvest-app-common/src/utilities/dates';
-import { maskCurrency } from 'utils/currency';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
