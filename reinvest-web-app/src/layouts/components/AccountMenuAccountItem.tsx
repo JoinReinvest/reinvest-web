@@ -1,6 +1,6 @@
 import { Avatar } from 'components/Avatar';
 import { Typography } from 'components/Typography';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 interface Props {
   fallbackText?: string;
@@ -8,7 +8,7 @@ interface Props {
   label?: string;
   labelForAvatar?: string;
   onClick?: () => void;
-  type?: AccountType;
+  type?: DraftAccountType | AccountType;
 }
 
 export const AccountMenuAccountItem = ({ imageSrc, fallbackText, label, onClick, type, labelForAvatar }: Props) => (
