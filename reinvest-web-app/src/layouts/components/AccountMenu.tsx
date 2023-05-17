@@ -119,7 +119,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                           label={`${account?.label}`.toLowerCase()}
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
-                          type={account?.type as AccountType}
+                          type={account?.type || AccountType.Individual}
                           labelForAvatar={account?.avatarLabel}
                         />
                       ))}

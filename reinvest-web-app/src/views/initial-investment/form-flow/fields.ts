@@ -20,19 +20,19 @@ export interface FlowFields {
   agreesToRecurringInvestment?: boolean;
   approvesSubscriptionAgreement?: boolean;
   bankAccountId?: string;
-  investmentAmount?: string;
+  investmentAmount?: number;
   investmentId?: string;
   oneTimeInvestment?: Investment;
   optsInForAutomaticDividendReinvestment?: boolean;
   recurringInvestment?: Investment;
 
-  recurringInvestmentAmount?: string;
+  recurringInvestmentAmount?: number;
   recurringInvestmentDate?: Date;
   recurringInvestmentInterval?: RecurringInvestmentInterval;
 }
 
 export interface Investment {
   type: 'one-time' | 'recurrent';
-  amount?: string;
+  amount?: number;
   date?: Date;
 }

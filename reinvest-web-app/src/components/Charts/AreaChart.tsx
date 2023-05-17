@@ -1,6 +1,6 @@
 import { Area, AreaChart as PrimitiveAreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import { maskCurrency } from 'reinvest-app-common/src/utilities/currency';
 import { ChartDataPoint, ChartDataPointDomains } from 'types/chart';
-import { maskCurrency } from 'utils/currency';
 
 import { CustomTooltip } from './Tooltip';
 
