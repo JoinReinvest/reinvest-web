@@ -1,3 +1,4 @@
+import { StepFullName } from '../../../onboarding/form-flow/steps/full-name';
 import { StepAutomaticDividend } from './automatic-dividend';
 import { StepBankSelection } from './bank-selection';
 import { StepConfirmation } from './confirmation';
@@ -18,4 +19,5 @@ export const STEPS = [
   StepSubscriptionAgreements,
   StepInvestmentVerification,
   StepInvestmentCompleted,
+  StepFullName,
 ];

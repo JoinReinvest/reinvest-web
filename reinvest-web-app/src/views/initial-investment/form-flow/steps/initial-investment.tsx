@@ -28,8 +28,7 @@ const getSchema = ({ _isForIndividualAccount }: FlowFields): Schema<Fields> => {
   const maskedMinimum = maskCurrency(minimum);
 
   return z.object({
-    investmentAmount: z.string().refine((val) =>
-      parseInt(val) >= minimum, `Minimum investment amount is ${maskedMinimum}`)
+    investmentAmount: z.string().refine(val => parseInt(val) >= minimum, `Minimum investment amount is ${maskedMinimum}`),
   });
 };
 
