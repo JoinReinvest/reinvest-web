@@ -6,29 +6,16 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { maskCurrency } from 'utils/currency';
-import {
-  MINIMUM_INVESTMENT_AMOUNT_FOR_CORPORATE_OR_TRUST,
-  MINIMUM_INVESTMENT_AMOUNT_FOR_INDIVIDUAL,
-} from 'views/initial-investment/constants/investment-amounts';
-import { Schema, z } from 'zod';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<FlowFields, 'investmentAmount'>;
-
-const getSchema = ({ _selectedAccount }: FlowFields): Schema<Fields> => {
-  const isIndividualAccount = _selectedAccount?.type?.toLowerCase() === 'individual';
-  const minimum = isIndividualAccount ? MINIMUM_INVESTMENT_AMOUNT_FOR_INDIVIDUAL : MINIMUM_INVESTMENT_AMOUNT_FOR_CORPORATE_OR_TRUST;
-  const maskedMinimum = maskCurrency(minimum);
-
-  return z.object({
-    investmentAmount: z.number().min(minimum, `Minimum investment amount is ${maskedMinimum}`),
-  });
-};
+type Fields = { amount?: number };
 
 const TITLE = 'Choose your investment amount and frequency.';
 const BUTTON_LABEL = 'Invest Now';
@@ -43,15 +30,16 @@ export const StepInvestmentAmount: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const schema = getSchema(storeFields);
-    const defaultValues: Fields = { investmentAmount: storeFields.investmentAmount };
+    const { activeAccount } = useActiveAccount();
+    const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
+    const defaultValues: Fields = { amount: storeFields.investmentAmount };
     const { handleSubmit, formState, setValue } = useForm<Fields>({ resolver: zodResolver(schema), defaultValues: async () => defaultValues });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const errorMessage = formState.errors.investmentAmount?.message;
+    const errorMessage = formState.errors.amount?.message;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ investmentAmount }) => {
-      await updateStoreFields({ investmentAmount });
+    const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
+      await updateStoreFields({ investmentAmount: amount });
       moveToNextStep();
     };
 
@@ -64,8 +52,8 @@ export const StepInvestmentAmount: StepParams<FlowFields> = {
           />
 
           <InvestmentCard
-            defaultValue={defaultValues.investmentAmount}
-            onChange={value => setValue('investmentAmount', value, { shouldValidate: true })}
+            defaultValue={defaultValues.amount}
+            onChange={value => setValue('amount', value, { shouldValidate: true })}
             currentBankAccount="Checking **** **** **** 0000"
             onChangeBankAccount={() => {
               // eslint-disable-next-line no-console
