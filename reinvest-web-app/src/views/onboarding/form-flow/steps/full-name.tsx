@@ -15,7 +15,6 @@ import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
-import { FullNameView } from '../../../shared/fullName';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -77,11 +76,43 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
     }, [isSuccess, moveToNextStep]);
 
     return (
-      <FullNameView<Fields>
-        onSubmit={onSubmit}
-        error={error}
-        form={form}
-      />
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
+        <FormContent>
+          <ModalTitle title="Enter your first and last name as it appears on your ID" />
+
+          {error && <ErrorMessagesHandler error={error} />}
+          <div className="flex w-full flex-col gap-16">
+            <Input
+              name="name.firstName"
+              control={form.control}
+              placeholder="First Name"
+              required
+            />
+
+            <Input
+              name="name.middleName"
+              control={form.control}
+              placeholder="Middle Name (Optional)"
+            />
+
+            <Input
+              name="name.lastName"
+              control={form.control}
+              placeholder="Last Name"
+              required
+            />
+          </div>
+        </FormContent>
+
+        <ButtonStack>
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={isLoading}
+          />
+        </ButtonStack>
+      </Form>
     );
   },
 };
