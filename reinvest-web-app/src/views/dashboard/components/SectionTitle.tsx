@@ -1,6 +1,5 @@
 import cx from 'classnames';
-
-import { Typography } from '../Typography';
+import { Typography } from 'components/Typography';
 
 interface Props {
   title: string;
