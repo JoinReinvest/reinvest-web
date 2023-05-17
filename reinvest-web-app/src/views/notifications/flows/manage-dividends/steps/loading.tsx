@@ -13,13 +13,14 @@ export const StepLoading: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.MANAGE_DIVIDENDS,
 
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { notificationObject } = useFlowsManagerContext();
+    const { notification, notificationObjectType } = useFlowsManagerContext();
 
-    const isDividend = notificationObject?.type === NotificationObjectType.Dividend;
+    const isDividend = notificationObjectType === NotificationObjectType.Dividend;
+    const dividendId = notification?.onObject?.id;
 
     const { data, isSuccess } = useGetDividend(getApiClient, {
-      dividendId: notificationObject?.id || '',
-      config: { enabled: isDividend && !!notificationObject?.id },
+      dividendId: dividendId || '',
+      config: { enabled: isDividend && !!dividendId },
     });
 
     useEffect(() => {
