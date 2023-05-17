@@ -8,6 +8,7 @@ import { InvestmentFlowProvider } from 'views/investment/form-flow';
 
 import { BankAccountFlow } from '../bank-account';
 import { BankAccountFlowProvider } from '../bank-account/form-flow';
+import { InitialInvestmentView } from '../initial-investment';
 import { AccountStats } from './components/AccountStats';
 import { PostList } from './components/PostList';
 
@@ -15,6 +16,8 @@ interface Props {
   arePostsReady: boolean;
   posts: BlogPostInterface[];
 }
+
+const initialStoreFields = { _hasCompletedFlow: false, bankAccount: '' };
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const { arrivesFromOnboarding, setArrivesFromOnboarding, activeAccountStatsMeta } = useActiveAccount();
@@ -36,8 +39,8 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
 
   return (
     <BankAccountFlowProvider initialStoreFields={{ _hasCompletedFlow: false, bankAccount: '' }}>
-      <InitialInvestmentFormFlowProvider initialStoreFields={{}}>
-        <InvestmentFlowProvider initialStoreFields={{}}>
+      <InitialInvestmentFormFlowProvider initialStoreFields={initialStoreFields}>
+        <InvestmentFlowProvider initialStoreFields={initialStoreFields}>
           <AccountStats toggleDisplayInitialInvestmentFlow={toggleDisplayInitialInvestmentFlow} />
 
           <PostList
@@ -46,6 +49,11 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
           />
 
           <BankAccountFlow
+            isOpen={displayInitialInvestmentFlow}
+            toggleIsOpen={toggleDisplayInitialInvestmentFlow}
+          />
+
+          <InitialInvestmentView
             isOpen={displayInitialInvestmentFlow}
             toggleIsOpen={toggleDisplayInitialInvestmentFlow}
           />
