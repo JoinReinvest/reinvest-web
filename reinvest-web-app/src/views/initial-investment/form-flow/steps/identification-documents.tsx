@@ -12,6 +12,7 @@ import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-type
 import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { useUpdateProfileForVerification } from 'reinvest-app-common/src/services/queries/updateProfileForVerification';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DocumentFileLinkInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
@@ -36,7 +37,11 @@ const schema = z.object({
 export const StepIdentificationDocuments: StepParams<FlowFields> = {
   identifier: Identifiers.IDENTIFICATION_DOCUMENTS,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateProfileDetails;
+  },
+
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields = { identificationDocuments: storeFields.identificationDocuments || [] };
     const [countDocumentsToUpload, setCountDocumentsToUpload] = useState<number>(0);
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -48,8 +53,10 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
 
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
+    const { isLoading: isUpdateProfileForVerificationLoading, mutateAsync: updateProfileForVerificationMutate } = useUpdateProfileForVerification(getApiClient);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
+    const shouldButtonBeLoading = isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading || isUpdateProfileForVerificationLoading;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || shouldButtonBeLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const existedDocuments = identificationDocuments?.filter(document => !!document.id) as DocumentFileLinkInput[];
@@ -69,13 +76,22 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
       }
 
       const hasIdScans = !!idScan?.length;
-      await updateStoreFields({ identificationDocuments: documentsWithoutFile });
+      await updateStoreFields({ identificationDocuments: documentsWithoutFile, _shouldUpdateProfileDetails: false });
+
+      const dataToUpdate = {
+        domicile: storeFields.domicile,
+        name: storeFields.name,
+        address: storeFields.address,
+        dateOfBirth: { dateOfBirth: storeFields.dateOfBirth },
+      };
 
       if (hasIdScans) {
-        moveToNextStep();
+        await updateProfileForVerificationMutate({ input: { ...dataToUpdate, idScan } });
       } else {
-        moveToNextStep();
+        await updateProfileForVerificationMutate({ input: dataToUpdate });
       }
+
+      moveToStepByIdentifier(Identifiers.INVESTMENT_VERIFICATION);
     };
 
     const loadingDocumentTitle = countDocumentsToUpload > 1 ? 'Documents' : 'Document';
@@ -117,7 +133,7 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading}
+            loading={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>

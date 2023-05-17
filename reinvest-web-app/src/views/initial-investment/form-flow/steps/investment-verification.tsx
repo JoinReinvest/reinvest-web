@@ -25,7 +25,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
   isAValidationView: true,
 
-  Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const { mutate, isSuccess, data, isLoading } = useVerifyAccount(getApiClient);
     const { refetch, isRefetching: isGetProfileRefetching, data: getUsrProfileData } = useGetUserProfile(getApiClient);
@@ -39,15 +39,16 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        if (!data?.canUserContinueTheInvestment) {
+        if (!data?.canUserContinueTheInvestment && !data?.isAccountVerified) {
           const shouldUpdateProfileData = data?.requiredActions?.filter(requiredAction => requiredAction?.onObject.type === 'PROFILE');
+          updateStoreFields({ _shouldUpdateProfileDetails: shouldUpdateProfileData.length });
 
           if (shouldUpdateProfileData) {
             refetch();
           }
         }
 
-        if (data?.isAccountVerified) {
+        if (data?.isAccountVerified || data?.canUserContinueTheInvestment) {
           moveToNextStep();
         }
       }
@@ -55,7 +56,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, [isSuccess]);
 
     useEffect(() => {
-      if (!isGetProfileRefetching && getUsrProfileData) {
+      if (!isGetProfileRefetching && getUsrProfileData && storeFields._shouldUpdateProfileDetails) {
         const { details } = getUsrProfileData;
         const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
         const address = details?.address;
@@ -65,7 +66,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
         updateStoreFields({ name, address, dateOfBirth, residency, identificationDocuments, _shouldUpdateProfileDetails: true });
       }
-    }, [isGetProfileRefetching, getUsrProfileData, updateStoreFields]);
+    }, [isGetProfileRefetching, getUsrProfileData, updateStoreFields, storeFields]);
 
     const onSubmit = () => {
       moveToNextStep();

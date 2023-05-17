@@ -15,6 +15,7 @@ const stepsWithBlackModal = [
   Identifiers.RESIDENCY_STATUS,
   Identifiers.RESIDENCY_VISA,
   Identifiers.RESIDENCY_GREEN_CARD,
+  Identifiers.IDENTIFICATION_DOCUMENTS,
 ];
 interface Props {
   isOpen: boolean;
