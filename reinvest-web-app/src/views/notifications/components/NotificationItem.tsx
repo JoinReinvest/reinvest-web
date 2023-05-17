@@ -29,7 +29,7 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
     const flowIdentifier = notification?.notificationType ? NOTIFICATION_TYPE_FLOWS.get(notification.notificationType) : null;
 
     if (notification?.onObject && flowIdentifier) {
-      updateCurrentFlow({ identifier: flowIdentifier, notificationObject: notification.onObject });
+      updateCurrentFlow({ identifier: flowIdentifier, notification });
     }
   }
 

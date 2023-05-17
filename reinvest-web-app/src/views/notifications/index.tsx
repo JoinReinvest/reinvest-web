@@ -4,7 +4,6 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { ModalProps } from 'types/modal';
 
 import { Notifications } from './components/Notifications';
-import { SAMPLE_NOTIFICATIONS } from './constants';
 import { FlowsManagerProvider, useFlowsManagerContext } from './providers/flows-manager';
 import { ModalManagerProvider, useModalManagerContext } from './providers/modal-manager';
 
@@ -31,7 +30,7 @@ export function InnerViewNotifications() {
         isOpen={isModalOpen}
         onOpenChange={onOpenChange}
       >
-        {currentFlowIdentifier ? currentFlow?.Component : <Notifications notifications={SAMPLE_NOTIFICATIONS} />}
+        {currentFlowIdentifier ? currentFlow?.Component : <Notifications />}
       </ModalWhiteWatermarkSide>
     );
   }
@@ -45,7 +44,7 @@ export function InnerViewNotifications() {
       addPaddingBottom={false}
       hideAvatarNextToTitle
     >
-      {currentFlowIdentifier ? currentFlow?.Component : <Notifications notifications={SAMPLE_NOTIFICATIONS} />}
+      {currentFlowIdentifier ? currentFlow?.Component : <Notifications />}
     </ModalWhite>
   );
 }

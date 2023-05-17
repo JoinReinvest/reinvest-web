@@ -5,13 +5,14 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
+import { useActiveAccountNotifications } from 'providers/ActiveAccountNotifications';
 import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
+import { useModalManagerContext } from 'views/notifications/providers/modal-manager';
 
-import { useFlowsManagerContext } from '../../../providers/flows-manager';
-import { useModalManagerContext } from '../../../providers/modal-manager';
 import { useFlow } from '../flow';
-import { DividendAction, FlowFields } from '../interfaces';
+import { FlowFields } from '../interfaces';
 import { FlowStepIdentifiers } from '../step-identifiers';
 
 const TITLE = 'Thank you for reinvesting.';
@@ -22,15 +23,21 @@ const BUTTON_LABEL = 'Dashboard';
 export const StepInvestmentConfirmation: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.INVESTMENT_CONFIRMATION,
 
-  Component: ({ updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { resetStoreFields, moveToFirstStep } = useFlow();
+    const { markAsRead } = useActiveAccountNotifications();
     const { onModalOpenChange } = useModalManagerContext();
-    const { updateCurrentFlow } = useFlowsManagerContext();
+    const { updateCurrentFlow, notification } = useFlowsManagerContext();
+
     const amountMasked = storeFields._amountMasked;
+    const notificationId = notification?.id;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
+      if (notificationId) {
+        await markAsRead({ notificationId });
+      }
+
       event.preventDefault();
-      await updateStoreFields({ action: DividendAction.REINVEST_FUNDS });
       updateCurrentFlow({ identifier: null });
       onModalOpenChange(false);
 
