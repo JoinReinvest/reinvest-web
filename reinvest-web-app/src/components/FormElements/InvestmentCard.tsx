@@ -25,25 +25,24 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
   const { field: presetField } = useController({ control: form.control, name: 'presetAmount' });
 
   const onPresetFieldChange = (value: string) => {
-    const numericValue = parseInt(value);
-
-    form.setValue('customAmount', numericValue);
+    const parsedValue = parseInt(value);
+    form.setValue('customAmount', parsedValue);
     presetField.onChange({ target: { value } });
 
-    onChange(numericValue);
+    onChange(parsedValue);
   };
 
-  const onCustomFieldChange = (event: { target: { value: number | string } }) => {
+  const onCustomFieldChange = (event: { target: { value: string } }) => {
     if (event.target.value !== '') {
       const { value } = event.target;
-      const numericValue = typeof value === 'string' ? parseInt(value) : value;
 
       if (`${value}` !== presetField.value) {
         presetField.onChange({ target: { value: '' } });
       }
 
-      form.setValue('customAmount', numericValue);
-      onChange(numericValue);
+      const parsedValue = parseInt(value);
+      form.setValue('customAmount', parsedValue);
+      onChange(parsedValue);
     }
   };
 

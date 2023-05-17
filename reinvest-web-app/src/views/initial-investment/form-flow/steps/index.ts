@@ -1,23 +1,19 @@
 import { StepAutomaticDividend } from './automatic-dividend';
+import { StepBankSelection } from './bank-selection';
+import { StepConfirmation } from './confirmation';
 import { StepInitialInvestment } from './initial-investment';
 import { StepInvestmentCompleted } from './investment-completed';
 import { StepInvestmentVerification } from './investment-verification';
-import { StepRecurringDepositSchedule } from './recurring-deposit-schedule';
+import { StepLanding } from './landing';
 import { StepRecurringInvestment } from './recurring-investment';
-import { StepRecurringInvestmentAmount } from './recurring-investment-amount';
-import { StepRecurringInvestmentDate } from './recurring-investment-date';
-import { StepRecurringInvestmentInterval } from './recurring-investment-interval';
 import { StepSubscriptionAgreements } from './subscription-agreements';
 
 export const STEPS = [
+  StepLanding,
+  StepBankSelection,
+  StepConfirmation,
   StepInitialInvestment,
-
   StepRecurringInvestment,
-  StepRecurringInvestmentAmount,
-  StepRecurringInvestmentInterval,
-  StepRecurringInvestmentDate,
-  StepRecurringDepositSchedule,
-
   StepAutomaticDividend,
   StepSubscriptionAgreements,
   StepInvestmentVerification,

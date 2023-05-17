@@ -13,7 +13,7 @@ import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
-import { AccountOverview, DraftAccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { ViewAccountManagement } from 'views/account-management';
 
@@ -119,7 +119,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                           label={`${account?.label}`.toLowerCase()}
                           fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
-                          type={account?.type as DraftAccountType}
+                          type={account?.type || AccountType.Individual}
                           labelForAvatar={account?.avatarLabel}
                         />
                       ))}

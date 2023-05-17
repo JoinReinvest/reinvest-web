@@ -1,73 +1,21 @@
-import dayjs from 'dayjs';
 import { Area, AreaChart as PrimitiveAreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { formatToDolars } from 'reinvest-app-common/src/utilities/currency';
-import { formatDate } from 'reinvest-app-common/src/utilities/dates';
+import { maskCurrency } from 'reinvest-app-common/src/utilities/currency';
+import { ChartDataPoint, ChartDataPointDomains } from 'types/chart';
 
 import { CustomTooltip } from './Tooltip';
 
-const currentDate = dayjs();
+interface Props {
+  dataPoints: ChartDataPoint[];
+  domains: ChartDataPointDomains;
+}
 
-const chartData = [
-  {
-    date: formatDate(dayjs(currentDate).subtract(111, 'day').toDate(), 'CHART'),
-    value: 100,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(10, 'day').toDate(), 'CHART'),
-    value: 200,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(9, 'day').toDate(), 'CHART'),
-    value: 500,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(8, 'day').toDate(), 'CHART'),
-    value: 1500,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(7, 'day').toDate(), 'CHART'),
-    value: 2000,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(6, 'day').toDate(), 'CHART'),
-    value: 1500,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(5, 'day').toDate(), 'CHART'),
-    value: 1890,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(4, 'day').toDate(), 'CHART'),
-    value: 2390.788,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(3, 'day').toDate(), 'CHART'),
-    value: 3490,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(2, 'day').toDate(), 'CHART'),
-    value: 2590,
-  },
-  {
-    date: formatDate(dayjs(currentDate).subtract(1, 'day').toDate(), 'CHART'),
-    value: 2010,
-  },
-  {
-    date: formatDate(currentDate.toDate(), 'CHART'),
-    value: 3123,
-  },
-];
-
-const maxDomain = Math.max(...chartData.map(item => item.value)) * 1.3;
-const minDomain = 0;
-
-export const AreaChart = () => {
+export const AreaChart = ({ dataPoints, domains }: Props) => {
   return (
     <ResponsiveContainer
       width="100%"
       height="100%"
     >
-      <PrimitiveAreaChart data={chartData}>
+      <PrimitiveAreaChart data={dataPoints}>
         <defs>
           <linearGradient
             id="colorUv"
@@ -96,9 +44,9 @@ export const AreaChart = () => {
         />
         <YAxis
           orientation="right"
-          tickFormatter={formatToDolars}
+          tickFormatter={value => maskCurrency(value)}
           mirror
-          domain={[minDomain, maxDomain]}
+          domain={[domains.min, domains.max]}
         />
         <Tooltip
           content={<CustomTooltip />}

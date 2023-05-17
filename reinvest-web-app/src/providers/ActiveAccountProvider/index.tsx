@@ -1,17 +1,20 @@
-import { PropsWithChildren, useContext, useState } from 'react';
+import { PropsWithChildren, useState } from 'react';
+import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
 import { useSessionStorage } from 'usehooks-ts';
 
 import { Context } from './context';
 import { StorageKeys } from './enums';
+import { useAccountStats } from './hooks/account-stats';
 import { useAvailableAccounts } from './hooks/available-accounts';
 import { useBeneficiaries } from './hooks/beneficiaries';
 import { useProfileAccounts } from './hooks/profile-account';
 import { State } from './interfaces';
 
-export const useActiveAccount = () => useContext(Context);
+export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountProvider');
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile } = useProfileAccounts();
+  const { activeAccountStats, activeAccountStatsMeta } = useAccountStats({ activeAccount });
   const { isAbleToAddBeneficiaries } = useBeneficiaries({ allAccounts });
   const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts });
   const [bankAccount, updateBankAccount] = useState<State['bankAccount']>(null);
@@ -21,6 +24,8 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
     <Context.Provider
       value={{
         activeAccount,
+        activeAccountStats,
+        activeAccountStatsMeta,
         refetchUserProfile,
         individualAccount,
         allAccounts,
