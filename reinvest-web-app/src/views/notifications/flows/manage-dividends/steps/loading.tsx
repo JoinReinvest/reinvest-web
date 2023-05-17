@@ -26,6 +26,7 @@ export const StepLoading: StepParams<FlowFields> = {
       async function initializeStoreFields() {
         if (isSuccess && data) {
           await updateStoreFields({
+            _dividendId: data.id,
             _amount: data.amount?.value || undefined,
             _amountMasked: data?.amount?.formatted || undefined,
           });

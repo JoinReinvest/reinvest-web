@@ -3,9 +3,10 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
+import { useManageDividends } from '../hooks/manage-dividends';
 import { DividendAction, FlowFields } from '../interfaces';
 import { FlowStepIdentifiers } from '../step-identifiers';
 
@@ -19,17 +20,32 @@ export const StepDividends: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.MANAGE_DIVIDENDS,
 
   Component: ({ updateStoreFields, storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { withdrawDividends, reinvestDividends, metaReinvestDividends, metaWithdrawDividends } = useManageDividends();
+
+    useEffect(() => {
+      if (metaReinvestDividends.isSuccess || metaWithdrawDividends.isSuccess) {
+        moveToNextStep();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [metaReinvestDividends, metaWithdrawDividends]);
+
+    const dividendId = storeFields._dividendId;
     const amountMasked = storeFields._amountMasked;
 
     const onDisagree = async () => {
-      await updateStoreFields({ action: DividendAction.WITHDRAW_FUNDS });
-      moveToNextStep();
+      if (dividendId) {
+        await updateStoreFields({ action: DividendAction.WITHDRAW_FUNDS });
+        await withdrawDividends({ dividendIds: [dividendId] });
+      }
     };
 
     const onAgree: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      await updateStoreFields({ action: DividendAction.REINVEST_FUNDS });
-      moveToNextStep();
+
+      if (dividendId) {
+        await updateStoreFields({ action: DividendAction.REINVEST_FUNDS });
+        await reinvestDividends({ dividendIds: [dividendId] });
+      }
     };
 
     return (
