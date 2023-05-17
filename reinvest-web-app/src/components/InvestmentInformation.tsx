@@ -1,8 +1,8 @@
 import { IconInvestmentOneTime } from 'assets/icons/IconInvestmentOneTime';
 import { IconInvestmentRecurrent } from 'assets/icons/IconInvestmentRecurrent';
 import { Typography } from 'components/Typography';
+import { maskCurrency } from 'reinvest-app-common/src/utilities/currency';
 import { formatDate } from 'reinvest-app-common/src/utilities/dates';
-import { maskCurrency } from 'utils/currency';
 
 interface Props {
   amount: number | string;
