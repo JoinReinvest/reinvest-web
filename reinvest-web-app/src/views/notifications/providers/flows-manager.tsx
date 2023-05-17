@@ -1,5 +1,5 @@
 import { createContext, PropsWithChildren, useMemo, useState } from 'react';
-import { Maybe, NotificationObject } from 'reinvest-app-common/src/types/graphql';
+import { Maybe, Notification, NotificationObjectType } from 'reinvest-app-common/src/types/graphql';
 import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
 
 import { FLOWS } from '../flows';
@@ -7,26 +7,28 @@ import { FlowIdentifiers } from '../flows/identifiers';
 import { FlowMeta } from '../flows/interfaces';
 import { useModalManagerContext } from './modal-manager';
 
-type UpdateCurrentFlowParams = { identifier: FlowIdentifiers; notificationObject: Maybe<NotificationObject> };
+type UpdateCurrentFlowParams = { identifier: FlowIdentifiers; notification: Maybe<Notification> };
 type UpdateCurrentFlowNullableParams = { identifier: null };
 type UpdateCurrentFlow = (params: UpdateCurrentFlowParams | UpdateCurrentFlowNullableParams) => void;
 
 interface State {
   currentFlow: FlowMeta | null;
   currentFlowIdentifier: FlowIdentifiers | null;
-  notificationObject: Maybe<NotificationObject>;
-  setNotificationObject: (value: Maybe<NotificationObject>) => void;
+  notification: Maybe<Notification>;
+  notificationObjectType: NotificationObjectType | null;
+  setNotification: (value: Maybe<Notification>) => void;
   updateCurrentFlow: UpdateCurrentFlow;
 }
 
 const Context = createContext<State>({
-  notificationObject: null,
+  notification: null,
+  notificationObjectType: null,
   currentFlow: null,
   currentFlowIdentifier: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateCurrentFlow: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setNotificationObject: () => {},
+  setNotification: () => {},
 });
 
 export const useFlowsManagerContext = createContextConsumer<State>(Context, 'FlowsManager');
@@ -34,7 +36,8 @@ export const useFlowsManagerContext = createContextConsumer<State>(Context, 'Flo
 export function FlowsManagerProvider({ children }: PropsWithChildren) {
   const { updateModalTitle } = useModalManagerContext();
   const [currentFlowIdentifier, setCurrentFlowIdentifier] = useState<State['currentFlowIdentifier']>(null);
-  const [notificationObject, setNotificationObject] = useState<State['notificationObject']>(null);
+  const [notification, setNotification] = useState<State['notification']>(null);
+  const notificationObjectType = useMemo(() => notification?.onObject?.type || null, [notification]);
 
   const currentFlow = useMemo(() => {
     if (currentFlowIdentifier) {
@@ -49,9 +52,9 @@ export function FlowsManagerProvider({ children }: PropsWithChildren) {
   const updateCurrentFlow: UpdateCurrentFlow = payload => {
     const flow = payload.identifier && FLOWS.get(payload.identifier);
 
-    if (flow && payload.notificationObject) {
+    if (flow && payload.notification) {
       updateModalTitle(flow.modalTitle);
-      setNotificationObject(payload.notificationObject);
+      setNotification(payload.notification);
     } else {
       setCurrentFlowIdentifier(null);
       updateModalTitle(null);
@@ -61,6 +64,8 @@ export function FlowsManagerProvider({ children }: PropsWithChildren) {
   };
 
   return (
-    <Context.Provider value={{ currentFlow, currentFlowIdentifier, notificationObject, updateCurrentFlow, setNotificationObject }}>{children}</Context.Provider>
+    <Context.Provider value={{ currentFlow, currentFlowIdentifier, notification, notificationObjectType, updateCurrentFlow, setNotification }}>
+      {children}
+    </Context.Provider>
   );
 }

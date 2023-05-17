@@ -1,14 +1,20 @@
-import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
+import { IconSpinner } from 'assets/icons/IconSpinner';
+import { useActiveAccountNotifications } from 'providers/ActiveAccountNotifications';
 
 import { EmptyListMessage } from './EmptyListMessage';
 import { NotificationsList } from './NotificationList';
 
-interface Props {
-  notifications: Maybe<Notification>[];
-}
-
-export function Notifications({ notifications }: Props) {
+export function Notifications() {
+  const { notifications, notificationsMeta } = useActiveAccountNotifications();
   const hasItems = notifications.length > 0;
+
+  if (notificationsMeta?.isLoading) {
+    return (
+      <div className="grid h-full place-items-center">
+        <IconSpinner color="black" />
+      </div>
+    );
+  }
 
   return <>{hasItems ? <NotificationsList notifications={notifications} /> : <EmptyListMessage />}</>;
 }
