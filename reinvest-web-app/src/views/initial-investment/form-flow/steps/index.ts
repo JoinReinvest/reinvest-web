@@ -1,12 +1,17 @@
-import { StepFullName } from '../../../onboarding/form-flow/steps/full-name';
 import { StepAutomaticDividend } from './automatic-dividend';
 import { StepBankSelection } from './bank-selection';
 import { StepConfirmation } from './confirmation';
+import { StepDateOfBirth } from './date-of-birth';
+import { StepFullName } from './full-name';
+import { StepIdentificationDocuments } from './identification-documents';
 import { StepInitialInvestment } from './initial-investment';
 import { StepInvestmentCompleted } from './investment-completed';
 import { StepInvestmentVerification } from './investment-verification';
 import { StepLanding } from './landing';
 import { StepRecurringInvestment } from './recurring-investment';
+import { StepResidencyGreenCard } from './residency-green-card';
+import { StepResidencyStatus } from './residency-status';
+import { StepResidencyVisa } from './residency-visa';
 import { StepSubscriptionAgreements } from './subscription-agreements';
 
 export const STEPS = [
@@ -18,6 +23,11 @@ export const STEPS = [
   StepAutomaticDividend,
   StepSubscriptionAgreements,
   StepInvestmentVerification,
-  StepInvestmentCompleted,
   StepFullName,
+  StepDateOfBirth,
+  StepResidencyStatus,
+  StepResidencyVisa,
+  StepResidencyGreenCard,
+  StepIdentificationDocuments,
+  StepInvestmentCompleted,
 ];

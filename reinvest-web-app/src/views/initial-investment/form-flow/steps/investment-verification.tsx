@@ -6,7 +6,9 @@ import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { getApiClient } from 'services/getApiClient';
 
 import { IconXCircle } from '../../../../assets/icons/IconXCircle';
@@ -23,9 +25,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
   isAValidationView: true,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const { mutate, isSuccess, data, isLoading } = useVerifyAccount(getApiClient);
+    const { refetch, isRefetching: isGetProfileRefetching, data: getUsrProfileData } = useGetUserProfile(getApiClient);
 
     useEffect(() => {
       if (activeAccount?.id) {
@@ -36,7 +39,13 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (isSuccess) {
-        console.log('data', data);
+        if (!data?.canUserContinueTheInvestment) {
+          const shouldUpdateProfileData = data?.requiredActions?.filter(requiredAction => requiredAction?.onObject.type === 'PROFILE');
+
+          if (shouldUpdateProfileData) {
+            refetch();
+          }
+        }
 
         if (data?.isAccountVerified) {
           moveToNextStep();
@@ -44,6 +53,19 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isSuccess]);
+
+    useEffect(() => {
+      if (!isGetProfileRefetching && getUsrProfileData) {
+        const { details } = getUsrProfileData;
+        const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
+        const address = details?.address;
+        const dateOfBirth = details?.dateOfBirth;
+        const identificationDocuments: DocumentFile[] = details?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
+        const residency = details?.domicile?.type;
+
+        updateStoreFields({ name, address, dateOfBirth, residency, identificationDocuments, _shouldUpdateProfileDetails: true });
+      }
+    }, [isGetProfileRefetching, getUsrProfileData, updateStoreFields]);
 
     const onSubmit = () => {
       moveToNextStep();

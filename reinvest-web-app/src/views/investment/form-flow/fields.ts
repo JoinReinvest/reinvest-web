@@ -1,5 +1,6 @@
 import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
-import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
+import { AccountOverview, Address, DomicileType, Maybe } from 'reinvest-app-common/src/types/graphql';
 
 import { Investment } from '../../initial-investment/form-flow/fields';
 
@@ -18,12 +19,20 @@ export interface FlowFields {
   _willSetUpRecurringInvestment?: boolean;
 
   _willSetUpRecurringInvestments?: boolean;
+  address?: Address | null;
   agreesToOneTimeInvestment?: boolean;
   agreesToRecurringInvestment?: boolean;
   approvesSubscriptionAgreement?: boolean;
   bankAccountId?: string;
+  dateOfBirth?: string | null;
+  identificationDocuments?: DocumentFile[];
   investmentAmount?: string;
   investmentId?: string;
+  name?: {
+    firstName: string;
+    lastName: string;
+    middleName?: string;
+  };
   oneTimeInvestment?: Investment;
   optsInForAutomaticDividendReinvestment?: boolean;
   recurringInvestment?: Investment;
@@ -31,4 +40,6 @@ export interface FlowFields {
   recurringInvestmentAmount?: string;
   recurringInvestmentDate?: Date;
   recurringInvestmentInterval?: RecurringInvestmentInterval;
+
+  residency?: DomicileType | null;
 }

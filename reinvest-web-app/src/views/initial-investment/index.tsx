@@ -8,6 +8,14 @@ import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
 import { ModalHandlerProvider } from './providers/modal-handler';
 
+const stepsWithBlackModal = [
+  Identifiers.INVESTMENT_VERIFICATION,
+  Identifiers.FULL_NAME,
+  Identifiers.DATE_OF_BIRTH,
+  Identifiers.RESIDENCY_STATUS,
+  Identifiers.RESIDENCY_VISA,
+  Identifiers.RESIDENCY_GREEN_CARD,
+];
 interface Props {
   isOpen: boolean;
   toggleIsOpen: (state: boolean) => void;
@@ -39,7 +47,7 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
     }
   };
 
-  if (currentStepIdentifier === Identifiers.INVESTMENT_VERIFICATION) {
+  if (currentStepIdentifier && stepsWithBlackModal.includes(currentStepIdentifier as Identifiers)) {
     return (
       <ModalBlackFullscreen isOpen={isOpen}>
         <CurrentStepView />
