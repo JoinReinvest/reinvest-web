@@ -1,7 +1,10 @@
-import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, AccountStats, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { QueryMeta } from 'types/queries';
 
 export interface State {
   activeAccount: AccountOverview | null;
+  activeAccountStats: Maybe<AccountStats>;
+  activeAccountStatsMeta: QueryMeta;
   allAccounts: Maybe<AccountOverview>[];
   arrivesFromOnboarding: boolean;
   /** Accounts that are available to be switched to. */
