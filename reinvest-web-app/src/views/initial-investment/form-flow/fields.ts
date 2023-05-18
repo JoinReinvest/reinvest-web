@@ -1,6 +1,6 @@
-import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { AccountOverview, Address, DomicileType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 
 import { Applicant, IndexedSchema } from '../../onboarding/form-flow/form-fields';
 
@@ -60,7 +60,7 @@ export interface FlowFields {
   recurringInvestmentAmount?: number;
 
   recurringInvestmentDate?: Date;
-  recurringInvestmentInterval?: RecurringInvestmentInterval;
+  recurringInvestmentInterval?: RecurringInvestmentFrequency;
   residency?: DomicileType | null;
 
   trustTrusteesGrantorsOrProtectors?: Applicant[];
