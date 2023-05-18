@@ -15,7 +15,7 @@ interface Props<FormFields extends FieldValues> extends UseControllerProps<FormF
 
 export function DatePicker<FormFields extends FieldValues>({ frequency, startDate = new Date(), ...controllerProps }: Props<FormFields>) {
   const { field } = useController(controllerProps);
-  const { excludedDateIntervals } = useExcludedDates(dayjs());
+  const { excludedDateIntervals } = useExcludedDates({ date: dayjs() });
   const { datesToHighlight, meta } = useHighlightedDates({ date: field.value, frequency });
 
   return (
