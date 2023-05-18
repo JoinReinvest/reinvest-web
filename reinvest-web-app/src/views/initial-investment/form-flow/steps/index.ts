@@ -1,10 +1,13 @@
 import { StepAutomaticDividend } from './automatic-dividend';
 import { StepBankSelection } from './bank-selection';
+import { StepBusinessAddress } from './business-address';
 import { StepConfirmation } from './confirmation';
 import { StepCorporateApplicantAddress } from './corporate-applicant-address';
 import { StepCorporateApplicantDetails } from './corporate-applicant-details';
 import { StepCorporateApplicantIdentification } from './corporate-applicant-identification';
 import { StepCorporateApplicantList } from './corporate-applicant-list';
+import { StepCorporationInformation } from './corporation-information';
+import { StepCorporationLegalName } from './corporation-legal-name';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepFullName } from './full-name';
 import { StepIdentificationDocuments } from './identification-documents';
@@ -33,6 +36,9 @@ export const STEPS = [
   StepResidencyVisa,
   StepResidencyGreenCard,
   StepIdentificationDocuments,
+  StepCorporationLegalName,
+  StepBusinessAddress,
+  StepCorporationInformation,
   StepCorporateApplicantList,
   StepCorporateApplicantDetails,
   StepCorporateApplicantAddress,

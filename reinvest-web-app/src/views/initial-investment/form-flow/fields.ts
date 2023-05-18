@@ -2,7 +2,7 @@ import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { AccountOverview, Address, DomicileType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 
-import { Applicant, IndexedSchema } from '../../onboarding/form-flow/form-fields';
+import { Applicant, FiduciaryEntityInformation, IndexedSchema } from '../../onboarding/form-flow/form-fields';
 
 export interface FlowFields {
   _hasCompletedFlow: boolean;
@@ -20,6 +20,7 @@ export interface FlowFields {
   _shouldAgreeToRecurringInvestment?: boolean;
 
   _shouldDisplayRecurringInvestment?: boolean;
+  _shouldUpdateCompanyData?: boolean;
   _shouldUpdateProfileDetails?: boolean;
   _shouldUpdateStakeholderData?: boolean;
   _willSetUpOneTimeInvestments?: boolean;
@@ -30,6 +31,7 @@ export interface FlowFields {
   agreesToRecurringInvestment?: boolean;
   approvesSubscriptionAgreement?: boolean;
   bankAccountId?: string;
+  businessAddress?: Address;
   companyMajorStakeholderApplicants?: Applicant[];
   corporationLegalName?: string;
   dateOfBirth?: string | null;
@@ -45,6 +47,7 @@ export interface FlowFields {
     };
     type?: DomicileType | null;
   };
+  fiduciaryEntityInformation?: FiduciaryEntityInformation;
   identificationDocuments?: DocumentFile[];
   investmentAmount?: number;
   investmentId?: string;

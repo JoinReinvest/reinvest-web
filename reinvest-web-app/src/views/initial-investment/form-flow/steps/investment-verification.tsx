@@ -60,9 +60,14 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview,
           );
 
+          const shouldUpdateCompanyData = data?.requiredActions?.filter(
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Company && requiredAction.action !== ActionName.RequireManualReview,
+          );
+
           updateStoreFields({
             _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length,
             _shouldUpdateStakeholderData: !!shouldUpdateStakeholderData?.length,
+            _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
           });
 
           if (shouldUpdateProfileData) {
