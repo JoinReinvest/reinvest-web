@@ -12,7 +12,7 @@ export function useAccountConfiguration(): Return {
   const { activeAccount } = useActiveAccount();
   const { data: accountConfiguration, refetch: refetchAccountConfiguration } = useGetAccountConfiguration(getApiClient, {
     accountId: activeAccount?.id || '',
-    config: { queryKey: [activeAccount?.id], enabled: !!activeAccount?.id },
+    config: { enabled: !!activeAccount?.id },
   });
 
   return { activeAccountConfiguration: accountConfiguration || null, refetchAccountConfiguration };
