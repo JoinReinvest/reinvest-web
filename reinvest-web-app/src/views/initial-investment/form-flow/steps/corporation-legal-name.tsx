@@ -21,6 +21,10 @@ const schema = z.object({
 export const StepCorporationLegalName: StepParams<FlowFields> = {
   identifier: Identifiers.CORPORATION_LEGAL_NAME,
 
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateCompanyData;
+  },
+
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields = { corporationLegalName: storeFields.corporationLegalName || '' };
     const { control, formState, handleSubmit } = useForm<Fields>({

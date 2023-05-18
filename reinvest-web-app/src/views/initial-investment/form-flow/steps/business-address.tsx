@@ -28,15 +28,19 @@ const schema = formValidationRules.address;
 export const StepBusinessAddress: StepParams<FlowFields> = {
   identifier: Identifiers.BUSINESS_ADDRESS,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateCompanyData;
+  },
+
+  Component: ({ moveToNextStep, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
-    // const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    // const defaultValues: Fields = storeFields.businessAddress || initialValues;
+    const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
+    const defaultValues: Fields = storeFields.businessAddress || initialValues;
 
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
-      // defaultValues: async () => defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);

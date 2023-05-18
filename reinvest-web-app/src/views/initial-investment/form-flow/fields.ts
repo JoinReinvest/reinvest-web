@@ -1,5 +1,5 @@
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
-import { AccountOverview, Address, DomicileType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, Address, CorporateCompanyTypeEnum, DomicileType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 
 import { Applicant, FiduciaryEntityInformation, IndexedSchema } from '../../onboarding/form-flow/form-fields';
@@ -34,6 +34,7 @@ export interface FlowFields {
   businessAddress?: Address;
   companyMajorStakeholderApplicants?: Applicant[];
   corporationLegalName?: string;
+  corporationType?: CorporateCompanyTypeEnum;
   dateOfBirth?: string | null;
   domicile?: {
     forGreenCard?: {

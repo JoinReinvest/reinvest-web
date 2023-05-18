@@ -34,6 +34,10 @@ const schema = z.object({
 export const StepCorporationInformation: StepParams<FlowFields> = {
   identifier: Identifiers.CORPORATION_INFORMATION,
 
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateCompanyData;
+  },
+
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const defaultValues: Fields = {

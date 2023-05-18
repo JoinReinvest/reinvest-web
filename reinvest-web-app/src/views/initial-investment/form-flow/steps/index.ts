@@ -8,6 +8,7 @@ import { StepCorporateApplicantIdentification } from './corporate-applicant-iden
 import { StepCorporateApplicantList } from './corporate-applicant-list';
 import { StepCorporationInformation } from './corporation-information';
 import { StepCorporationLegalName } from './corporation-legal-name';
+import { StepCorporationType } from './corporation-type';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepFullName } from './full-name';
 import { StepIdentificationDocuments } from './identification-documents';
@@ -36,6 +37,7 @@ export const STEPS = [
   StepResidencyVisa,
   StepResidencyGreenCard,
   StepIdentificationDocuments,
+  StepCorporationType,
   StepCorporationLegalName,
   StepBusinessAddress,
   StepCorporationInformation,
