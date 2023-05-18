@@ -1,4 +1,4 @@
-import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
+import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
 
 import { Investment } from '../../initial-investment/form-flow/fields';
@@ -30,5 +30,5 @@ export interface FlowFields {
 
   recurringInvestmentAmount?: number;
   recurringInvestmentDate?: Date;
-  recurringInvestmentInterval?: RecurringInvestmentInterval;
+  recurringInvestmentInterval?: RecurringInvestmentFrequency;
 }
