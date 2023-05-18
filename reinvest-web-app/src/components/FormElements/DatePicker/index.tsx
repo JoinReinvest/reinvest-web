@@ -25,7 +25,12 @@ export function DatePicker<FormFields extends FieldValues>({ frequency, startDat
       minDate={startDate}
       onChange={field.onChange}
       onBlur={field.onBlur}
-      renderCustomHeader={Header}
+      renderCustomHeader={props => (
+        <Header
+          {...props}
+          startDate={startDate}
+        />
+      )}
       renderDayContents={renderDayContents}
       excludeDateIntervals={excludedDateIntervals}
       highlightDates={datesToHighlight}
