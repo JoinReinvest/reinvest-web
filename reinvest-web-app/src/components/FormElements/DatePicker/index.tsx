@@ -9,7 +9,7 @@ import { useExcludedDates } from './hooks/dates-to-exclude';
 import { useHighlightedDates } from './hooks/dates-to-highlight';
 
 interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
-  frequency: RecurringInvestmentFrequency;
+  frequency?: RecurringInvestmentFrequency;
   startDate?: Date;
 }
 

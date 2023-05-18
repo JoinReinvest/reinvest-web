@@ -12,9 +12,9 @@ import { FormEventHandler } from 'react';
 import {
   RECURRING_INVESTMENT_INTERVAL_LABELS,
   RECURRING_INVESTMENT_INTERVALS_WITHIN_MONTH,
-  RecurringInvestmentInterval,
 } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 import { maskCurrency } from 'reinvest-app-common/src/utilities/currency';
 import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 
@@ -111,7 +111,7 @@ function generateListItem(label: string, value: string, uppercase?: boolean) {
   );
 }
 
-function getFrequencyLabel(frequency: RecurringInvestmentInterval | undefined, investmentDate: Date | undefined) {
+function getFrequencyLabel(frequency: RecurringInvestmentFrequency | undefined, investmentDate: Date | undefined) {
   if (frequency && investmentDate) {
     const label = RECURRING_INVESTMENT_INTERVAL_LABELS.get(frequency);
     const date = new Date(investmentDate);

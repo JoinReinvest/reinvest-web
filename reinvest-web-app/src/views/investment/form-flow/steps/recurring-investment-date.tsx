@@ -6,8 +6,8 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 import { Schema, z } from 'zod';
 
 import { FlowFields } from '../fields';
@@ -15,14 +15,14 @@ import { Identifiers } from '../identifiers';
 
 const TITLE = 'Select your 1st investment date';
 
-const SUBTITLES = new Map<RecurringInvestmentInterval, string>([
-  [RecurringInvestmentInterval.WEEKLY, 'This will repeat on the same day each week.'],
-  [RecurringInvestmentInterval.BI_WEEKLY, 'This will repeat on the same day bi-weekly.'],
-  [RecurringInvestmentInterval.MONTHLY, 'This will repeat on the same day every month.'],
-  [RecurringInvestmentInterval.QUARTERLY, 'This will repeat on the same day quaterly.'],
+const SUBTITLES = new Map<RecurringInvestmentFrequency, string>([
+  [RecurringInvestmentFrequency.Weekly, 'This will repeat on the same day each week.'],
+  [RecurringInvestmentFrequency.BiWeekly, 'This will repeat on the same day bi-weekly.'],
+  [RecurringInvestmentFrequency.Monthly, 'This will repeat on the same day every month.'],
+  [RecurringInvestmentFrequency.Quarterly, 'This will repeat on the same day quaterly.'],
 ]);
 
-function getSubtitle(interval: RecurringInvestmentInterval | undefined) {
+function getSubtitle(interval: RecurringInvestmentFrequency | undefined) {
   if (interval) {
     return SUBTITLES.get(interval);
   }
@@ -83,7 +83,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
           <DatePicker
             name="date"
             control={control}
-            highlightInterval={storeFields.recurringInvestmentInterval}
+            frequency={storeFields.recurringInvestmentInterval}
           />
         </FormContent>
 
