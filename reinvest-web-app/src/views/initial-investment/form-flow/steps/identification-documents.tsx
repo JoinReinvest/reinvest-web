@@ -41,7 +41,7 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
     return !!fields._shouldUpdateProfileDetails;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields = { identificationDocuments: storeFields.identificationDocuments || [] };
     const [countDocumentsToUpload, setCountDocumentsToUpload] = useState<number>(0);
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -95,7 +95,11 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
         await updateProfileForVerificationMutate({ input: dataToUpdate });
       }
 
-      moveToStepByIdentifier(Identifiers.INVESTMENT_VERIFICATION);
+      if (storeFields._shouldUpdateCompanyData || storeFields._shouldUpdateStakeholderData) {
+        return moveToNextStep();
+      }
+
+      return moveToStepByIdentifier(Identifiers.INVESTMENT_VERIFICATION);
     };
 
     const loadingDocumentTitle = countDocumentsToUpload > 1 ? 'Documents' : 'Document';

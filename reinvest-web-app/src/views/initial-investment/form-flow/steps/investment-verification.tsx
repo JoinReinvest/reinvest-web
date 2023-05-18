@@ -66,7 +66,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
           updateStoreFields({
             _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length,
-            _shouldUpdateStakeholderData: !!shouldUpdateStakeholderData?.length,
+            _shouldUpdateStakeholderData: !!shouldUpdateStakeholderData?.length || !!shouldUpdateCompanyData?.length,
             _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
           });
 
