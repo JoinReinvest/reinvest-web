@@ -8,14 +8,14 @@ import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/inv
 
 interface Props {
   currentBankAccount: string;
-  onChange: (value?: string) => void;
+  onChange: (value?: number) => void;
   onChangeBankAccount: () => void;
   className?: string;
-  defaultValue?: string;
+  defaultValue?: number;
 }
 
 interface Fields {
-  customAmount?: string;
+  customAmount?: number;
   presetAmount?: string;
 }
 
@@ -25,10 +25,11 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
   const { field: presetField } = useController({ control: form.control, name: 'presetAmount' });
 
   const onPresetFieldChange = (value: string) => {
-    form.setValue('customAmount', value);
+    const parsedValue = parseInt(value);
+    form.setValue('customAmount', parsedValue);
     presetField.onChange({ target: { value } });
 
-    onChange(value);
+    onChange(parsedValue);
   };
 
   const onCustomFieldChange = (event: { target: { value: string } }) => {
@@ -39,8 +40,9 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
         presetField.onChange({ target: { value: '' } });
       }
 
-      form.setValue('customAmount', value);
-      onChange(value);
+      const parsedValue = parseInt(value);
+      form.setValue('customAmount', parsedValue);
+      onChange(parsedValue);
     }
   };
 

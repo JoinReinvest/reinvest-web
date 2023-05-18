@@ -4909,10 +4909,10 @@ fast-diff@^1.1.2:
   resolved "https://registry.yarnpkg.com/fast-diff/-/fast-diff-1.2.0.tgz#73ee11982d86caaf7959828d519cfe927fac5f03"
   integrity sha512-xJuoT5+L99XlZ8twedaRf6Ax2TgQVxvgZOYoPKqZufmJib0tL2tegPBOZb1pVNgIhlqDlA0eO0c3wBvQcmzx4w==
 
-fast-equals@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-4.0.3.tgz#72884cc805ec3c6679b99875f6b7654f39f0e8c7"
-  integrity sha512-G3BSX9cfKttjr+2o1O22tYMLq0DPluZnYtq1rXumE1SpL/F/SLIfHx08WYQoWSIpeMYf8sRbJ8++71+v6Pnxfg==
+fast-equals@^5.0.0:
+  version "5.0.1"
+  resolved "https://registry.yarnpkg.com/fast-equals/-/fast-equals-5.0.1.tgz#a4eefe3c5d1c0d021aeed0bc10ba5e0c12ee405d"
+  integrity sha512-WF1Wi8PwwSY7/6Kx0vKXtw8RwuSGoM1bvDaJbu7MxDlR1vovZjIAKrnzyrThgAjm6JDTu0fVgWXDlMGspodfoQ==
 
 fast-glob@^3.2.11, fast-glob@^3.2.12, fast-glob@^3.2.5, fast-glob@^3.2.9:
   version "3.2.12"
@@ -7501,11 +7501,11 @@ react-select@^5.7.2:
     use-isomorphic-layout-effect "^1.1.2"
 
 react-smooth@^2.0.2:
-  version "2.0.2"
-  resolved "https://registry.yarnpkg.com/react-smooth/-/react-smooth-2.0.2.tgz#0ef24213628cb13bf4305194a050e1db4302a3a1"
-  integrity sha512-pgqSp1q8rAGtF1bXQE0m3CHGLNfZZh5oA5o1tsPLXRHnKtkujMIJ8Ws5nO1mTySZf1c4vgwlEk+pHi3Ln6eYLw==
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/react-smooth/-/react-smooth-2.0.3.tgz#2845fa8f22914f2e4445856d5688fb8a7d72f3ae"
+  integrity sha512-yl4y3XiMorss7ayF5QnBiSprig0+qFHui8uh7Hgg46QX5O+aRMRKlfGGNGLHno35JkQSvSYY8eCWkBfHfrSHfg==
   dependencies:
-    fast-equals "^4.0.3"
+    fast-equals "^5.0.0"
     react-transition-group "2.9.0"
 
 react-style-singleton@^2.2.1:
@@ -7650,7 +7650,7 @@ regexpp@^3.0.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#3364635dbb300dc7834260c26989edf757a9a023"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#26c5dc6bdb85de291c07a908ce4ccb3a75f36070"
   dependencies:
     "@graphql-codegen/cli" "^3.3.1"
     "@graphql-codegen/typescript" "^3.0.4"

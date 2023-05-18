@@ -5,11 +5,11 @@ import { AccountOverview, Address, DomicileType, Maybe } from 'reinvest-app-comm
 import { Applicant, IndexedSchema } from '../../onboarding/form-flow/form-fields';
 
 export interface FlowFields {
-  _currentTrustTrusteeGrantorOrProtector: IndexedSchema<Applicant>;
   _hasCompletedFlow: boolean;
   bankAccount: string;
   _availableAccounts?: Maybe<AccountOverview>[];
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
+  _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
   _hasCompletedInvestment?: boolean;
   _investmentWasSuccessful?: boolean;
   _isEditingCompanyMajorStakeholderApplicant?: boolean;
@@ -26,7 +26,14 @@ export interface FlowFields {
   _willSetUpRecurringInvestments?: boolean;
   address?: Address | null;
   agreesToOneTimeInvestment?: boolean;
+  agreesToRecurringInvestment?: boolean;
+  approvesSubscriptionAgreement?: boolean;
+  bankAccountId?: string;
+  companyMajorStakeholderApplicants?: Applicant[];
+  corporationLegalName?: string;
+  dateOfBirth?: string | null;
   domicile?: {
+    type: DomicileType;
     forGreenCard?: {
       birthCountry: string;
       citizenshipCountry: string;
@@ -38,33 +45,28 @@ export interface FlowFields {
     };
   };
   identificationDocuments?: DocumentFile[];
-  investmentAmount?: string;
+  investmentAmount?: number;
   investmentId?: string;
   name?: {
     firstName: string;
     lastName: string;
     middleName?: string;
   };
+
   oneTimeInvestment?: Investment;
   optsInForAutomaticDividendReinvestment?: boolean;
   recurringInvestment?: Investment;
+  recurringInvestmentAmount?: number;
 
-  recurringInvestmentAmount?: string;
   recurringInvestmentDate?: Date;
   recurringInvestmentInterval?: RecurringInvestmentInterval;
   residency?: DomicileType | null;
 
-  companyMajorStakeholderApplicants?: Applicant[];
-  corporationLegalName?: string;
   trustTrusteesGrantorsOrProtectors?: Applicant[];
-  bankAccountId?: string;
-  approvesSubscriptionAgreement?: boolean;
-  dateOfBirth?: string | null;
-  agreesToRecurringInvestment?: boolean;
 }
 
 export interface Investment {
   type: 'one-time' | 'recurrent';
-  amount?: string;
+  amount?: number;
   date?: Date;
 }

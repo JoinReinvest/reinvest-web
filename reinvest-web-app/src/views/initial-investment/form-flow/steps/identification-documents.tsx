@@ -14,7 +14,7 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
 import { useUpdateProfileForVerification } from 'reinvest-app-common/src/services/queries/updateProfileForVerification';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
-import { DocumentFileLinkInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { AddressInput, DocumentFileLinkInput, DomicileType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
@@ -41,7 +41,7 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
     return !!fields._shouldUpdateProfileDetails;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields = { identificationDocuments: storeFields.identificationDocuments || [] };
     const [countDocumentsToUpload, setCountDocumentsToUpload] = useState<number>(0);
     const { control, formState, handleSubmit } = useForm<Fields>({
@@ -79,9 +79,13 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
       await updateStoreFields({ identificationDocuments: documentsWithoutFile, _shouldUpdateProfileDetails: false });
 
       const dataToUpdate = {
-        domicile: storeFields.domicile,
+        domicile: storeFields.domicile || {
+          type: DomicileType.Citizen,
+          forGreenCard: { birthCountry: '', birthState: '', citizenshipCountry: '' },
+          forVisa: { birthCountry: '', visaType: '', citizenshipCountry: '' },
+        },
         name: storeFields.name,
-        address: storeFields.address,
+        address: (storeFields.address as AddressInput) || { addressLine1: '', addressLine2: '', city: '', state: '', zipCode: '' },
         dateOfBirth: { dateOfBirth: storeFields.dateOfBirth },
       };
 

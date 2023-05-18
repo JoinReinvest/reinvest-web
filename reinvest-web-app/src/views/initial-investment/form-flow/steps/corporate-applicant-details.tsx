@@ -56,7 +56,6 @@ export const StepCorporateApplicantDetails: StepParams<FlowFields> = {
           ...fields,
           _index: storeFields._currentCompanyMajorStakeholder?._index,
         },
-        _willHaveMajorStakeholderApplicants: true,
       });
       moveToNextStep();
     };

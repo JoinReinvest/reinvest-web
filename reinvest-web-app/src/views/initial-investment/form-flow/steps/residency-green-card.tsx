@@ -34,7 +34,7 @@ export const StepResidencyGreenCard: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const defaultValues: Fields = { domicile: { forGreenCard: storeFields.domicile?.forGreenCard } };
+    const defaultValues: Fields = { domicile: { forGreenCard: storeFields.domicile?.forGreenCard, type: DomicileType.GreenCard } };
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),

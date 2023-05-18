@@ -41,7 +41,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       if (isSuccess) {
         if (!data?.canUserContinueTheInvestment && !data?.isAccountVerified) {
           const shouldUpdateProfileData = data?.requiredActions?.filter(requiredAction => requiredAction?.onObject.type === 'PROFILE');
-          updateStoreFields({ _shouldUpdateProfileDetails: shouldUpdateProfileData.length });
+          updateStoreFields({ _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length });
 
           if (shouldUpdateProfileData) {
             refetch();

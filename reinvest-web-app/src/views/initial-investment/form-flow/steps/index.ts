@@ -1,7 +1,9 @@
 import { StepAutomaticDividend } from './automatic-dividend';
 import { StepBankSelection } from './bank-selection';
 import { StepConfirmation } from './confirmation';
+import { StepCorporateApplicantAddress } from './corporate-applicant-address';
 import { StepCorporateApplicantDetails } from './corporate-applicant-details';
+import { StepCorporateApplicantIdentification } from './corporate-applicant-identification';
 import { StepCorporateApplicantList } from './corporate-applicant-list';
 import { StepDateOfBirth } from './date-of-birth';
 import { StepFullName } from './full-name';
@@ -33,5 +35,8 @@ export const STEPS = [
   StepIdentificationDocuments,
   StepInvestmentCompleted,
   StepCorporateApplicantList,
+  StepCorporateApplicantDetails,
+  StepCorporateApplicantAddress,
+  StepCorporateApplicantIdentification,
   StepCorporateApplicantDetails,
 ];

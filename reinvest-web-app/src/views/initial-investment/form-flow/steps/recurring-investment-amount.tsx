@@ -8,27 +8,20 @@ import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { recurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { maskCurrency } from 'utils/currency';
-import { Schema, z } from 'zod';
 
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
 
 const TITLE = 'Choose the amount for your recurring investment';
-const MINIMUM_AMOUNT = 100;
-const MASKED_MINIMUM_AMOUNT = maskCurrency(MINIMUM_AMOUNT);
 
 interface Fields {
-  investmentAmount?: string;
+  amount?: number;
 }
 
-const schema: Schema<Fields> = z.object({
-  investmentAmount: z.string().min(MINIMUM_AMOUNT, `Minimum investment amount is ${MASKED_MINIMUM_AMOUNT}`),
-});
-
 const getDefaultValues = ({ recurringInvestment }: FlowFields): Fields => ({
-  investmentAmount: recurringInvestment?.amount,
+  amount: recurringInvestment?.amount,
 });
 
 export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
@@ -49,15 +42,15 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
     const { handleSubmit, setValue, formState } = useForm<Fields>({
       mode: 'onChange',
       defaultValues: async () => defaultValues,
-      resolver: zodResolver(schema),
+      resolver: zodResolver(recurringInvestmentSchema),
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const errorMessage = formState.errors.investmentAmount?.message;
+    const errorMessage = formState.errors.amount?.message;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ investmentAmount }) => {
+    const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
       const investment: Investment = {
-        amount: investmentAmount,
+        amount,
         type: 'recurrent',
         date: new Date(),
       };
@@ -76,8 +69,8 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
           />
 
           <InvestmentCard
-            defaultValue={defaultValues.investmentAmount}
-            onChange={value => setValue('investmentAmount', value, { shouldValidate: true })}
+            defaultValue={defaultValues.amount}
+            onChange={value => setValue('amount', value, { shouldValidate: true })}
             currentBankAccount="Checking **** **** **** 0000"
             onChangeBankAccount={() => {
               // eslint-disable-next-line no-console

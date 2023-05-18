@@ -1,10 +1,11 @@
-import { IconInfo } from '../../assets/icons/IconInfo';
-import { Typography } from '../Typography';
+import { IconInfo } from 'assets/icons/IconInfo';
+import { Typography } from 'components/Typography';
 
 interface Props {
   title: string;
-  earnedMoney?: number;
+  earnedMoney?: string;
 }
+
 export const InvestmentDetails = ({ earnedMoney, title }: Props) => {
   return (
     <div className="flex justify-between px-24 py-14">
@@ -12,7 +13,7 @@ export const InvestmentDetails = ({ earnedMoney, title }: Props) => {
         <Typography variant="paragraph-large">{title}</Typography>
         <IconInfo />
       </div>
-      <Typography variant="paragraph-large">${earnedMoney || 0}</Typography>
+      <Typography variant="paragraph-large">{earnedMoney || 0}</Typography>
     </div>
   );
 };

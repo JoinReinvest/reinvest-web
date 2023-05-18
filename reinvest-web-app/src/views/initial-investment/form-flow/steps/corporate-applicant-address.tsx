@@ -15,14 +15,14 @@ import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
-import { Address, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { Address } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
 import { makeRequest } from 'services/api-request';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
+import { Applicant } from '../../../onboarding/form-flow/form-fields';
 import { FlowFields } from '../fields';
-import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Exclude<Applicant['residentialAddress'], undefined>;
@@ -32,13 +32,13 @@ const schema = formValidationRules.address;
 export const StepCorporateApplicantAddress: StepParams<FlowFields> = {
   identifier: Identifiers.APPLICANT_ADDRESS,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    const initialValuesFromStore =
-      storeFields.accountType === DraftAccountType.Trust
-        ? storeFields._currentTrustTrusteeGrantorOrProtector?.residentialAddress
-        : storeFields._currentCompanyMajorStakeholder?.residentialAddress;
-    const defaultValues: Fields = initialValuesFromStore || initialValues;
+    // const initialValuesFromStore =
+    // storeFields.accountType === DraftAccountType.Trust
+    //   ? storeFields._currentTrustTrusteeGrantorOrProtector?.residentialAddress
+    //   : storeFields._currentCompanyMajorStakeholder?.residentialAddress;
+    const defaultValues: Fields = initialValues;
     const {
       isSuccess: isTrustDraftAccountSuccess,
       error: trustDraftAccountError,
@@ -80,16 +80,16 @@ export const StepCorporateApplicantAddress: StepParams<FlowFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async address => {
-      if (storeFields.accountType === DraftAccountType.Corporate) {
-        await updateStoreFields({ _currentCompanyMajorStakeholder: { ...storeFields._currentCompanyMajorStakeholder, residentialAddress: address } });
-      }
-
-      if (storeFields.accountType === DraftAccountType.Trust) {
-        await updateStoreFields({
-          _currentTrustTrusteeGrantorOrProtector: { ...storeFields._currentTrustTrusteeGrantorOrProtector, residentialAddress: address },
-        });
-      }
-
+      // if (storeFields.accountType === DraftAccountType.Corporate) {
+      //   await updateStoreFields({ _currentCompanyMajorStakeholder: { ...storeFields._currentCompanyMajorStakeholder, residentialAddress: address } });
+      // }
+      //
+      // if (storeFields.accountType === DraftAccountType.Trust) {
+      //   await updateStoreFields({
+      //     _currentTrustTrusteeGrantorOrProtector: { ...storeFields._currentTrustTrusteeGrantorOrProtector, residentialAddress: address },
+      //   });
+      // }
+      console.log('address', address);
       moveToNextStep();
     };
 
