@@ -1,27 +1,28 @@
 import dayjs from 'dayjs';
 import ReactDatePicker from 'react-datepicker';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
-import { RecurringInvestmentInterval } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
+import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 
-import { useExcludedDates } from './dates-to-exclude';
-import { useHighlightedDates } from './dates-to-highlight';
 import { DayContent } from './DayContent';
 import { Header } from './Header';
+import { useExcludedDates } from './hooks/dates-to-exclude';
+import { useHighlightedDates } from './hooks/dates-to-highlight';
 
 interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
-  highlightInterval?: RecurringInvestmentInterval;
+  frequency: RecurringInvestmentFrequency;
+  startDate?: Date;
 }
 
-export function DatePicker<FormFields extends FieldValues>({ highlightInterval, ...controllerProps }: Props<FormFields>) {
+export function DatePicker<FormFields extends FieldValues>({ frequency, startDate = new Date(), ...controllerProps }: Props<FormFields>) {
   const { field } = useController(controllerProps);
   const { excludedDateIntervals } = useExcludedDates(dayjs());
-  const { datesToHighlight } = useHighlightedDates(dayjs(field.value), highlightInterval);
+  const { datesToHighlight, meta } = useHighlightedDates({ date: field.value, frequency });
 
   return (
     <ReactDatePicker
       name={field.name}
       ref={field.ref}
-      startDate={field.value}
+      minDate={startDate}
       onChange={field.onChange}
       onBlur={field.onBlur}
       renderCustomHeader={Header}
@@ -29,6 +30,9 @@ export function DatePicker<FormFields extends FieldValues>({ highlightInterval, 
       excludeDateIntervals={excludedDateIntervals}
       highlightDates={datesToHighlight}
       inline
+      allowSameDay
+      selected={field.value}
+      disabled={meta.isLoading}
     />
   );
 }

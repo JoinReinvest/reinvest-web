@@ -1,7 +1,7 @@
 import { Dayjs } from 'dayjs';
 import { useMemo } from 'react';
 
-import { DateInterval } from './interfaces';
+import { DateInterval } from '../interfaces';
 
 export function useExcludedDates(date: Dayjs) {
   const excludedDateIntervals = useMemo<DateInterval[]>(() => {
