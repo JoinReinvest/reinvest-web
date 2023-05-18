@@ -21,6 +21,7 @@ export interface FlowFields {
 
   _shouldDisplayRecurringInvestment?: boolean;
   _shouldUpdateProfileDetails?: boolean;
+  _shouldUpdateStakeholderData?: boolean;
   _willSetUpOneTimeInvestments?: boolean;
   _willSetUpRecurringInvestment?: boolean;
   _willSetUpRecurringInvestments?: boolean;
@@ -33,7 +34,6 @@ export interface FlowFields {
   corporationLegalName?: string;
   dateOfBirth?: string | null;
   domicile?: {
-    type: DomicileType;
     forGreenCard?: {
       birthCountry: string;
       citizenshipCountry: string;
@@ -43,6 +43,7 @@ export interface FlowFields {
       citizenshipCountry: string;
       visaType: string;
     };
+    type?: DomicileType | null;
   };
   identificationDocuments?: DocumentFile[];
   investmentAmount?: number;

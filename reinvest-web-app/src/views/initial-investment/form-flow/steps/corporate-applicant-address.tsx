@@ -32,13 +32,14 @@ const schema = formValidationRules.address;
 export const StepCorporateApplicantAddress: StepParams<FlowFields> = {
   identifier: Identifiers.APPLICANT_ADDRESS,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateStakeholderData;
+  },
+
+  Component: ({ moveToNextStep, storeFields }: StepComponentProps<FlowFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    // const initialValuesFromStore =
-    // storeFields.accountType === DraftAccountType.Trust
-    //   ? storeFields._currentTrustTrusteeGrantorOrProtector?.residentialAddress
-    //   : storeFields._currentCompanyMajorStakeholder?.residentialAddress;
-    const defaultValues: Fields = initialValues;
+    const initialValuesFromStore = storeFields._currentCompanyMajorStakeholder?.residentialAddress;
+    const defaultValues: Fields = initialValuesFromStore || initialValues;
     const {
       isSuccess: isTrustDraftAccountSuccess,
       error: trustDraftAccountError,
@@ -79,17 +80,7 @@ export const StepCorporateApplicantAddress: StepParams<FlowFields> = {
       }
     };
 
-    const onSubmit: SubmitHandler<Fields> = async address => {
-      // if (storeFields.accountType === DraftAccountType.Corporate) {
-      //   await updateStoreFields({ _currentCompanyMajorStakeholder: { ...storeFields._currentCompanyMajorStakeholder, residentialAddress: address } });
-      // }
-      //
-      // if (storeFields.accountType === DraftAccountType.Trust) {
-      //   await updateStoreFields({
-      //     _currentTrustTrusteeGrantorOrProtector: { ...storeFields._currentTrustTrusteeGrantorOrProtector, residentialAddress: address },
-      //   });
-      // }
-      console.log('address', address);
+    const onSubmit: SubmitHandler<Fields> = () => {
       moveToNextStep();
     };
 

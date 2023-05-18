@@ -11,10 +11,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
-import { PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { useUpdateStakeholderForVerification } from 'reinvest-app-common/src/services/queries/updateStakeholderForVerification';
+import { AccountType, DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 import { getApiClient } from 'services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from 'services/queries/useSendDocumentsToS3AndGetScanIds';
 
+import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
 import { Applicant } from '../../../onboarding/form-flow/form-fields';
 import {
   ACCEPTED_FILES_MIME_TYPES,
@@ -23,6 +26,7 @@ import {
   MAXIMUM_NUMBER_OF_FILES,
   MINIMUM_NUMBER_OF_FILES,
 } from '../../../onboarding/form-flow/schemas';
+import { getDefaultIdentificationValueForApplicant } from '../../../onboarding/form-flow/utilities';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -31,21 +35,29 @@ type Fields = Pick<Applicant, 'identificationDocuments'>;
 export const StepCorporateApplicantIdentification: StepParams<FlowFields> = {
   identifier: Identifiers.CORPORATE_APPLICANT_IDENTIFICATION,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    // const defaultValues = getDefaultIdentificationValueForApplicant(storeFields, DraftAccountType.Corporate);
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateStakeholderData;
+  },
+
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+    const { activeAccount } = useActiveAccount();
+    const accountType = activeAccount?.type === AccountType.Corporate ? DraftAccountType.Corporate : DraftAccountType.Trust;
+    const defaultValues = getDefaultIdentificationValueForApplicant(storeFields, accountType);
     const { isSuccess, error, isLoading } = useCompleteCorporateDraftAccount(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { control, formState, handleSubmit } = useForm<Fields>({
       resolver: zodResolver(APPLICANT_IDENTIFICATION),
-      // defaultValues,
+      defaultValues,
     });
+    const { mutateAsync: updateStakeholderMutate, isLoading: isUpdateStakeholderLoading } = useUpdateStakeholderForVerification(getApiClient);
 
-    const shouldButtonLoading = isSendDocumentToS3AndGetScanIdsLoading || isCreateDocumentsFileLinksLoading || isLoading;
+    const shouldButtonLoading = isSendDocumentToS3AndGetScanIdsLoading || isCreateDocumentsFileLinksLoading || isLoading || isUpdateStakeholderLoading;
     const shouldButtonBeDisabled = !formState.isValid || shouldButtonLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const { _isEditingCompanyMajorStakeholderApplicant } = storeFields;
+
       const currentMajorStakeholderApplicant = { ...storeFields._currentCompanyMajorStakeholder, identificationDocuments };
       const currentMajorStakeholderApplicantIndex = currentMajorStakeholderApplicant._index;
       await updateStoreFields({ _currentCompanyMajorStakeholder: currentMajorStakeholderApplicant });
@@ -59,63 +71,45 @@ export const StepCorporateApplicantIdentification: StepParams<FlowFields> = {
         if (
           !!_isEditingCompanyMajorStakeholderApplicant &&
           typeof currentMajorStakeholderApplicantIndex !== 'undefined' &&
-          currentMajorStakeholderApplicantIndex >= 0
-          // && storeFields.accountId
+          currentMajorStakeholderApplicantIndex >= 0 &&
+          activeAccount?.id &&
+          currentMajorStakeholderApplicant.id
         ) {
-          // const editedStakeholder = {
-          //   id: currentMajorStakeholderApplicant.id,
-          //   name: {
-          //     firstName: currentMajorStakeholderApplicant.firstName,
-          //     lastName: currentMajorStakeholderApplicant.lastName,
-          //     middleName: currentMajorStakeholderApplicant.middleName,
-          //   },
-          //   dateOfBirth: {
-          //     dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
-          //   },
-          //   address: { ...currentMajorStakeholderApplicant.residentialAddress, country: 'USA' } as AddressInput,
-          //   domicile: {
-          //     type: currentMajorStakeholderApplicant.domicile || SimplifiedDomicileType.Citizen,
-          //   },
-          //   idScan,
-          // };
-          // const data = await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [editedStakeholder] } });
-          // const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
-          // await updateStoreFields({
-          //   companyMajorStakeholderApplicants: stakeholdersToStoreFields,
-          //   _currentCompanyMajorStakeholder: undefined,
-          //   _isEditingCompanyMajorStakeholderApplicant: false,
-          //   _willHaveMajorStakeholderApplicants: false,
-          // });
-        } else {
-          // const newStakeholder = {
-          //   name: {
-          //     firstName: currentMajorStakeholderApplicant.firstName,
-          //     lastName: currentMajorStakeholderApplicant.lastName,
-          //     middleName: currentMajorStakeholderApplicant.middleName,
-          //   },
-          //   dateOfBirth: {
-          //     dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
-          //   },
-          //   address: { ...currentMajorStakeholderApplicant.residentialAddress, country: 'USA' } as AddressInput,
-          //   ssn: {
-          //     ssn: currentMajorStakeholderApplicant.socialSecurityNumber || '',
-          //   },
-          //   domicile: {
-          //     type: currentMajorStakeholderApplicant.domicile || SimplifiedDomicileType.Citizen,
-          //   },
-          //   idScan,
-          // };
-          // if (true) {
-          //   // const data = await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [newStakeholder] } });
-          //   // const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
-          //
-          //   await updateStoreFields({
-          //     // companyMajorStakeholderApplicants: stakeholdersToStoreFields,
-          //     _isEditingCompanyMajorStakeholderApplicant: false,
-          //     // _willHaveMajorStakeholderApplicants: false,
-          //   });
-          // }
+          const dateOfBirth = formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' });
+          const { firstName, lastName, middleName, residentialAddress } = currentMajorStakeholderApplicant;
+          const updateStakeholderInput = {
+            dateOfBirth: { dateOfBirth },
+            idScan,
+            name: {
+              firstName,
+              lastName,
+              middleName,
+            },
+            address: {
+              addressLine1: residentialAddress?.addressLine1 || '',
+              addressLine2: residentialAddress?.addressLine2 || '',
+              country: residentialAddress?.country || 'USA',
+              city: residentialAddress?.city || '',
+              zip: residentialAddress?.zip || '',
+              state: residentialAddress?.state || '',
+            },
+          };
+
+          await updateStakeholderMutate({
+            accountId: activeAccount.id,
+            stakeholderId: currentMajorStakeholderApplicant.id,
+            input: updateStakeholderInput,
+          });
+
+          await updateStoreFields({ _shouldUpdateStakeholderData: false });
+
+          const stakolders = storeFields.companyMajorStakeholderApplicants?.filter(stakeholder => stakeholder.id !== currentMajorStakeholderApplicant.id);
+          storeFields._currentCompanyMajorStakeholder ? stakolders?.push(storeFields._currentCompanyMajorStakeholder) : null;
+
+          await updateStoreFields({ companyMajorStakeholderApplicants: stakolders });
         }
+
+        moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_LIST);
       }
     };
 

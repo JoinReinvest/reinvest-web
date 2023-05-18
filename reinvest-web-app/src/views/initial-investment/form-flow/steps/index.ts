@@ -33,10 +33,9 @@ export const STEPS = [
   StepResidencyVisa,
   StepResidencyGreenCard,
   StepIdentificationDocuments,
-  StepInvestmentCompleted,
   StepCorporateApplicantList,
   StepCorporateApplicantDetails,
   StepCorporateApplicantAddress,
   StepCorporateApplicantIdentification,
-  StepCorporateApplicantDetails,
+  StepInvestmentCompleted,
 ];

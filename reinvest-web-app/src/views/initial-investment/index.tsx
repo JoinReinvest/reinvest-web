@@ -16,6 +16,11 @@ const stepsWithBlackModal = [
   Identifiers.RESIDENCY_VISA,
   Identifiers.RESIDENCY_GREEN_CARD,
   Identifiers.IDENTIFICATION_DOCUMENTS,
+  Identifiers.CORPORATE_APPLICANT_LIST,
+  Identifiers.CORPORATE_APPLICANT_DETAILS,
+  Identifiers.APPLICANT_ADDRESS,
+  Identifiers.CORPORATE_APPLICANT_IDENTIFICATION,
+  Identifiers.CORPORATE_APPLICANT_DETAILS,
 ];
 interface Props {
   isOpen: boolean;
@@ -50,7 +55,10 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
 
   if (currentStepIdentifier && stepsWithBlackModal.includes(currentStepIdentifier as Identifiers)) {
     return (
-      <ModalBlackFullscreen isOpen={isOpen}>
+      <ModalBlackFullscreen
+        isOpen={isOpen}
+        onOpenChange={onModalClickBack}
+      >
         <CurrentStepView />
       </ModalBlackFullscreen>
     );

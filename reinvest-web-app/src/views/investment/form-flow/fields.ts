@@ -34,7 +34,6 @@ export interface FlowFields {
   corporationLegalName?: string;
   dateOfBirth?: string | null;
   domicile?: {
-    type: DomicileType;
     forGreenCard?: {
       birthCountry: string;
       citizenshipCountry: string;
@@ -44,6 +43,7 @@ export interface FlowFields {
       citizenshipCountry: string;
       visaType: string;
     };
+    type?: DomicileType | null;
   };
   identificationDocuments?: DocumentFile[];
   investmentAmount?: number;

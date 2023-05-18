@@ -6,14 +6,17 @@ import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useGetCorporateAccount } from 'reinvest-app-common/src/services/queries/getCorporateAccount';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
+import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 
 import { IconXCircle } from '../../../../assets/icons/IconXCircle';
 import { Button } from '../../../../components/Button';
 import { ButtonStack } from '../../../../components/FormElements/ButtonStack';
+import { formatStakeholdersForStorage } from '../../../onboarding/form-flow/utilities';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -28,7 +31,12 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const { mutate, isSuccess, data, isLoading } = useVerifyAccount(getApiClient);
-    const { refetch, isRefetching: isGetProfileRefetching, data: getUsrProfileData } = useGetUserProfile(getApiClient);
+    const { refetch: refetchUserProfile, isRefetching: isGetProfileRefetching, data: getUserProfileData } = useGetUserProfile(getApiClient);
+    const {
+      refetch: refetchCorporate,
+      isRefetching: isCorporateRefetching,
+      data: getCorporateData,
+    } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
 
     useEffect(() => {
       if (activeAccount?.id) {
@@ -39,12 +47,30 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (isSuccess) {
+        if (!data?.requiredActions?.length) {
+          return moveToNextStep();
+        }
+
         if (!data?.canUserContinueTheInvestment && !data?.isAccountVerified) {
-          const shouldUpdateProfileData = data?.requiredActions?.filter(requiredAction => requiredAction?.onObject.type === 'PROFILE');
-          updateStoreFields({ _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length });
+          const shouldUpdateProfileData = data?.requiredActions?.filter(
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
+          );
+
+          const shouldUpdateStakeholderData = data?.requiredActions?.filter(
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview,
+          );
+
+          updateStoreFields({
+            _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length,
+            _shouldUpdateStakeholderData: !!shouldUpdateStakeholderData?.length,
+          });
 
           if (shouldUpdateProfileData) {
-            refetch();
+            refetchUserProfile();
+          }
+
+          if (shouldUpdateStakeholderData) {
+            refetchCorporate();
           }
         }
 
@@ -56,17 +82,26 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, [isSuccess]);
 
     useEffect(() => {
-      if (!isGetProfileRefetching && getUsrProfileData && storeFields._shouldUpdateProfileDetails) {
-        const { details } = getUsrProfileData;
+      if (!isGetProfileRefetching && getUserProfileData && storeFields._shouldUpdateProfileDetails) {
+        const { details } = getUserProfileData;
         const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
         const address = details?.address;
         const dateOfBirth = details?.dateOfBirth;
         const identificationDocuments: DocumentFile[] = details?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
         const residency = details?.domicile?.type;
+        const domicile = details?.domicile || { type: DomicileType.Citizen, visaType: '', birthCountry: '', citizenshipCountry: '' };
 
-        updateStoreFields({ name, address, dateOfBirth, residency, identificationDocuments, _shouldUpdateProfileDetails: true });
+        updateStoreFields({ name, address, dateOfBirth, residency, identificationDocuments, domicile, _shouldUpdateProfileDetails: true });
       }
-    }, [isGetProfileRefetching, getUsrProfileData, updateStoreFields, storeFields]);
+    }, [isGetProfileRefetching, getUserProfileData, updateStoreFields, storeFields]);
+
+    useEffect(() => {
+      if (!isCorporateRefetching && getCorporateData && storeFields._shouldUpdateStakeholderData) {
+        const { details } = getCorporateData;
+        const stakeholdersToStoreFields = details?.stakeholders ? formatStakeholdersForStorage(details?.stakeholders as Stakeholder[]) : [];
+        updateStoreFields({ companyMajorStakeholderApplicants: stakeholdersToStoreFields, _shouldUpdateStakeholderData: true });
+      }
+    }, [isCorporateRefetching, getCorporateData, updateStoreFields, storeFields]);
 
     const onSubmit = () => {
       moveToNextStep();

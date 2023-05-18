@@ -25,6 +25,10 @@ type Fields = Omit<Applicant, 'identificationDocument'>;
 export const StepCorporateApplicantDetails: StepParams<FlowFields> = {
   identifier: Identifiers.CORPORATE_APPLICANT_DETAILS,
 
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateStakeholderData;
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const defaultValues = getDefaultValuesForApplicantWithoutIdentification(storeFields, DraftAccountType.Corporate);
 

@@ -41,7 +41,7 @@ export const getDefaultValuesForApplicantWithoutIdentification: GetDefaultValues
 };
 
 type GetDefaultIdentificationValueForApplicant = (
-  fields: OnboardingFormFields,
+  fields: OnboardingFormFields | FlowFields,
   type: DraftAccountType.Corporate | DraftAccountType.Trust,
 ) => Pick<Applicant, 'identificationDocuments'>;
 export const getDefaultIdentificationValueForApplicant: GetDefaultIdentificationValueForApplicant = (fields, type) => {

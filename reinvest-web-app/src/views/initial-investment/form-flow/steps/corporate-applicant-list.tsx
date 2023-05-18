@@ -6,20 +6,20 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { Applicant, IndexedSchema } from '../../../onboarding/form-flow/form-fields';
-import { MAXIMUM_NUMBER_OF_APPLICANTS } from '../../../onboarding/form-flow/schemas';
 import { generateApplicantListItem } from '../../../onboarding/form-flow/utilities';
 import { FlowFields } from '../fields';
-// import { Applicant, IndexedSchema } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 export const StepCorporateApplicantList: StepParams<FlowFields> = {
   identifier: Identifiers.CORPORATE_APPLICANT_LIST,
 
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldUpdateStakeholderData;
+  },
+
   Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
-    const numberOfApplicants = majorStakeholderApplicants.length;
-    const hasReachedMaximumNumberOfApplicants = numberOfApplicants >= MAXIMUM_NUMBER_OF_APPLICANTS;
 
     const indexedStakeholderApplicants: IndexedSchema<Applicant>[] = majorStakeholderApplicants.map((item, index) => ({
       ...item,
@@ -38,6 +38,10 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
       }
     };
 
+    const onContinue = async () => {
+      moveToStepByIdentifier(Identifiers.INVESTMENT_VERIFICATION);
+    };
+
     return (
       <ModalContent>
         <div className="flex flex-col gap-60 lg:justify-center lg:gap-16">
@@ -50,16 +54,8 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
 
         <ButtonStack>
           <Button
-            variant="outlined"
-            label="Add Applicant"
-            // onClick={onAddNewApplication}
-            className="text-green-frost-01"
-            disabled={hasReachedMaximumNumberOfApplicants}
-          />
-
-          <Button
-            label="Continue"
-            // onClick={onContinue}
+            label="Submit"
+            onClick={onContinue}
           />
         </ButtonStack>
       </ModalContent>

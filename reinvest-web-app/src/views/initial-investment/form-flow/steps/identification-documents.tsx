@@ -79,7 +79,7 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
       await updateStoreFields({ identificationDocuments: documentsWithoutFile, _shouldUpdateProfileDetails: false });
 
       const dataToUpdate = {
-        domicile: storeFields.domicile || {
+        domicile: { ...storeFields.domicile, type: storeFields.domicile?.type as DomicileType } || {
           type: DomicileType.Citizen,
           forGreenCard: { birthCountry: '', birthState: '', citizenshipCountry: '' },
           forVisa: { birthCountry: '', visaType: '', citizenshipCountry: '' },
