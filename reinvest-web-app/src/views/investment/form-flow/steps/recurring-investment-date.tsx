@@ -5,30 +5,15 @@ import { DatePicker } from 'components/FormElements/DatePicker';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { RECURRING_INVESTMENT_SCHEDULE_SUBTITLES } from 'constants/recurring-investment';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
 import { Schema, z } from 'zod';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
 const TITLE = 'Select your 1st investment date';
-
-const SUBTITLES = new Map<RecurringInvestmentFrequency, string>([
-  [RecurringInvestmentFrequency.Weekly, 'This will repeat on the same day each week.'],
-  [RecurringInvestmentFrequency.BiWeekly, 'This will repeat on the same day bi-weekly.'],
-  [RecurringInvestmentFrequency.Monthly, 'This will repeat on the same day every month.'],
-  [RecurringInvestmentFrequency.Quarterly, 'This will repeat on the same day quaterly.'],
-]);
-
-function getSubtitle(interval: RecurringInvestmentFrequency | undefined) {
-  if (interval) {
-    return SUBTITLES.get(interval);
-  }
-
-  return undefined;
-}
 
 interface Fields {
   date?: Date;
@@ -64,7 +49,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const subtitle = getSubtitle(storeFields.recurringInvestmentInterval);
+    const subtitle = storeFields?.recurringInvestmentInterval && RECURRING_INVESTMENT_SCHEDULE_SUBTITLES.get(storeFields.recurringInvestmentInterval);
 
     const onSubmit: SubmitHandler<Fields> = async ({ date }) => {
       await updateStoreFields({ recurringInvestmentDate: date });
