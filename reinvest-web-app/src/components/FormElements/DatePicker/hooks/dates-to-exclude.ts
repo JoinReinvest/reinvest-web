@@ -1,10 +1,21 @@
 import { Dayjs } from 'dayjs';
 import { useMemo } from 'react';
 
-import { DateInterval } from './interfaces';
+interface DateInterval {
+  end: Date;
+  start: Date;
+}
 
-export function useExcludedDates(date: Dayjs) {
-  const excludedDateIntervals = useMemo<DateInterval[]>(() => {
+interface Params {
+  date: Dayjs;
+}
+
+interface Return {
+  excludedDateIntervals: DateInterval[];
+}
+
+export function useExcludedDates({ date }: Params): Return {
+  const excludedDateIntervals = useMemo(() => {
     const dates: DateInterval[] = [];
     const firstDayOfTheMonth = date.startOf('month');
     const isTodayFirstDayOfTheMonth = date.isSame(firstDayOfTheMonth, 'day');
