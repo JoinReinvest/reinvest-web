@@ -25,7 +25,7 @@ export const StepCorporationLegalName: StepParams<FlowFields> = {
     return !!fields._shouldUpdateCompanyData;
   },
 
-  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields = { corporationLegalName: storeFields.corporationLegalName || '' };
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'all',
@@ -35,7 +35,8 @@ export const StepCorporationLegalName: StepParams<FlowFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid;
 
-    const onSubmit: SubmitHandler<Fields> = async () => {
+    const onSubmit: SubmitHandler<Fields> = async ({ corporationLegalName }) => {
+      await updateStoreFields({ corporationLegalName });
       moveToNextStep();
     };
 

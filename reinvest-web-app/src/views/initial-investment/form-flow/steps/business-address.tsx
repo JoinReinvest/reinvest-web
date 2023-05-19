@@ -32,7 +32,7 @@ export const StepBusinessAddress: StepParams<FlowFields> = {
     return !!fields._shouldUpdateCompanyData;
   },
 
-  Component: ({ moveToNextStep, storeFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ moveToNextStep, storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields = storeFields.businessAddress || initialValues;
@@ -66,7 +66,8 @@ export const StepBusinessAddress: StepParams<FlowFields> = {
       }
     };
 
-    const onSubmit: SubmitHandler<Fields> = async () => {
+    const onSubmit: SubmitHandler<Fields> = async address => {
+      await updateStoreFields({ businessAddress: address });
       moveToNextStep();
     };
 

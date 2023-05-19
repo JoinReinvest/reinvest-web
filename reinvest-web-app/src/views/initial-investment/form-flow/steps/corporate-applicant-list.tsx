@@ -3,8 +3,12 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { ModalContent } from 'components/ModalElements/Content';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useUpdateCompanyForVerification } from 'reinvest-app-common/src/services/queries/updateCompanyForVerification';
+import { SimplifiedDomicileType } from 'reinvest-app-common/src/types/graphql';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
+import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
+import { getApiClient } from '../../../../services/getApiClient';
 import { Applicant, IndexedSchema } from '../../../onboarding/form-flow/form-fields';
 import { generateApplicantListItem } from '../../../onboarding/form-flow/utilities';
 import { FlowFields } from '../fields';
@@ -18,8 +22,10 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+    const { activeAccount } = useActiveAccount();
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
     const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
+    const { mutateAsync } = useUpdateCompanyForVerification(getApiClient);
 
     const indexedStakeholderApplicants: IndexedSchema<Applicant>[] = majorStakeholderApplicants.map((item, index) => ({
       ...item,
@@ -39,6 +45,57 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
     };
 
     const onContinue = async () => {
+      const { corporationLegalName, corporationType, businessAddress, companyMajorStakeholderApplicants } = storeFields;
+
+      if (
+        storeFields._shouldUpdateCompanyData &&
+        activeAccount?.id &&
+        corporationLegalName &&
+        corporationType &&
+        businessAddress &&
+        companyMajorStakeholderApplicants
+      ) {
+        const stakeholdersForInput = companyMajorStakeholderApplicants.map(stakeholder => ({
+          id: stakeholder.id,
+          name: {
+            firstName: stakeholder.firstName,
+            lastName: stakeholder.lastName,
+            middleName: stakeholder.middleName,
+          },
+          dateOfBirth: { dateOfBirth: stakeholder.dateOfBirth },
+          ssn: { ssn: stakeholder.socialSecurityNumber },
+          address: {
+            addressLine1: stakeholder?.residentialAddress?.addressLine1 || '',
+            addressLine2: stakeholder?.residentialAddress?.addressLine2 || '',
+            zip: stakeholder?.residentialAddress?.zip || '',
+            state: stakeholder?.residentialAddress?.state || '',
+            city: stakeholder?.residentialAddress?.city || '',
+            country: stakeholder?.residentialAddress?.country || '',
+          },
+          domicile: {
+            type: stakeholder.domicile || SimplifiedDomicileType.Resident,
+          },
+          idScan: stakeholder.idScan || [],
+        }));
+
+        await mutateAsync({
+          accountId: activeAccount.id,
+          input: {
+            companyType: { type: corporationType },
+            address: {
+              addressLine1: businessAddress.addressLine1 || '',
+              addressLine2: businessAddress.addressLine2 || '',
+              zip: businessAddress.zip || '',
+              state: businessAddress.state || '',
+              city: businessAddress.city || '',
+              country: businessAddress.country || '',
+            },
+            companyName: { name: corporationLegalName },
+            stakeholders: stakeholdersForInput,
+          },
+        });
+      }
+
       moveToStepByIdentifier(Identifiers.INVESTMENT_VERIFICATION);
     };
 

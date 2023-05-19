@@ -10,6 +10,7 @@ import { StepCorporationInformation } from './corporation-information';
 import { StepCorporationLegalName } from './corporation-legal-name';
 import { StepCorporationType } from './corporation-type';
 import { StepDateOfBirth } from './date-of-birth';
+import { StepDocumentsForCorporation } from './documents-for-corporation';
 import { StepFullName } from './full-name';
 import { StepIdentificationDocuments } from './identification-documents';
 import { StepInitialInvestment } from './initial-investment';
@@ -41,6 +42,7 @@ export const STEPS = [
   StepCorporationLegalName,
   StepBusinessAddress,
   StepCorporationInformation,
+  StepDocumentsForCorporation,
   StepCorporateApplicantList,
   StepCorporateApplicantDetails,
   StepCorporateApplicantAddress,

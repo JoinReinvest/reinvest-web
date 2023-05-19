@@ -38,7 +38,7 @@ export const StepCorporationInformation: StepParams<FlowFields> = {
     return !!fields._shouldUpdateCompanyData;
   },
 
-  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const defaultValues: Fields = {
       fiduciaryEntityInformation: storeFields.fiduciaryEntityInformation || {},
@@ -53,7 +53,8 @@ export const StepCorporationInformation: StepParams<FlowFields> = {
     const shouldButtonBeDisabled = !formState.isValid;
     const fiduciaryEntityTitle = activeAccount?.type === AccountType.Corporate ? 'corporation' : 'trust';
 
-    const onSubmit: SubmitHandler<Fields> = async () => {
+    const onSubmit: SubmitHandler<Fields> = async ({ fiduciaryEntityInformation }) => {
+      await updateStoreFields({ fiduciaryEntityInformation });
       moveToNextStep();
     };
 
