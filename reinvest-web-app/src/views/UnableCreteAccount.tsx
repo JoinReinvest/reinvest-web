@@ -1,6 +1,6 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
 import { IconXCircle } from 'assets/icons/IconXCircle';
-import { DialogBlack } from 'components/DialogBlack';
+import { Dialog } from 'components/Dialog';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
@@ -10,7 +10,7 @@ export const UnableCreteAccount = ({ isOpen, onOpenChange, accountType }: Props)
   const title = accountType === DraftAccountType.Corporate ? 'You are unable to create a Corporate Account' : 'You are unable to create a Trust Account';
 
   return (
-    <DialogBlack
+    <Dialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
@@ -21,6 +21,6 @@ export const UnableCreteAccount = ({ isOpen, onOpenChange, accountType }: Props)
           subtitle="You need to be an authorized signatory and beneficiary owner of a corporation to have a trust account on REINVEST."
         />
       </div>
-    </DialogBlack>
+    </Dialog>
   );
 };
