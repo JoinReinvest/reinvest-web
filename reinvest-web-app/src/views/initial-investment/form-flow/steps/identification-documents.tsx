@@ -89,11 +89,9 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
         dateOfBirth: { dateOfBirth: storeFields.dateOfBirth },
       };
 
-      if (hasIdScans) {
-        await updateProfileForVerificationMutate({ input: { ...dataToUpdate, idScan } });
-      } else {
-        await updateProfileForVerificationMutate({ input: dataToUpdate });
-      }
+      hasIdScans
+        ? await updateProfileForVerificationMutate({ input: { ...dataToUpdate, idScan } })
+        : await updateProfileForVerificationMutate({ input: dataToUpdate });
 
       if (storeFields._shouldUpdateCompanyData || storeFields._shouldUpdateStakeholderData) {
         return moveToNextStep();

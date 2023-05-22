@@ -5,6 +5,7 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { ButtonStack } from '../components/FormElements/ButtonStack';
 import { Form } from '../components/FormElements/Form';
 import { FormContent } from '../components/FormElements/FormContent';
+import { Link } from '../components/Link';
 import { LinkButton } from '../components/LinkButton';
 import { ModalBlackFullscreen } from '../components/ModalBlackFullscreen';
 import { Typography } from '../components/Typography';
@@ -14,7 +15,15 @@ type Props = Omit<DialogProps, 'children'> & { title: string };
 
 const subtitle = (
   <Typography variant="paragraph-emphasized">
-    Please reach out to <span className="text-green-frost-01">{EMAILS.support}</span>
+    Please reach out to{' '}
+    <Link
+      href={EMAILS.supportHref}
+      title={EMAILS.support}
+      className="text-green-frost-01 no-underline"
+    >
+      {EMAILS.support}
+    </Link>
+    .
   </Typography>
 );
 

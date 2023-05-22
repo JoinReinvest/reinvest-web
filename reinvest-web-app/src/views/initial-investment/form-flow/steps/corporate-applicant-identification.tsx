@@ -104,7 +104,10 @@ export const StepCorporateApplicantIdentification: StepParams<FlowFields> = {
           await updateStoreFields({ _shouldUpdateStakeholderData: false });
 
           const stakolders = storeFields.companyMajorStakeholderApplicants?.filter(stakeholder => stakeholder.id !== currentMajorStakeholderApplicant.id);
-          storeFields._currentCompanyMajorStakeholder ? stakolders?.push(storeFields._currentCompanyMajorStakeholder) : null;
+
+          if (storeFields._currentCompanyMajorStakeholder) {
+            stakolders?.push(storeFields._currentCompanyMajorStakeholder);
+          }
 
           await updateStoreFields({ companyMajorStakeholderApplicants: stakolders });
         }
