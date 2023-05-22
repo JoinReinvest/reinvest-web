@@ -3,6 +3,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
@@ -21,21 +22,29 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
-    const { mutate, isSuccess } = useVerifyAccount(getApiClient);
+    const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
+    const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
 
     useEffect(() => {
-      if (activeAccount?.id) {
-        mutate({ accountId: activeAccount.id });
+      async function initiateInvestments() {
+        if (activeAccount?.id) {
+          await mutateAsync({ accountId: activeAccount.id });
+          recurringInvestment && (await initiateRecurringInvestment());
+        }
       }
+
+      initiateInvestments();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (isSuccess) {
+      const hasRecurringInvestmentSucceded = recurringInvestment ? initiateRecurringInvestmentMeta.isSuccess : true;
+
+      if (verifyAccountMeta.isSuccess && hasRecurringInvestmentSucceded) {
         moveToNextStep();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess]);
+    }, [verifyAccountMeta.isSuccess, initiateRecurringInvestmentMeta.isSuccess]);
 
     return (
       <div className="relative h-full">

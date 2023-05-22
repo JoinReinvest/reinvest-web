@@ -7,7 +7,6 @@ export interface FlowFields {
   _availableAccounts?: Maybe<AccountOverview>[];
   _hasCompletedInvestment?: boolean;
   _investmentWasSuccessful?: boolean;
-  _isForIndividualAccount?: boolean;
   _selectedAccount?: AccountOverview;
   _shouldAgreeToOneTimeInvestment?: boolean;
   _shouldAgreeToRecurringInvestment?: boolean;

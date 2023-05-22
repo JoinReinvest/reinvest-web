@@ -6,6 +6,8 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { RECURRING_INVESTMENT_SCHEDULE_SUBTITLES } from 'constants/recurring-investment';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { Schema, z } from 'zod';
@@ -37,22 +39,31 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const defaultValues: Fields = { date: storeFields?.recurringInvestment?.date };
+    const { createRecurringInvestment, createRecurringInvestmentMeta } = useRecurringInvestment();
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
-      defaultValues: async () => defaultValues,
+      defaultValues: async () => ({ date: storeFields?.recurringInvestment?.date }),
     });
+
+    useEffect(() => {
+      if (createRecurringInvestmentMeta.isSuccess) {
+        moveToNextStep();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [createRecurringInvestmentMeta.isSuccess]);
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const subtitle = storeFields?.recurringInvestmentInterval && RECURRING_INVESTMENT_SCHEDULE_SUBTITLES.get(storeFields.recurringInvestmentInterval);
 
     const onSubmit: SubmitHandler<Fields> = async ({ date }) => {
-      const recurringInvestment = storeFields.recurringInvestment ?? { type: 'recurrent' };
-      const updatedRecurringInvestment = { ...recurringInvestment, date };
+      const { recurringInvestmentAmount, recurringInvestmentInterval } = storeFields;
 
-      await updateStoreFields({ recurringInvestment: updatedRecurringInvestment });
-      moveToNextStep();
+      await updateStoreFields({ recurringInvestmentDate: date });
+
+      if (date && recurringInvestmentAmount && recurringInvestmentInterval) {
+        await createRecurringInvestment({ date, investmentAmount: recurringInvestmentAmount, frequency: recurringInvestmentInterval });
+      }
     };
 
     return (
