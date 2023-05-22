@@ -4,7 +4,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetCorporateAccount } from 'reinvest-app-common/src/services/queries/getCorporateAccount';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
@@ -16,6 +16,7 @@ import { getApiClient } from 'services/getApiClient';
 import { IconXCircle } from '../../../../assets/icons/IconXCircle';
 import { Button } from '../../../../components/Button';
 import { ButtonStack } from '../../../../components/FormElements/ButtonStack';
+import { BannedView } from '../../../BannedView';
 import { formatStakeholdersForStorage } from '../../../onboarding/form-flow/utilities';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -30,6 +31,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
+    const [isBannedAccount, setIsBannedAccount] = useState(false);
     const { mutate, isSuccess, data, isLoading } = useVerifyAccount(getApiClient);
     const { refetch: refetchUserProfile, isRefetching: isGetProfileRefetching, data: getUserProfileData } = useGetUserProfile(getApiClient);
     const {
@@ -49,6 +51,12 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       if (isSuccess) {
         if (!data?.requiredActions?.length) {
           return moveToNextStep();
+        }
+
+        const accountIsBanned = data?.requiredActions?.find(requiredAction => requiredAction?.action === ActionName.BanAccount);
+
+        if (accountIsBanned) {
+          return setIsBannedAccount(true);
         }
 
         if (!data?.canUserContinueTheInvestment && !data?.isAccountVerified) {
@@ -111,6 +119,15 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const onSubmit = () => {
       moveToNextStep();
     };
+
+    if (isBannedAccount) {
+      return (
+        <BannedView
+          isOpen
+          title="Verification failed. Your account has been locked."
+        />
+      );
+    }
 
     return (
       <Form onSubmit={onSubmit}>
