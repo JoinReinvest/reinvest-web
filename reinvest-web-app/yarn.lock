@@ -2646,10 +2646,15 @@
   dependencies:
     tslib "^2.4.0"
 
-"@tanstack/eslint-plugin-query@4.29.4", "@tanstack/eslint-plugin-query@^4.29.4":
+"@tanstack/eslint-plugin-query@4.29.4":
   version "4.29.4"
   resolved "https://registry.yarnpkg.com/@tanstack/eslint-plugin-query/-/eslint-plugin-query-4.29.4.tgz#c593b3ef36c8626484806b37ee45eae2304f96b3"
   integrity sha512-dKWigue+8KV9BaKLq5yUu4wUYCendpvEve8lc3YyD634MQJ/joK7nJXiMfAEHY5Bwnh00Y3ZTBJ6YNtAz4CbVQ==
+
+"@tanstack/eslint-plugin-query@^4.29.4":
+  version "4.29.8"
+  resolved "https://registry.yarnpkg.com/@tanstack/eslint-plugin-query/-/eslint-plugin-query-4.29.8.tgz#20cdbeedaff8a956b808eeb4789d248e3a43f634"
+  integrity sha512-w3tMVl8gZRiEdCoKweK07OkSPROFJ/hGJWdUcrfpWoTg8eaw7IWLMXWZJZKQEF2j1Aq6YkWBwuTF8QmZvVzVZA==
 
 "@tanstack/match-sorter-utils@^8.7.0":
   version "8.8.4"
@@ -2796,9 +2801,9 @@
   integrity sha512-jhuKLIRrhvCPLqwPcx6INqmKeiA5EWrsCOPhrlFSrbrmU4ZMPjj5Ul/oLCMDO98XRUIwVm78xICz4EPCektzeQ==
 
 "@types/node@*":
-  version "20.2.0"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.2.0.tgz#e33da33171ac4eba79b9cfe30b68a4f1561e74ec"
-  integrity sha512-3iD2jaCCziTx04uudpJKwe39QxXgSUnpxXSvRQjRvHPxFQfmfP4NXIm/NURVeNlTCc+ru4WqjYGTmpXrW9uMlw==
+  version "20.2.1"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.2.1.tgz#de559d4b33be9a808fd43372ccee822c70f39704"
+  integrity sha512-DqJociPbZP1lbZ5SQPk4oag6W7AyaGMO6gSfRwq3PWl4PXTwJpRQJhDq4W0kzrg3w6tJ1SwlvGZ5uKFHY13LIg==
 
 "@types/node@20.1.1":
   version "20.1.1"
@@ -4352,9 +4357,9 @@ eastasianwidth@^0.2.0:
   integrity sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==
 
 electron-to-chromium@^1.4.284:
-  version "1.4.399"
-  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.399.tgz#df8a63d1f572124ad8b5d846e38b0532ad7d9d54"
-  integrity sha512-+V1aNvVgoWNWYIbMOiQ1n5fRIaY4SlQ/uRlrsCjLrUwr/3OvQgiX2f5vdav4oArVT9TnttJKcPCqjwPNyZqw/A==
+  version "1.4.400"
+  resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.400.tgz#bc39fd77c4280b8d9abfbd7bee17d7bf3d1ef35f"
+  integrity sha512-Lsvf7cvwbIxCfB8VqbnVtEsjGi3+48ejDiQZfWo5gkT+1vQ2DHQI5pl0nUvPD6z1IQk6JgFeMC5ZQJqVhalEHg==
 
 emoji-regex@^8.0.0:
   version "8.0.0"
@@ -7650,7 +7655,7 @@ regexpp@^3.0.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#ab1d35ba4114b1beaa7aeba6299110237bc10076"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#b497ae2171260abf53ddb9020fa015b5f394ec5c"
   dependencies:
     "@graphql-codegen/cli" "^3.3.1"
     "@graphql-codegen/typescript" "^3.0.4"
