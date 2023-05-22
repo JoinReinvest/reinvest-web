@@ -5,7 +5,6 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { ButtonStack } from '../components/FormElements/ButtonStack';
 import { Form } from '../components/FormElements/Form';
 import { FormContent } from '../components/FormElements/FormContent';
-// import { Link } from '../components/Link';
 import { LinkButton } from '../components/LinkButton';
 import { GetHelpLink } from '../components/Links/GetHelp';
 import { ModalBlackFullscreen } from '../components/ModalBlackFullscreen';
