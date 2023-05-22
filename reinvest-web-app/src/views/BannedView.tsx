@@ -14,7 +14,7 @@ type Props = Omit<DialogProps, 'children'> & { title: string };
 
 const subtitle = (
   <Typography variant="paragraph-emphasized">
-    Please reach out to <span className="text-green-frost-01">support@reinvestcommunity.com.</span>
+    Please reach out to <span className="text-green-frost-01">{EMAILS.support}</span>
   </Typography>
 );
 
