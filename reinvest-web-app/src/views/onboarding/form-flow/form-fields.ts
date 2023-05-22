@@ -111,7 +111,7 @@ interface Compliances {
   isSeniorPoliticalFigure?: boolean;
 }
 
-interface FiduciaryEntityInformation {
+export interface FiduciaryEntityInformation {
   annualRevenue?: CorporationAnnualRevenue;
   industry?: Industry;
   numberOfEmployees?: CorporationNumberOfEmployees;
