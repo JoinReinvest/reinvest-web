@@ -14,8 +14,7 @@ interface Return {
 
 export function useAccountStats({ activeAccount }: Params): Return {
   const accountId = activeAccount?.id || '';
-  const { data: accountStats, isSuccess, isLoading, refetch } = useGetAccountStats(getApiClient, { accountId });
-  const activeAccountStatsMeta: QueryMeta = { isLoading, isSuccess, refetch };
+  const { data: accountStats, ...activeAccountStatsMeta } = useGetAccountStats(getApiClient, { accountId });
 
   return { activeAccountStats: accountStats || null, activeAccountStatsMeta };
 }

@@ -1,4 +1,4 @@
-import { DEFAULT_QUERY_META } from 'constants/query';
+import { DEFAULT_QUERY_META } from 'constants/queries';
 import { createContext } from 'react';
 
 import { State } from './interfaces';
