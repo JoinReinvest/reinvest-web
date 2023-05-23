@@ -2,6 +2,7 @@ import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
 
 import { useInitialInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
@@ -27,7 +28,7 @@ interface Props {
   toggleIsOpen: (state: boolean) => void;
 }
 
-export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
+const InnerInitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
   const { activeAccount } = useActiveAccount();
   useInitializeFields();
 
@@ -87,3 +88,9 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
     </ModalWhiteFullscreen>
   );
 };
+
+export const InitialInvestmentView = (props: Props) => (
+  <RecurringInvestmentProvider>
+    <InnerInitialInvestmentView {...props} />
+  </RecurringInvestmentProvider>
+);

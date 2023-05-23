@@ -1,9 +1,13 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
+import { IconXCircle } from 'assets/icons/IconXCircle';
+import { Button } from 'components/Button';
+import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetCorporateAccount } from 'reinvest-app-common/src/services/queries/getCorporateAccount';
@@ -12,12 +16,9 @@ import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verif
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
-import { IconXCircle } from '../../../../assets/icons/IconXCircle';
-import { Button } from '../../../../components/Button';
-import { ButtonStack } from '../../../../components/FormElements/ButtonStack';
 import { BannedView } from '../../../BannedView';
-import { formatStakeholdersForStorage } from '../../../onboarding/form-flow/utilities';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -31,8 +32,9 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
+    const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
+    const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const [isBannedAccount, setIsBannedAccount] = useState(false);
-    const { mutate, isSuccess, data, isLoading } = useVerifyAccount(getApiClient);
     const { refetch: refetchUserProfile, isRefetching: isGetProfileRefetching, data: getUserProfileData } = useGetUserProfile(getApiClient);
     const {
       refetch: refetchCorporate,
@@ -41,34 +43,39 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
 
     useEffect(() => {
-      if (activeAccount?.id) {
-        mutate({ accountId: activeAccount.id });
+      async function initiateInvestments() {
+        if (activeAccount?.id) {
+          await mutateAsync({ accountId: activeAccount.id });
+          recurringInvestment && (await initiateRecurringInvestment());
+        }
       }
+
+      initiateInvestments();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      if (isSuccess) {
-        if (!data?.requiredActions?.length) {
+      if (verifyAccountMeta.isSuccess) {
+        if (!verifyAccountMeta?.data?.requiredActions?.length) {
           return moveToNextStep();
         }
 
-        const accountIsBanned = data?.requiredActions?.find(requiredAction => requiredAction?.action === ActionName.BanAccount);
+        const accountIsBanned = verifyAccountMeta.data?.requiredActions?.find(requiredAction => requiredAction?.action === ActionName.BanAccount);
 
         if (accountIsBanned) {
           return setIsBannedAccount(true);
         }
 
-        if (!data?.canUserContinueTheInvestment && !data?.isAccountVerified) {
-          const shouldUpdateProfileData = data?.requiredActions?.filter(
+        if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
+          const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
           );
 
-          const shouldUpdateStakeholderData = data?.requiredActions?.filter(
+          const shouldUpdateStakeholderData = verifyAccountMeta.data?.requiredActions?.filter(
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview,
           );
 
-          const shouldUpdateCompanyData = data?.requiredActions?.filter(
+          const shouldUpdateCompanyData = verifyAccountMeta.data?.requiredActions?.filter(
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Company && requiredAction.action !== ActionName.RequireManualReview,
           );
 
@@ -87,12 +94,12 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           }
         }
 
-        if (data?.isAccountVerified || data?.canUserContinueTheInvestment) {
+        if (verifyAccountMeta.data?.isAccountVerified || verifyAccountMeta.data?.canUserContinueTheInvestment) {
           moveToNextStep();
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess]);
+    }, [verifyAccountMeta.isSuccess, initiateRecurringInvestmentMeta.isSuccess]);
 
     useEffect(() => {
       if (!isGetProfileRefetching && getUserProfileData && storeFields._shouldUpdateProfileDetails) {
@@ -131,7 +138,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        {isLoading && !data && (
+        {verifyAccountMeta.isLoading && !verifyAccountMeta.data && (
           <FormContent>
             <div className="flex flex-col gap-32">
               <div className="flex w-full flex-col items-center gap-16">
@@ -144,7 +151,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             </div>
           </FormContent>
         )}
-        {data && !data.isAccountVerified && (
+        {verifyAccountMeta.data && !verifyAccountMeta.data.isAccountVerified && (
           <>
             <FormContent>
               <div className="flex flex-col gap-32">

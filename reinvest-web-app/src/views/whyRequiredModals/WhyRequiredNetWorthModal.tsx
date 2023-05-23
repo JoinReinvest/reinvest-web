@@ -1,5 +1,5 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
-import { DialogBlack } from 'components/DialogBlack';
+import { Dialog } from 'components/Dialog';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 
@@ -7,7 +7,7 @@ type WhyRequiredNetWorthModalProps = Omit<DialogProps, 'children'>;
 
 export const WhyRequiredNetWorthModal = ({ isOpen, onOpenChange }: WhyRequiredNetWorthModalProps) => {
   return (
-    <DialogBlack
+    <Dialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
@@ -25,6 +25,6 @@ export const WhyRequiredNetWorthModal = ({ isOpen, onOpenChange }: WhyRequiredNe
           inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia vol
         </Typography>
       </>
-    </DialogBlack>
+    </Dialog>
   );
 };

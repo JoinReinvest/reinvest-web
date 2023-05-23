@@ -4,7 +4,7 @@ import { Typography } from 'components/Typography';
 import { forwardRef } from 'react';
 import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
 import { formatDateForNotification } from 'reinvest-app-common/src/utilities/dates';
-import { highlightNotificationDescription } from 'reinvest-app-common/src/utilities/notifications';
+import { boldBracketedText } from 'utils/strings';
 
 import { NOTIFICATION_TYPE_FLOWS } from '../constants';
 import { useFlowsManagerContext } from '../providers/flows-manager';
@@ -22,7 +22,7 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
     'cursor-pointer': !notification?.isDismissible,
   });
 
-  const description = highlightNotificationDescription(notification?.body || '');
+  const description = boldBracketedText(notification?.body || '');
   const timestamp = formatDateForNotification(notification?.date || '');
 
   function onClick() {

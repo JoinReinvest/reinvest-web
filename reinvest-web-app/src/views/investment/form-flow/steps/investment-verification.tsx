@@ -2,8 +2,12 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
-import { useEffect, useState } from 'react';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
+import { useEffect } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
+import { getApiClient } from 'services/getApiClient';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -22,31 +26,31 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const [isSuccess, setIsSuccess] = useState(false);
+  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { activeAccount } = useActiveAccount();
+    const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
+    const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
 
     useEffect(() => {
-      const timer = setTimeout(() => {
-        setIsSuccess(true);
-      }, 3000);
+      async function initiateInvestments() {
+        if (activeAccount?.id) {
+          await mutateAsync({ accountId: activeAccount.id });
+          recurringInvestment && (await initiateRecurringInvestment());
+        }
+      }
 
-      return () => clearTimeout(timer);
+      initiateInvestments();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-      async function verifySuccess() {
-        if (isSuccess) {
-          await updateStoreFields({ _investmentWasSuccessful: true });
-          moveToNextStep();
-        } else {
-          await updateStoreFields({ _investmentWasSuccessful: false });
-        }
-      }
+      const hasRecurringInvestmentSucceded = recurringInvestment ? initiateRecurringInvestmentMeta.isSuccess : true;
 
-      verifySuccess();
+      if (verifyAccountMeta.isSuccess && hasRecurringInvestmentSucceded) {
+        moveToNextStep();
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess]);
+    }, [verifyAccountMeta.isSuccess, initiateRecurringInvestmentMeta.isSuccess]);
 
     return (
       <div className="relative h-full">

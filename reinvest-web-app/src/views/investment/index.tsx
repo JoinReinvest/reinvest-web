@@ -1,6 +1,7 @@
 import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { ModalWhiteSideResponsive } from 'components/ModalWhiteSideResponsive';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
+import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
 import { AccountOverview } from 'reinvest-app-common/src/types/graphql';
 
 import { useInvestmentFlow } from './form-flow';
@@ -14,7 +15,7 @@ interface Props {
   toggleIsOpen: (state: boolean) => void;
 }
 
-export function InvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
+function InnerInvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
   useInitializeFields();
 
   const {
@@ -81,3 +82,9 @@ export function InvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
     </ModalWhiteSideResponsive>
   );
 }
+
+export const InvestmentView = (props: Props) => (
+  <RecurringInvestmentProvider>
+    <InnerInvestmentView {...props} />
+  </RecurringInvestmentProvider>
+);

@@ -1,9 +1,8 @@
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { AccountOverview, Address, DomicileType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
-
-import { Investment } from '../../initial-investment/form-flow/fields';
-import { Applicant, IndexedSchema } from '../../onboarding/form-flow/form-fields';
+import { Investment } from 'views/initial-investment/form-flow/fields';
+import { Applicant, IndexedSchema } from 'views/onboarding/form-flow/form-fields';
 
 export interface FlowFields {
   _hasCompletedFlow: boolean;
@@ -15,7 +14,6 @@ export interface FlowFields {
   _investmentWasSuccessful?: boolean;
   _isEditingCompanyMajorStakeholderApplicant?: boolean;
   _isEditingTrustTrusteeGrantorOrProtector?: boolean;
-  _isForIndividualAccount?: boolean;
   _selectedAccount?: AccountOverview;
   _shouldAgreeToOneTimeInvestment?: boolean;
   _shouldAgreeToRecurringInvestment?: boolean;

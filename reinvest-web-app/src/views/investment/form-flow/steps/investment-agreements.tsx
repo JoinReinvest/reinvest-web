@@ -1,12 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { DialogSubscriptionAgreement } from 'components/DialogSubscriptionAgreement';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { useToggler } from 'hooks/toggler';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCreateSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/createSubscriptionAgreement';
+import { useSignSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/signSubscriptionAgreement';
+import { getApiClient } from 'services/getApiClient';
 import { Schema, z } from 'zod';
 
 import { FlowFields } from '../fields';
@@ -45,6 +52,12 @@ export const StepInvestmentAgreements: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { subscriptionRecurringInvestmentAgreement, signRecurringInvestmentSubscriptionAgreement } = useRecurringInvestment();
+    // TO-DO: Use data to display one time investment subscription agreement
+    const { mutate: createSubscriptionAgreementMutation } = useCreateSubscriptionAgreement(getApiClient);
+    const { mutate: signSubscriptionAgreement } = useSignSubscriptionAgreement(getApiClient);
+    const [isDialogRecurringAgreementOpen, toggleIsDialogRecurringAgreementOpen] = useToggler(false);
+
     const defaultValues: Fields = {
       agreesToOneTimeInvestment: !!storeFields.agreesToOneTimeInvestment,
       agreesToRecurringInvestment: !!storeFields.agreesToRecurringInvestment,
@@ -56,13 +69,27 @@ export const StepInvestmentAgreements: StepParams<FlowFields> = {
       resolver: zodResolver(getSchema(storeFields)),
     });
 
+    useEffect(() => {
+      const { investmentId } = storeFields;
+
+      if (investmentId) {
+        createSubscriptionAgreementMutation({ investmentId });
+      }
+    }, [createSubscriptionAgreementMutation, storeFields]);
+
     const shouldButtonsBeDisabled = !formState.isValid || formState.isSubmitting;
     const shouldAgreeToRecurringInvestment = !!storeFields._shouldAgreeToRecurringInvestment;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
+      const { investmentId } = storeFields;
       const { agreesToOneTimeInvestment, agreesToRecurringInvestment } = fields;
       await updateStoreFields({ agreesToOneTimeInvestment, agreesToRecurringInvestment });
-      moveToNextStep();
+
+      if (investmentId) {
+        await signSubscriptionAgreement({ investmentId });
+        await signRecurringInvestmentSubscriptionAgreement();
+        moveToNextStep();
+      }
     };
 
     return (
@@ -86,15 +113,24 @@ export const StepInvestmentAgreements: StepParams<FlowFields> = {
             </CheckboxLabeled>
 
             {shouldAgreeToRecurringInvestment && (
-              <CheckboxLabeled
-                name="agreesToRecurringInvestment"
-                control={control}
-                labelAsButtonLink
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onButtonLinkClick={() => {}}
-              >
-                {LABEL_AGREEMENT_RECURRING}
-              </CheckboxLabeled>
+              <>
+                <CheckboxLabeled
+                  name="agreesToRecurringInvestment"
+                  control={control}
+                  labelAsButtonLink
+                  onButtonLinkClick={toggleIsDialogRecurringAgreementOpen}
+                >
+                  {LABEL_AGREEMENT_RECURRING}
+                </CheckboxLabeled>
+
+                {subscriptionRecurringInvestmentAgreement && (
+                  <DialogSubscriptionAgreement
+                    subscriptionAgreement={subscriptionRecurringInvestmentAgreement}
+                    isModalOpen={isDialogRecurringAgreementOpen}
+                    onModalOpenChange={toggleIsDialogRecurringAgreementOpen}
+                  />
+                )}
+              </>
             )}
           </div>
         </FormContent>
