@@ -1,5 +1,5 @@
 import { AccountOverview, AccountStats, Maybe, Profile } from 'reinvest-app-common/src/types/graphql';
-import { QueryMeta } from 'types/queries';
+import { MutationMeta, QueryMeta } from 'types/queries';
 
 export interface State {
   activeAccount: AccountOverview | null;
@@ -13,9 +13,12 @@ export interface State {
   bankAccount: string | null;
   individualAccount: AccountOverview | null;
   isAbleToAddBeneficiaries: boolean;
+  isAccountBanned: boolean;
+  previousAccount: AccountOverview | null;
   setArrivesFromOnboarding: (value: boolean) => void;
   updateActiveAccount: (account: Maybe<AccountOverview>) => void;
   updateBankAccount: (bankAccount: string) => void;
   userProfile: Profile | null;
   userProfileMeta: QueryMeta;
+  validateActiveAccountMeta: MutationMeta;
 }
