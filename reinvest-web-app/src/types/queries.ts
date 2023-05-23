@@ -1,7 +1,9 @@
 import { ErrorResponse } from 'reinvest-app-common/src/services/queries/interfaces';
 
 export interface QueryMeta {
+  isError: boolean;
   isLoading: boolean;
+  isRefetching: boolean;
   isSuccess: boolean;
   refetch: () => void;
 }

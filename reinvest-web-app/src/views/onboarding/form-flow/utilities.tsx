@@ -2,10 +2,11 @@ import { IconPencil } from 'assets/icons/IconPencil';
 import { Typography } from 'components/Typography';
 import { DraftAccountType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
 
+import { FlowFields } from '../../initial-investment/form-flow/fields';
 import { Applicant, IndexedSchema, OnboardingFormFields } from './form-fields';
 
 type GetDefaultValuesForApplicantWithoutIdentification = (
-  fields: OnboardingFormFields,
+  fields: OnboardingFormFields | FlowFields,
   type: DraftAccountType.Corporate | DraftAccountType.Trust,
 ) => Omit<Applicant, 'identificationDocument'>;
 export const getDefaultValuesForApplicantWithoutIdentification: GetDefaultValuesForApplicantWithoutIdentification = (
@@ -40,7 +41,7 @@ export const getDefaultValuesForApplicantWithoutIdentification: GetDefaultValues
 };
 
 type GetDefaultIdentificationValueForApplicant = (
-  fields: OnboardingFormFields,
+  fields: OnboardingFormFields | FlowFields,
   type: DraftAccountType.Corporate | DraftAccountType.Trust,
 ) => Pick<Applicant, 'identificationDocuments'>;
 export const getDefaultIdentificationValueForApplicant: GetDefaultIdentificationValueForApplicant = (fields, type) => {

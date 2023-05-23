@@ -1,18 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { DialogSubscriptionAgreement } from 'components/DialogSubscriptionAgreement';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { useToggler } from 'hooks/toggler';
+import { useInvestmentContext } from 'providers/InvestmentProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useCreateSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/createSubscriptionAgreement';
-import { useSignSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/signSubscriptionAgreement';
 import { Schema, z } from 'zod';
 
-import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -50,17 +51,14 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { investmentId } = storeFields;
+    const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useInvestmentContext();
+    const { subscriptionRecurringInvestmentAgreement, signRecurringInvestmentSubscriptionAgreement } = useRecurringInvestment();
+    const [isDialogInvestmentOpen, toggleIsDialogInvestmentOpen] = useToggler();
+    const [isDialogRecurringAgreementOpen, toggleIsDialogRecurringAgreementOpen] = useToggler(false);
     const defaultValues: Fields = {
       agreesToOneTimeInvestment: !!storeFields.agreesToOneTimeInvestment,
       agreesToRecurringInvestment: !!storeFields.agreesToRecurringInvestment,
     };
-    const {
-      mutate: createSubscriptionAgreementMutation,
-      isSuccess: isCreateSubscriptionAgreementSuccess,
-      data: createSubscriptionAgreementData,
-    } = useCreateSubscriptionAgreement(getApiClient);
-    const { mutate: signSubscriptionAgreement } = useSignSubscriptionAgreement(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
@@ -76,25 +74,19 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
       const { agreesToOneTimeInvestment, agreesToRecurringInvestment } = fields;
       await updateStoreFields({ agreesToOneTimeInvestment, agreesToRecurringInvestment });
 
-      if (investmentId) {
-        await signSubscriptionAgreement({ investmentId });
-        moveToNextStep();
+      if (subscriptionAgreement) {
+        await signSubscriptionAgreement();
+        await signRecurringInvestmentSubscriptionAgreement();
       }
     };
 
     useEffect(() => {
-      if (isCreateSubscriptionAgreementSuccess) {
-        //TODO: we should render view based on content from API from mutation signSubscriptionAgreement
+      if (signSubscriptionAgreementMeta.isSuccess) {
+        moveToNextStep();
       }
-    }, [isCreateSubscriptionAgreementSuccess, createSubscriptionAgreementData]);
 
-    useEffect(() => {
-      const { investmentId } = storeFields;
-
-      if (investmentId) {
-        createSubscriptionAgreementMutation({ investmentId });
-      }
-    }, [createSubscriptionAgreementMutation, storeFields]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -106,27 +98,45 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
 
           <div className="flex flex-col gap-16">
             {shouldAgreeToOneTimeInvestment && (
-              <CheckboxLabeled
-                name="agreesToOneTimeInvestment"
-                control={control}
-                labelAsButtonLink
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onButtonLinkClick={() => {}}
-              >
-                {LABEL_AGREEMENT_ONE_TIME}
-              </CheckboxLabeled>
+              <>
+                <CheckboxLabeled
+                  name="agreesToOneTimeInvestment"
+                  control={control}
+                  labelAsButtonLink
+                  onButtonLinkClick={toggleIsDialogInvestmentOpen}
+                >
+                  {LABEL_AGREEMENT_ONE_TIME}
+                </CheckboxLabeled>
+
+                {subscriptionAgreement && (
+                  <DialogSubscriptionAgreement
+                    subscriptionAgreement={subscriptionAgreement}
+                    isModalOpen={isDialogInvestmentOpen}
+                    onModalOpenChange={toggleIsDialogInvestmentOpen}
+                  />
+                )}
+              </>
             )}
 
             {shouldAgreeToRecurringInvestment && (
-              <CheckboxLabeled
-                name="agreesToRecurringInvestment"
-                control={control}
-                labelAsButtonLink
-                // eslint-disable-next-line @typescript-eslint/no-empty-function
-                onButtonLinkClick={() => {}}
-              >
-                {LABEL_AGREEMENT_RECURRING}
-              </CheckboxLabeled>
+              <>
+                <CheckboxLabeled
+                  name="agreesToRecurringInvestment"
+                  control={control}
+                  labelAsButtonLink
+                  onButtonLinkClick={toggleIsDialogRecurringAgreementOpen}
+                >
+                  {LABEL_AGREEMENT_RECURRING}
+                </CheckboxLabeled>
+
+                {subscriptionRecurringInvestmentAgreement && (
+                  <DialogSubscriptionAgreement
+                    subscriptionAgreement={subscriptionRecurringInvestmentAgreement}
+                    isModalOpen={isDialogRecurringAgreementOpen}
+                    onModalOpenChange={toggleIsDialogRecurringAgreementOpen}
+                  />
+                )}
+              </>
             )}
           </div>
         </FormContent>

@@ -1,23 +1,43 @@
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 
 import { useInitialInvestmentFlow } from '../form-flow';
 
-export const useInitializeFields = () => {
-  const { activeAccount } = useActiveAccount();
+interface Params {
+  forInitialInvestment?: boolean;
+}
+
+export const useInitializeFields = ({ forInitialInvestment }: Params) => {
+  const { availableAccounts } = useActiveAccount();
+  const { recurringInvestment, recurringInvestmentMeta } = useRecurringInvestment();
   const { updateStoreFields } = useInitialInvestmentFlow();
 
   useEffect(() => {
-    if (activeAccount && activeAccount.type) {
-      const isActiveAccountIndividual = activeAccount.type === 'INDIVIDUAL';
+    async function initializeFields() {
+      const hasMoreThanAnAvailableAccount = availableAccounts.length > 0;
 
-      updateStoreFields({ _isForIndividualAccount: isActiveAccountIndividual });
+      await updateStoreFields({
+        _shouldAgreeToOneTimeInvestment: true,
+        _hasMoreThanAnAccount: hasMoreThanAnAvailableAccount,
+        _forInitialInvestment: forInitialInvestment,
+      });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [activeAccount]);
 
-  useEffect(() => {
-    updateStoreFields({ _shouldAgreeToOneTimeInvestment: true });
+    initializeFields();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    async function setShouldDisplayRecurringInvestment() {
+      if (recurringInvestmentMeta.isSuccess && recurringInvestment === null) {
+        await updateStoreFields({
+          _shouldDisplayRecurringInvestment: true,
+        });
+      }
+    }
+
+    setShouldDisplayRecurringInvestment();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [recurringInvestmentMeta.isSuccess, recurringInvestment]);
 };

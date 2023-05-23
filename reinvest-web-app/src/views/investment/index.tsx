@@ -1,6 +1,7 @@
 import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { ModalWhiteSideResponsive } from 'components/ModalWhiteSideResponsive';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
+import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
 import { AccountOverview } from 'reinvest-app-common/src/types/graphql';
 
 import { useInvestmentFlow } from './form-flow';
@@ -14,7 +15,7 @@ interface Props {
   toggleIsOpen: (state: boolean) => void;
 }
 
-export function InvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
+function InnerInvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
   useInitializeFields();
 
   const {
@@ -22,28 +23,21 @@ export function InvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
     moveToPreviousValidStep,
     resetStoreFields,
     moveToFirstStep,
-    getStoreFields,
-    updateStoreFields,
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
   const onModalLastStep = async () => {
     toggleIsOpen(false);
-    const storeFields = getStoreFields();
-
     moveToFirstStep();
     await resetStoreFields();
-    await updateStoreFields({ _availableAccounts: storeFields?._availableAccounts });
   };
 
   const onModalClickBack = async () => {
     if (isFirstStep) {
-      const storeFields = getStoreFields();
       toggleIsOpen(false);
 
       await resetStoreFields();
       moveToFirstStep();
-      await updateStoreFields({ _availableAccounts: storeFields?._availableAccounts });
     } else {
       moveToPreviousValidStep();
     }
@@ -81,3 +75,9 @@ export function InvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
     </ModalWhiteSideResponsive>
   );
 }
+
+export const InvestmentView = (props: Props) => (
+  <RecurringInvestmentProvider>
+    <InnerInvestmentView {...props} />
+  </RecurringInvestmentProvider>
+);

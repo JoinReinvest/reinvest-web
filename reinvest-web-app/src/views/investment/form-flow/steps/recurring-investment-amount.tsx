@@ -7,9 +7,11 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { recurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
+import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
+import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -30,10 +32,11 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields = { amount: storeFields.recurringInvestmentAmount };
+    const { activeAccount } = useActiveAccount();
     const { handleSubmit, setValue, formState } = useForm<Fields>({
       mode: 'onChange',
       defaultValues: async () => defaultValues,
-      resolver: zodResolver(recurringInvestmentSchema),
+      resolver: zodResolver(generateInvestmentSchema({ accountType: activeAccount?.type || AccountType.Individual })),
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;

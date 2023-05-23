@@ -2,20 +2,24 @@ import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { InvestmentProvider } from 'providers/InvestmentProvider';
+import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
+import { useMemo } from 'react';
+import { ModalProps } from 'types/modal';
 
+import { FLOW_STEPS_WITH_BLACK_MODAL } from './constants';
 import { useInitialInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
 import { ModalHandlerProvider } from './providers/modal-handler';
 
-interface Props {
-  isOpen: boolean;
-  toggleIsOpen: (state: boolean) => void;
+interface Props extends ModalProps {
+  forInitialInvestment?: boolean;
 }
 
-export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
+const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment }: Props) => {
   const { activeAccount } = useActiveAccount();
-  useInitializeFields();
+  useInitializeFields({ forInitialInvestment });
 
   const {
     CurrentStepView,
@@ -25,23 +29,28 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
     meta: { currentStepIdentifier, isFirstStep },
   } = useInitialInvestmentFlow();
 
+  const shouldDisplayBlackModal = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_BLACK_MODAL.includes(currentStepIdentifier), [currentStepIdentifier]);
+
   const onModalLastStep = () => {
-    toggleIsOpen(false);
+    onModalOpenChange(false);
     moveToFirstStep();
     resetStoreFields();
   };
 
   const onModalClickBack = () => {
     if (isFirstStep) {
-      toggleIsOpen(false);
+      onModalOpenChange(false);
     } else {
       moveToPreviousValidStep();
     }
   };
 
-  if (currentStepIdentifier === Identifiers.INVESTMENT_VERIFICATION) {
+  if (shouldDisplayBlackModal) {
     return (
-      <ModalBlackFullscreen isOpen={isOpen}>
+      <ModalBlackFullscreen
+        isOpen={isModalOpen}
+        onOpenChange={onModalClickBack}
+      >
         <CurrentStepView />
       </ModalBlackFullscreen>
     );
@@ -51,7 +60,7 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
     return (
       <ModalHandlerProvider onModalLastStep={onModalLastStep}>
         <ModalWhiteWatermark
-          isOpen={isOpen}
+          isOpen={isModalOpen}
           onOpenChange={onModalLastStep}
         >
           <CurrentStepView />
@@ -62,7 +71,7 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
 
   return (
     <ModalWhiteFullscreen
-      isOpen={isOpen}
+      isOpen={isModalOpen}
       onOpenChange={onModalClickBack}
       activeAccount={activeAccount}
     >
@@ -70,3 +79,11 @@ export const InitialInvestmentView = ({ isOpen, toggleIsOpen }: Props) => {
     </ModalWhiteFullscreen>
   );
 };
+
+export const InitialInvestmentView = (props: Props) => (
+  <InvestmentProvider>
+    <RecurringInvestmentProvider>
+      <InnerInitialInvestmentView {...props} />
+    </RecurringInvestmentProvider>
+  </InvestmentProvider>
+);

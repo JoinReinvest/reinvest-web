@@ -24,7 +24,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
       toggleIsLoading(true);
-      await updateStoreFields({ _willSetUpRecurringInvestments: true, _shouldAgreeToRecurringInvestment: true });
+      await updateStoreFields({ _willSetUpRecurringInvestment: true, _shouldAgreeToRecurringInvestment: true });
 
       toggleIsLoading(false);
       moveToNextStep();
@@ -32,7 +32,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
 
     const onSkipButtonClick = async () => {
       toggleIsLoading(true);
-      await updateStoreFields({ _willSetUpRecurringInvestments: false, _shouldAgreeToRecurringInvestment: false });
+      await updateStoreFields({ _willSetUpRecurringInvestment: false, _shouldAgreeToRecurringInvestment: false });
 
       toggleIsLoading(false);
       moveToNextStep();

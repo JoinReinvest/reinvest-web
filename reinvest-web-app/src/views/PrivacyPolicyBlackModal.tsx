@@ -1,5 +1,5 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
-import { DialogBlack } from 'components/DialogBlack';
+import { Dialog } from 'components/Dialog';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 
@@ -7,7 +7,7 @@ type PrivacyPolicyBlackModalProps = Omit<DialogProps, 'children'>;
 
 export const PrivacyPolicyBlackModal = ({ isOpen, onOpenChange }: PrivacyPolicyBlackModalProps) => {
   return (
-    <DialogBlack
+    <Dialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
@@ -30,6 +30,6 @@ export const PrivacyPolicyBlackModal = ({ isOpen, onOpenChange }: PrivacyPolicyB
           for You to the author/donor to decide if he or she is willing to receive error reports for the Work.
         </Typography>
       </>
-    </DialogBlack>
+    </Dialog>
   );
 };
