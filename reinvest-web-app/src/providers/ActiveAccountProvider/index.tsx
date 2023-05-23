@@ -14,7 +14,7 @@ import { State } from './interfaces';
 export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountProvider');
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
-  const { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile, previousAccount } = useProfileAccounts();
+  const { allAccounts, activeAccount, updateActiveAccount, previousAccount, userProfile, userProfileMeta } = useProfileAccounts();
   const { activeAccountStats, activeAccountStatsMeta } = useAccountStats({ activeAccount });
   const { isAbleToAddBeneficiaries } = useBeneficiaries({ allAccounts });
   const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts });
@@ -25,11 +25,12 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   return (
     <Context.Provider
       value={{
+        userProfile,
         activeAccount,
         previousAccount,
         activeAccountStats,
         activeAccountStatsMeta,
-        refetchUserProfile,
+        userProfileMeta,
         individualAccount,
         allAccounts,
         updateActiveAccount,

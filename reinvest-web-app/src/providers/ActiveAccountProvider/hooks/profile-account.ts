@@ -1,18 +1,20 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
-import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, AccountType, Maybe, Profile } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { QueryMeta } from 'types/queries';
 
 interface Return {
   activeAccount: AccountOverview | null;
   allAccounts: Maybe<AccountOverview>[];
   previousAccount: AccountOverview | null;
-  refetchUserProfile: () => void;
   updateActiveAccount: (account: Maybe<AccountOverview>) => void;
+  userProfile: Profile | null;
+  userProfileMeta: QueryMeta;
 }
 
 export function useProfileAccounts(): Return {
-  const { data: userProfile, refetch: refetchUserProfile } = useGetUserProfile(getApiClient);
+  const { data: userProfile, ...userProfileMeta } = useGetUserProfile(getApiClient);
   const [activeAccount, setActiveAccount] = useState<AccountOverview | null>(null);
   const previousAccount = useRef<AccountOverview | null>(null);
   const allAccounts = useMemo(() => userProfile?.accounts || [], [userProfile]);
@@ -38,5 +40,5 @@ export function useProfileAccounts(): Return {
     }
   };
 
-  return { allAccounts, activeAccount, updateActiveAccount, refetchUserProfile, previousAccount: previousAccount.current };
+  return { allAccounts, activeAccount, updateActiveAccount, previousAccount: previousAccount.current, userProfile: userProfile ?? null, userProfileMeta };
 }

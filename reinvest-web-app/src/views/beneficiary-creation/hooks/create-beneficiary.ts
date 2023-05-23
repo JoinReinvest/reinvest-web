@@ -17,7 +17,7 @@ interface Return {
 }
 
 export function useCreateBeneficiary(): Return {
-  const { individualAccount, refetchUserProfile } = useActiveAccount();
+  const { individualAccount, userProfileMeta } = useActiveAccount();
   const { error: errorAvatarLink, isLoading: isAvatarLinkMutationLoading, mutateAsync: createAvatarLinkMutate } = useCreateAvatarFileLink(getApiClient);
 
   const {
@@ -44,7 +44,7 @@ export function useCreateBeneficiary(): Return {
       };
 
       await openBeneficiaryAccountMutate({ input, individualAccountId });
-      refetchUserProfile();
+      userProfileMeta.refetch();
     }
   }
 

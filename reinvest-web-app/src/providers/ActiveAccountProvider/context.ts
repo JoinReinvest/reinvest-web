@@ -1,9 +1,11 @@
-import { DEFAULT_MUTATION_META, DEFAULT_QUERY_META } from 'constants/query';
+import { DEFAULT_MUTATION_META, DEFAULT_QUERY_META } from 'constants/queries';
 import { createContext } from 'react';
 
 import { State } from './interfaces';
 
 export const Context = createContext<State>({
+  userProfile: null,
+  userProfileMeta: DEFAULT_QUERY_META,
   activeAccount: null,
   previousAccount: null,
   activeAccountStats: null,
@@ -20,8 +22,6 @@ export const Context = createContext<State>({
   setArrivesFromOnboarding: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateBankAccount: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  refetchUserProfile: () => {},
   isAccountBanned: false,
   validateActiveAccountMeta: DEFAULT_MUTATION_META,
 });
