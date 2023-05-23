@@ -54,8 +54,8 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
           />
 
           <InitialInvestmentView
-            isOpen={displayInitialInvestmentFlow}
-            toggleIsOpen={toggleDisplayInitialInvestmentFlow}
+            isModalOpen={displayInitialInvestmentFlow}
+            onModalOpenChange={toggleDisplayInitialInvestmentFlow}
           />
         </InvestmentFlowProvider>
       </InitialInvestmentFormFlowProvider>
