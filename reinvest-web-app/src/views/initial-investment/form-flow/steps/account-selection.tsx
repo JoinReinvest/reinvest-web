@@ -35,7 +35,7 @@ export const StepAccountSelection: StepParams<FlowFields> = {
   },
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { activeAccount, updateActiveAccount, availableAccounts } = useActiveAccount();
+    const { activeAccount, updateActiveAccount, availableAccounts, allAccounts } = useActiveAccount();
     const { control, handleSubmit, formState } = useForm<Fields>({
       resolver: zodResolver(schema),
       defaultValues: async () => ({ accountId: activeAccount?.id ?? undefined }),
@@ -47,7 +47,9 @@ export const StepAccountSelection: StepParams<FlowFields> = {
       const account = availableAccounts.find(account => account?.id === accountId);
 
       if (account) {
-        updateActiveAccount(account);
+        const isActiveAccount = activeAccount?.id === account.id;
+
+        !isActiveAccount && updateActiveAccount(account);
         moveToNextStep();
       }
     };
@@ -62,7 +64,7 @@ export const StepAccountSelection: StepParams<FlowFields> = {
 
           <AccountSelection
             name="accountId"
-            options={availableAccounts}
+            options={allAccounts}
             control={control}
           />
         </FormContent>
