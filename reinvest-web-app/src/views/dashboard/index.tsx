@@ -3,11 +3,13 @@ import { BlogPostInterface } from 'components/Education/BlogCard';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect } from 'react';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { InitialInvestmentFormFlowProvider } from 'views/initial-investment/form-flow';
 import { InvestmentFlowProvider } from 'views/investment/form-flow';
 
 import { BankAccountFlow } from '../bank-account';
 import { BankAccountFlowProvider } from '../bank-account/form-flow';
+import { BannedView } from '../BannedView';
 import { InitialInvestmentView } from '../initial-investment';
 import { AccountStats } from './components/AccountStats';
 import { PostList } from './components/PostList';
@@ -20,7 +22,16 @@ interface Props {
 const initialStoreFields = { _hasCompletedFlow: false, bankAccount: '' };
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
-  const { arrivesFromOnboarding, setArrivesFromOnboarding, activeAccountStatsMeta } = useActiveAccount();
+  const {
+    arrivesFromOnboarding,
+    activeAccount,
+    setArrivesFromOnboarding,
+    activeAccountStatsMeta,
+    isAccountBanned,
+    updateActiveAccount,
+    previousAccount,
+    validateActiveAccountMeta,
+  } = useActiveAccount();
   // Display the initial investment flow if the user arrives from the onboarding flow
   const [displayInitialInvestmentFlow, toggleDisplayInitialInvestmentFlow] = useToggler(arrivesFromOnboarding);
 
@@ -29,11 +40,23 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (activeAccountStatsMeta?.isLoading) {
+  if (activeAccountStatsMeta?.isLoading || validateActiveAccountMeta?.isLoading) {
     return (
       <div className="absolute right-1/2 top-1/2 -translate-y-1/2 translate-x-1/2">
         <IconSpinner color="black" />
       </div>
+    );
+  }
+
+  if (isAccountBanned) {
+    const title = `Your ${activeAccount?.type?.toLowerCase() || AccountType.Individual.toLowerCase()} account has been locked.`;
+
+    return (
+      <BannedView
+        isOpen
+        title={title}
+        onOpenChange={() => updateActiveAccount(previousAccount)}
+      />
     );
   }
 
