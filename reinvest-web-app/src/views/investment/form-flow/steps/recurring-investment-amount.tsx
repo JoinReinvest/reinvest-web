@@ -6,9 +6,11 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { recurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
+import { generateRecurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -29,11 +31,13 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { activeAccount } = useActiveAccount();
+    const schema = generateRecurringInvestmentSchema({ accountType: activeAccount?.type ?? AccountType.Individual });
     const defaultValues: Fields = { amount: storeFields.recurringInvestmentAmount };
     const { handleSubmit, setValue, formState } = useForm<Fields>({
       mode: 'onChange',
       defaultValues: async () => defaultValues,
-      resolver: zodResolver(recurringInvestmentSchema),
+      resolver: zodResolver(schema),
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -62,7 +66,6 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
               console.info('change bank account');
             }}
             className="mx-auto"
-            isRecurring
           />
 
           {!!errorMessage && <FormMessage message={errorMessage} />}
