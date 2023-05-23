@@ -10,7 +10,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateRecurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { FlowFields, Investment } from '../fields';
@@ -34,9 +34,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.oneTimeInvestment, fields._willSetUpRecurringInvestments];
-
-    return allRequiredFieldsExists(requiredFields);
+    return !!fields._willSetUpRecurringInvestments;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
@@ -89,6 +87,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
         <ButtonStack>
           <Button
             label="Skip"
+            variant="outlined"
             disabled
           />
 

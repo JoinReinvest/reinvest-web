@@ -35,7 +35,6 @@ export const STEPS = [
   StepAutomaticDividend,
 
   StepRecurringInvestment,
-  StepRecurringInvestment,
   StepRecurringInvestmentAmount,
   StepRecurringInvestmentInterval,
   StepRecurringInvestmentDate,
