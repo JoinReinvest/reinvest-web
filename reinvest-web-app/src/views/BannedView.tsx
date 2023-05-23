@@ -1,7 +1,9 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
 import { IconXCircle } from 'assets/icons/IconXCircle';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { useRouter } from 'next/router';
 
+import { Button } from '../components/Button';
 import { ButtonStack } from '../components/FormElements/ButtonStack';
 import { Form } from '../components/FormElements/Form';
 import { FormContent } from '../components/FormElements/FormContent';
@@ -11,7 +13,7 @@ import { ModalBlackFullscreen } from '../components/ModalBlackFullscreen';
 import { Typography } from '../components/Typography';
 import { EMAILS } from '../constants/urls';
 
-type Props = Omit<DialogProps, 'children'> & { title: string };
+type Props = Omit<DialogProps, 'children'> & { title: string; possibleAddNewAccount?: boolean };
 
 const subtitle = (
   <Typography variant="paragraph-emphasized">
@@ -23,7 +25,11 @@ const subtitle = (
   </Typography>
 );
 
-export const BannedView = ({ isOpen, onOpenChange, title }: Props) => {
+export const BannedView = ({ isOpen, onOpenChange, title, possibleAddNewAccount }: Props) => {
+  const router = useRouter();
+
+  const addNewAccountOnClick = () => router.push('/onboarding');
+
   return (
     <ModalBlackFullscreen
       isOpen={isOpen}
@@ -42,6 +48,14 @@ export const BannedView = ({ isOpen, onOpenChange, title }: Props) => {
             label="Contact Us"
             href={EMAILS.supportHref}
           />
+          {possibleAddNewAccount && (
+            <Button
+              label="Add New Account"
+              variant="outlined"
+              className="text-green-frost-01"
+              onClick={addNewAccountOnClick}
+            />
+          )}
         </ButtonStack>
       </Form>
     </ModalBlackFullscreen>

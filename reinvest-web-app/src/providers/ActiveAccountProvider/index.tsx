@@ -20,27 +20,7 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts });
   const [bankAccount, updateBankAccount] = useState<State['bankAccount']>(null);
   const [arrivesFromOnboarding, setArrivesFromOnboarding] = useSessionStorage(StorageKeys.HAS_BEEN_ONBOARDED, false);
-  // const { data: verifyAccountData, mutateAsync: verifyAccountMutate } = useVerifyAccount(getApiClient);
   const { validateActiveAccountMeta, isAccountBanned } = useValidateActiveAccount({ activeAccount });
-  // const [isAccountBanned, setIsAccountBanned] = useState(false);
-
-  // useEffect(() => {
-  //   async function verifyAccount() {
-  //     if (activeAccount?.id) {
-  //       await verifyAccountMutate({ accountId: activeAccount.id });
-  //     }
-  //   }
-  //
-  //   verifyAccount();
-  // }, [activeAccount, verifyAccountMutate]);
-  //
-  // useEffect(() => {
-  //   if (verifyAccountData) {
-  //     const { requiredActions } = verifyAccountData;
-  //     const hasBannedProfile = requiredActions?.map(requiredAction => requiredAction?.action).includes(ActionName.BanAccount);
-  //     setIsAccountBanned(hasBannedProfile || false);
-  //   }
-  // }, [verifyAccountData]);
 
   return (
     <Context.Provider

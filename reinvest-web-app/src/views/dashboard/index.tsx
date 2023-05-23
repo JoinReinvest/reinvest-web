@@ -31,6 +31,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     updateActiveAccount,
     previousAccount,
     validateActiveAccountMeta,
+    allAccounts,
   } = useActiveAccount();
   // Display the initial investment flow if the user arrives from the onboarding flow
   const [displayInitialInvestmentFlow, toggleDisplayInitialInvestmentFlow] = useToggler(arrivesFromOnboarding);
@@ -56,6 +57,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         isOpen
         title={title}
         onOpenChange={() => updateActiveAccount(previousAccount)}
+        possibleAddNewAccount={allAccounts.length < 2}
       />
     );
   }
