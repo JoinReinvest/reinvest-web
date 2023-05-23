@@ -51,7 +51,6 @@ export interface FlowFields {
   fiduciaryEntityInformation?: FiduciaryEntityInformation;
   identificationDocuments?: DocumentFile[];
   investmentAmount?: number;
-  investmentId?: string;
   name?: {
     firstName: string;
     lastName: string;

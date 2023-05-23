@@ -2,6 +2,7 @@ import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { InvestmentProvider } from 'providers/InvestmentProvider';
 import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
 import { useMemo } from 'react';
 import { ModalProps } from 'types/modal';
@@ -80,7 +81,9 @@ const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange, forInitial
 };
 
 export const InitialInvestmentView = (props: Props) => (
-  <RecurringInvestmentProvider>
-    <InnerInitialInvestmentView {...props} />
-  </RecurringInvestmentProvider>
+  <InvestmentProvider>
+    <RecurringInvestmentProvider>
+      <InnerInitialInvestmentView {...props} />
+    </RecurringInvestmentProvider>
+  </InvestmentProvider>
 );

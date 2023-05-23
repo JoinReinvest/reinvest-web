@@ -1,3 +1,4 @@
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconWarning } from 'assets/icons/IconWarning';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -5,13 +6,11 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { useInvestmentContext } from 'providers/InvestmentProvider';
+import { FormEventHandler } from 'react';
 import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useGetInvestmentSummary } from 'reinvest-app-common/src/services/queries/getInvestmentSummary';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { getApiClient } from '../../../../services/getApiClient';
 import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -40,12 +39,8 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    const [amountFromApi, setAmountFromApi] = useState('');
+    const { investmentSummary, investmentSummaryMeta } = useInvestmentContext();
     const { onModalLastStep } = useModalHandler();
-    const { refetch, isSuccess, isRefetching, data } = useGetInvestmentSummary(getApiClient, {
-      investmentId: storeFields.investmentId || '',
-      config: { enabled: false },
-    });
 
     const recurrentInvestmentInterval =
       storeFields.recurringInvestmentInterval && RECURRING_INVESTMENT_INTERVAL_LABELS.get(storeFields.recurringInvestmentInterval);
@@ -57,25 +52,15 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
       onModalLastStep && onModalLastStep();
     };
 
-    useEffect(() => {
-      if (isSuccess && data) {
-        setAmountFromApi(data.amount.formatted || '');
-      }
-    }, [isSuccess, data]);
-
-    useEffect(() => {
-      refetch();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
     return (
       <Form onSubmit={onSubmit}>
-        {isRefetching && (
+        {investmentSummaryMeta.isLoading && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
           </div>
         )}
-        {!isRefetching && isSuccess && (
+
+        {investmentSummaryMeta.isSuccess && (
           <FormContent>
             <div className="flex flex-col gap-40">
               <Typography
@@ -86,9 +71,9 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
               </Typography>
 
               <div className="flex flex-col gap-32">
-                {amountFromApi && (
+                {investmentSummary?.amount.formatted && (
                   <InvestmentInformation
-                    amount={amountFromApi}
+                    amount={investmentSummary.amount.formatted}
                     type={storeFields.oneTimeInvestment ? 'one-time' : 'recurring'}
                     date={new Date()}
                     label={storeFields.oneTimeInvestment ? 'One Time Investment' : recurrentInvestmentLabel}

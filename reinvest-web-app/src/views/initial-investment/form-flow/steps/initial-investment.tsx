@@ -7,12 +7,11 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useCreateInvestment } from 'reinvest-app-common/src/services/queries/createInvestment';
-import { getApiClient } from 'services/getApiClient';
 
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -29,7 +28,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.INITIAL_INVESTMENT,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { mutate, isSuccess, data } = useCreateInvestment(getApiClient);
+    const { createInvestment, createInvestmentMeta } = useInvestmentContext();
     const { activeAccount } = useActiveAccount();
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
     const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
@@ -49,8 +48,8 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         date: new Date(),
       };
 
-      if (activeAccount?.id && amount) {
-        await mutate({ accountId: activeAccount?.id, amount: { value: amount } });
+      if (amount) {
+        await createInvestment({ investmentAmount: amount });
         await updateStoreFields({ oneTimeInvestment: investment, _shouldAgreeToOneTimeInvestment: true });
       }
     };
@@ -62,11 +61,11 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     };
 
     useEffect(() => {
-      if (isSuccess) {
-        updateStoreFields({ investmentId: data, _shouldAgreeToOneTimeInvestment: true });
+      if (createInvestmentMeta.isSuccess) {
+        updateStoreFields({ _shouldAgreeToOneTimeInvestment: true });
         moveToNextStep();
       }
-    }, [isSuccess, data, moveToNextStep, updateStoreFields]);
+    }, [createInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>

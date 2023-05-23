@@ -24,6 +24,7 @@ export function useHighlightedDates({ date, frequency }: Params): Return {
     schedule: { startDate, frequency: frequency ?? RecurringInvestmentFrequency.Monthly },
     config: { enabled: !!frequency && !!date },
   });
+
   const datesToHighlight = useMemo(
     () => [
       {
