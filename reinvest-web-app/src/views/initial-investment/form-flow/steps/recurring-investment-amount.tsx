@@ -30,11 +30,11 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT_AMOUNT,
 
   willBePartOfTheFlow: fields => {
-    return !!fields._willSetUpRecurringInvestments;
+    return !!fields._willSetUpRecurringInvestment;
   },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.oneTimeInvestment, fields._willSetUpRecurringInvestments];
+    const requiredFields = [fields.oneTimeInvestment, fields._willSetUpRecurringInvestment];
 
     return allRequiredFieldsExists(requiredFields);
   },

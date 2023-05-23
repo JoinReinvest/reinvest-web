@@ -2,27 +2,25 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlogPostInterface } from 'components/Education/BlogCard';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { BankAccountFlow } from 'views/bank-account';
+import { BankAccountFlowProvider } from 'views/bank-account/form-flow';
+import { InitialInvestmentView } from 'views/initial-investment';
 import { InitialInvestmentFormFlowProvider } from 'views/initial-investment/form-flow';
-import { InvestmentFlowProvider } from 'views/investment/form-flow';
 
-import { BankAccountFlow } from '../bank-account';
-import { BankAccountFlowProvider } from '../bank-account/form-flow';
-import { InitialInvestmentView } from '../initial-investment';
 import { AccountStats } from './components/AccountStats';
 import { PostList } from './components/PostList';
+import { INITIAL_STORE_FIELDS } from './constants';
 
 interface Props {
   arePostsReady: boolean;
   posts: BlogPostInterface[];
 }
 
-const initialStoreFields = { _hasCompletedFlow: false, bankAccount: '' };
-
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const { arrivesFromOnboarding, setArrivesFromOnboarding, activeAccountStatsMeta } = useActiveAccount();
-  // Display the initial investment flow if the user arrives from the onboarding flow
-  const [displayInitialInvestmentFlow, toggleDisplayInitialInvestmentFlow] = useToggler(arrivesFromOnboarding);
+  const hadArrivedFromOnboarding = useRef(arrivesFromOnboarding);
+  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
 
   useEffect(() => {
     setArrivesFromOnboarding(false);
@@ -39,25 +37,24 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
 
   return (
     <BankAccountFlowProvider initialStoreFields={{ _hasCompletedFlow: false, bankAccount: '' }}>
-      <InitialInvestmentFormFlowProvider initialStoreFields={initialStoreFields}>
-        <InvestmentFlowProvider initialStoreFields={initialStoreFields}>
-          <AccountStats toggleDisplayInitialInvestmentFlow={toggleDisplayInitialInvestmentFlow} />
+      <InitialInvestmentFormFlowProvider initialStoreFields={INITIAL_STORE_FIELDS}>
+        <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
 
-          <PostList
-            arePostsReady={arePostsReady}
-            posts={posts}
-          />
+        <PostList
+          arePostsReady={arePostsReady}
+          posts={posts}
+        />
 
-          <BankAccountFlow
-            isOpen={displayInitialInvestmentFlow}
-            toggleIsOpen={toggleDisplayInitialInvestmentFlow}
-          />
+        <BankAccountFlow
+          isOpen={isInvestmentFlowOpen}
+          toggleIsOpen={toggleIsInvestmentFlowOpen}
+        />
 
-          <InitialInvestmentView
-            isOpen={displayInitialInvestmentFlow}
-            toggleIsOpen={toggleDisplayInitialInvestmentFlow}
-          />
-        </InvestmentFlowProvider>
+        <InitialInvestmentView
+          isModalOpen={isInvestmentFlowOpen}
+          onModalOpenChange={toggleIsInvestmentFlowOpen}
+          forInitialInvestment={hadArrivedFromOnboarding.current}
+        />
       </InitialInvestmentFormFlowProvider>
     </BankAccountFlowProvider>
   );

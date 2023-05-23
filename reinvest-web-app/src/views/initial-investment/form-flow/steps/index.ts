@@ -1,3 +1,4 @@
+import { StepAccountSelection } from './account-selection';
 import { StepAutomaticDividend } from './automatic-dividend';
 import { StepBankSelection } from './bank-selection';
 import { StepBusinessAddress } from './business-address';
@@ -28,12 +29,18 @@ import { StepResidencyVisa } from './residency-visa';
 import { StepSubscriptionAgreements } from './subscription-agreements';
 
 export const STEPS = [
+  StepAccountSelection,
+
+  // Bank account
   StepLanding,
   StepBankSelection,
   StepConfirmation,
+
+  // Investment
   StepInitialInvestment,
   StepAutomaticDividend,
 
+  // Recurring investment
   StepRecurringInvestment,
   StepRecurringInvestment,
   StepRecurringInvestmentAmount,
@@ -41,8 +48,11 @@ export const STEPS = [
   StepRecurringInvestmentDate,
   StepRecurringDepositSchedule,
 
+  // Subscription agreements + investment initialization
   StepSubscriptionAgreements,
   StepInvestmentVerification,
+
+  // Profile verification
   StepFullName,
   StepDateOfBirth,
   StepResidencyStatus,
@@ -58,5 +68,7 @@ export const STEPS = [
   StepCorporateApplicantDetails,
   StepCorporateApplicantAddress,
   StepCorporateApplicantIdentification,
+
+  // Investment confirmation
   StepInvestmentCompleted,
 ];

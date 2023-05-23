@@ -1,3 +1,4 @@
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconWarning } from 'assets/icons/IconWarning';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
@@ -13,7 +14,6 @@ import { useGetAccountConfiguration } from 'reinvest-app-common/src/services/que
 import { useSetAutomaticDividendReinvestmentAgreement } from 'reinvest-app-common/src/services/queries/setAutomaticDividendReinvestmentAgreement';
 import { getApiClient } from 'services/getApiClient';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
