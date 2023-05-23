@@ -2,6 +2,7 @@ import { ErrorResponse } from 'reinvest-app-common/src/services/queries/interfac
 
 export interface QueryMeta {
   isLoading: boolean;
+  isRefetching: boolean;
   isSuccess: boolean;
   refetch: () => void;
 }
