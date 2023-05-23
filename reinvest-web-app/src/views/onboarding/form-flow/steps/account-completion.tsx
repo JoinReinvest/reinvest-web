@@ -38,11 +38,11 @@ export const StepAccountCompletion: StepParams<OnboardingFormFields> = {
 
   Component: () => {
     const router = useRouter();
-    const { setArrivesFromOnboarding, refetchUserProfile } = useActiveAccount();
+    const { setArrivesFromOnboarding, userProfileMeta } = useActiveAccount();
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      refetchUserProfile();
+      userProfileMeta.refetch();
       setArrivesFromOnboarding(true);
       await router.push(URL.index);
     };

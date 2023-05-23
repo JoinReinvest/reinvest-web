@@ -20,15 +20,11 @@ interface Return {
 
 export function useHighlightedDates({ date, frequency }: Params): Return {
   const startDate = date && formatDate(date, 'API');
-  const {
-    data: dates,
-    isLoading,
-    isSuccess,
-    refetch,
-  } = useGetScheduleSimulation(getApiClient, {
+  const { data: dates, ...meta } = useGetScheduleSimulation(getApiClient, {
     schedule: { startDate, frequency: frequency ?? RecurringInvestmentFrequency.Monthly },
     config: { enabled: !!frequency && !!date },
   });
+
   const datesToHighlight = useMemo(
     () => [
       {
@@ -37,8 +33,6 @@ export function useHighlightedDates({ date, frequency }: Params): Return {
     ],
     [dates],
   );
-
-  const meta: QueryMeta = { isLoading, isSuccess, refetch };
 
   return { datesToHighlight, meta };
 }
