@@ -1,12 +1,12 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
-import { DialogBlack } from 'components/DialogBlack';
+import { Dialog } from 'components/Dialog';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 
 type Props = Omit<DialogProps, 'children'>;
 
 export const WhyRequiredTrustTypeModal = ({ isOpen, onOpenChange }: Props) => (
-  <DialogBlack
+  <Dialog
     isOpen={isOpen}
     onOpenChange={onOpenChange}
   >
@@ -23,5 +23,5 @@ export const WhyRequiredTrustTypeModal = ({ isOpen, onOpenChange }: Props) => (
         inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia vol
       </Typography>
     </>
-  </DialogBlack>
+  </Dialog>
 );
