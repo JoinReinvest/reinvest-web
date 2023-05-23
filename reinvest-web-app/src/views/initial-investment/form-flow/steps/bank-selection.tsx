@@ -13,6 +13,7 @@ import { mapPlaidDataForApi, PlaidEvent } from 'reinvest-app-common/src/utilitie
 import { getApiClient } from 'services/getApiClient';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -35,6 +36,7 @@ export const StepBankSelection: StepParams<FlowFields> = {
       isLoading: isCreateBankAccountLoading,
       data: createBankAccountData,
       isSuccess: isCreateBankAccountSuccess,
+      error: createBankAccountError,
     } = useCreateBankAccount(getApiClient);
     const { mutate: fulfillBankAccountMutation, isSuccess: isFulfillBankAccountSuccess } = useFulfillBankAccount(getApiClient);
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
@@ -80,6 +82,8 @@ export const StepBankSelection: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
+        {createBankAccountError && <ErrorMessagesHandler error={createBankAccountError} />}
+
         {isCreateBankAccountLoading && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
