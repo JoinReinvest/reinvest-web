@@ -62,6 +62,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
               console.info('change bank account');
             }}
             className="mx-auto"
+            isRecurring
           />
 
           {!!errorMessage && <FormMessage message={errorMessage} />}

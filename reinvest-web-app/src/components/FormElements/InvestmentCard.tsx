@@ -3,8 +3,10 @@ import cx from 'classnames';
 import { ButtonLink } from 'components/ButtonLink';
 import { InputMasked } from 'components/FormElements/InputMasked';
 import { Typography } from 'components/Typography';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useController, useForm } from 'react-hook-form';
 import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/investment-amounts';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 interface Props {
   currentBankAccount: string;
@@ -12,6 +14,7 @@ interface Props {
   onChangeBankAccount: () => void;
   className?: string;
   defaultValue?: number;
+  isRecurring?: boolean;
 }
 
 interface Fields {
@@ -19,10 +22,11 @@ interface Fields {
   presetAmount?: string;
 }
 
-export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankAccount, onChange, className }: Props) {
-  const defaultValues: Fields = { presetAmount: '', customAmount: defaultValue };
-  const form = useForm<Fields>({ defaultValues: async () => defaultValues });
+export function InvestmentCard({ isRecurring = false, defaultValue, currentBankAccount, onChangeBankAccount, onChange, className }: Props) {
+  const { activeAccount } = useActiveAccount();
+  const form = useForm<Fields>({ defaultValues: async () => ({ presetAmount: '', customAmount: defaultValue }) });
   const { field: presetField } = useController({ control: form.control, name: 'presetAmount' });
+  const presets = getAmountPresets(activeAccount?.type || AccountType.Individual, isRecurring);
 
   const onPresetFieldChange = (value: string) => {
     const parsedValue = parseInt(value);
@@ -59,7 +63,7 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
         dir="ltr"
         className="flex justify-between gap-8"
       >
-        {INVESTMENT_PRESET_AMOUNTS.map(option => (
+        {presets.map(option => (
           <RadioGroup.Item
             key={option.value}
             value={option.value}
@@ -103,4 +107,9 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
       </div>
     </div>
   );
+}
+
+function getAmountPresets(accountType: AccountType, isRecurring: boolean) {
+  // eslint-disable-next-line security/detect-object-injection
+  return INVESTMENT_PRESET_AMOUNTS[accountType][isRecurring ? 'recurring' : 'oneTime'];
 }
