@@ -16,9 +16,9 @@ interface Props extends ModalProps {
   forInitialInvestment?: boolean;
 }
 
-const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange }: Props) => {
+const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment }: Props) => {
   const { activeAccount } = useActiveAccount();
-  useInitializeFields();
+  useInitializeFields({ forInitialInvestment });
 
   const {
     CurrentStepView,

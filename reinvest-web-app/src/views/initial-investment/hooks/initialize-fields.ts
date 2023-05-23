@@ -4,7 +4,11 @@ import { useEffect } from 'react';
 
 import { useInitialInvestmentFlow } from '../form-flow';
 
-export const useInitializeFields = () => {
+interface Params {
+  forInitialInvestment?: boolean;
+}
+
+export const useInitializeFields = ({ forInitialInvestment }: Params) => {
   const { availableAccounts } = useActiveAccount();
   const { recurringInvestment, recurringInvestmentMeta } = useRecurringInvestment();
   const { updateStoreFields } = useInitialInvestmentFlow();
@@ -13,7 +17,11 @@ export const useInitializeFields = () => {
     async function initializeFields() {
       const hasMoreThanAnAvailableAccount = availableAccounts.length > 0;
 
-      await updateStoreFields({ _shouldAgreeToOneTimeInvestment: true, _hasMoreThanAnAccount: hasMoreThanAnAvailableAccount });
+      await updateStoreFields({
+        _shouldAgreeToOneTimeInvestment: true,
+        _hasMoreThanAnAccount: hasMoreThanAnAvailableAccount,
+        _forInitialInvestment: forInitialInvestment,
+      });
     }
 
     initializeFields();

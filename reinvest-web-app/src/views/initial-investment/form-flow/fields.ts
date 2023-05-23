@@ -6,9 +6,9 @@ import { Applicant, FiduciaryEntityInformation, IndexedSchema } from 'views/onbo
 export interface FlowFields {
   bankAccount: string;
 
-  _arrivesFromOnboarding?: boolean;
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
   _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
+  _forInitialInvestment?: boolean;
   _hasCompletedFlow?: boolean;
   _hasCompletedInvestment?: boolean;
   _hasMoreThanAnAccount?: boolean;

@@ -28,7 +28,7 @@ export const StepAccountSelection: StepParams<FlowFields> = {
   identifier: Identifiers.ACCOUNT_SELECTION,
 
   willBePartOfTheFlow: fields => {
-    const arrivesFromOnboarding = !!fields._arrivesFromOnboarding;
+    const arrivesFromOnboarding = !!fields._forInitialInvestment;
     const hasMoreThanOneAccount = !!fields._hasMoreThanAnAccount;
 
     return arrivesFromOnboarding && hasMoreThanOneAccount;

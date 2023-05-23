@@ -2,6 +2,7 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlogPostInterface } from 'components/Education/BlogCard';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useEffect, useRef } from 'react';
 import { BankAccountFlow } from 'views/bank-account';
 import { BankAccountFlowProvider } from 'views/bank-account/form-flow';
 import { InitialInvestmentView } from 'views/initial-investment';
@@ -9,7 +10,7 @@ import { InitialInvestmentFormFlowProvider } from 'views/initial-investment/form
 
 import { AccountStats } from './components/AccountStats';
 import { PostList } from './components/PostList';
-import { useInvestmentStoreFields } from './hooks/investment-store-fields';
+import { INITIAL_STORE_FIELDS } from './constants';
 
 interface Props {
   arePostsReady: boolean;
@@ -17,9 +18,14 @@ interface Props {
 }
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
-  const { initialStoreFields } = useInvestmentStoreFields();
-  const { arrivesFromOnboarding, activeAccountStatsMeta } = useActiveAccount();
+  const { arrivesFromOnboarding, setArrivesFromOnboarding, activeAccountStatsMeta } = useActiveAccount();
+  const hadArrivedFromOnboarding = useRef(arrivesFromOnboarding);
   const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
+
+  useEffect(() => {
+    setArrivesFromOnboarding(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   if (activeAccountStatsMeta?.isLoading) {
     return (
@@ -31,7 +37,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
 
   return (
     <BankAccountFlowProvider initialStoreFields={{ _hasCompletedFlow: false, bankAccount: '' }}>
-      <InitialInvestmentFormFlowProvider initialStoreFields={initialStoreFields}>
+      <InitialInvestmentFormFlowProvider initialStoreFields={INITIAL_STORE_FIELDS}>
         <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
 
         <PostList
@@ -47,6 +53,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         <InitialInvestmentView
           isModalOpen={isInvestmentFlowOpen}
           onModalOpenChange={toggleIsInvestmentFlowOpen}
+          forInitialInvestment={hadArrivedFromOnboarding.current}
         />
       </InitialInvestmentFormFlowProvider>
     </BankAccountFlowProvider>
