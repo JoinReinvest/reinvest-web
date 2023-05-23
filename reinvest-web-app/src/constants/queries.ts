@@ -11,6 +11,7 @@ export const DEFAULT_MUTATION_META: MutationMeta = {
 export const DEFAULT_QUERY_META: QueryMeta = {
   isLoading: false,
   isSuccess: false,
+  isError: false,
   isRefetching: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   refetch: () => {},

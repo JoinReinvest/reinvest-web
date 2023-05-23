@@ -23,28 +23,21 @@ function InnerInvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
     moveToPreviousValidStep,
     resetStoreFields,
     moveToFirstStep,
-    getStoreFields,
-    updateStoreFields,
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
   const onModalLastStep = async () => {
     toggleIsOpen(false);
-    const storeFields = getStoreFields();
-
     moveToFirstStep();
     await resetStoreFields();
-    await updateStoreFields({ _availableAccounts: storeFields?._availableAccounts });
   };
 
   const onModalClickBack = async () => {
     if (isFirstStep) {
-      const storeFields = getStoreFields();
       toggleIsOpen(false);
 
       await resetStoreFields();
       moveToFirstStep();
-      await updateStoreFields({ _availableAccounts: storeFields?._availableAccounts });
     } else {
       moveToPreviousValidStep();
     }

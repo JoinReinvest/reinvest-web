@@ -1,14 +1,30 @@
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 
 import { useInitialInvestmentFlow } from '../form-flow';
 
-export const useInitializeFields = () => {
+interface Params {
+  forInitialInvestment?: boolean;
+}
+
+export const useInitializeFields = ({ forInitialInvestment }: Params) => {
+  const { availableAccounts } = useActiveAccount();
   const { recurringInvestment, recurringInvestmentMeta } = useRecurringInvestment();
   const { updateStoreFields } = useInitialInvestmentFlow();
 
   useEffect(() => {
-    updateStoreFields({ _shouldAgreeToOneTimeInvestment: true });
+    async function initializeFields() {
+      const hasMoreThanAnAvailableAccount = availableAccounts.length > 0;
+
+      await updateStoreFields({
+        _shouldAgreeToOneTimeInvestment: true,
+        _hasMoreThanAnAccount: hasMoreThanAnAvailableAccount,
+        _forInitialInvestment: forInitialInvestment,
+      });
+    }
+
+    initializeFields();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
