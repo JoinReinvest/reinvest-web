@@ -1,30 +1,29 @@
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
-import { AccountOverview, Address, CorporateCompanyTypeEnum, DocumentFileLinkInput, DomicileType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { Address, CorporateCompanyTypeEnum, DocumentFileLinkInput, DomicileType } from 'reinvest-app-common/src/types/graphql';
 import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
-
-import { Applicant, FiduciaryEntityInformation, IndexedSchema } from '../../onboarding/form-flow/form-fields';
+import { Applicant, FiduciaryEntityInformation, IndexedSchema } from 'views/onboarding/form-flow/form-fields';
 
 export interface FlowFields {
-  _hasCompletedFlow: boolean;
   bankAccount: string;
-  _availableAccounts?: Maybe<AccountOverview>[];
+
+  _arrivesFromOnboarding?: boolean;
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
   _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
+  _hasCompletedFlow?: boolean;
   _hasCompletedInvestment?: boolean;
+  _hasMoreThanAnAccount?: boolean;
   _investmentWasSuccessful?: boolean;
   _isEditingCompanyMajorStakeholderApplicant?: boolean;
   _isEditingTrustTrusteeGrantorOrProtector?: boolean;
-  _selectedAccount?: AccountOverview;
   _shouldAgreeToOneTimeInvestment?: boolean;
   _shouldAgreeToRecurringInvestment?: boolean;
-
   _shouldDisplayRecurringInvestment?: boolean;
   _shouldUpdateCompanyData?: boolean;
   _shouldUpdateProfileDetails?: boolean;
   _shouldUpdateStakeholderData?: boolean;
   _willSetUpOneTimeInvestments?: boolean;
   _willSetUpRecurringInvestment?: boolean;
-  _willSetUpRecurringInvestments?: boolean;
+
   address?: Address | null;
   agreesToOneTimeInvestment?: boolean;
   agreesToRecurringInvestment?: boolean;
@@ -58,16 +57,13 @@ export interface FlowFields {
     lastName: string;
     middleName?: string;
   };
-
   oneTimeInvestment?: Investment;
   optsInForAutomaticDividendReinvestment?: boolean;
   recurringInvestment?: Investment;
   recurringInvestmentAmount?: number;
-
   recurringInvestmentDate?: Date;
   recurringInvestmentInterval?: RecurringInvestmentFrequency;
   residency?: DomicileType | null;
-
   trustTrusteesGrantorsOrProtectors?: Applicant[];
 }
 

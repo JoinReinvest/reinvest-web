@@ -12,7 +12,11 @@ import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
 import { ModalHandlerProvider } from './providers/modal-handler';
 
-const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange }: ModalProps) => {
+interface Props extends ModalProps {
+  forInitialInvestment?: boolean;
+}
+
+const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange }: Props) => {
   const { activeAccount } = useActiveAccount();
   useInitializeFields();
 
@@ -75,7 +79,7 @@ const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange }: ModalPro
   );
 };
 
-export const InitialInvestmentView = (props: ModalProps) => (
+export const InitialInvestmentView = (props: Props) => (
   <RecurringInvestmentProvider>
     <InnerInitialInvestmentView {...props} />
   </RecurringInvestmentProvider>
