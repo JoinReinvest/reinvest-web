@@ -2,7 +2,7 @@ import { IconPencil } from 'assets/icons/IconPencil';
 import { Typography } from 'components/Typography';
 import { DraftAccountType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
 
-import { FlowFields } from '../../initial-investment/form-flow/fields';
+import { FlowFields } from '../../investment/form-flow/fields';
 import { Applicant, IndexedSchema, OnboardingFormFields } from './form-fields';
 
 type GetDefaultValuesForApplicantWithoutIdentification = (

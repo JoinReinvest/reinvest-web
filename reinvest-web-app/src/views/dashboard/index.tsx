@@ -6,13 +6,11 @@ import { useEffect, useRef } from 'react';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { BankAccountFlow } from 'views/bank-account';
 import { BankAccountFlowProvider } from 'views/bank-account/form-flow';
-import { InitialInvestmentView } from 'views/initial-investment';
-import { InitialInvestmentFormFlowProvider } from 'views/initial-investment/form-flow';
+import { InvestmentView } from 'views/investment';
 
 import { BannedView } from '../BannedView';
 import { AccountStats } from './components/AccountStats';
 import { PostList } from './components/PostList';
-import { INITIAL_STORE_FIELDS } from './constants';
 
 interface Props {
   arePostsReady: boolean;
@@ -62,25 +60,23 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
 
   return (
     <BankAccountFlowProvider initialStoreFields={{ _hasCompletedFlow: false, bankAccount: '' }}>
-      <InitialInvestmentFormFlowProvider initialStoreFields={INITIAL_STORE_FIELDS}>
-        <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
+      <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
 
-        <PostList
-          arePostsReady={arePostsReady}
-          posts={posts}
-        />
+      <PostList
+        arePostsReady={arePostsReady}
+        posts={posts}
+      />
 
-        <BankAccountFlow
-          isOpen={isInvestmentFlowOpen}
-          toggleIsOpen={toggleIsInvestmentFlowOpen}
-        />
+      <BankAccountFlow
+        isOpen={isInvestmentFlowOpen}
+        toggleIsOpen={toggleIsInvestmentFlowOpen}
+      />
 
-        <InitialInvestmentView
-          isModalOpen={isInvestmentFlowOpen}
-          onModalOpenChange={toggleIsInvestmentFlowOpen}
-          forInitialInvestment={hadArrivedFromOnboarding.current}
-        />
-      </InitialInvestmentFormFlowProvider>
+      <InvestmentView
+        isModalOpen={isInvestmentFlowOpen}
+        onModalOpenChange={toggleIsInvestmentFlowOpen}
+        forInitialInvestment={hadArrivedFromOnboarding.current}
+      />
     </BankAccountFlowProvider>
   );
 };

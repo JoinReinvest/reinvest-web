@@ -24,15 +24,12 @@ const schema: Schema<Fields> = z.object({
 export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT_INTERVAL,
 
-  willBePartOfTheFlow: fields => !!fields._shouldDisplayRecurringInvestment,
+  willBePartOfTheFlow: fields => {
+    return !!fields._willSetUpRecurringInvestment;
+  },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [
-      fields._selectedAccount,
-      fields.investmentAmount !== undefined,
-      fields._willSetUpRecurringInvestment,
-      fields.recurringInvestmentAmount !== undefined,
-    ];
+    const requiredFields = [fields._willSetUpRecurringInvestment, fields.recurringInvestment];
 
     return allRequiredFieldsExists(requiredFields);
   },
@@ -54,10 +51,10 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent willLeaveContentOnTop>
+        <FormContent>
           <ModalTitle
             title={TITLE}
-            isTitleCenteredOnMobile={false}
+            isTitleCenteredOnMobile
           />
 
           <SelectionCards
@@ -72,6 +69,12 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
         </FormContent>
 
         <ButtonStack>
+          <Button
+            label="Skip"
+            variant="outlined"
+            disabled
+          />
+
           <Button
             type="submit"
             label="Continue"

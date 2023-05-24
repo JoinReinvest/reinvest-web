@@ -1,22 +1,25 @@
 import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
-import { ModalWhiteSideResponsive } from 'components/ModalWhiteSideResponsive';
+import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { InvestmentProvider } from 'providers/InvestmentProvider';
 import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
-import { AccountOverview } from 'reinvest-app-common/src/types/graphql';
+import { useMemo } from 'react';
+import { ModalProps } from 'types/modal';
 
-import { useInvestmentFlow } from './form-flow';
+import { FLOW_STEPS_WITH_BLACK_MODAL, INITIAL_STORE_FIELDS } from './constants';
+import { InvestmentFlowProvider, useInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
 import { ModalHandlerProvider } from './providers/modal-handler';
 
-interface Props {
-  activeAccount: AccountOverview | null;
-  isOpen: boolean;
-  toggleIsOpen: (state: boolean) => void;
+interface Props extends ModalProps {
+  forInitialInvestment?: boolean;
 }
 
-function InnerInvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
-  useInitializeFields();
+const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment }: Props) => {
+  const { activeAccount } = useActiveAccount();
+  useInitializeFields({ forInitialInvestment });
 
   const {
     CurrentStepView,
@@ -26,26 +29,28 @@ function InnerInvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
-  const onModalLastStep = async () => {
-    toggleIsOpen(false);
+  const shouldDisplayBlackModal = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_BLACK_MODAL.includes(currentStepIdentifier), [currentStepIdentifier]);
+
+  const onModalLastStep = () => {
+    onModalOpenChange(false);
     moveToFirstStep();
-    await resetStoreFields();
+    resetStoreFields();
   };
 
-  const onModalClickBack = async () => {
+  const onModalClickBack = () => {
     if (isFirstStep) {
-      toggleIsOpen(false);
-
-      await resetStoreFields();
-      moveToFirstStep();
+      onModalOpenChange(false);
     } else {
       moveToPreviousValidStep();
     }
   };
 
-  if (currentStepIdentifier === Identifiers.INVESTMENT_VERIFICATION) {
+  if (shouldDisplayBlackModal) {
     return (
-      <ModalBlackFullscreen isOpen={isOpen}>
+      <ModalBlackFullscreen
+        isOpen={isModalOpen}
+        onOpenChange={onModalClickBack}
+      >
         <CurrentStepView />
       </ModalBlackFullscreen>
     );
@@ -55,7 +60,7 @@ function InnerInvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
     return (
       <ModalHandlerProvider onModalLastStep={onModalLastStep}>
         <ModalWhiteWatermark
-          isOpen={isOpen}
+          isOpen={isModalOpen}
           onOpenChange={onModalLastStep}
         >
           <CurrentStepView />
@@ -65,19 +70,22 @@ function InnerInvestmentView({ isOpen, toggleIsOpen, activeAccount }: Props) {
   }
 
   return (
-    <ModalWhiteSideResponsive
-      title="Invest"
-      isOpen={isOpen}
+    <ModalWhiteFullscreen
+      isOpen={isModalOpen}
       onOpenChange={onModalClickBack}
       activeAccount={activeAccount}
     >
       <CurrentStepView />
-    </ModalWhiteSideResponsive>
+    </ModalWhiteFullscreen>
   );
-}
+};
 
 export const InvestmentView = (props: Props) => (
-  <RecurringInvestmentProvider>
-    <InnerInvestmentView {...props} />
-  </RecurringInvestmentProvider>
+  <InvestmentProvider>
+    <RecurringInvestmentProvider>
+      <InvestmentFlowProvider initialStoreFields={INITIAL_STORE_FIELDS}>
+        <InnerInvestmentView {...props} />
+      </InvestmentFlowProvider>
+    </RecurringInvestmentProvider>
+  </InvestmentProvider>
 );
