@@ -6,14 +6,14 @@ import { MutationMeta } from 'types/queries';
 type MutationParams = { dividendIds: string[] };
 type MutationFunction = (params: MutationParams) => Promise<boolean>;
 
-interface Return {
+interface Returns {
   metaReinvestDividends: MutationMeta;
   metaWithdrawDividends: MutationMeta;
   reinvestDividends: MutationFunction;
   withdrawDividends: MutationFunction;
 }
 
-export function useManageDividends(): Return {
+export function useManageDividends(): Returns {
   const { mutateAsync: withdrawDividends, ...metaWithdrawDividends } = useWithdrawDividends(getApiClient);
   const { mutateAsync: reinvestDividends, ...metaReinvestDividends } = useReinvestDividends(getApiClient);
 

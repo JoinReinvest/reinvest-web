@@ -5,19 +5,25 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { useManageDividends } from 'hooks/manage-dividends';
 import { FormEventHandler, useEffect } from 'react';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { DividendAction, FlowFields } from '../interfaces';
 import { FlowStepIdentifiers } from '../step-identifiers';
 
-const TITLE = 'Manage Dividends';
-const AMOUNT_LABEL = 'Dividend Amount';
-const MESSAGE = 'Make a decision on whether to reinvest or withdraw your dividend. If you take no action within (30) days, your dividend will be reinvested. ';
+const TITLE = 'Manage Rewards';
+const AMOUNT_LABEL = 'Reward Amount';
+const MESSAGE = 'Make a decision on whether to reinvest or withdraw your incentive.';
 const BUTTON_DISAGREE_LABEL = 'Withdraw';
 const BUTTON_AGREE_LABEL = 'Reinvest';
 
-export const StepDividends: StepParams<FlowFields> = {
+export const StepDividend: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.MANAGE_DIVIDENDS,
+
+  doesMeetConditionFields: fields => {
+    const requiredFields = [fields._dividendId, fields._amount, fields._amountMasked];
+
+    return allRequiredFieldsExists(requiredFields);
+  },
 
   Component: ({ updateStoreFields, storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { withdrawDividends, reinvestDividends, metaReinvestDividends, metaWithdrawDividends } = useManageDividends();
@@ -31,6 +37,8 @@ export const StepDividends: StepParams<FlowFields> = {
 
     const dividendId = storeFields._dividendId;
     const amountMasked = storeFields._amountMasked;
+
+    const isButtonDisabled = metaReinvestDividends.isLoading || metaWithdrawDividends.isLoading;
 
     const onDisagree = async () => {
       if (dividendId) {
@@ -78,11 +86,15 @@ export const StepDividends: StepParams<FlowFields> = {
             label={BUTTON_DISAGREE_LABEL}
             onClick={onDisagree}
             variant="outlined"
+            disabled={isButtonDisabled}
+            loading={metaWithdrawDividends.isLoading}
           />
 
           <Button
             label={BUTTON_AGREE_LABEL}
             type="submit"
+            disabled={isButtonDisabled}
+            loading={metaReinvestDividends.isLoading}
           />
         </ButtonStack>
       </Form>
