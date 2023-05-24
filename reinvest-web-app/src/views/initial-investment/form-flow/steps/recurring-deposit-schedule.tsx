@@ -26,7 +26,6 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
 
   doesMeetConditionFields: fields => {
     const requiredFields = [
-      fields.oneTimeInvestment,
       fields._willSetUpRecurringInvestment,
       fields.recurringInvestment,
       fields.recurringInvestmentInterval,

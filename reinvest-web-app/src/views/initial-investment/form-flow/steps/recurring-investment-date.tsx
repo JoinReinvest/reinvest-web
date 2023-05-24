@@ -33,7 +33,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.oneTimeInvestment, fields._willSetUpRecurringInvestment, fields.recurringInvestment, fields.recurringInvestmentInterval];
+    const requiredFields = [fields._willSetUpRecurringInvestment, fields.recurringInvestment, fields.recurringInvestmentInterval];
 
     return allRequiredFieldsExists(requiredFields);
   },

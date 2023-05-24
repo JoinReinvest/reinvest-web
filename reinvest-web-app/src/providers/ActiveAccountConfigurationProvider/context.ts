@@ -1,19 +1,13 @@
+import { DEFAULT_MUTATION_META, DEFAULT_QUERY_META } from 'constants/queries';
 import { createContext } from 'react';
 
-import { ConfigurationMeta, State } from './interfaces';
-
-const DEFAULT_CONFIGURATION_META: ConfigurationMeta = {
-  error: null,
-  isLoading: false,
-  isSuccess: false,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  reset: () => {},
-};
+import { State } from './interfaces';
 
 export const Context = createContext<State>({
   activeAccountConfiguration: null,
+  activeAccountConfigurationMeta: DEFAULT_QUERY_META,
   hasAutomaticDividendsActive: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateHasAutomaticDividendsActive: async () => {},
-  automaticDividendsMeta: DEFAULT_CONFIGURATION_META,
+  automaticDividendsMeta: DEFAULT_MUTATION_META,
 });

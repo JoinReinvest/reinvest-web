@@ -38,15 +38,14 @@ export const STEPS = [
 
   // Investment
   StepInitialInvestment,
-  StepAutomaticDividend,
 
   // Recurring investment
-  StepRecurringInvestment,
   StepRecurringInvestment,
   StepRecurringInvestmentAmount,
   StepRecurringInvestmentInterval,
   StepRecurringInvestmentDate,
   StepRecurringDepositSchedule,
+  StepAutomaticDividend,
 
   // Subscription agreements + investment initialization
   StepSubscriptionAgreements,

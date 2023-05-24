@@ -29,7 +29,7 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.oneTimeInvestment, fields._willSetUpRecurringInvestment, fields.recurringInvestment];
+    const requiredFields = [fields._willSetUpRecurringInvestment, fields.recurringInvestment];
 
     return allRequiredFieldsExists(requiredFields);
   },
@@ -71,6 +71,7 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
         <ButtonStack>
           <Button
             label="Skip"
+            variant="outlined"
             disabled
           />
 

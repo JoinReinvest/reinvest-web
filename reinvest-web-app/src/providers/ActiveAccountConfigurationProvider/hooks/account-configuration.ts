@@ -2,18 +2,19 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetAccountConfiguration } from 'reinvest-app-common/src/services/queries/getAccountConfiguration';
 import { AccountConfiguration } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { QueryMeta } from 'types/queries';
 
 interface Return {
   activeAccountConfiguration: AccountConfiguration | null;
-  refetchAccountConfiguration: () => void;
+  activeAccountConfigurationMeta: QueryMeta;
 }
 
 export function useAccountConfiguration(): Return {
   const { activeAccount } = useActiveAccount();
-  const { data: accountConfiguration, refetch: refetchAccountConfiguration } = useGetAccountConfiguration(getApiClient, {
+  const { data, ...activeAccountConfigurationMeta } = useGetAccountConfiguration(getApiClient, {
     accountId: activeAccount?.id || '',
     config: { enabled: !!activeAccount?.id },
   });
 
-  return { activeAccountConfiguration: accountConfiguration || null, refetchAccountConfiguration };
+  return { activeAccountConfiguration: data ?? null, activeAccountConfigurationMeta };
 }
