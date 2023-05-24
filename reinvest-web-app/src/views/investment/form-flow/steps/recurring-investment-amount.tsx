@@ -7,36 +7,43 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateRecurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
-import { FlowFields } from '../fields';
+import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
 
 const TITLE = 'Choose the amount for your recurring investment';
 
-type Fields = { amount?: number };
+interface Fields {
+  amount?: number;
+}
+
+const getDefaultValues = ({ recurringInvestment }: FlowFields): Fields => ({
+  amount: recurringInvestment?.amount,
+});
 
 export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT_AMOUNT,
 
-  willBePartOfTheFlow: fields => !!fields._shouldDisplayRecurringInvestment,
+  willBePartOfTheFlow: fields => {
+    return !!fields._willSetUpRecurringInvestment;
+  },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields._selectedAccount, fields.investmentAmount !== undefined, fields._willSetUpRecurringInvestment];
-
-    return allRequiredFieldsExists(requiredFields);
+    return !!fields._willSetUpRecurringInvestment;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const schema = generateRecurringInvestmentSchema({ accountType: activeAccount?.type ?? AccountType.Individual });
-    const defaultValues: Fields = { amount: storeFields.recurringInvestmentAmount };
+    const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
     const { handleSubmit, setValue, formState } = useForm<Fields>({
       mode: 'onChange',
-      defaultValues: async () => defaultValues,
+      defaultValues,
       resolver: zodResolver(schema),
     });
 
@@ -44,17 +51,23 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
     const errorMessage = formState.errors.amount?.message;
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
-      await updateStoreFields({ investmentAmount: amount, recurringInvestmentDate: new Date() });
+      const investment: Investment = {
+        amount,
+        type: 'recurrent',
+        date: new Date(),
+      };
+
+      await updateStoreFields({ recurringInvestment: investment });
 
       moveToNextStep();
     };
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent willLeaveContentOnTop>
+        <FormContent>
           <ModalTitle
             title={TITLE}
-            isTitleCenteredOnMobile={false}
+            isTitleCenteredOnMobile
           />
 
           <InvestmentCard
@@ -72,6 +85,12 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
         </FormContent>
 
         <ButtonStack>
+          <Button
+            label="Skip"
+            variant="outlined"
+            disabled
+          />
+
           <Button
             type="submit"
             label="Continue"
