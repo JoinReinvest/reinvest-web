@@ -5,6 +5,7 @@ import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
 import { useEffect, useState } from 'react';
 
 import { useOnboardingFormFlow } from './form-flow';
+import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFieldsFromApi } from './hooks/initialize-fields-from-api';
 
 export const OnboardingFlow = () => {
@@ -13,7 +14,7 @@ export const OnboardingFlow = () => {
 
   const {
     CurrentStepView,
-    meta: { isFirstStep },
+    meta: { isFirstStep, currentStepIdentifier },
     moveToPreviousValidStep,
     progressPercentage,
     updateStoreFields,
@@ -22,9 +23,15 @@ export const OnboardingFlow = () => {
 
   useInitializeFieldsFromApi({ updateStoreFields });
 
+  const shouldDisplayXButton = currentStepIdentifier === Identifiers.ACCOUNT_COMPLETION;
+
   useEffect(() => {
     setIsModalOpen(true);
   }, []);
+
+  const goToDashboard = () => {
+    router.push(URL.index);
+  };
 
   const onModalClickBack = () => {
     if (isFirstStep) {
@@ -40,8 +47,9 @@ export const OnboardingFlow = () => {
     <ActiveAccountProvider>
       <ModalBlackFullscreen
         isOpen={isModalOpen}
-        onOpenChange={onModalClickBack}
+        onOpenChange={!shouldDisplayXButton ? onModalClickBack : goToDashboard}
         progressBarValue={progressPercentage}
+        isBackButtonEnabled={!shouldDisplayXButton}
       >
         <CurrentStepView />
       </ModalBlackFullscreen>

@@ -7,7 +7,7 @@ import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvid
 import { useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
-import { FLOW_STEPS_WITH_BLACK_MODAL, INITIAL_STORE_FIELDS } from './constants';
+import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON, INITIAL_STORE_FIELDS } from './constants';
 import { InvestmentFlowProvider, useInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
@@ -30,6 +30,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   } = useInvestmentFlow();
 
   const shouldDisplayBlackModal = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_BLACK_MODAL.includes(currentStepIdentifier), [currentStepIdentifier]);
+  const shouldDisplayBackIcon = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_X_BUTTON.includes(currentStepIdentifier), [currentStepIdentifier]);
 
   const onModalLastStep = () => {
     onModalOpenChange(false);
@@ -72,8 +73,9 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   return (
     <ModalWhiteFullscreen
       isOpen={isModalOpen}
-      onOpenChange={onModalClickBack}
+      onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
       activeAccount={activeAccount}
+      isBackButtonEnabled={!shouldDisplayBackIcon}
     >
       <CurrentStepView />
     </ModalWhiteFullscreen>
