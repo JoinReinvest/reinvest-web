@@ -60,11 +60,11 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
     };
 
     useEffect(() => {
-      if (isSuccess && accountConfiguration?.automaticDividendReinvestmentAgreement.signed) {
+      if (isSuccess && accountConfiguration?.automaticDividendReinvestmentAgreement?.signed) {
         updateStoreFields({ optsInForAutomaticDividendReinvestment: true });
         moveToNextStep();
       }
-    }, [isSuccess, accountConfiguration?.automaticDividendReinvestmentAgreement.signed, updateStoreFields, moveToNextStep]);
+    }, [isSuccess, accountConfiguration?.automaticDividendReinvestmentAgreement?.signed, updateStoreFields, moveToNextStep]);
 
     useEffect(() => {
       refetch();
