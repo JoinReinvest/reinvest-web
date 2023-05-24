@@ -1,11 +1,7 @@
-import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
-import { MutationMeta, QueryMeta } from 'types/queries';
+import { useMarkAsRead } from './hooks/mark-as-read';
+import { useNotifications } from './hooks/notifications';
 
-export interface State {
-  markAsRead: MarkAsRead;
-  notifications: Maybe<Notification>[];
-  markAsReadMeta?: MutationMeta;
-  notificationsMeta?: QueryMeta;
-}
+export interface State extends UseMarkAsRead, UseNotifications {}
 
-type MarkAsRead = ({ notificationId }: { notificationId: string }) => Promise<boolean>;
+type UseMarkAsRead = ReturnType<typeof useMarkAsRead>;
+type UseNotifications = ReturnType<typeof useNotifications>;

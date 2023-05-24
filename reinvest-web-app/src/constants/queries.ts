@@ -1,4 +1,4 @@
-import { MutationMeta, QueryMeta } from 'types/queries';
+import { InfiniteQueryMeta, MutationMeta, QueryMeta } from 'types/queries';
 
 export const DEFAULT_MUTATION_META: MutationMeta = {
   error: null,
@@ -15,4 +15,10 @@ export const DEFAULT_QUERY_META: QueryMeta = {
   isRefetching: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   refetch: () => {},
+};
+
+export const DEFAULT_INFINITE_QUERY_META: InfiniteQueryMeta = {
+  ...DEFAULT_QUERY_META,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  fetchNextPage: () => {},
 };
