@@ -20,16 +20,16 @@ const MESSAGE_INFORMATION = 'This transaction should take 3-5 business days to c
 export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_DEPOSIT_SCHEDULE,
 
-  willBePartOfTheFlow: fields => !!fields._shouldDisplayRecurringInvestment,
+  willBePartOfTheFlow: fields => {
+    return !!fields._willSetUpRecurringInvestment;
+  },
 
   doesMeetConditionFields: fields => {
     const requiredFields = [
-      fields._selectedAccount,
-      fields.investmentAmount !== undefined,
       fields._willSetUpRecurringInvestment,
-      fields.recurringInvestmentAmount !== undefined,
+      fields.recurringInvestment,
       fields.recurringInvestmentInterval,
-      fields.recurringInvestmentDate,
+      fields.recurringInvestment?.date,
     ];
 
     return allRequiredFieldsExists(requiredFields);
@@ -45,15 +45,12 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        <FormContent willLeaveContentOnTop>
+        <FormContent>
           <div className="flex w-full justify-center">
             <IconRecurrent />
           </div>
 
-          <ModalTitle
-            title={TITLE}
-            isTitleCenteredOnMobile={false}
-          />
+          <ModalTitle title={TITLE} />
 
           {recurringInvestment && (
             <RecurringInvestmentDepositSchedule

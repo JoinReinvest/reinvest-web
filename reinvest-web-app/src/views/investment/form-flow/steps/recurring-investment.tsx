@@ -6,7 +6,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useToggler } from 'hooks/toggler';
 import { FormEventHandler } from 'react';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -17,14 +17,6 @@ const SUBTITLE =
 
 export const StepRecurringInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT,
-
-  willBePartOfTheFlow: fields => !!fields._shouldDisplayRecurringInvestment,
-
-  doesMeetConditionFields: fields => {
-    const requiredFields = [fields._selectedAccount, fields.investmentAmount !== undefined];
-
-    return allRequiredFieldsExists(requiredFields);
-  },
 
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const [isLoading, toggleIsLoading] = useToggler(false);
@@ -48,7 +40,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        <FormContent willLeaveContentOnTop>
+        <FormContent>
           <div className="flex w-full justify-center">
             <IconRecurrent />
           </div>
@@ -56,13 +48,12 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
           <ModalTitle
             title={TITLE}
             subtitle={SUBTITLE}
-            isTitleCenteredOnMobile={false}
           />
         </FormContent>
 
-        <ButtonStack useRowOnLgScreen>
+        <ButtonStack>
           <Button
-            label="Skip"
+            label="I’ll do this later"
             variant="outlined"
             disabled={isLoading}
             onClick={onSkipButtonClick}
@@ -72,6 +63,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
             type="submit"
             label="Continue"
             disabled={isLoading}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>
