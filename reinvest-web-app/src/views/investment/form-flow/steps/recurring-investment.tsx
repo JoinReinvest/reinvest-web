@@ -53,7 +53,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
 
         <ButtonStack>
           <Button
-            label="Skip"
+            label="I’ll do this later"
             variant="outlined"
             disabled={isLoading}
             onClick={onSkipButtonClick}
