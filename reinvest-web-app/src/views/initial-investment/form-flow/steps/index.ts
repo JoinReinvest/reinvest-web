@@ -32,13 +32,13 @@ export const STEPS = [
   StepBankSelection,
   StepConfirmation,
   StepInitialInvestment,
-  StepAutomaticDividend,
 
   StepRecurringInvestment,
   StepRecurringInvestmentAmount,
   StepRecurringInvestmentInterval,
   StepRecurringInvestmentDate,
   StepRecurringDepositSchedule,
+  StepAutomaticDividend,
 
   StepSubscriptionAgreements,
   StepInvestmentVerification,
