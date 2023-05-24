@@ -1,11 +1,13 @@
-import { DEFAULT_MUTATION_META, DEFAULT_QUERY_META } from 'constants/queries';
+import { DEFAULT_INFINITE_QUERY_META, DEFAULT_MUTATION_META } from 'constants/queries';
 import { createContext } from 'react';
 
 import { State } from './interfaces';
 
 export const Context = createContext<State>({
-  notifications: [],
-  notificationsMeta: DEFAULT_QUERY_META,
-  markAsRead: async () => false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  markAsRead: () => new Promise(() => {}),
   markAsReadMeta: DEFAULT_MUTATION_META,
+  notifications: [],
+  notificationStats: null,
+  notificationsMeta: DEFAULT_INFINITE_QUERY_META,
 });

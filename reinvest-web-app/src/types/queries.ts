@@ -14,3 +14,7 @@ export interface MutationMeta {
   isSuccess: boolean;
   reset: () => void;
 }
+
+export interface InfiniteQueryMeta extends QueryMeta {
+  fetchNextPage: () => void;
+}

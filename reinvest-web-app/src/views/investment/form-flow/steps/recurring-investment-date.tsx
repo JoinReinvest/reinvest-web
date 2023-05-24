@@ -28,16 +28,12 @@ const schema: Schema<Fields> = z.object({
 export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT_DATE,
 
-  willBePartOfTheFlow: fields => !!fields._shouldDisplayRecurringInvestment,
+  willBePartOfTheFlow: fields => {
+    return !!fields._willSetUpRecurringInvestment;
+  },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [
-      fields._selectedAccount,
-      fields.investmentAmount !== undefined,
-      fields._willSetUpRecurringInvestment,
-      fields.recurringInvestmentAmount !== undefined,
-      fields.recurringInvestmentInterval,
-    ];
+    const requiredFields = [fields._willSetUpRecurringInvestment, fields.recurringInvestment, fields.recurringInvestmentInterval];
 
     return allRequiredFieldsExists(requiredFields);
   },
@@ -47,7 +43,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
-      defaultValues: async () => ({ date: storeFields?.recurringInvestmentDate }),
+      defaultValues: async () => ({ date: storeFields?.recurringInvestment?.date }),
     });
 
     useEffect(() => {
@@ -57,7 +53,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [createRecurringInvestmentMeta.isSuccess]);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || createRecurringInvestmentMeta.isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const subtitle = storeFields?.recurringInvestmentInterval && RECURRING_INVESTMENT_SCHEDULE_SUBTITLES.get(storeFields.recurringInvestmentInterval);
 
     const onSubmit: SubmitHandler<Fields> = async ({ date }) => {
@@ -72,11 +68,11 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent willLeaveContentOnTop>
+        <FormContent>
           <ModalTitle
             title={TITLE}
             subtitle={subtitle}
-            isTitleCenteredOnMobile={false}
+            isTitleCenteredOnMobile
           />
 
           <DatePicker
@@ -91,7 +87,6 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={createRecurringInvestmentMeta.isLoading}
           />
         </ButtonStack>
       </Form>

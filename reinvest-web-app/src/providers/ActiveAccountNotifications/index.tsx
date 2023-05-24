@@ -8,8 +8,8 @@ import { useNotifications } from './hooks/notifications';
 export const useActiveAccountNotifications = createContextConsumer(Context, 'ActiveAccountNotificationsProvider');
 
 export const ActiveAccountNotificationsProvider = ({ children }: PropsWithChildren) => {
-  const { notifications, meta: notificationsMeta } = useNotifications();
-  const { markAsRead, meta: markAsReadMeta } = useMarkAsRead();
+  const notificationsResult = useNotifications();
+  const markAsReadResult = useMarkAsRead();
 
-  return <Context.Provider value={{ notifications, notificationsMeta, markAsRead, markAsReadMeta }}>{children}</Context.Provider>;
+  return <Context.Provider value={{ ...notificationsResult, ...markAsReadResult }}>{children}</Context.Provider>;
 };

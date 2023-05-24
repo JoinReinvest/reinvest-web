@@ -7,48 +7,73 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useMemo } from 'react';
+import { useInvestmentContext } from 'providers/InvestmentProvider';
+import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { FlowFields } from '../fields';
+import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = { amount?: number };
+interface Fields {
+  amount?: number;
+}
 
-const TITLE = 'Choose your investment amount and frequency.';
-const BUTTON_LABEL = 'Invest Now';
+const getDefaultValues = ({ oneTimeInvestment }: FlowFields): Fields => ({
+  amount: oneTimeInvestment?.amount,
+});
 
-export const StepInvestmentAmount: StepParams<FlowFields> = {
-  identifier: Identifiers.INVESTMENT_AMOUNT,
-
-  doesMeetConditionFields: fields => {
-    const requiredFields = [fields._selectedAccount];
-
-    return allRequiredFieldsExists(requiredFields);
-  },
+export const StepInitialInvestment: StepParams<FlowFields> = {
+  identifier: Identifiers.INITIAL_INVESTMENT,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { createInvestment, createInvestmentMeta } = useInvestmentContext();
     const { activeAccount } = useActiveAccount();
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
-    const defaultValues: Fields = { amount: storeFields.investmentAmount };
-    const { handleSubmit, formState, setValue } = useForm<Fields>({ resolver: zodResolver(schema), defaultValues: async () => defaultValues });
+    const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
+    const { handleSubmit, setValue, formState } = useForm<Fields>({
+      mode: 'onChange',
+      defaultValues: async () => defaultValues,
+      resolver: zodResolver(schema),
+    });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
-      await updateStoreFields({ investmentAmount: amount });
+      const investment: Investment = {
+        amount,
+        type: 'one-time',
+        date: new Date(),
+      };
+
+      if (amount) {
+        await createInvestment({ investmentAmount: amount });
+        await updateStoreFields({ oneTimeInvestment: investment, _shouldAgreeToOneTimeInvestment: true });
+      }
+    };
+
+    const onSkipButtonClick = async () => {
+      await updateStoreFields({ _willSetUpOneTimeInvestments: false, _shouldAgreeToOneTimeInvestment: false });
+
       moveToNextStep();
     };
 
+    useEffect(() => {
+      if (createInvestmentMeta.isSuccess) {
+        updateStoreFields({ _shouldAgreeToOneTimeInvestment: true });
+        createInvestmentMeta.reset();
+        moveToNextStep();
+      }
+    }, [createInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields, createInvestmentMeta]);
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent willLeaveContentOnTop>
+        <FormContent>
           <ModalTitle
-            title={TITLE}
-            isTitleCenteredOnMobile={false}
+            title="Make your initial one-time investment"
+            isTitleCenteredOnMobile
           />
 
           <InvestmentCard
@@ -59,6 +84,7 @@ export const StepInvestmentAmount: StepParams<FlowFields> = {
               // eslint-disable-next-line no-console
               console.info('change bank account');
             }}
+            className="mx-auto"
           />
 
           {!!errorMessage && <FormMessage message={errorMessage} />}
@@ -66,8 +92,13 @@ export const StepInvestmentAmount: StepParams<FlowFields> = {
 
         <ButtonStack>
           <Button
+            label="Skip"
+            variant="outlined"
+            onClick={onSkipButtonClick}
+          />
+          <Button
             type="submit"
-            label={BUTTON_LABEL}
+            label="Invest Now"
             disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>

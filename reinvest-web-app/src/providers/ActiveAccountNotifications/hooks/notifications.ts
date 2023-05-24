@@ -1,20 +1,35 @@
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useGetNotDismissedNotifications } from 'reinvest-app-common/src/services/queries/getNotDimissedNotifications';
-import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
+import { useMemo } from 'react';
+import { useGetNotifications } from 'reinvest-app-common/src/services/queries/getNotifications';
+import { Maybe, Notification, NotificationsStats } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
-import { QueryMeta } from 'types/queries';
+import { InfiniteQueryMeta } from 'types/queries';
 
 interface Return {
-  meta: QueryMeta;
+  notificationStats: Pick<NotificationsStats, 'totalCount' | 'unreadCount'> | null;
   notifications: Maybe<Notification>[];
+  notificationsMeta: InfiniteQueryMeta;
 }
 
 export function useNotifications(): Return {
   const { activeAccount } = useActiveAccount();
-  const { data, ...meta } = useGetNotDismissedNotifications(getApiClient, {
+
+  const { data, ...notificationsMeta } = useGetNotifications(getApiClient, {
     accountId: activeAccount?.id || '',
     config: { enabled: !!activeAccount?.id },
   });
 
-  return { notifications: data || [], meta };
+  const notificationStats = useMemo<Return['notificationStats']>(() => {
+    const lastPage = data?.pages.slice(-1)?.at(0);
+
+    if (lastPage) {
+      return { totalCount: lastPage.totalCount, unreadCount: lastPage.unreadCount };
+    }
+
+    return null;
+  }, [data]);
+
+  const notifications = useMemo(() => data?.pages.map(el => el.getNotifications).flat() || [], [data]);
+
+  return { notificationStats, notifications, notificationsMeta };
 }
