@@ -35,7 +35,7 @@ export const StepAccountSelection: StepParams<FlowFields> = {
   },
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { activeAccount, updateActiveAccount, availableAccounts, allAccounts } = useActiveAccount();
+    const { activeAccount, updateActiveAccount, allAccounts } = useActiveAccount();
     const { control, handleSubmit, formState } = useForm<Fields>({
       resolver: zodResolver(schema),
       defaultValues: async () => ({ accountId: activeAccount?.id ?? undefined }),
@@ -44,7 +44,7 @@ export const StepAccountSelection: StepParams<FlowFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async ({ accountId }) => {
-      const account = availableAccounts.find(account => account?.id === accountId);
+      const account = allAccounts.find(account => account?.id === accountId);
 
       if (account) {
         const isActiveAccount = activeAccount?.id === account.id;

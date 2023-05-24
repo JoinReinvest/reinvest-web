@@ -1,5 +1,3 @@
-import { Button } from 'components/Button';
-import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
@@ -18,7 +16,6 @@ import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
 const TITLE = 'Select your bank';
-const BUTTON_LABEL = 'Continue';
 
 export const StepBankSelection: StepParams<FlowFields> = {
   identifier: Identifiers.BANK_SELECTION,
@@ -99,13 +96,6 @@ export const StepBankSelection: StepParams<FlowFields> = {
                 title="plaid connection"
               />
             </FormContent>
-
-            <ButtonStack>
-              <Button
-                type="submit"
-                label={BUTTON_LABEL}
-              />
-            </ButtonStack>
           </>
         )}
       </Form>
