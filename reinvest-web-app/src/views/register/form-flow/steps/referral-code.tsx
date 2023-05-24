@@ -1,11 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
+import { ReferralCodeChecklist } from 'components/Checklist/ReferralCode';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { InputReferralCode } from 'components/FormElements/InputReferralCode';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { env } from 'env';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -17,7 +18,7 @@ import zod, { Schema } from 'zod';
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<RegisterFormFields, 'referralCode'>;
+type Fields = Required<Pick<RegisterFormFields, 'referralCode'>>;
 
 const schema: Schema<Fields> = zod.object({
   referralCode: formValidationRules.referralCode,
@@ -28,10 +29,15 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
   doesMeetConditionFields: fields => !!fields.email,
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
+    const defaultValues: Fields = { referralCode: storeFields.referralCode || '' };
+    const { handleSubmit, control, formState, watch } = useForm<Fields>({
+      mode: 'onBlur',
+      defaultValues: async () => defaultValues,
+      resolver: zodResolver(schema),
+    });
     const [isValidatingReferralCode, setIsValidatingReferralCode] = useState(false);
     const [error, setError] = useState<string | undefined>('');
-
-    const { handleSubmit, control, formState } = useForm<Fields>({ mode: 'onBlur', defaultValues: storeFields, resolver: zodResolver(schema) });
+    const referralCode = watch('referralCode');
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
@@ -72,18 +78,22 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="Do you have a referral code? (optional)"
             subtitle="You and your referrer will receive $20 in dividends following your first investment!"
           />
 
-          {error && <FormMessage message={error} />}
+          <div className="flex w-full flex-col gap-16">
+            {error && <FormMessage message={error} />}
 
-          <InputReferralCode
-            name="referralCode"
-            control={control}
-            defaultValue={storeFields.referralCode}
-          />
+            <InputReferralCode
+              name="referralCode"
+              control={control}
+              defaultValue={storeFields.referralCode}
+            />
+
+            <ReferralCodeChecklist referralCode={referralCode} />
+          </div>
         </FormContent>
 
         <ButtonStack>
@@ -93,6 +103,7 @@ export const StepReferralCode: StepParams<RegisterFormFields> = {
             label="Skip"
             onClick={onSkip}
             className="text-white"
+            disabled={isValidatingReferralCode}
           />
 
           <Button

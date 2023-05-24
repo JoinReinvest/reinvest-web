@@ -4,8 +4,11 @@ import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
+import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
+import { ActionName } from 'reinvest-app-common/src/types/graphql';
 
 import { getApiClient } from '../services/getApiClient';
+import { BannedView } from '../views/BannedView';
 
 export enum ChallengeName {
   SMS_MFA = 'SMS_MFA',
@@ -47,16 +50,20 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
-  const { data, isSuccess, isLoading, refetch } = useGetUserProfile(getApiClient);
+  const { data, isSuccess, isLoading, refetch, isRefetching } = useGetUserProfile(getApiClient);
+  const { mutateAsync: verifyAccountMutate, isLoading: isVerifyAccountLoading, data: verifyAccountData } = useVerifyAccount(getApiClient);
+  const [isBannedProfile, setIsBannedProfile] = useState(false);
 
-  const signIn = async (email: string, password: string, redirectTo?: string): Promise<CognitoUser | Error> => {
+  const signIn = async (email: string, password: string): Promise<CognitoUser | Error> => {
     try {
       setLoading(true);
+
       const user: CognitoUser = await Auth.signIn(email, password);
 
       if (user.challengeName !== ChallengeName.SMS_MFA) {
         setUser(user);
-        router.push(redirectTo || URL.index);
+
+        await refetch();
       }
 
       return user;
@@ -69,6 +76,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   useEffect(() => {
     refetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const confirmSignIn = async (authenticationCode: string, user: CognitoUser) => {
@@ -76,7 +84,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
     setUser(confirmedUser);
 
-    router.push(URL.index);
+    await refetch();
 
     return confirmedUser;
   };
@@ -89,18 +97,47 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       router.push(URL.login);
     }
   };
-
   const ctx = useMemo(() => {
     return { user, loading, actions: { signIn, confirmSignIn, signOut } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
   useEffect(() => {
-    if (isSuccess && data && !notProtectedUrls.includes(router.pathname) && (!data.isCompleted || data.accounts?.length === 0)) {
-      router.push(URL.onboarding);
+    if (isSuccess && data && !isRefetching) {
+      if (data.accounts?.length === 0) {
+        router.push(URL.onboarding);
+      } else {
+        const { accounts } = data;
+
+        if (accounts && accounts[0] && accounts[0].id) {
+          verifyAccountMutate({ accountId: accounts[0].id });
+        }
+
+        const query = router.query;
+        const { redirectUrl } = query;
+
+        if (redirectUrl) {
+          router.push(redirectUrl as string);
+        } else {
+          if (notProtectedUrls.includes(router.pathname)) {
+            router.push(URL.index);
+          }
+
+          router.push(router.pathname || URL.index);
+        }
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }, [data, isRefetching, isSuccess]);
+
+  useEffect(() => {
+    if (verifyAccountData) {
+      const { requiredActions } = verifyAccountData;
+      const hasBannedProfile = requiredActions?.map(requiredAction => requiredAction?.action).includes(ActionName.BanProfile);
+
+      setIsBannedProfile(hasBannedProfile || false);
+    }
+  }, [verifyAccountData, isVerifyAccountLoading]);
 
   useEffect(() => {
     const currentUser = async () => {
@@ -111,10 +148,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
         setLoading(false);
         setUser(user);
-
-        if (user && notProtectedUrls.includes(router.pathname)) {
-          return router.push(URL.index);
-        }
       } catch (err) {
         setLoading(false);
         setUser(null);
@@ -133,11 +166,27 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading) && router.pathname !== URL.logout) {
-    return <IconSpinner />;
+  if (
+    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || (isRefetching && !data)) &&
+    router.pathname !== URL.logout &&
+    router.pathname !== URL.onboarding &&
+    router.pathname !== URL.not_found
+  ) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <IconSpinner />
+      </div>
+    );
   }
 
-  return <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>;
+  return isBannedProfile ? (
+    <BannedView
+      isOpen
+      title="Your profile has been locked."
+    />
+  ) : (
+    <AuthContext.Provider value={ctx}>{children}</AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => useContext(AuthContext);

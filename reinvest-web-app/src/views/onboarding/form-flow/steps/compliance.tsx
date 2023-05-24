@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -16,23 +16,15 @@ import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = OnboardingFormFields['compliances'] & {
-  doNoneApply: boolean;
+  doNoneApply?: boolean;
 };
 
-const getDefaultValues = ({ compliances }: OnboardingFormFields): Fields => {
-  const hasCompliances = compliances && Object.values(compliances).some(Boolean);
-
-  if (hasCompliances) {
-    return { ...compliances, doNoneApply: false };
-  }
-
-  return {
-    isAssociatedWithFinra: false,
-    isAssociatedWithPubliclyTradedCompany: false,
-    isSeniorPoliticalFigure: false,
-    doNoneApply: false,
-  };
-};
+const getDefaultValues = ({ statementTypes, compliances }: OnboardingFormFields): Fields => ({
+  isAssociatedWithFinra: statementTypes?.includes(StatementType.FinraMember),
+  isAssociatedWithPubliclyTradedCompany: statementTypes?.includes(StatementType.TradingCompanyStakeholder),
+  isSeniorPoliticalFigure: statementTypes?.includes(StatementType.Politician),
+  doNoneApply: !!compliances?.doNoneApply,
+});
 
 const schema = z
   .object({
@@ -66,18 +58,9 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.COMPLIANCES,
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.accountType,
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-    ];
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
-    return allRequiredFieldsExists(requiredFields);
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -124,7 +107,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Do any of the following apply to you?" />
+          <ModalTitle title="Do any of the following apply to you?" />
 
           <div className="flex w-full flex-col gap-16">
             {formState.errors.root?.message && (

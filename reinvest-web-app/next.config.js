@@ -21,6 +21,13 @@ module.exports = withVideos(
     reactStrictMode: true,
     images: {
       domains: ['images.ctfassets.net'],
+      remotePatterns: [
+        {
+          protocol: 'https',
+          hostname: 'reinvest-*-avatars.s3.us-east-1.amazonaws.com',
+          port: ''
+        },
+      ],
     },
     env: {
       SITE_NAME: process.env.SITE_NAME,
@@ -37,15 +44,13 @@ module.exports = withVideos(
     redirects: async () => {
       return [{ source: '/referral/:id', destination: '/register/?referral=:id', permanent: true }];
     },
-    experimental: {
-      headers() {
-        return [
-          {
-            source: "/.well-known/apple-app-site-association",
-            headers: [{ key: "content-type", value: "application/json" }]
-          }
-        ];
-      }
-    }
+    headers: async () => {
+      return [
+        {
+          source: '/.well-known/apple-app-site-association',
+          headers: [{ key: 'content-type', value: 'application/json' }],
+        },
+      ];
+    },
   }),
 );

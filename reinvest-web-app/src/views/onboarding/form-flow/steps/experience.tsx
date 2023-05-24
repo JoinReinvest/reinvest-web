@@ -1,16 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EXPERIENCES_AS_OPTIONS } from 'reinvest-app-common/src/constants/experiences';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
-import { DraftAccountType, Experience } from 'reinvest-app-common/src/types/graphql';
+import { Experience } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
@@ -28,21 +28,12 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EXPERIENCE,
 
   willBePartOfTheFlow(fields) {
-    return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile;
+    return !!fields.accountType && !fields.isCompletedProfile;
   },
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-      fields.ssn,
-    ];
+    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn];
 
-    return fields.accountType === DraftAccountType.Individual && !fields.isCompletedProfile && allRequiredFieldsExists(requiredFields);
+    return !!fields.accountType && !fields.isCompletedProfile && allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -58,7 +49,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ experience }) => {
       await updateStoreFields({ experience });
-      await completeProfileMutate({ input: { investingExperience: { experience }, verifyAndFinish: true } });
+      await completeProfileMutate({ input: { investingExperience: { experience } } });
     };
 
     useEffect(() => {
@@ -74,7 +65,7 @@ export const StepExperience: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="What is your experience with real estate investment?" />
+          <ModalTitle title="What is your experience with real estate investment?" />
 
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           <SelectionCards

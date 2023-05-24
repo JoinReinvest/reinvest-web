@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
@@ -7,6 +6,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Select } from 'components/Select';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -25,8 +25,6 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Exclude<OnboardingFormFields['address'], null>;
 
-const schema = formValidationRules.address;
-
 export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.PERMANENT_ADDRESS,
 
@@ -35,21 +33,14 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-    ];
+    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
     const individualFields = [fields.ssn];
 
     return (
-      (fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
-      (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields))
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(requiredFields) && allRequiredFieldsExists(individualFields)) ||
+        (fields.accountType !== DraftAccountType.Individual && allRequiredFieldsExists(requiredFields))) &&
+      !fields.isCompletedProfile
     );
   },
 
@@ -61,8 +52,8 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
-      resolver: zodResolver(schema),
-      defaultValues,
+      resolver: zodResolver(formValidationRules.address),
+      defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeLoading = isLoading || isLoadingSelectedAddress;
@@ -106,7 +97,7 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="What is your permanent address?"
             informationMessage="US Residents Only"
           />
@@ -121,7 +112,6 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
               formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
               formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
-              shouldUnregister
             />
 
             <Input
@@ -146,7 +136,6 @@ export const StepPermanentAddress: StepParams<OnboardingFormFields> = {
             <InputZipCode
               name="zip"
               control={control}
-              shouldUnregister
               defaultValue={storeFields.address?.zip}
             />
           </div>

@@ -1,9 +1,11 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
+import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
 import { useEffect, useState } from 'react';
 
 import { useOnboardingFormFlow } from './form-flow';
+import { useInitializeFieldsFromApi } from './hooks/initialize-fields-from-api';
 
 export const OnboardingFlow = () => {
   const router = useRouter();
@@ -14,7 +16,11 @@ export const OnboardingFlow = () => {
     meta: { isFirstStep },
     moveToPreviousValidStep,
     progressPercentage,
+    updateStoreFields,
+    getStoreFields,
   } = useOnboardingFormFlow();
+
+  useInitializeFieldsFromApi({ updateStoreFields });
 
   useEffect(() => {
     setIsModalOpen(true);
@@ -22,19 +28,23 @@ export const OnboardingFlow = () => {
 
   const onModalClickBack = () => {
     if (isFirstStep) {
-      router.push(URL.index);
+      const getStoreFieldsResult = getStoreFields();
+
+      router.push(getStoreFieldsResult?.isCompletedProfile ? URL.index : URL.logout);
     } else {
       moveToPreviousValidStep();
     }
   };
 
   return (
-    <BlackModal
-      isOpen={isModalOpen}
-      onOpenChange={onModalClickBack}
-      progressBarValue={progressPercentage}
-    >
-      <CurrentStepView />
-    </BlackModal>
+    <ActiveAccountProvider>
+      <ModalBlackFullscreen
+        isOpen={isModalOpen}
+        onOpenChange={onModalClickBack}
+        progressBarValue={progressPercentage}
+      >
+        <CurrentStepView />
+      </ModalBlackFullscreen>
+    </ActiveAccountProvider>
   );
 };

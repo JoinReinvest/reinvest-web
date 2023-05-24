@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
@@ -7,12 +6,13 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputBirthDate } from 'components/FormElements/InputBirthDate';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
-import dayjs from 'dayjs';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { formatDate, isDateFromApi } from 'reinvest-app-common/src/utilities/dates';
 import { getApiClient } from 'services/getApiClient';
 import { WhyRequiredDateBirthModal } from 'views/whyRequiredModals/WhyRequiredDateBirthModal';
 import { z } from 'zod';
@@ -34,16 +34,9 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
   },
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.accountType,
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-    ];
+    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName];
 
-    return allRequiredFieldsExists(requiredFields);
+    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -51,7 +44,12 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
-    const defaultValues: Fields = { dateOfBirth: storeFields.dateOfBirth };
+    const defaultValues: Fields = {
+      dateOfBirth: isDateFromApi(storeFields.dateOfBirth || '')
+        ? formatDate(storeFields.dateOfBirth || '', 'DEFAULT', { currentFormat: 'API' })
+        : storeFields.dateOfBirth,
+    };
+
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
@@ -65,7 +63,7 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      const dateOfBirth = getDateOfBirth(fields.dateOfBirth || '');
+      const dateOfBirth = formatDate(fields.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' });
       await updateStoreFields({ ...fields, dateOfBirth });
 
       await completeProfileMutate({ input: { dateOfBirth: { dateOfBirth } } });
@@ -81,14 +79,13 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="Enter your date of birth" />
+            <ModalTitle title="Enter your date of birth" />
 
             {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
             <div className="flex w-full flex-col gap-16">
               <InputBirthDate
                 name="dateOfBirth"
                 control={control}
-                defaultValue={storeFields.dateOfBirth}
               />
 
               <OpenModalLink
@@ -117,5 +114,3 @@ export const StepDateOfBirth: StepParams<OnboardingFormFields> = {
     );
   },
 };
-
-const getDateOfBirth = (dateOfBirth: string) => dayjs(dateOfBirth, 'MM-DD-YYYY').format('YYYY-MM-DD');

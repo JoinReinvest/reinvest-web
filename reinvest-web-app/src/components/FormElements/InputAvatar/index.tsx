@@ -2,23 +2,41 @@ import { AvatarProps, AvatarWithButton as PrimitiveAvatarWithButton } from '@hoo
 import placeholderImage from 'assets/images/profile-picture-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { FormMessage } from 'components/FormElements/FormMessage';
-import { ImageProps } from 'next/image';
-import { ChangeEventHandler, useState } from 'react';
+import { ChangeEventHandler, useMemo, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
+import { AccountType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { EditAvatarButton } from './EditAvatarButton';
 
 type PrimitiveProps = Pick<AvatarProps, 'image' | 'altText'>;
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
+  accountType?: DraftAccountType | AccountType;
+  onFileChange?: (file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
 }
 
-export function InputAvatar<FormFields extends FieldValues>({ image, altText, sizeLimitInMegaBytes = 5.0, ...controllerProps }: Props<FormFields>) {
+export function InputAvatar<FormFields extends FieldValues>({
+  altText,
+  sizeLimitInMegaBytes = 5.0,
+  onFileChange,
+  accountType,
+  ...controllerProps
+}: Props<FormFields>) {
   const { field } = useController(controllerProps);
-  const [imageSrc, setImageSrc] = useState<ImageProps['src']>(image || placeholderImage);
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
+
+  const fieldValue = field.value;
+
+  const imageSrc = useMemo(() => {
+    if (fieldValue && fieldValue?.file) {
+      return URL.createObjectURL(fieldValue.file);
+    }
+
+    return undefined;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fieldValue]);
 
   const accepts: PartialMimeTypeKeys = ['jpeg', 'jpg', 'png'];
   const schema = generateFileSchema(accepts, sizeLimitInMegaBytes);
@@ -26,23 +44,39 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
 
   const hasError = !!errorMessage;
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = async ({ target }) => {
     const file = target.files?.item(0);
-    const validationSchema = schema.safeParse(file);
+    const hasFile = !!file;
 
-    if (!validationSchema.success) {
-      const { errors } = validationSchema.error;
-      const validationErrorMessage = errors.at(0)?.message;
-      setErrorMessage(validationErrorMessage);
+    if (hasFile) {
+      const validationSchema = schema.safeParse({ file });
+      onFileChange && (await onFileChange(file));
+
+      if (!validationSchema.success) {
+        const { errors } = validationSchema.error;
+        const validationErrorMessage = errors.at(0)?.message;
+        setErrorMessage(validationErrorMessage);
+      }
+
+      if (validationSchema.success) {
+        setErrorMessage(undefined);
+        field.onChange({ file } || null);
+      }
+    }
+  };
+
+  const getImageSrc = () => {
+    if (imageSrc) {
+      return imageSrc;
     }
 
-    if (validationSchema.success && !!file) {
-      const fileUrl = URL.createObjectURL(file);
+    const isIndividualOrBeneficiary = accountType && [AccountType.Individual, AccountType.Beneficiary, DraftAccountType.Individual].includes(accountType);
 
-      setImageSrc(fileUrl);
-      setErrorMessage(undefined);
-      field.onChange(file || null);
+    if (!imageSrc && isIndividualOrBeneficiary) {
+      return placeholderImage;
     }
+
+    return undefined;
   };
 
   return (
@@ -54,9 +88,11 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
         <PrimitiveAvatarWithButton
           avatar={
             <Avatar
-              src={imageSrc}
+              src={getImageSrc()}
               alt={altText || 'Profile picture for user'}
               isSizeFixed
+              accountType={accountType}
+              label={getLabelToDisplay(accountType || DraftAccountType.Individual)}
             />
           }
           button={
@@ -75,3 +111,15 @@ export function InputAvatar<FormFields extends FieldValues>({ image, altText, si
     </div>
   );
 }
+
+export const getLabelToDisplay = (accountType: DraftAccountType | AccountType | string) => {
+  if (accountType === DraftAccountType.Trust) {
+    return 'T';
+  }
+
+  if (accountType === DraftAccountType.Corporate) {
+    return 'C';
+  }
+
+  return '';
+};

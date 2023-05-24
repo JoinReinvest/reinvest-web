@@ -3,7 +3,8 @@ import { Typography } from 'components/Typography';
 import { ChangeEventHandler, useState } from 'react';
 import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
 import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 
 import { FormMessage } from '../FormMessage';
 import { UploadedFile } from './UploadedFile';
@@ -12,6 +13,7 @@ interface Props<FormFields extends FieldValues> extends UseControllerProps<FormF
   placeholder: string;
   accepts?: PartialMimeTypeKeys;
   label?: string;
+  onFileChange?: (previousFile: DocumentFile, file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
 }
 
@@ -20,6 +22,7 @@ export function InputFile<FormFields extends FieldValues>({
   placeholder,
   accepts = ['jpeg', 'jpg', 'pdf', 'png'],
   sizeLimitInMegaBytes = 5,
+  onFileChange,
   ...controllerProps
 }: Props<FormFields>) {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -32,9 +35,9 @@ export function InputFile<FormFields extends FieldValues>({
 
   const acceptMimeTypes = mapToMimeType(accepts).join(',');
 
-  const handleChange: ChangeEventHandler<HTMLInputElement> = ({ target }) => {
+  const handleChange: ChangeEventHandler<HTMLInputElement> = async ({ target }) => {
     const file = target.files?.item(0);
-    const validationSchema = schema.safeParse(file);
+    const validationSchema = schema.safeParse({ file });
 
     if (!validationSchema.success) {
       const { errors } = validationSchema.error;
@@ -42,9 +45,11 @@ export function InputFile<FormFields extends FieldValues>({
       setErrorMessage(validationErrorMessage);
     }
 
-    if (validationSchema.success) {
+    if (validationSchema.success && file) {
       setErrorMessage(undefined);
-      field.onChange(file || null);
+      field.onChange({ file } || null);
+
+      onFileChange && (await onFileChange(field.value, file));
     }
   };
 
@@ -79,7 +84,7 @@ export function InputFile<FormFields extends FieldValues>({
 
       {hasFile && (
         <UploadedFile
-          fileName={field.value.name}
+          fileName={field.value.name || field.value.file.name}
           onRemove={clearFile}
         />
       )}

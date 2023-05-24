@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Select } from 'components/Select';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -34,21 +34,17 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_DETAILS,
 
   willBePartOfTheFlow(fields) {
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
     const isEmployed = fields.employmentStatus === EmploymentStatus.Employed;
     const meetsBaseRequirements = isAccountIndividual && isEmployed;
 
-    return meetsBaseRequirements || (meetsBaseRequirements && hasCompletedProfileCreation);
+    return meetsBaseRequirements || meetsBaseRequirements;
   },
 
   doesMeetConditionFields(fields) {
     const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
@@ -58,13 +54,12 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
       fields.employmentStatus,
     ];
 
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
     const hasProfileFields = allRequiredFieldsExists(profileFields);
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
     const isEmployed = fields.employmentStatus === EmploymentStatus.Employed;
     const meetsBaseRequirements = isAccountIndividual && isEmployed;
 
-    return (meetsBaseRequirements && hasProfileFields) || (meetsBaseRequirements && hasCompletedProfileCreation);
+    return (meetsBaseRequirements && hasProfileFields) || meetsBaseRequirements;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -104,7 +99,7 @@ export const StepEmploymentDetails: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Where are you employed?" />
+          <ModalTitle title="Where are you employed?" />
           {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           <div className="flex w-full flex-col gap-16">
             <Input

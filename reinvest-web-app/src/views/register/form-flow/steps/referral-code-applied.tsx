@@ -1,8 +1,8 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
-import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ModalContent } from 'components/ModalElements/Content';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { RegisterFormFields } from '../form-fields';
@@ -19,10 +19,10 @@ export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
   },
 
   Component: ({ moveToNextStep }: StepComponentProps<RegisterFormFields>) => (
-    <BlackModalContent>
+    <ModalContent>
       <div className="relative flex h-full flex-col gap-24 md:justify-center">
         <IconCheckCircle className="mx-auto" />
-        <BlackModalTitle title="Referral code applied" />
+        <ModalTitle title="Referral code applied" />
       </div>
 
       <ButtonStack>
@@ -31,6 +31,6 @@ export const StepReferralCodeApplied: StepParams<RegisterFormFields> = {
           onClick={moveToNextStep}
         />
       </ButtonStack>
-    </BlackModalContent>
+    </ModalContent>
   ),
 };

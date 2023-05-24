@@ -1,8 +1,8 @@
 import { IconCheckCircle } from 'assets/icons/IconCheckCircle';
-import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { LinkButton } from 'components/LinkButton';
+import { ModalContent } from 'components/ModalElements/Content';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { URL } from 'constants/urls';
 import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
@@ -22,11 +22,11 @@ export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
 
   Component: () => {
     return (
-      <BlackModalContent>
+      <ModalContent>
         <div className="flex flex-col items-center justify-center gap-24">
           <IconCheckCircle />
 
-          <BlackModalTitle
+          <ModalTitle
             title="Your Password Has Been Reset"
             className="text-center"
           />
@@ -38,7 +38,7 @@ export const StepResetValidation: StepParams<ForgotPasswordFormFields> = {
             label="Continue"
           />
         </ButtonStack>
-      </BlackModalContent>
+      </ModalContent>
     );
   },
 };

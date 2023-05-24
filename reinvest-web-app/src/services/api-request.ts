@@ -6,16 +6,17 @@ export const makeRequest = async <Response = unknown, Config = unknown>({
   data,
   ...parameters
 }: AxiosRequestConfig<Config>): Promise<AxiosResponse<Response>> => {
-  const response = await axios.request<Response>({
-    url,
-    method,
-    data,
-    ...parameters,
-  });
-
   try {
-    return response;
-  } catch {
-    return response;
+    return axios.request<Response>({
+      url,
+      method,
+      data,
+      ...parameters,
+    });
+  } catch (error) {
+    /* eslint-disable no-console */
+    console.error(error);
   }
+
+  return Promise.reject();
 };

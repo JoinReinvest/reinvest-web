@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { OpenModalLink } from 'components/Links/OpenModalLink';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Select } from 'components/Select';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -32,26 +32,12 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.NET_WORTH_AND_INCOME,
 
   doesMeetConditionFields(fields) {
-    const profileFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-      fields.ssn,
-      fields.address,
-      fields.isAccreditedInvestor,
-      fields.experience,
-      fields.employmentStatus,
-    ];
+    const profileFields = [fields.employmentStatus];
 
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
     const hasProfileFields = allRequiredFieldsExists(profileFields);
 
-    return isAccountIndividual && (hasCompletedProfileCreation || (hasProfileFields && !hasCompletedProfileCreation));
+    return isAccountIndividual && hasProfileFields;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -88,7 +74,7 @@ export const StepNetWorthAndIncome: StepParams<OnboardingFormFields> = {
       <>
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle title="What is approximate net worth and income?" />
+            <ModalTitle title="What is approximate net worth and income?" />
             {error && <ErrorMessagesHandler error={error} />}
 
             <div className="flex w-full flex-col gap-16">

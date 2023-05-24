@@ -1,14 +1,17 @@
 import { CorporationAnnualRevenue, CorporationNumberOfEmployees } from 'reinvest-app-common/src/constants/corporation';
 import { Industry } from 'reinvest-app-common/src/constants/industries';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import {
   Address,
-  CorporateCompanyType,
+  AddressInput,
+  CorporateCompanyTypeEnum,
   DomicileType,
   DraftAccountType,
   EmploymentStatus,
   Experience,
+  SimplifiedDomicileType,
   StatementType,
-  TrustCompanyType,
+  TrustCompanyTypeEnum,
 } from 'reinvest-app-common/src/types/graphql';
 
 export interface OnboardingFormFields {
@@ -17,12 +20,14 @@ export interface OnboardingFormFields {
   experience: Experience | null;
   isCompletedProfile: boolean;
   residency: DomicileType | null;
+  _accountSuccesfullyCreated?: boolean;
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
   _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
   _didDocumentIdentificationValidationSucceed?: boolean;
   _hasAuthenticatedPhoneNumber?: boolean;
   _isEditingCompanyMajorStakeholderApplicant?: boolean;
   _isEditingTrustTrusteeGrantorOrProtector?: boolean;
+  _isPhoneCompleted?: boolean;
   _isSocialSecurityNumberAlreadyAssigned?: boolean;
   _isSocialSecurityNumberBanned?: boolean;
   _willHaveMajorStakeholderApplicants?: boolean;
@@ -37,13 +42,10 @@ export interface OnboardingFormFields {
   companyMajorStakeholderApplicants?: Applicant[];
   companyTickerSymbols?: CompanyTickerSymbol[];
   compliances?: Compliances;
-  corporationAnnualRevenue?: CorporationAnnualRevenue;
-  corporationIndustry?: Industry;
   corporationLegalName?: string;
-  corporationNumberOfEmployees?: CorporationNumberOfEmployees;
-  corporationType?: CorporateCompanyType;
-  documentsForCorporation?: File[];
-  documentsForTrust?: File[];
+  corporationType?: CorporateCompanyTypeEnum;
+  documentsForCorporation?: DocumentFile[];
+  documentsForTrust?: DocumentFile[];
   domicile?: {
     forGreenCard?: {
       birthCountry: string;
@@ -63,9 +65,10 @@ export interface OnboardingFormFields {
   };
   employmentDetails?: EmploymentDetails;
   employmentStatus?: EmploymentStatus;
+  fiduciaryEntityInformation?: FiduciaryEntityInformation;
   finraInstitution?: string;
   finraInstitutionName?: string;
-  identificationDocument?: IdentificationDocuments;
+  identificationDocuments?: DocumentFile[];
   isAccreditedInvestor?: boolean;
   isAuthorizedSignatoryEntity?: boolean;
   name?: {
@@ -81,23 +84,18 @@ export interface OnboardingFormFields {
     number?: string;
   };
   phoneNumberAuthenticationCode?: string;
-  profilePicture?: File | null;
+  profilePicture?: DocumentFile | null;
   seniorPoliticalFigure?: string;
   ssn?: string;
   statementTypes?: StatementType[];
   trustLegalName?: string;
   trustTrusteesGrantorsOrProtectors?: Applicant[];
-  trustType?: TrustCompanyType;
+  trustType?: TrustCompanyTypeEnum;
   visaType?: 'F-1' | 'H-1B' | 'L-1' | 'O-1' | 'G-4';
 }
 
 export interface CompanyTickerSymbol {
   symbol: string;
-}
-
-export interface IdentificationDocuments {
-  back: File | null;
-  front: File | null;
 }
 
 interface EmploymentDetails {
@@ -107,19 +105,28 @@ interface EmploymentDetails {
 }
 
 interface Compliances {
+  doNoneApply?: boolean;
   isAssociatedWithFinra?: boolean;
   isAssociatedWithPubliclyTradedCompany?: boolean;
   isSeniorPoliticalFigure?: boolean;
 }
 
+export interface FiduciaryEntityInformation {
+  annualRevenue?: CorporationAnnualRevenue;
+  industry?: Industry;
+  numberOfEmployees?: CorporationNumberOfEmployees;
+}
+
 export interface Applicant {
   dateOfBirth?: Date;
-  domicile?: 'us' | 'green-card' | 'visa';
+  domicile?: SimplifiedDomicileType.Resident | SimplifiedDomicileType.Citizen;
   firstName?: string;
-  identificationDocument?: File;
+  id?: string;
+  idScan?: { fileName: string; id: string }[];
+  identificationDocuments?: DocumentFile[];
   lastName?: string;
   middleName?: string;
-  residentialAddress?: string;
+  residentialAddress?: AddressInput;
   socialSecurityNumber?: string;
 }
 

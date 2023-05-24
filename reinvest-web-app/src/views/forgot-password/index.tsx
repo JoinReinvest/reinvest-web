@@ -1,4 +1,4 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -28,11 +28,11 @@ export const ForgotPasswordFlow = () => {
   };
 
   return (
-    <BlackModal
+    <ModalBlackFullscreen
       isOpen={isModalOpen}
       onOpenChange={onModalClickBack}
     >
       <CurrentStepView />
-    </BlackModal>
+    </ModalBlackFullscreen>
   );
 };

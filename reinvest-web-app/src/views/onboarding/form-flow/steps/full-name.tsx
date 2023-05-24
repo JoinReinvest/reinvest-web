@@ -1,15 +1,16 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { PrivacyPolicyStatement, StatementType, TermsAndConditionsStatement } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { z } from 'zod';
 
@@ -17,7 +18,7 @@ import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorM
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Pick<OnboardingFormFields, 'name'>;
+type Fields = Required<Pick<OnboardingFormFields, 'name'>>;
 
 const schema = z.object({
   name: z.object({
@@ -41,10 +42,11 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = storeFields.name ? { name: storeFields.name } : { name: { firstName: '', middleName: '', lastName: '' } };
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: defaultValues,
     });
 
     const { error, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
@@ -53,7 +55,18 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
-      await completeProfileMutate({ input: { name: fields?.name } });
+      await completeProfileMutate({
+        input: {
+          name: fields?.name,
+          statements: [
+            { type: StatementType.PrivacyPolicy, forPrivacyPolicy: { statement: PrivacyPolicyStatement.IHaveReadAndAgreeToTheReinvestPrivacyPolicy } },
+            {
+              type: StatementType.TermsAndConditions,
+              forTermsAndConditions: { statement: TermsAndConditionsStatement.IHaveReadAndAgreeToTheReinvestTermsAndConditions },
+            },
+          ],
+        },
+      });
     };
 
     useEffect(() => {
@@ -65,7 +78,7 @@ export const StepFullName: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Enter your first and last name as it appears on your ID" />
+          <ModalTitle title="Enter your first and last name as it appears on your ID" />
 
           {error && <ErrorMessagesHandler error={error} />}
           <div className="flex w-full flex-col gap-16">

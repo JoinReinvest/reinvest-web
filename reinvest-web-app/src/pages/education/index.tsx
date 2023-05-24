@@ -34,7 +34,7 @@ const renderCard = (card: EducationCardProps) => (
   />
 );
 
-const renderBlogCard = (card: BlogPostInterface) => (
+export const renderBlogCard = (card: BlogPostInterface) => (
   <BlogCard
     key={card.title}
     {...card}
@@ -53,7 +53,7 @@ const EducationPage = () => {
 
   return (
     <MainLayout>
-      <div className="relative -mx-20 flex min-h-180 text-white lg:mx-0 lg:w-full">
+      <div className="relative -mx-20 flex min-h-240 text-white lg:mx-0 lg:min-h-180 lg:w-full">
         <Typography
           variant="h3"
           className="absolute bottom-24 left-24 z-10 lg:bottom-32 lg:left-32"

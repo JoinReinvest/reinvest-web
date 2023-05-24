@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_VALUES } from 'reinvest-app-common/src/constants/employment_statuses';
@@ -28,19 +28,13 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.EMPLOYMENT_STATUS,
 
   willBePartOfTheFlow(fields) {
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
-    const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
-
-    return isAccountIndividual && hasCompletedProfileCreation;
+    return fields.accountType === DraftAccountType.Individual;
   },
 
   doesMeetConditionFields(fields) {
     const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
@@ -50,10 +44,9 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
     ];
 
     const hasProfileFields = allRequiredFieldsExists(profileFields);
-    const hasCompletedProfileCreation = !!fields.isCompletedProfile;
     const isAccountIndividual = fields.accountType === DraftAccountType.Individual;
 
-    return (isAccountIndividual && hasProfileFields) || (isAccountIndividual && hasCompletedProfileCreation);
+    return (isAccountIndividual && hasProfileFields) || isAccountIndividual;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
@@ -70,7 +63,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
       isSuccess,
     } = useCompleteIndividualDraftAccount(getApiClient);
 
-    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting || isLoading;
+    const shouldButtonBeDisabled = !form.formState.isValid || isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
@@ -89,7 +82,7 @@ export const StepEmploymentStatus: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={form.handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Are you currently employed?" />
+          <ModalTitle title="Are you currently employed?" />
 
           {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           <SelectionCards

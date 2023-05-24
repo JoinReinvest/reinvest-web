@@ -21,8 +21,16 @@
     @apply text-h5 font-stretch-expanded;
   }
 
+  .typo-h5-larger {
+    @apply text-h5-larger lg:text-h5 font-stretch-expanded;
+  }
+
   .typo-h6 {
     @apply text-h6;
+  }
+
+  .typo-h6-responsive {
+    @apply text-h6 lg:text-paragraph-large;
   }
 
   .typo-bonus-heading {
@@ -47,6 +55,10 @@
 
   .typo-paragraph-emphasized {
     @apply text-paragraph-emphasized;
+  }
+
+  .typo-paragraph-emphasized-regular {
+    @apply text-paragraph-emphasized-regular;
   }
 
   .typo-paragraph-small {

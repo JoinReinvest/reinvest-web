@@ -1,5 +1,4 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
@@ -7,16 +6,21 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Select } from 'components/Select';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { Address, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
+import { Address, AddressInput, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
 import { makeRequest } from 'services/api-request';
 
+import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
+import { getApiClient } from '../../../../services/getApiClient';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -28,21 +32,44 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.BUSINESS_ADDRESS,
 
   willBePartOfTheFlow: ({ accountType }) => {
-    return accountType === DraftAccountType.Corporate;
+    return accountType === DraftAccountType.Corporate || accountType === DraftAccountType.Trust;
+  },
+
+  doesMeetConditionFields: fields => {
+    const profileFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency, fields.ssn, fields.address, fields.experience];
+
+    const hasProfileFields = allRequiredFieldsExists(profileFields);
+    const hasTrustFields = allRequiredFieldsExists([fields.trustType, fields.trustLegalName]) && fields.accountType === DraftAccountType.Trust;
+    const hasCorporateFields =
+      allRequiredFieldsExists([fields.corporationType, fields.corporationLegalName, fields.ein]) && fields.accountType === DraftAccountType.Corporate;
+
+    return hasProfileFields && (hasTrustFields || hasCorporateFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    const defaultValues: Fields = storeFields.permanentAddress || initialValues;
-
+    const defaultValues: Fields = storeFields.businessAddress || initialValues;
+    const {
+      mutateAsync: completeTrustDraftAccount,
+      isSuccess: isTrustDraftAccountSuccess,
+      error: trustDraftAccountError,
+      isLoading: isTrustDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
+    const {
+      mutateAsync: completeCorporateDraftAccount,
+      isSuccess: isCorporateDraftAccountSuccess,
+      error: corporateDraftAccountError,
+      isLoading: isCorporateDraftAccountLoading,
+    } = useCompleteCorporateDraftAccount(getApiClient);
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
-      defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoadingSelectedAddress;
+    const shouldButtonBeLoading = isTrustDraftAccountLoading || isCorporateDraftAccountLoading;
+    const shouldButtonBeDisabled = !formState.isValid || shouldButtonBeLoading || isLoadingSelectedAddress;
 
     const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
       const placeId = option?.placeId;
@@ -65,18 +92,40 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async permanentAddress => {
-      await updateStoreFields({ permanentAddress });
-      moveToNextStep();
+      await updateStoreFields({ businessAddress: permanentAddress });
+      const address = permanentAddress as AddressInput;
+      const { accountId, accountType } = storeFields;
+
+      if (accountId && permanentAddress.addressLine1 && permanentAddress.city && permanentAddress.state && permanentAddress.zip) {
+        const variables = { accountId, input: { address: { ...address, country: 'USA' } } };
+
+        if (accountType === DraftAccountType.Trust) {
+          await completeTrustDraftAccount(variables);
+        }
+
+        if (accountType === DraftAccountType.Corporate) {
+          await completeCorporateDraftAccount(variables);
+        }
+      }
     };
+
+    const fiduciaryEntityTitle = storeFields.accountType === DraftAccountType.Corporate ? 'corporation' : 'trust';
+
+    useEffect(() => {
+      if (isTrustDraftAccountSuccess || isCorporateDraftAccountSuccess) {
+        moveToNextStep();
+      }
+    }, [isTrustDraftAccountSuccess, isCorporateDraftAccountSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
-            title="Enter the business address for your corporation."
+          <ModalTitle
+            title={`Enter the business address for your ${fiduciaryEntityTitle}.`}
             informationMessage="US Residents Only"
           />
-
+          {trustDraftAccountError && <ErrorMessagesHandler error={trustDraftAccountError} />}
+          {corporateDraftAccountError && <ErrorMessagesHandler error={corporateDraftAccountError} />}
           <div className="flex w-full flex-col gap-16">
             <SelectAsync
               name="addressLine1"
@@ -86,7 +135,6 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
               formatOptionsLabel={(option, meta) => addressService.getFormattedAddressLabels(option, meta.inputValue)}
               formatSelectedOptionLabel={option => option.label}
               onOptionSelected={setValuesFromStreetAddress}
-              shouldUnregister
             />
 
             <Input
@@ -111,7 +159,6 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             <InputZipCode
               name="zip"
               control={control}
-              shouldUnregister
             />
           </div>
         </FormContent>
@@ -121,7 +168,7 @@ export const StepBusinessAddress: StepParams<OnboardingFormFields> = {
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
-            loading={isLoadingSelectedAddress}
+            loading={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>

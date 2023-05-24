@@ -1,8 +1,8 @@
 import { IconXCircle } from 'assets/icons/IconXCircle';
-import { BlackModalContent } from 'components/BlackModal/BlackModalContent';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { LinkButton } from 'components/LinkButton';
 import { GetHelpLink } from 'components/Links/GetHelp';
+import { ModalContent } from 'components/ModalElements/Content';
 import { Typography } from 'components/Typography';
 import { EMAILS } from 'constants/urls';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -54,7 +54,7 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
     };
 
     return (
-      <BlackModalContent>
+      <ModalContent>
         <div className="flex w-full flex-col gap-36">
           <IconXCircle className="mx-auto" />
 
@@ -82,7 +82,7 @@ export const StepSocialSecurityNumberValidation: StepParams<OnboardingFormFields
             label="Contact"
           />
         </ButtonStack>
-      </BlackModalContent>
+      </ModalContent>
     );
   },
 };

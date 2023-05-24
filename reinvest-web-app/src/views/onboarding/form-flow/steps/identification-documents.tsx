@@ -1,99 +1,99 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { InputFile } from 'components/FormElements/InputFile';
-import { useEffect } from 'react';
+import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { ModalTitle } from 'components/ModalElements/Title';
+import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
-import { generateFileSchema } from 'reinvest-app-common/src/form-schemas';
+import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
-import { DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
+import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
+import { DocumentFileLinkInput, DraftAccountType, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { getApiClient } from '../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
-import { OnboardingFormFields } from '../form-fields';
+import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import { FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
 
-type Fields = Pick<OnboardingFormFields, 'identificationDocument'>;
+type Fields = Exclude<Applicant, undefined>;
 
 const ACCEPTED_FILE_MIME_TYPES: PartialMimeTypeKeys = ['jpeg', 'jpg', 'pdf', 'png'];
-const FILE_SIZE_LIMIT_IN_MEGA_BYTES = 5.0;
-const FILE_SCHEMA = generateFileSchema(ACCEPTED_FILE_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGA_BYTES);
+const MINIMUM_NUMBER_OF_FILES = 1;
+const MAXIMUM_NUMBER_OF_FILES = 5;
 
 const schema = z.object({
-  identificationDocument: z.object({
-    front: FILE_SCHEMA,
-    back: FILE_SCHEMA,
-  }),
+  identificationDocuments: generateMultiFileSchema(ACCEPTED_FILE_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES, MINIMUM_NUMBER_OF_FILES, MAXIMUM_NUMBER_OF_FILES),
 });
 
 export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.IDENTIFICATION_DOCUMENTS,
 
   doesMeetConditionFields(fields) {
-    const requiredFields = [
-      fields.name?.firstName,
-      fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
-      fields.dateOfBirth,
-      fields.residency,
-    ];
+    const requiredFields = [fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
 
     const individualFields = [fields.ssn];
 
     return (
       allRequiredFieldsExists(requiredFields) &&
-      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) || fields.accountType !== DraftAccountType.Individual)
+      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(individualFields)) ||
+        fields.accountType !== DraftAccountType.Individual) &&
+      !fields.isCompletedProfile
     );
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { identificationDocuments: storeFields.identificationDocuments || [] };
+    const [countDocumentsToUpload, setCountDocumentsToUpload] = useState<number>(0);
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
-    const {
-      // error: createDocumentsFileLinksError,
-      isLoading: isCreateDocumentsFileLinksLoading,
-      mutateAsync: createDocumentsFileLinksMutate,
-    } = useCreateDocumentsFileLinks(getApiClient);
+    const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
 
-    const {
-      // error: sendDocumentsToS3AndGetScanIdsError,
-      isLoading: isSendDocumentToS3AndGetScanIdsLoading,
-      // isSuccess: isSendDocumentToS3AndGetScanIdsSuccess,
-      mutateAsync: sendDocumentsToS3AndGetScanIdsMutate,
-    } = useSendDocumentsToS3AndGetScanIds();
+    const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
 
     const shouldButtonBeDisabled =
       !formState.isValid || formState.isSubmitting || isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocument }) => {
-      const idScan = [];
+    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
+      const existedDocuments = identificationDocuments?.filter(document => !!document.id) as DocumentFileLinkInput[];
+      const idScan = existedDocuments?.length ? [...existedDocuments] : [];
 
-      if (identificationDocument?.front && identificationDocument?.back) {
-        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 2 })) as PutFileLink[];
-        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocument });
+      const hasDocuments = !!identificationDocuments?.length;
+      const hasDocumentsToUpload = identificationDocuments?.some(document => !!document.file);
+      const documentsWithoutFile = identificationDocuments?.map(({ id, fileName }) => ({ id, fileName }));
+
+      if (hasDocuments && hasDocumentsToUpload) {
+        const documentsToUpload = identificationDocuments.map(({ file }) => file).filter(Boolean) as DocumentFile[];
+        const numberOfDocumentsToUpload = documentsToUpload.length;
+        setCountDocumentsToUpload(numberOfDocumentsToUpload);
+        const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: numberOfDocumentsToUpload })) as PutFileLink[];
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments: documentsToUpload });
         idScan.push(...scans);
       }
 
       try {
-        await updateStoreFields({ identificationDocument });
-        await completeProfileMutate({ input: { idScan } });
+        const hasIdScans = !!idScan?.length;
+        await updateStoreFields({ identificationDocuments: documentsWithoutFile });
+
+        if (hasIdScans) {
+          await completeProfileMutate({ input: { idScan } });
+        } else {
+          moveToNextStep();
+        }
       } catch (error) {
         await updateStoreFields({ _didDocumentIdentificationValidationSucceed: false });
       }
@@ -105,12 +105,14 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       }
     }, [isSuccess, moveToNextStep]);
 
+    const loadingDocumentTitle = countDocumentsToUpload > 1 ? 'Documents' : 'Document';
+
     if (isLoading || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading) {
       return (
-        <div className="flex items-center gap-32">
+        <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <BlackModalTitle title="Uploading Your Document" />
+          <ModalTitle title={`Uploading Your ${loadingDocumentTitle}`} />
         </div>
       );
     }
@@ -119,27 +121,22 @@ export const StepIdentificationDocuments: StepParams<OnboardingFormFields> = {
       return (
         <Form onSubmit={handleSubmit(onSubmit)}>
           <FormContent>
-            <BlackModalTitle
+            <ModalTitle
               title="Please upload your Driver’s License or Passport for further verification"
               subtitle="Valid identification includes Driver's license, Permanent Resident card or a non-expired Passport."
             />
 
             {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
-            <div className="flex w-full flex-col gap-16">
-              <InputFile
-                name="identificationDocument.front"
-                control={control}
+            <div className="flex w-full flex-col">
+              <InputMultiFile
+                name="identificationDocuments"
+                minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+                maximumNumberOfFiles={MAXIMUM_NUMBER_OF_FILES}
+                sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
                 accepts={ACCEPTED_FILE_MIME_TYPES}
-                sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGA_BYTES}
-                placeholder="Upload ID Front"
-              />
-
-              <InputFile
-                name="identificationDocument.back"
                 control={control}
-                accepts={ACCEPTED_FILE_MIME_TYPES}
-                sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGA_BYTES}
-                placeholder="Upload ID Back"
+                placeholderOnEmpty="Upload Files"
+                placeholderOnMeetsMinimum="Add Additional Files"
               />
             </div>
           </FormContent>

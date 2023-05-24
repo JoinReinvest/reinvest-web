@@ -1,16 +1,19 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteIndividualDraftAccount } from 'reinvest-app-common/src/services/queries/completeIndividualDraftAccount';
+import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
+import { useCompleteTrustDraftAccount } from 'reinvest-app-common/src/services/queries/completeTrustDraftAccount';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useOpenAccount } from 'reinvest-app-common/src/services/queries/openAccount';
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
@@ -24,8 +27,11 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'profilePicture'>;
 
+const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
+const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
+
 const schema = z.object({
-  profilePicture: z.custom<File>().nullable(),
+  profilePicture: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES),
 });
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
@@ -35,33 +41,30 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const profileFields = [
       fields.name?.firstName,
       fields.name?.lastName,
-      fields.phone?.number,
-      fields.phone?.countryCode,
-      fields.authCode,
       fields.dateOfBirth,
       fields.residency,
       fields.ssn,
-      fields.identificationDocument,
+      fields.address,
+      fields.experience,
       fields.accountType,
     ];
 
-    const individualAccountFields = [fields.netIncome, fields.netWorth];
-
-    return (
-      fields.isCompletedProfile &&
-      ((fields.accountType === DraftAccountType.Individual && allRequiredFieldsExists(profileFields)) || allRequiredFieldsExists(individualAccountFields))
-    );
+    return allRequiredFieldsExists(profileFields);
   },
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<OnboardingFormFields>) => {
-    const router = useRouter();
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const { profilePicture, accountId } = storeFields;
     const { control, formState, handleSubmit } = useForm<Fields>({
-      mode: 'all',
+      mode: 'onChange',
       resolver: zodResolver(schema),
       defaultValues: { profilePicture: profilePicture || null },
     });
 
+    const {
+      error: profileDetailsError,
+      isLoading: isCompleteProfileDetailsLoading,
+      mutateAsync: completeProfileMutate,
+    } = useCompleteProfileDetails(getApiClient);
     const { error: createAvatarLinkError, isLoading: isCreateAvatarLinkLoading, mutateAsync: createAvatarLinkMutate } = useCreateAvatarFileLink(getApiClient);
 
     const {
@@ -73,69 +76,113 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const {
       error: openAccountError,
       isLoading: isOpenAccountLoading,
-      mutate: openAccountMutate,
+      mutateAsync: openAccountMutate,
       isSuccess: isOpenAccountSuccess,
     } = useOpenAccount(getApiClient);
 
-    const shouldButtonBeDisabled =
-      !formState.isValid || formState.isSubmitting || isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading;
+    const {
+      mutateAsync: completeTrustDraftAccount,
+      error: completeDraftAccountError,
+      isLoading: isCompleteDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
-      const avatarLink = await createAvatarLinkMutate({});
+    const {
+      mutateAsync: completeCorporateDraftAccount,
+      error: completeCorporateDraftAccountError,
+      isLoading: isCompleteCorporateDraftAccountLoading,
+    } = useCompleteTrustDraftAccount(getApiClient);
+
+    const shouldButtonBeLoading =
+      isCreateAvatarLinkLoading || isCompleteProfileDetailsLoading || isCompleteDraftAccountLoading || isCompleteCorporateDraftAccountLoading;
+
+    const shouldButtonBeDisabled =
+      !formState.isValid || formState.isSubmitting || isIndividualDraftAccountLoading || isOpenAccountLoading || shouldButtonBeLoading;
+
+    const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
+
+    const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
+      await updateStoreFields({ profilePicture });
+      const hasFile = !!profilePicture?.file;
       let avatarId = '';
 
-      if (fields.profilePicture) {
-        if (avatarLink?.url && avatarLink.id) {
-          await sendFilesToS3Bucket([{ file: fields.profilePicture, url: avatarLink.url, id: avatarLink.id }]);
+      if (hasFile) {
+        const avatarLink = await createAvatarLinkMutate({});
+
+        if (avatarLink?.url && avatarLink.id && profilePicture?.file) {
+          await sendFilesToS3Bucket([{ file: profilePicture.file, url: avatarLink.url, id: avatarLink.id, fileName: profilePicture.file.name }]);
           avatarId = avatarLink.id;
         }
       }
 
       if (accountId && avatarId) {
-        const avatar = { id: avatarId };
-        const individualDraftAccount = await completeIndividualDraftAccountMutate({
-          accountId,
-          input: { avatar, verifyAndFinish: true },
-        });
+        if (!storeFields.isCompletedProfile) {
+          await completeProfileMutate({ input: { verifyAndFinish: true } });
+        }
 
-        if (individualDraftAccount?.isCompleted) {
-          openAccountMutate({ draftAccountId: accountId });
+        const avatar = { id: avatarId };
+
+        let draftAccount = null;
+
+        if (storeFields.accountType === DraftAccountType.Individual) {
+          draftAccount = await completeIndividualDraftAccountMutate({
+            accountId,
+            input: { avatar },
+          });
+        }
+
+        if (storeFields.accountType === DraftAccountType.Trust) {
+          draftAccount = await completeTrustDraftAccount({ accountId, input: { avatar } });
+        }
+
+        if (storeFields.accountType === DraftAccountType.Corporate) {
+          draftAccount = await completeCorporateDraftAccount({ accountId, input: { avatar } });
+        }
+
+        if (draftAccount?.isCompleted) {
+          await openAccountMutate({ draftAccountId: accountId });
         }
       }
     };
 
     const onSkip = async () => {
       if (accountId) {
-        const individualDraftAccount = await completeIndividualDraftAccountMutate({
-          accountId,
-          input: { verifyAndFinish: true },
-        });
-
-        if (individualDraftAccount?.isCompleted) {
-          openAccountMutate({ draftAccountId: accountId });
+        if (!storeFields.isCompletedProfile) {
+          await completeProfileMutate({ input: { verifyAndFinish: true } });
         }
+
+        await openAccountMutate({ draftAccountId: accountId });
       }
+    };
+
+    const onFileChange = async (file: File) => {
+      await updateStoreFields({ profilePicture: { fileName: file.name, file } });
     };
 
     useEffect(() => {
       if (isOpenAccountSuccess) {
-        router.push('/');
+        updateStoreFields({ _accountSuccesfullyCreated: true }).then(() => moveToNextStep());
       }
-    });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isOpenAccountSuccess]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Upload Profile Picture" />
+          <ModalTitle title="Upload Profile Picture" />
           {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
+          {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
+          {completeDraftAccountError && <ErrorMessagesHandler error={completeDraftAccountError} />}
+          {completeCorporateDraftAccountError && <ErrorMessagesHandler error={completeCorporateDraftAccountError} />}
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"
               control={control}
               altText="Profile picture for account"
+              sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
+              onFileChange={onFileChange}
+              accountType={storeFields.accountType}
             />
 
             <Typography
@@ -149,17 +196,18 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         <ButtonStack>
           <Button
-            type="submit"
-            label="Continue"
-            disabled={shouldButtonBeDisabled}
-            loading={isCreateAvatarLinkLoading || isIndividualDraftAccountLoading || isOpenAccountLoading}
-          />
-
-          <Button
             label="Skip"
             variant="outlined"
             onClick={onSkip}
             className="text-green-frost-01"
+            disabled={shouldSkipButtonBeDisabled}
+          />
+
+          <Button
+            type="submit"
+            label="Continue"
+            disabled={shouldButtonBeDisabled}
+            loading={shouldButtonBeLoading}
           />
         </ButtonStack>
       </Form>

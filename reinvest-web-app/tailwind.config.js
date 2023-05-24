@@ -18,6 +18,7 @@ module.exports = {
     },
     spacing: {
       0: 0,
+      1: '.1rem',
       2: '.2rem',
       3: '.3rem',
       4: '.4rem',
@@ -33,6 +34,7 @@ module.exports = {
       20: '2rem',
       22: '2.2rem',
       24: '2.4rem',
+      25: '2.5rem',
       26: '2.6rem',
       28: '2.8rem',
       30: '3.0rem',
@@ -40,24 +42,40 @@ module.exports = {
       34: '3.4rem',
       36: '3.6rem',
       38: '3.8rem',
+      38.9: '3.89rem',
       40: '4.0rem',
       44: '4.4rem',
+      46.71: '4.671rem',
       48: '4.8rem',
+      50: '5.0rem',
       60: '6.0rem',
+      64: '6.4rem',
+      68: '6.8rem',
       72: '7.2rem',
       80: '8.0rem',
       84: '8.4rem',
       96: '9.6rem',
       100: '10.0rem',
       110: '11.0rem',
+      115: '11.5rem',
       120: '12.0rem',
+      137: '13.7rem',
       128: '12.8rem',
       144: '14.4rem',
+      160: '16.0rem',
+      169: '16.9rem',
       180: '18.0rem',
       210: '21.0rem',
+      300: '30.0rem',
+      342: '34.2rem',
+      415: '41.5rem',
+      460: '46.0rem',
+      650: '65.0rem',
     },
     fontSize: {
       base: '10px',
+      '18': '1.8rem',
+      '48': '4.8rem',
 
       h1: [
         '5.4rem',
@@ -104,6 +122,15 @@ module.exports = {
         },
       ],
 
+      'h5-larger': [
+        '2.4rem',
+        {
+          fontWeight: 400,
+          lineHeight: '3.0rem',
+          letterSpacing: '-0.05em',
+        },
+      ],
+
       h6: [
         '1.6rem',
         {
@@ -147,6 +174,13 @@ module.exports = {
         },
       ],
 
+      'paragraph-emphasized-regular': [
+        '1.4rem',
+        {
+          fontWeight: '400',
+        },
+      ],
+
       paragraph: [
         '1.2rem',
         {
@@ -158,6 +192,14 @@ module.exports = {
         '1.1rem',
         {
           fontWeight: '400',
+        },
+      ],
+
+      'custom-1': [
+        '4.8rem',
+        {
+          fontWeight: 500,
+          lineHeight: '4.32rem',
         },
       ],
     },
@@ -180,6 +222,7 @@ module.exports = {
         '04': '#E9E9E9',
         '05': '#FCFCFC',
       },
+      gold: '#DDC59E',
 
       tertiary: {
         success: '#44CB7A',
@@ -191,17 +234,29 @@ module.exports = {
       current: 'currentColor',
       inherit: 'inherit',
     },
+
+    boxShadow: {
+      md: '0px 4px 8px rgba(0, 0, 0, 0.08);',
+    },
+
     extend: {
       maxWidth: {
         330: '33rem',
         375: '37.5rem',
+        415: '41.5rem',
         720: '72.0rem',
       },
       minHeight: {
         180: '18rem',
+        240: '24.0rem',
+      },
+      maxHeight: {
+        146: '14.6rem',
+        284: '28.4rem',
+        570: '57.0rem',
       },
       gridTemplateRows: {
-        'full-auto': '1fr auto'
+        'full-auto': '1fr auto',
       },
       lineHeight: {
         13: '1.3rem',
@@ -211,8 +266,12 @@ module.exports = {
         'transform-color': 'transform, color',
       },
       animation: {
-        'spin-reverse': 'spin 1s linear infinite reverse'
-      }
+        'spin-reverse': 'spin 1s linear infinite reverse',
+      },
+      zIndex: {
+        60: '60',
+        70: '70',
+      },
     },
   },
   plugins: [

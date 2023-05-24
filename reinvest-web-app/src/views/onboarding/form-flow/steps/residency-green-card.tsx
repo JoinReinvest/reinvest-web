@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { SelectFilterable } from 'components/FormElements/SelectFilterable';
+import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { COUNTRIES } from 'reinvest-app-common/src/constants/countries';
@@ -32,18 +32,21 @@ const schema = z.object({
 
 export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.RESIDENCY_GREEN_CARD,
+
   willBePartOfTheFlow(fields) {
     return fields.residency === DomicileType.GreenCard && !fields.isCompletedProfile;
   },
+
   doesMeetConditionFields(fields) {
     return fields.residency === DomicileType.GreenCard && !fields.isCompletedProfile;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
+    const defaultValues: Fields = { domicile: { forGreenCard: storeFields.domicile?.forGreenCard } };
     const { formState, control, handleSubmit } = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: storeFields,
+      defaultValues: async () => defaultValues,
     });
 
     const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
@@ -75,7 +78,7 @@ export const StepResidencyGreenCard: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle
+          <ModalTitle
             title="Please enter your US Green Card details."
             informationMessage="US Residents Only"
           />

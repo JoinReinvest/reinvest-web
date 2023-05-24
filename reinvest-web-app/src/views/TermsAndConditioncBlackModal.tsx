@@ -1,19 +1,18 @@
 import { DialogProps } from '@hookooekoo/ui-dialog';
-
-import { BlackModalDialog } from '../components/BlackModal/BlackModalDialog';
-import { Title } from '../components/Title';
-import { Typography } from '../components/Typography';
+import { Dialog } from 'components/Dialog';
+import { ModalTitle } from 'components/ModalElements/Title';
+import { Typography } from 'components/Typography';
 
 type TermsAndConditioncBlackModalProps = Omit<DialogProps, 'children'>;
 
 export const TermsAndConditioncBlackModal = ({ isOpen, onOpenChange }: TermsAndConditioncBlackModalProps) => {
   return (
-    <BlackModalDialog
+    <Dialog
       isOpen={isOpen}
       onOpenChange={onOpenChange}
     >
       <>
-        <Title title="Terms and Conditions" />
+        <ModalTitle title="Terms and Conditions" />
         <Typography variant="paragraph-large">
           As a condition to exercising the rights to the Licensed Program. The Recipient may select either this Agreement and does not already Covered Code as
           defined in the absence of any other entity based on the Program, and can be in a reasonable attempt to trace the Current Maintainer under Clause 2
@@ -31,6 +30,6 @@ export const TermsAndConditioncBlackModal = ({ isOpen, onOpenChange }: TermsAndC
           for You to the author/donor to decide if he or she is willing to receive error reports for the Work.
         </Typography>
       </>
-    </BlackModalDialog>
+    </Dialog>
   );
 };

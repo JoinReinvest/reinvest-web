@@ -15,11 +15,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const parsedData: GetPostsResponse = typeof response.data === 'string' ? JSON.parse(response.data) : response.data;
   const hasSucceded = !!parsedData.success;
 
-  if (!hasSucceded) {
-    res.status(500).json({ error: response.statusText });
-  } else {
+  if (hasSucceded) {
     res.status(200).json(parsedData);
+
+    return;
   }
+
+  res.status(500).json({ error: response.statusText });
 
   return;
 }

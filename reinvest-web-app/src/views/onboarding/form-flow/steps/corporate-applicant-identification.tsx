@@ -1,29 +1,42 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { BlackModalTitle } from 'components/BlackModal/BlackModalTitle';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { InputFile } from 'components/FormElements/InputFile';
+import { InputMultiFile } from 'components/FormElements/InputMultiFile';
+import { ModalTitle } from 'components/ModalElements/Title';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { useCompleteCorporateDraftAccount } from 'reinvest-app-common/src/services/queries/completeCorporateDraftAccount';
+import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
+import { AddressInput, DraftAccountType, PutFileLink, SimplifiedDomicileType, Stakeholder } from 'reinvest-app-common/src/types/graphql';
+import { formatDate } from 'reinvest-app-common/src/utilities/dates';
+import { getApiClient } from 'services/getApiClient';
+import { useSendDocumentsToS3AndGetScanIds } from 'services/queries/useSendDocumentsToS3AndGetScanIds';
 
 import { Applicant, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import { ACCEPTED_FILES_MIME_TYPES, APPLICANT_IDENTIFICATION, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../schemas';
-import { getDefaultIdentificationValueForApplicant } from '../utilities';
+import {
+  ACCEPTED_FILES_MIME_TYPES,
+  APPLICANT_IDENTIFICATION,
+  FILE_SIZE_LIMIT_IN_MEGABYTES,
+  MAXIMUM_NUMBER_OF_FILES,
+  MINIMUM_NUMBER_OF_FILES,
+} from '../schemas';
+import { formatStakeholdersForStorage, getDefaultIdentificationValueForApplicant } from '../utilities';
 
-type Fields = Pick<Applicant, 'identificationDocument'>;
+type Fields = Pick<Applicant, 'identificationDocuments'>;
 
 export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.CORPORATE_APPLICANT_IDENTIFICATION,
 
   doesMeetConditionFields: fields => {
-    const { _willHaveMajorStakeholderApplicants, _currentCompanyMajorStakeholder } = fields;
+    const { _willHaveMajorStakeholderApplicants, _currentCompanyMajorStakeholder, _isEditingCompanyMajorStakeholderApplicant } = fields;
     const hasCurrentCompanyMajorStakeholder = _currentCompanyMajorStakeholder !== undefined;
 
-    return !!_willHaveMajorStakeholderApplicants && hasCurrentCompanyMajorStakeholder;
+    return (!!_willHaveMajorStakeholderApplicants && hasCurrentCompanyMajorStakeholder) || !!_isEditingCompanyMajorStakeholderApplicant;
   },
 
   willBePartOfTheFlow: ({ accountType }) => {
@@ -32,59 +45,116 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
     const defaultValues = getDefaultIdentificationValueForApplicant(storeFields, DraftAccountType.Corporate);
-
+    const { mutateAsync: completeCorporateDraftAccount, isSuccess, error, isLoading } = useCompleteCorporateDraftAccount(getApiClient);
+    const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
+    const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { control, formState, handleSubmit } = useForm<Fields>({
       resolver: zodResolver(APPLICANT_IDENTIFICATION),
       defaultValues,
     });
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonLoading = isSendDocumentToS3AndGetScanIdsLoading || isCreateDocumentsFileLinksLoading || isLoading;
+    const shouldButtonBeDisabled = !formState.isValid || shouldButtonLoading;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocument }) => {
+    const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const { _isEditingCompanyMajorStakeholderApplicant } = storeFields;
-      const currentMajorStakeholderApplicant = { ...storeFields._currentCompanyMajorStakeholder, identificationDocument };
+      const currentMajorStakeholderApplicant = { ...storeFields._currentCompanyMajorStakeholder, identificationDocuments };
       const currentMajorStakeholderApplicantIndex = currentMajorStakeholderApplicant._index;
       await updateStoreFields({ _currentCompanyMajorStakeholder: currentMajorStakeholderApplicant });
+      const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 1 })) as PutFileLink[];
+      const idScan: { fileName: string; id: string }[] = [];
 
-      if (!!_isEditingCompanyMajorStakeholderApplicant && currentMajorStakeholderApplicantIndex) {
-        const allApplicants = storeFields.companyMajorStakeholderApplicants || [];
-        const updatedApplicants = allApplicants.map((applicant, index) => {
-          if (index === currentMajorStakeholderApplicantIndex) {
-            return currentMajorStakeholderApplicant;
+      if (identificationDocuments) {
+        const scans = await sendDocumentsToS3AndGetScanIdsMutate({ documentsFileLinks, identificationDocuments });
+        idScan.push(...scans);
+
+        if (
+          !!_isEditingCompanyMajorStakeholderApplicant &&
+          typeof currentMajorStakeholderApplicantIndex !== 'undefined' &&
+          currentMajorStakeholderApplicantIndex >= 0 &&
+          storeFields.accountId
+        ) {
+          const editedStakeholder = {
+            id: currentMajorStakeholderApplicant.id,
+            name: {
+              firstName: currentMajorStakeholderApplicant.firstName,
+              lastName: currentMajorStakeholderApplicant.lastName,
+              middleName: currentMajorStakeholderApplicant.middleName,
+            },
+            dateOfBirth: {
+              dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
+            },
+            address: { ...currentMajorStakeholderApplicant.residentialAddress, country: 'USA' } as AddressInput,
+            domicile: {
+              type: currentMajorStakeholderApplicant.domicile || SimplifiedDomicileType.Citizen,
+            },
+            idScan,
+          };
+
+          const data = await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [editedStakeholder] } });
+          const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
+
+          await updateStoreFields({
+            companyMajorStakeholderApplicants: stakeholdersToStoreFields,
+            _currentCompanyMajorStakeholder: undefined,
+            _isEditingCompanyMajorStakeholderApplicant: false,
+            _willHaveMajorStakeholderApplicants: false,
+          });
+        } else {
+          const newStakeholder = {
+            name: {
+              firstName: currentMajorStakeholderApplicant.firstName,
+              lastName: currentMajorStakeholderApplicant.lastName,
+              middleName: currentMajorStakeholderApplicant.middleName,
+            },
+            dateOfBirth: {
+              dateOfBirth: formatDate(currentMajorStakeholderApplicant.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' }),
+            },
+            address: { ...currentMajorStakeholderApplicant.residentialAddress, country: 'USA' } as AddressInput,
+            ssn: {
+              ssn: currentMajorStakeholderApplicant.socialSecurityNumber || '',
+            },
+            domicile: {
+              type: currentMajorStakeholderApplicant.domicile || SimplifiedDomicileType.Citizen,
+            },
+            idScan,
+          };
+
+          if (storeFields.accountId) {
+            const data = await completeCorporateDraftAccount({ accountId: storeFields.accountId, input: { stakeholders: [newStakeholder] } });
+            const stakeholdersToStoreFields = data?.details?.stakeholders ? formatStakeholdersForStorage(data?.details?.stakeholders as Stakeholder[]) : [];
+
+            await updateStoreFields({
+              companyMajorStakeholderApplicants: stakeholdersToStoreFields,
+              _isEditingCompanyMajorStakeholderApplicant: false,
+              _willHaveMajorStakeholderApplicants: false,
+            });
           }
-
-          return applicant;
-        });
-
-        await updateStoreFields({
-          companyMajorStakeholderApplicants: updatedApplicants,
-          _currentCompanyMajorStakeholder: undefined,
-          _isEditingCompanyMajorStakeholderApplicant: false,
-        });
-
-        moveToNextStep();
-
-        return;
-      } else {
-        const allApplicants = storeFields.companyMajorStakeholderApplicants || [];
-        const updatedApplicants = [...allApplicants, currentMajorStakeholderApplicant];
-
-        await updateStoreFields({ companyMajorStakeholderApplicants: updatedApplicants, _isEditingCompanyMajorStakeholderApplicant: false });
-        moveToNextStep();
+        }
       }
     };
+
+    useEffect(() => {
+      if (isSuccess) {
+        moveToNextStep();
+      }
+    }, [isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <BlackModalTitle title="Upload the ID of your applicant." />
+          <ModalTitle title="Upload the ID of your applicant." />
+          {error && <ErrorMessagesHandler error={error} />}
 
-          <InputFile
-            name="identificationDocument"
-            control={control}
-            accepts={ACCEPTED_FILES_MIME_TYPES}
+          <InputMultiFile
+            name="identificationDocuments"
+            minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
+            maximumNumberOfFiles={MAXIMUM_NUMBER_OF_FILES}
             sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
-            placeholder="Upload File"
+            accepts={ACCEPTED_FILES_MIME_TYPES}
+            control={control}
+            placeholderOnEmpty="Upload Files"
+            placeholderOnMeetsMinimum="Add Additional Files"
           />
         </FormContent>
 
@@ -93,6 +163,7 @@ export const StepCorporateApplicantIdentification: StepParams<OnboardingFormFiel
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
+            loading={shouldButtonLoading}
           />
         </ButtonStack>
       </Form>
