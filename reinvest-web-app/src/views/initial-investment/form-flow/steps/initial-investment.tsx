@@ -63,9 +63,10 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     useEffect(() => {
       if (createInvestmentMeta.isSuccess) {
         updateStoreFields({ _shouldAgreeToOneTimeInvestment: true });
+        createInvestmentMeta.reset();
         moveToNextStep();
       }
-    }, [createInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields]);
+    }, [createInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields, createInvestmentMeta]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>

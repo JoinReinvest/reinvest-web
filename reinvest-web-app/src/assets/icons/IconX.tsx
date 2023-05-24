@@ -13,7 +13,7 @@ export const IconX = Icon(
       y1="9.46967"
       x2="22.9654"
       y2="22.9047"
-      stroke="black"
+      stroke="currentColor"
       strokeWidth="1.5"
     />
     <line
@@ -21,7 +21,7 @@ export const IconX = Icon(
       y1="22.9052"
       x2="22.6117"
       y2="9.47019"
-      stroke="black"
+      stroke="currentColor"
       strokeWidth="1.5"
     />
   </svg>,
