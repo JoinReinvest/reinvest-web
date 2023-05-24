@@ -73,7 +73,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   return (
     <ModalWhiteFullscreen
       isOpen={isModalOpen}
-      onOpenChange={onModalClickBack}
+      onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
       activeAccount={activeAccount}
       isBackButtonEnabled={!shouldDisplayBackIcon}
     >
