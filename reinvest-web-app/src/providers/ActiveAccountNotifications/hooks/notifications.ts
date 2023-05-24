@@ -11,11 +11,10 @@ interface Return {
 
 export function useNotifications(): Return {
   const { activeAccount } = useActiveAccount();
-  const { data, isLoading, isSuccess, refetch } = useGetNotDismissedNotifications(getApiClient, {
+  const { data, ...meta } = useGetNotDismissedNotifications(getApiClient, {
     accountId: activeAccount?.id || '',
     config: { enabled: !!activeAccount?.id },
   });
-  const meta: QueryMeta = { isLoading, isSuccess, refetch };
 
   return { notifications: data || [], meta };
 }

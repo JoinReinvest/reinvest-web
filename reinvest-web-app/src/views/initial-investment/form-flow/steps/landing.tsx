@@ -1,6 +1,7 @@
 import { Separator } from '@radix-ui/react-separator';
 import { IconChain } from 'assets/icons/IconChain';
 import { IconEyeHide } from 'assets/icons/IconEyeHide';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { LogoIcon2 } from 'assets/LogoIcon2';
 import { LogoPlaid } from 'assets/LogoPlaid';
 import { Button } from 'components/Button';
@@ -16,12 +17,12 @@ import { useReadBankAccount } from 'reinvest-app-common/src/services/queries/rea
 import { getApiClient } from 'services/getApiClient';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
 const TITLE = 'REINVEST uses Plaid to connect your account';
 const BUTTON_LABEL = 'Continue';
+
 const LIST_ITEMS = [
   {
     icon: <IconChain />,

@@ -21,12 +21,12 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_DEPOSIT_SCHEDULE,
 
   willBePartOfTheFlow: fields => {
-    return !!fields._willSetUpRecurringInvestments;
+    return !!fields._willSetUpRecurringInvestment;
   },
 
   doesMeetConditionFields: fields => {
     const requiredFields = [
-      fields._willSetUpRecurringInvestments,
+      fields._willSetUpRecurringInvestment,
       fields.recurringInvestment,
       fields.recurringInvestmentInterval,
       fields.recurringInvestment?.date,
