@@ -74,6 +74,7 @@ const InnerInitialInvestmentView = ({ isModalOpen, onModalOpenChange, forInitial
       isOpen={isModalOpen}
       onOpenChange={onModalClickBack}
       activeAccount={activeAccount}
+      isBackButtonEnabled={false}
     >
       <CurrentStepView />
     </ModalWhiteFullscreen>

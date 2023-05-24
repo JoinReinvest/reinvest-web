@@ -10,9 +10,10 @@ interface Props extends PropsWithChildren {
   activeAccount: Maybe<AccountOverview>;
   isOpen: boolean;
   onOpenChange: (state: boolean) => void;
+  isBackButtonEnabled?: boolean;
 }
 
-export const ModalWhiteFullscreen = ({ isOpen, onOpenChange, activeAccount, children }: Props) => (
+export const ModalWhiteFullscreen = ({ isOpen, onOpenChange, activeAccount, children, isBackButtonEnabled }: Props) => (
   <Dialog.Root
     open={isOpen}
     onOpenChange={onOpenChange}
@@ -24,7 +25,7 @@ export const ModalWhiteFullscreen = ({ isOpen, onOpenChange, activeAccount, chil
         <>
           <HeaderActiveAccount activeAccount={activeAccount} />
 
-          <Header />
+          <Header isBackButtonEnabled={isBackButtonEnabled} />
 
           <Content>{children}</Content>
         </>

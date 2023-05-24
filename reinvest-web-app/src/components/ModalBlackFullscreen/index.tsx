@@ -8,10 +8,11 @@ import { Header } from './Header';
 type PrimitiveProps = Pick<DialogProps, 'isOpen' | 'onOpenChange'>;
 
 export interface Props extends PrimitiveProps, PropsWithChildren {
+  isBackButtonEnabled?: boolean;
   progressBarValue?: number;
 }
 
-export const ModalBlackFullscreen = ({ isOpen = false, onOpenChange, progressBarValue, children }: Props) => {
+export const ModalBlackFullscreen = ({ isOpen = false, onOpenChange, progressBarValue, children, isBackButtonEnabled = true }: Props) => {
   const contentContainerRef = useRef<HTMLDivElement>(null);
   const willShowProgressBar = progressBarValue !== undefined;
 
@@ -29,7 +30,7 @@ export const ModalBlackFullscreen = ({ isOpen = false, onOpenChange, progressBar
       onEscapeKeyDown={onEscapeKeyDown}
     >
       <div className="flex h-full w-full flex-col items-center justify-between gap-24 overflow-y-hidden py-40 text-white lg:py-60">
-        <Header />
+        <Header isBackButtonEnabled={isBackButtonEnabled} />
 
         {willShowProgressBar && (
           <div className="w-full md:px-20">
