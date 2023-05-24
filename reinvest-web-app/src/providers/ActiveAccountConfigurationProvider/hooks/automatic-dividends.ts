@@ -3,31 +3,29 @@ import { useMemo } from 'react';
 import { useSetAutomaticDividendReinvestmentAgreement } from 'reinvest-app-common/src/services/queries/setAutomaticDividendReinvestmentAgreement';
 import { AccountConfiguration } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
-
-import { ConfigurationMeta } from '../interfaces';
+import { MutationMeta, QueryMeta } from 'types/queries';
 
 interface Params {
   activeAccountConfiguration: AccountConfiguration | null;
-  refetchAccountConfiguration: () => void;
+  activeAccountConfigurationMeta: QueryMeta;
 }
 
 interface Returns {
-  automaticDividendsMeta: ConfigurationMeta;
+  automaticDividendsMeta: MutationMeta;
   hasAutomaticDividendsActive: boolean;
   updateHasAutomaticDividendsActive: (state: boolean) => Promise<void>;
 }
 
-export function useAutomaticDividends({ activeAccountConfiguration, refetchAccountConfiguration }: Params): Returns {
+export function useAutomaticDividends({ activeAccountConfiguration, activeAccountConfigurationMeta }: Params): Returns {
   const { activeAccount } = useActiveAccount();
   const hasAutomaticDividendsActive = useMemo(() => !!activeAccountConfiguration?.automaticDividendReinvestmentAgreement?.signed, [activeAccountConfiguration]);
 
-  const { mutateAsync, error, isLoading, isSuccess, reset } = useSetAutomaticDividendReinvestmentAgreement(getApiClient);
-  const automaticDividendsMeta: ConfigurationMeta = { error, isLoading, isSuccess, reset };
+  const { mutateAsync, ...automaticDividendsMeta } = useSetAutomaticDividendReinvestmentAgreement(getApiClient);
 
   async function updateHasAutomaticDividendsActive(state: boolean) {
     if (activeAccount?.id) {
       await mutateAsync({ accountId: activeAccount.id, automaticDividendReinvestmentAgreement: state });
-      refetchAccountConfiguration();
+      activeAccountConfigurationMeta.refetch();
     }
   }
 

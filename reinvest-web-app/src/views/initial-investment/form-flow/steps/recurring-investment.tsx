@@ -63,6 +63,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
             type="submit"
             label="Continue"
             disabled={isLoading}
+            loading={isLoading}
           />
         </ButtonStack>
       </Form>
