@@ -1,7 +1,7 @@
 import { useMarkAsRead } from './hooks/mark-as-read';
-import { useNotifications } from './hooks/notifications';
+import { useNotificationsStats } from './hooks/notifications-stats';
 
 export interface State extends UseMarkAsRead, UseNotifications {}
 
 type UseMarkAsRead = ReturnType<typeof useMarkAsRead>;
-type UseNotifications = ReturnType<typeof useNotifications>;
+type UseNotifications = ReturnType<typeof useNotificationsStats>;
