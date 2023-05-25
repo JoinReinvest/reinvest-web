@@ -6,14 +6,16 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
+import { dateOlderThanEighteenYearsSchema, formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { z } from 'zod';
 
+import { InputBirthDate } from '../../../../components/FormElements/InputBirthDate';
+import { InputSocialSecurityNumber } from '../../../../components/FormElements/InputSocialSecurityNumber';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Required<Pick<FlowFields, 'name'>>;
+type Fields = Required<Pick<FlowFields, 'name' | 'dateOfBirth' | 'ssn'>>;
 
 const schema = z.object({
   name: z.object({
@@ -21,6 +23,7 @@ const schema = z.object({
     middleName: formValidationRules.middleName,
     lastName: formValidationRules.lastName,
   }),
+  dateOfBirth: dateOlderThanEighteenYearsSchema,
 });
 
 export const StepFullName: StepParams<FlowFields> = {
@@ -31,11 +34,14 @@ export const StepFullName: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const defaultValues: Fields = storeFields.name ? { name: storeFields.name } : { name: { firstName: '', middleName: '', lastName: '' } };
+    const defaultValues: Fields =
+      storeFields.name && storeFields.dateOfBirth && storeFields.ssn
+        ? { name: storeFields.name, dateOfBirth: storeFields.dateOfBirth, ssn: storeFields.ssn }
+        : { name: { firstName: '', middleName: '', lastName: '' }, dateOfBirth: '', ssn: '' };
     const form = useForm<Fields>({
       mode: 'all',
       resolver: zodResolver(schema),
-      defaultValues: defaultValues,
+      defaultValues: async () => defaultValues,
     });
 
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
@@ -50,7 +56,7 @@ export const StepFullName: StepParams<FlowFields> = {
         <FormContent>
           <ModalTitle title="Enter your first and last name as it appears on your ID" />
 
-          <div className="flex w-full flex-col gap-16">
+          <div className="full-name-investment-flow flex w-full flex-col gap-16">
             <Input
               name="name.firstName"
               control={form.control}
@@ -69,6 +75,18 @@ export const StepFullName: StepParams<FlowFields> = {
               control={form.control}
               placeholder="Last Name"
               required
+            />
+
+            <InputBirthDate
+              name="dateOfBirth"
+              control={form.control}
+            />
+
+            <InputSocialSecurityNumber
+              name="ssn"
+              control={form.control}
+              willUseSecureMask={true}
+              disabled
             />
           </div>
         </FormContent>

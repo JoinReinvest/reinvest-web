@@ -23,6 +23,14 @@
   }
 }
 
+.full-name-investment-flow {
+  .hkek-input-masked-control {
+    &[data-is-disabled='true'] {
+      @apply bg-transparent;
+    }
+  }
+}
+
 .hkek-input-text-control,
 .hkek-input-masked-control,
 .hkek-text-area-control {

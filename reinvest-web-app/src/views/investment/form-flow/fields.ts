@@ -4,6 +4,7 @@ import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/grap
 import { Applicant, FiduciaryEntityInformation, IndexedSchema } from 'views/onboarding/form-flow/form-fields';
 
 export interface FlowFields {
+  address: Address | null;
   bankAccount: string;
 
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
@@ -25,7 +26,6 @@ export interface FlowFields {
   _willSetUpRecurringInvestment?: boolean;
   _willUpdateBankAccount?: boolean;
 
-  address?: Address | null;
   agreesToOneTimeInvestment?: boolean;
   agreesToRecurringInvestment?: boolean;
   approvesSubscriptionAgreement?: boolean;
@@ -62,6 +62,7 @@ export interface FlowFields {
   recurringInvestment?: Investment;
   recurringInvestmentInterval?: RecurringInvestmentFrequency;
   residency?: DomicileType | null;
+  ssn?: string;
   trustTrusteesGrantorsOrProtectors?: Applicant[];
 }
 

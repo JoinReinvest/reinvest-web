@@ -104,13 +104,21 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       if (!userProfileMeta.isRefetching && userProfile && storeFields._shouldUpdateProfileDetails) {
         const { details } = userProfile;
         const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
-        const address = details?.address;
         const dateOfBirth = details?.dateOfBirth;
         const identificationDocuments: DocumentFile[] = details?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
         const residency = details?.domicile?.type;
         const domicile = details?.domicile || { type: DomicileType.Citizen, visaType: '', birthCountry: '', citizenshipCountry: '' };
+        const ssn = details?.ssn || '';
+        const address = {
+          addressLine1: details?.address?.addressLine1 || '',
+          addressLine2: details?.address?.addressLine2 || '',
+          city: details?.address?.city || '',
+          country: details?.address?.country || '',
+          state: details?.address?.state || '',
+          zip: details?.address?.zip || '',
+        };
 
-        updateStoreFields({ name, address, dateOfBirth, residency, identificationDocuments, domicile, _shouldUpdateProfileDetails: true });
+        updateStoreFields({ name, dateOfBirth, residency, identificationDocuments, domicile, ssn, address, _shouldUpdateProfileDetails: true });
       }
     }, [userProfileMeta.isRefetching, userProfile, updateStoreFields, storeFields]);
 
