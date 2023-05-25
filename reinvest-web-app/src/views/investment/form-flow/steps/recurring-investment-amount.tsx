@@ -37,7 +37,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
     return !!fields._willSetUpRecurringInvestment;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const schema = generateRecurringInvestmentSchema({ accountType: activeAccount?.type ?? AccountType.Individual });
     const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
@@ -49,6 +49,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
+    const bankAccount = storeFields.bankAccount;
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
       const investment: Investment = {
@@ -62,6 +63,11 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
+    async function onChangeBankAccount() {
+      await updateStoreFields({ bankAccount: '', _willUpdateBankAccount: true });
+      moveToStepByIdentifier(Identifiers.BANK_SELECTION);
+    }
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
@@ -73,11 +79,8 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
           <InvestmentCard
             defaultValue={defaultValues.amount}
             onChange={value => setValue('amount', value, { shouldValidate: true })}
-            currentBankAccount="Checking **** **** **** 0000"
-            onChangeBankAccount={() => {
-              // eslint-disable-next-line no-console
-              console.info('change bank account');
-            }}
+            currentBankAccount={bankAccount}
+            onChangeBankAccount={onChangeBankAccount}
             className="mx-auto"
           />
 

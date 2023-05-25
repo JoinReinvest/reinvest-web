@@ -27,7 +27,7 @@ const getDefaultValues = ({ oneTimeInvestment }: FlowFields): Fields => ({
 export const StepInitialInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.INITIAL_INVESTMENT,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { createInvestment, createInvestmentMeta } = useInvestmentContext();
     const { activeAccount } = useActiveAccount();
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
@@ -38,8 +38,17 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
       resolver: zodResolver(schema),
     });
 
+    useEffect(() => {
+      if (createInvestmentMeta.isSuccess) {
+        updateStoreFields({ _shouldAgreeToOneTimeInvestment: true });
+        createInvestmentMeta.reset();
+        moveToNextStep();
+      }
+    }, [createInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields, createInvestmentMeta]);
+
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
+    const bankAccount = storeFields.bankAccount;
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
       const investment: Investment = {
@@ -60,13 +69,10 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
-    useEffect(() => {
-      if (createInvestmentMeta.isSuccess) {
-        updateStoreFields({ _shouldAgreeToOneTimeInvestment: true });
-        createInvestmentMeta.reset();
-        moveToNextStep();
-      }
-    }, [createInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields, createInvestmentMeta]);
+    async function onChangeBankAccount() {
+      await updateStoreFields({ bankAccount: '', _willUpdateBankAccount: true });
+      moveToStepByIdentifier(Identifiers.BANK_SELECTION);
+    }
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -79,11 +85,8 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
           <InvestmentCard
             defaultValue={defaultValues.amount}
             onChange={value => setValue('amount', value, { shouldValidate: true })}
-            currentBankAccount="Checking **** **** **** 0000"
-            onChangeBankAccount={() => {
-              // eslint-disable-next-line no-console
-              console.info('change bank account');
-            }}
+            currentBankAccount={bankAccount}
+            onChangeBankAccount={onChangeBankAccount}
             className="mx-auto"
           />
 
