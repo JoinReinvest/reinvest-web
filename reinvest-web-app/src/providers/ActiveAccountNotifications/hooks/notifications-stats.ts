@@ -11,7 +11,7 @@ interface Return {
   notificationsMeta: InfiniteQueryMeta;
 }
 
-export function useNotifications(): Return {
+export function useNotificationsStats(): Return {
   const { activeAccount } = useActiveAccount();
 
   const { data, ...notificationsMeta } = useGetNotifications(getApiClient, {

@@ -15,7 +15,7 @@
   }
 
   &[data-has-error='true'] {
-    @apply border-tertiary-error;
+    @apply border-tertiary-error-01;
   }
 
   &:-webkit-autofill {
@@ -49,7 +49,7 @@
   }
 
   &-error-message {
-    @apply typo-paragraph-small absolute left-0 mt-8 top-full text-tertiary-error;
+    @apply typo-paragraph-small absolute left-0 mt-8 top-full text-tertiary-error-01;
   }
 
   &[data-is-dirty-and-enabled='true'] {
@@ -65,7 +65,7 @@
   }
 
   &[data-has-error='true'] {
-    @apply shadow-transparent border-tertiary-error bg-tertiary-error/5;
+    @apply shadow-transparent border-tertiary-error-01 bg-tertiary-error-01/5;
   }
 
   &[data-has-error='true']:has(.hkek-input-text-control-error-message),
