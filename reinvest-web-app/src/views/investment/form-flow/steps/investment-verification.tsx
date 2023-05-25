@@ -66,9 +66,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         }
 
         if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
-          const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
-            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
-          );
+          const shouldUpdateProfileData = true;
+          //   verifyAccountMeta.data?.requiredActions?.filter(
+          //   requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
+          // );
 
           const shouldUpdateStakeholderData = verifyAccountMeta.data?.requiredActions?.filter(
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview,
@@ -79,7 +80,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           );
 
           updateStoreFields({
-            _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length,
+            _shouldUpdateProfileDetails: shouldUpdateProfileData, //!!shouldUpdateProfileData?.length,
             _shouldUpdateStakeholderData: !!shouldUpdateStakeholderData?.length || !!shouldUpdateCompanyData?.length,
             _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
           });
@@ -104,13 +105,21 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       if (!userProfileMeta.isRefetching && userProfile && storeFields._shouldUpdateProfileDetails) {
         const { details } = userProfile;
         const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
-        const address = details?.address;
         const dateOfBirth = details?.dateOfBirth;
         const identificationDocuments: DocumentFile[] = details?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
         const residency = details?.domicile?.type;
         const domicile = details?.domicile || { type: DomicileType.Citizen, visaType: '', birthCountry: '', citizenshipCountry: '' };
+        const ssn = details?.ssn || '';
+        const address = {
+          addressLine1: details?.address?.addressLine1 || '',
+          addressLine2: details?.address?.addressLine2 || '',
+          city: details?.address?.city || '',
+          country: details?.address?.country || '',
+          state: details?.address?.state || '',
+          zip: details?.address?.zip || '',
+        };
 
-        updateStoreFields({ name, address, dateOfBirth, residency, identificationDocuments, domicile, _shouldUpdateProfileDetails: true });
+        updateStoreFields({ name, dateOfBirth, residency, identificationDocuments, domicile, ssn, address, _shouldUpdateProfileDetails: true });
       }
     }, [userProfileMeta.isRefetching, userProfile, updateStoreFields, storeFields]);
 
