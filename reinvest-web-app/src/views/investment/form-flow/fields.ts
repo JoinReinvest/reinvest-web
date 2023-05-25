@@ -59,8 +59,6 @@ export interface FlowFields {
   oneTimeInvestment?: Investment;
   optsInForAutomaticDividendReinvestment?: boolean;
   recurringInvestment?: Investment;
-  recurringInvestmentAmount?: number;
-  recurringInvestmentDate?: Date;
   recurringInvestmentInterval?: RecurringInvestmentFrequency;
   residency?: DomicileType | null;
   trustTrusteesGrantorsOrProtectors?: Applicant[];
