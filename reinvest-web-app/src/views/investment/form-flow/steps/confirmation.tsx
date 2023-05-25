@@ -20,7 +20,7 @@ export const StepConfirmation: StepParams<FlowFields> = {
   identifier: Identifiers.CONFIRMATION,
 
   doesMeetConditionFields: fields => {
-    return !!fields.bankAccount;
+    return !!fields.bankAccount && !fields._hasCompletedFlow;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
