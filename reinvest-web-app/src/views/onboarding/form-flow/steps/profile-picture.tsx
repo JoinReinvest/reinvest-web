@@ -98,8 +98,6 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled =
       !formState.isValid || formState.isSubmitting || isIndividualDraftAccountLoading || isOpenAccountLoading || shouldButtonBeLoading;
 
-    // const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
-
     const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
       await updateStoreFields({ profilePicture });
       const hasFile = !!profilePicture?.file;
