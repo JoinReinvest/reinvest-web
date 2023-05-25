@@ -68,7 +68,7 @@ export const StepLanding: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (isReadBankAccountSuccess && readBankAccountData?.accountNumber) {
-        updateStoreFields({ bankAccount: readBankAccountData.accountNumber });
+        updateStoreFields({ bankAccount: readBankAccountData.accountNumber, _hasCompletedFlow: true });
         moveToNextStep();
       }
     }, [isReadBankAccountSuccess, moveToNextStep, updateStoreFields, readBankAccountData?.accountNumber]);

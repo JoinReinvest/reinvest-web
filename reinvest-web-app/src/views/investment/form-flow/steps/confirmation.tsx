@@ -20,7 +20,7 @@ export const StepConfirmation: StepParams<FlowFields> = {
   identifier: Identifiers.CONFIRMATION,
 
   doesMeetConditionFields: fields => {
-    return !fields.bankAccount;
+    return !!fields.bankAccount && !fields._hasCompletedFlow;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
@@ -30,7 +30,7 @@ export const StepConfirmation: StepParams<FlowFields> = {
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      updateStoreFields({ _hasCompletedFlow: true });
+      await updateStoreFields({ _hasCompletedFlow: true });
 
       moveToNextStep();
     };
@@ -41,7 +41,10 @@ export const StepConfirmation: StepParams<FlowFields> = {
           <div className="flex flex-col items-center gap-32">
             {icon}
 
-            <ModalTitle title={title} />
+            <ModalTitle
+              title={title}
+              isTitleCenteredOnMobile
+            />
           </div>
         </FormContent>
 

@@ -29,13 +29,17 @@ export const StepBankSelection: StepParams<FlowFields> = {
     const [plaidDataForApi, setPlaidDataForApi] = useState<FulfillBankAccountInput>();
 
     const {
-      mutate: createBankAccountMutation,
+      mutateAsync: createBankAccountMutation,
       isLoading: isCreateBankAccountLoading,
       data: createBankAccountData,
       isSuccess: isCreateBankAccountSuccess,
       error: createBankAccountError,
     } = useCreateBankAccount(getApiClient);
-    const { mutate: fulfillBankAccountMutation, isSuccess: isFulfillBankAccountSuccess } = useFulfillBankAccount(getApiClient);
+    const {
+      mutateAsync: fulfillBankAccountMutation,
+      isSuccess: isFulfillBankAccountSuccess,
+      isLoading: isFulfillBankAccountLoading,
+    } = useFulfillBankAccount(getApiClient);
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
 
@@ -67,12 +71,12 @@ export const StepBankSelection: StepParams<FlowFields> = {
     useEffect(() => {
       if (plaidDataForApi && activeAccount?.id) {
         fulfillBankAccountMutation({ accountId: activeAccount.id, input: plaidDataForApi });
+        updateStoreFields({ bankAccount: hashBankAccountNumber(plaidDataForApi.accountNumber) });
       }
-    }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation]);
+    }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation, updateStoreFields]);
 
     useEffect(() => {
       if (isFulfillBankAccountSuccess) {
-        updateStoreFields({ bankAccount: plaidDataForApi?.accountNumber });
         moveToNextStep();
       }
     }, [isFulfillBankAccountSuccess, moveToNextStep, updateStoreFields, plaidDataForApi?.accountNumber]);
@@ -81,12 +85,12 @@ export const StepBankSelection: StepParams<FlowFields> = {
       <Form onSubmit={onSubmit}>
         {createBankAccountError && <ErrorMessagesHandler error={createBankAccountError} />}
 
-        {isCreateBankAccountLoading && (
+        {(isCreateBankAccountLoading || isFulfillBankAccountLoading) && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
           </div>
         )}
-        {!isCreateBankAccountLoading && isCreateBankAccountSuccess && createBankAccountData?.link && (
+        {!isCreateBankAccountLoading && !isFulfillBankAccountLoading && isCreateBankAccountSuccess && createBankAccountData?.link && (
           <>
             <FormContent>
               <Typography variant="h3">{TITLE}</Typography>
@@ -102,3 +106,5 @@ export const StepBankSelection: StepParams<FlowFields> = {
     );
   },
 };
+
+const hashBankAccountNumber = (bankAccountFullNumber: string) => `****${bankAccountFullNumber.slice(-4)}`;
