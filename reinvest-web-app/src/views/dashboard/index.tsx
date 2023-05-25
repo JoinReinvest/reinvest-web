@@ -4,8 +4,6 @@ import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect, useRef } from 'react';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { BankAccountFlow } from 'views/bank-account';
-import { BankAccountFlowProvider } from 'views/bank-account/form-flow';
 import { InvestmentView } from 'views/investment';
 
 import { BannedView } from '../BannedView';
@@ -59,7 +57,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   }
 
   return (
-    <BankAccountFlowProvider initialStoreFields={{ _hasCompletedFlow: false, bankAccount: '' }}>
+    <>
       <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
 
       <PostList
@@ -67,16 +65,11 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         posts={posts}
       />
 
-      <BankAccountFlow
-        isOpen={isInvestmentFlowOpen}
-        toggleIsOpen={toggleIsInvestmentFlowOpen}
-      />
-
       <InvestmentView
         isModalOpen={isInvestmentFlowOpen}
         onModalOpenChange={toggleIsInvestmentFlowOpen}
         forInitialInvestment={hadArrivedFromOnboarding.current}
       />
-    </BankAccountFlowProvider>
+    </>
   );
 };
