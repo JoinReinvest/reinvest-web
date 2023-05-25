@@ -57,12 +57,12 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
     const subtitle = storeFields?.recurringInvestmentInterval && RECURRING_INVESTMENT_SCHEDULE_SUBTITLES.get(storeFields.recurringInvestmentInterval);
 
     const onSubmit: SubmitHandler<Fields> = async ({ date }) => {
-      const { recurringInvestmentAmount, recurringInvestmentInterval } = storeFields;
+      const { recurringInvestment, recurringInvestmentInterval } = storeFields;
 
-      await updateStoreFields({ recurringInvestmentDate: date });
+      recurringInvestment && (await updateStoreFields({ recurringInvestment: { ...recurringInvestment, date } }));
 
-      if (date && recurringInvestmentAmount && recurringInvestmentInterval) {
-        await createRecurringInvestment({ date, investmentAmount: recurringInvestmentAmount, frequency: recurringInvestmentInterval });
+      if (date && recurringInvestment?.amount && recurringInvestmentInterval) {
+        await createRecurringInvestment({ date, investmentAmount: recurringInvestment.amount, frequency: recurringInvestmentInterval });
       }
     };
 
