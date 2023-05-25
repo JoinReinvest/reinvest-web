@@ -84,7 +84,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
       if (signSubscriptionAgreementMeta.isSuccess) {
         moveToNextStep();
       }
-    }, [signSubscriptionAgreementMeta.isSuccess]);
+    }, [signSubscriptionAgreementMeta.isSuccess, moveToNextStep]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
