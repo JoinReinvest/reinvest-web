@@ -123,7 +123,6 @@ export const StepBankSelection: StepParams<FlowFields> = {
             <IconSpinner />
           </div>
         )}
-
         {!isFulfillBankAccountLoading && (shouldCreateBankAccountHaveSucceded || shouldUpdateBankAccountHaveSucceded) && plaidFrameLink && (
           <>
             <FormContent>
