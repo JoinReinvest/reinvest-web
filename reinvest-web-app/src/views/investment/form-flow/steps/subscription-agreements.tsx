@@ -84,9 +84,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
       if (signSubscriptionAgreementMeta.isSuccess) {
         moveToNextStep();
       }
-
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [signSubscriptionAgreementMeta.isSuccess]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
