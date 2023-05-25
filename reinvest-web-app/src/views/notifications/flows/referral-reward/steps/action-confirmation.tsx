@@ -11,18 +11,20 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinves
 import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
 import { useModalManagerContext } from 'views/notifications/providers/modal-manager';
 
+import { DividendAction } from '../../interfaces';
 import { useFlow } from '../flow';
-import { DividendAction, FlowFields } from '../interfaces';
+import { FlowFields } from '../interfaces';
 import { FlowStepIdentifiers } from '../step-identifiers';
 
 const TITLE_REINVEST = 'Thank you for reinvesting.';
-const TITLE_WITHDRAW = 'Reward withdrawing successful.';
+const TITLE_WITHDRAW = 'Reward withdrawal successful.';
 const AMOUNT_LABEL = 'Reward Amount';
-const INFORMATION_MESSAGE = 'Deposited to your account';
+const INFORMATION_MESSAGE_WITHDRAW = 'Deposited to your account';
+const INFORMATION_MESSAGE_REINVEST = 'Successfully reinvested.';
 const BUTTON_LABEL = 'Dashboard';
 
 export const StepActionConfirmation: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.INVESTMENT_CONFIRMATION,
+  identifier: FlowStepIdentifiers.ACTION_CONFIRMATION,
 
   doesMeetConditionFields: fields => {
     const requiredFields = [fields._dividendId, fields._amount, fields._amountMasked, fields.action];
@@ -35,7 +37,10 @@ export const StepActionConfirmation: StepParams<FlowFields> = {
     const { markAsRead } = useActiveAccountNotifications();
     const { onModalOpenChange } = useModalManagerContext();
     const { updateCurrentFlow, notification } = useFlowsManagerContext();
-    const title = storeFields.action === DividendAction.REINVEST_FUNDS ? TITLE_REINVEST : TITLE_WITHDRAW;
+
+    const willReinvestFunds = storeFields.action === DividendAction.REINVEST_FUNDS;
+    const title = willReinvestFunds ? TITLE_REINVEST : TITLE_WITHDRAW;
+    const informationMessage = willReinvestFunds ? INFORMATION_MESSAGE_REINVEST : INFORMATION_MESSAGE_WITHDRAW;
 
     const amountMasked = storeFields._amountMasked;
     const notificationId = notification?.id;
@@ -83,7 +88,7 @@ export const StepActionConfirmation: StepParams<FlowFields> = {
               variant="paragraph-large"
               className="grow text-gray-01"
             >
-              {INFORMATION_MESSAGE}
+              {informationMessage}
             </Typography>
           </div>
         </FormContent>
