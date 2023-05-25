@@ -5,8 +5,8 @@ import { Applicant, FiduciaryEntityInformation, IndexedSchema } from 'views/onbo
 
 export interface FlowFields {
   address: Address | null;
-
   bankAccount: string;
+
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
   _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
   _forInitialInvestment?: boolean;
@@ -23,8 +23,9 @@ export interface FlowFields {
   _shouldUpdateProfileDetails?: boolean;
   _shouldUpdateStakeholderData?: boolean;
   _willSetUpOneTimeInvestments?: boolean;
-
   _willSetUpRecurringInvestment?: boolean;
+  _willUpdateBankAccount?: boolean;
+
   agreesToOneTimeInvestment?: boolean;
   agreesToRecurringInvestment?: boolean;
   approvesSubscriptionAgreement?: boolean;
