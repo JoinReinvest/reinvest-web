@@ -2,7 +2,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { FormEventHandler, useEffect, useState } from 'react';
+import { FormEventHandler, useEffect, useRef, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateBankAccount } from 'reinvest-app-common/src/services/queries/createBankAccount';
 import { useFulfillBankAccount } from 'reinvest-app-common/src/services/queries/fulfillBankAccount';
@@ -27,15 +27,20 @@ export const StepBankSelection: StepParams<FlowFields> = {
   Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const [plaidDataForApi, setPlaidDataForApi] = useState<FulfillBankAccountInput>();
+    const bankAccountNumber = useRef<string>('');
 
     const {
-      mutate: createBankAccountMutation,
+      mutateAsync: createBankAccountMutation,
       isLoading: isCreateBankAccountLoading,
       data: createBankAccountData,
       isSuccess: isCreateBankAccountSuccess,
       error: createBankAccountError,
     } = useCreateBankAccount(getApiClient);
-    const { mutate: fulfillBankAccountMutation, isSuccess: isFulfillBankAccountSuccess } = useFulfillBankAccount(getApiClient);
+    const {
+      mutateAsync: fulfillBankAccountMutation,
+      isSuccess: isFulfillBankAccountSuccess,
+      isLoading: isFulfillBankAccountLoading,
+    } = useFulfillBankAccount(getApiClient);
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
 
@@ -55,6 +60,7 @@ export const StepBankSelection: StepParams<FlowFields> = {
         if (data.plaidAccountDetails?.length) {
           const dataForApi = mapPlaidDataForApi(data.plaidAccountDetails[0]);
           setPlaidDataForApi(dataForApi);
+          bankAccountNumber.current = hashBankAccountNumber(dataForApi.accountNumber);
         }
       };
 
@@ -67,12 +73,12 @@ export const StepBankSelection: StepParams<FlowFields> = {
     useEffect(() => {
       if (plaidDataForApi && activeAccount?.id) {
         fulfillBankAccountMutation({ accountId: activeAccount.id, input: plaidDataForApi });
+        updateStoreFields({ bankAccount: hashBankAccountNumber(plaidDataForApi.accountNumber) });
       }
-    }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation]);
+    }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation, updateStoreFields]);
 
     useEffect(() => {
       if (isFulfillBankAccountSuccess) {
-        updateStoreFields({ bankAccount: plaidDataForApi?.accountNumber });
         moveToNextStep();
       }
     }, [isFulfillBankAccountSuccess, moveToNextStep, updateStoreFields, plaidDataForApi?.accountNumber]);
@@ -81,12 +87,12 @@ export const StepBankSelection: StepParams<FlowFields> = {
       <Form onSubmit={onSubmit}>
         {createBankAccountError && <ErrorMessagesHandler error={createBankAccountError} />}
 
-        {isCreateBankAccountLoading && (
+        {(isCreateBankAccountLoading || isFulfillBankAccountLoading) && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
           </div>
         )}
-        {!isCreateBankAccountLoading && isCreateBankAccountSuccess && createBankAccountData?.link && (
+        {!isCreateBankAccountLoading && !isFulfillBankAccountLoading && isCreateBankAccountSuccess && createBankAccountData?.link && (
           <>
             <FormContent>
               <Typography variant="h3">{TITLE}</Typography>
@@ -102,3 +108,5 @@ export const StepBankSelection: StepParams<FlowFields> = {
     );
   },
 };
+
+const hashBankAccountNumber = (bankAccountFullNumber: string) => `****${bankAccountFullNumber.slice(-4)}`;
