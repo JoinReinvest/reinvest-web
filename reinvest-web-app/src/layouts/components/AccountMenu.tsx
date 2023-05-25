@@ -110,7 +110,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                 </header>
 
                 <ul className="flex flex-col gap-16">
-                  <ul className="flex max-h-146 flex-col gap-16 overflow-auto md:max-h-max">
+                  <ul className="flex max-h-146 flex-col gap-16 overflow-auto md:max-h-256">
                     {hasAvailableAccounts &&
                       availableAccountsWithLabels.map(account => (
                         <AccountMenuAccountItem
