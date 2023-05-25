@@ -2,7 +2,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { FormEventHandler, useEffect, useRef, useState } from 'react';
+import { FormEventHandler, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateBankAccount } from 'reinvest-app-common/src/services/queries/createBankAccount';
 import { useFulfillBankAccount } from 'reinvest-app-common/src/services/queries/fulfillBankAccount';
@@ -27,7 +27,6 @@ export const StepBankSelection: StepParams<FlowFields> = {
   Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const [plaidDataForApi, setPlaidDataForApi] = useState<FulfillBankAccountInput>();
-    const bankAccountNumber = useRef<string>('');
 
     const {
       mutateAsync: createBankAccountMutation,
@@ -60,7 +59,6 @@ export const StepBankSelection: StepParams<FlowFields> = {
         if (data.plaidAccountDetails?.length) {
           const dataForApi = mapPlaidDataForApi(data.plaidAccountDetails[0]);
           setPlaidDataForApi(dataForApi);
-          bankAccountNumber.current = hashBankAccountNumber(dataForApi.accountNumber);
         }
       };
 
