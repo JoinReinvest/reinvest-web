@@ -195,6 +195,14 @@ module.exports = {
         },
       ],
 
+      'notifications-counter': [
+        '1.0rem',
+        {
+          fontWeight: '400',
+          lineHeight: '1.3rem'
+        }
+      ],
+
       'custom-1': [
         '4.8rem',
         {
