@@ -31,7 +31,7 @@ const FILE_SIZE_LIMIT_IN_MEGABYTES = 5.0;
 const ACCEPTED_FILES_MIME_TYPES: PartialMimeTypeKeys = ['pdf', 'png', 'jpeg'];
 
 const schema = z.object({
-  profilePicture: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES),
+  profilePicture: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES, true),
 });
 
 export const StepProfilePicture: StepParams<OnboardingFormFields> = {
@@ -98,7 +98,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     const shouldButtonBeDisabled =
       !formState.isValid || formState.isSubmitting || isIndividualDraftAccountLoading || isOpenAccountLoading || shouldButtonBeLoading;
 
-    const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
+    // const shouldSkipButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
       await updateStoreFields({ profilePicture });
@@ -114,40 +114,28 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
         }
       }
 
-      if (accountId && avatarId) {
-        if (!storeFields.isCompletedProfile) {
-          await completeProfileMutate({ input: { verifyAndFinish: true } });
-        }
-
-        const avatar = { id: avatarId };
-
-        let draftAccount = null;
-
-        if (storeFields.accountType === DraftAccountType.Individual) {
-          draftAccount = await completeIndividualDraftAccountMutate({
-            accountId,
-            input: { avatar },
-          });
-        }
-
-        if (storeFields.accountType === DraftAccountType.Trust) {
-          draftAccount = await completeTrustDraftAccount({ accountId, input: { avatar } });
-        }
-
-        if (storeFields.accountType === DraftAccountType.Corporate) {
-          draftAccount = await completeCorporateDraftAccount({ accountId, input: { avatar } });
-        }
-
-        if (draftAccount?.isCompleted) {
-          await openAccountMutate({ draftAccountId: accountId });
-        }
-      }
-    };
-
-    const onSkip = async () => {
       if (accountId) {
         if (!storeFields.isCompletedProfile) {
           await completeProfileMutate({ input: { verifyAndFinish: true } });
+        }
+
+        if (avatarId) {
+          const avatar = { id: avatarId };
+
+          if (storeFields.accountType === DraftAccountType.Individual) {
+            await completeIndividualDraftAccountMutate({
+              accountId,
+              input: { avatar },
+            });
+          }
+
+          if (storeFields.accountType === DraftAccountType.Trust) {
+            await completeTrustDraftAccount({ accountId, input: { avatar } });
+          }
+
+          if (storeFields.accountType === DraftAccountType.Corporate) {
+            await completeCorporateDraftAccount({ accountId, input: { avatar } });
+          }
         }
 
         await openAccountMutate({ draftAccountId: accountId });
@@ -196,16 +184,8 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
         <ButtonStack>
           <Button
-            label="Skip"
-            variant="outlined"
-            onClick={onSkip}
-            className="text-green-frost-01"
-            disabled={shouldSkipButtonBeDisabled}
-          />
-
-          <Button
             type="submit"
-            label="Continue"
+            label="Complete Profile"
             disabled={shouldButtonBeDisabled}
             loading={shouldButtonBeLoading}
           />
