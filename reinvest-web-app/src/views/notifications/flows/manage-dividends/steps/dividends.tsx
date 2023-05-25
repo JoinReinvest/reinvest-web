@@ -7,7 +7,8 @@ import { useManageDividends } from 'hooks/manage-dividends';
 import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { DividendAction, FlowFields } from '../interfaces';
+import { DividendAction } from '../../interfaces';
+import { FlowFields } from '../interfaces';
 import { FlowStepIdentifiers } from '../step-identifiers';
 
 const TITLE = 'Manage Dividends';
