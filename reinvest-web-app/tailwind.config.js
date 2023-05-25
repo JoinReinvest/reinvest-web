@@ -226,7 +226,9 @@ module.exports = {
 
       tertiary: {
         success: '#44CB7A',
-        error: '#FA375A',
+        error: {
+          '01': '#FA375A'
+        },
         warning: '#FAC337',
       },
 
