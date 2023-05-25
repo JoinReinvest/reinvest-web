@@ -4,7 +4,7 @@ import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { InvestmentProvider } from 'providers/InvestmentProvider';
 import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
-import { useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
 import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON, INITIAL_STORE_FIELDS } from './constants';
@@ -33,11 +33,11 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   const shouldDisplayBlackModal = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_BLACK_MODAL.includes(currentStepIdentifier), [currentStepIdentifier]);
   const shouldDisplayBackIcon = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_X_BUTTON.includes(currentStepIdentifier), [currentStepIdentifier]);
 
-  const onModalLastStep = () => {
+  const onModalLastStep = useCallback(() => {
     onModalOpenChange(false);
     moveToFirstStep();
     resetStoreFields();
-  };
+  }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
 
   const onModalClickBack = () => {
     if (isFirstStep) {
