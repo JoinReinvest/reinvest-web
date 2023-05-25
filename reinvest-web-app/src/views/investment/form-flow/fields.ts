@@ -23,6 +23,7 @@ export interface FlowFields {
   _shouldUpdateStakeholderData?: boolean;
   _willSetUpOneTimeInvestments?: boolean;
   _willSetUpRecurringInvestment?: boolean;
+  _willUpdateBankAccount?: boolean;
 
   address?: Address | null;
   agreesToOneTimeInvestment?: boolean;
