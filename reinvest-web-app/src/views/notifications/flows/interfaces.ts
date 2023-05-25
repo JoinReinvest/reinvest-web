@@ -7,3 +7,8 @@ export interface FlowMeta {
   identifier: FlowIdentifiers;
   modalTitle: string;
 }
+
+export enum DividendAction {
+  WITHDRAW_FUNDS = 'WITHDRAW_FUNDS',
+  REINVEST_FUNDS = 'REINVEST_FUNDS',
+}

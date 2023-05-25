@@ -3,12 +3,12 @@ import { createContextConsumer } from 'reinvest-app-common/src/utilities/context
 
 import { Context } from './context';
 import { useMarkAsRead } from './hooks/mark-as-read';
-import { useNotifications } from './hooks/notifications';
+import { useNotificationsStats } from './hooks/notifications-stats';
 
 export const useActiveAccountNotifications = createContextConsumer(Context, 'ActiveAccountNotificationsProvider');
 
 export const ActiveAccountNotificationsProvider = ({ children }: PropsWithChildren) => {
-  const notificationsResult = useNotifications();
+  const notificationsResult = useNotificationsStats();
   const markAsReadResult = useMarkAsRead();
 
   return <Context.Provider value={{ ...notificationsResult, ...markAsReadResult }}>{children}</Context.Provider>;

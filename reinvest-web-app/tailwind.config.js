@@ -195,6 +195,14 @@ module.exports = {
         },
       ],
 
+      'notifications-counter': [
+        '1.0rem',
+        {
+          fontWeight: '400',
+          lineHeight: '1.3rem'
+        }
+      ],
+
       'custom-1': [
         '4.8rem',
         {
@@ -226,7 +234,10 @@ module.exports = {
 
       tertiary: {
         success: '#44CB7A',
-        error: '#FA375A',
+        error: {
+          '01': '#FA375A',
+          '02': '#E50029'
+        },
         warning: '#FAC337',
       },
 
