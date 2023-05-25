@@ -66,10 +66,9 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         }
 
         if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
-          const shouldUpdateProfileData = true;
-          //   verifyAccountMeta.data?.requiredActions?.filter(
-          //   requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
-          // );
+          const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
+          );
 
           const shouldUpdateStakeholderData = verifyAccountMeta.data?.requiredActions?.filter(
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview,
@@ -80,7 +79,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           );
 
           updateStoreFields({
-            _shouldUpdateProfileDetails: shouldUpdateProfileData, //!!shouldUpdateProfileData?.length,
+            _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length,
             _shouldUpdateStakeholderData: !!shouldUpdateStakeholderData?.length || !!shouldUpdateCompanyData?.length,
             _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
           });
