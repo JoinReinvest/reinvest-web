@@ -171,7 +171,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   console.log('isLoading', isLoading);
   console.log('isProtectedPage', isProtectedPage);
   console.log('isProtectedPage && !user', isProtectedPage && !user);
-  console.log('!isProtectedPage && user', !isProtectedPage && user);
+  console.log('!isProtectedPage && user', !isProtectedPage && !!user);
 
   if (
     ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
