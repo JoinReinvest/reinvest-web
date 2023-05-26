@@ -121,9 +121,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         } else {
           if (notProtectedUrls.includes(router.pathname)) {
             router.push(URL.index);
+          } else {
+            router.push(router.pathname || URL.index);
           }
-
-          router.push(router.pathname || URL.index);
         }
       }
     }
@@ -167,7 +167,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   }, []);
 
   if (
-    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || (isRefetching && !data)) &&
+    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
     router.pathname !== URL.logout &&
     router.pathname !== URL.onboarding &&
     router.pathname !== URL.not_found
