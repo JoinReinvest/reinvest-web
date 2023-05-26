@@ -170,7 +170,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
     router.pathname !== URL.logout &&
     router.pathname !== URL.onboarding &&
-    router.pathname !== URL.not_found
+    router.pathname !== URL.not_found &&
+    router.pathname !== URL.login
   ) {
     return (
       <div className="flex h-screen w-screen items-center justify-center">
