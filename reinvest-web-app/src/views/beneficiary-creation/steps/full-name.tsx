@@ -15,6 +15,9 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Required<Pick<BeneficiaryCreationFormFields, 'firstName' | 'lastName'>>;
 
+const TITLE = "Enter your beneficiary's name";
+const BUTTON_LABEL = 'Continue';
+
 const schema = z.object({
   firstName: formValidationRules.firstName,
   lastName: formValidationRules.lastName,
@@ -44,7 +47,7 @@ export const StepFullName: StepParams<BeneficiaryCreationFormFields> = {
           useFixedGap
           willLeaveContentOnTop
         >
-          <Typography variant="paragraph-large">Enter your beneficiary&apos;s name</Typography>
+          <Typography variant="paragraph-large">{TITLE}</Typography>
 
           <Input
             name="firstName"
@@ -64,7 +67,7 @@ export const StepFullName: StepParams<BeneficiaryCreationFormFields> = {
         <ButtonStack>
           <Button
             type="submit"
-            label="Continue"
+            label={BUTTON_LABEL}
             disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>

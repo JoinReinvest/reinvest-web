@@ -11,6 +11,8 @@ import { allRequiredFieldsExists } from 'reinvest-app-common/src/services/form-f
 import { BeneficiaryCreationFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
+const BUTTON_LABEL = 'Invest';
+
 export const StepConfirmation: StepParams<BeneficiaryCreationFormFields> = {
   identifier: Identifiers.INVESTING_PROMPT,
 
@@ -47,7 +49,7 @@ export const StepConfirmation: StepParams<BeneficiaryCreationFormFields> = {
         <ButtonStack useRowOnLgScreen>
           <Button
             type="submit"
-            label="Invest"
+            label={BUTTON_LABEL}
           />
         </ButtonStack>
       </Form>
