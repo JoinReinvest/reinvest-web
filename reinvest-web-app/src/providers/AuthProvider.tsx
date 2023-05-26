@@ -105,7 +105,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   useEffect(() => {
     if (isSuccess && data && !isRefetching) {
       if (data.accounts?.length === 0) {
-        console.log('push1');
         router.push(URL.onboarding);
       } else {
         const { accounts } = data;
@@ -118,16 +117,13 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         const { redirectUrl } = query;
 
         if (redirectUrl) {
-          console.log('push2');
           router.push(redirectUrl as string);
         } else {
           if (notProtectedUrls.includes(router.pathname)) {
-            console.log('push3');
             router.push(URL.index);
+          } else {
+            router.push(router.pathname || URL.index);
           }
-
-          console.log('push4');
-          router.push(router.pathname || URL.index);
         }
       }
     }
