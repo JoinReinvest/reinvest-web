@@ -172,6 +172,17 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   console.log('isProtectedPage', isProtectedPage);
   console.log('isProtectedPage && !user', isProtectedPage && !user);
   console.log('!isProtectedPage && user', !isProtectedPage && !!user);
+  console.log(
+    '!((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&\n' +
+      '    router.pathname !== URL.logout &&\n' +
+      '    router.pathname !== URL.onboarding &&\n' +
+      '    router.pathname !== URL.not_found',
+    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
+      router.pathname !== URL.logout &&
+      router.pathname !== URL.onboarding &&
+      router.pathname !== URL.not_found,
+  );
+  console.log('====================');
 
   if (
     ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
