@@ -78,12 +78,27 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
       const hasIdScans = !!idScan?.length;
       await updateStoreFields({ identificationDocuments: documentsWithoutFile, _shouldUpdateProfileDetails: false });
 
+      const residentData = {
+        birthCountry: storeFields.domicile?.birthCountry || '',
+        citizenshipCountry: storeFields.domicile?.citizenshipCountry || '',
+      };
+      const greenCardData = {
+        ...residentData,
+      };
+
+      const visaCardData = {
+        ...residentData,
+        visaType: storeFields.domicile?.visaType || '',
+      };
+
+      const domicile = {
+        type: storeFields.domicile?.type as DomicileType,
+        forGreenCard: (storeFields.domicile?.type as DomicileType) === DomicileType.GreenCard ? greenCardData : undefined,
+        forVisa: (storeFields.domicile?.type as DomicileType) === DomicileType.Visa ? visaCardData : undefined,
+      };
+
       const dataToUpdate = {
-        domicile: { ...storeFields.domicile, type: storeFields.domicile?.type as DomicileType } || {
-          type: DomicileType.Citizen,
-          forGreenCard: { birthCountry: '', birthState: '', citizenshipCountry: '' },
-          forVisa: { birthCountry: '', visaType: '', citizenshipCountry: '' },
-        },
+        domicile,
         name: storeFields.name,
         address: (storeFields.address as AddressInput) || { addressLine1: '', addressLine2: '', city: '', state: '', zipCode: '' },
         dateOfBirth: { dateOfBirth: storeFields.dateOfBirth },
