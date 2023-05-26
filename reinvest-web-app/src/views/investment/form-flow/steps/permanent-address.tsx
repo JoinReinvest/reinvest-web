@@ -36,7 +36,7 @@ export const StepPermanentAddress: StepParams<FlowFields> = {
       {
         addressLine1: storeFields?.address?.addressLine1 || '',
         addressLine2: storeFields?.address?.addressLine2 || '',
-        city: storeFields?.address?.city || '',
+        city: storeFields?.address?.city || 'USA',
         country: storeFields?.address?.country || '',
         state: storeFields?.address?.state || '',
         zip: storeFields?.address?.zip || '',
@@ -72,7 +72,7 @@ export const StepPermanentAddress: StepParams<FlowFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async address => {
-      await updateStoreFields({ address });
+      await updateStoreFields({ address: { ...address, country: 'USA' } });
 
       moveToNextStep();
     };

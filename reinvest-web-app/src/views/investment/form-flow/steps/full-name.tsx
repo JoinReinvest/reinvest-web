@@ -8,6 +8,7 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { dateOlderThanEighteenYearsSchema, formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { formatDate, isDateFromApi } from 'reinvest-app-common/src/utilities/dates';
 import { z } from 'zod';
 
 import { InputBirthDate } from '../../../../components/FormElements/InputBirthDate';
@@ -36,7 +37,13 @@ export const StepFullName: StepParams<FlowFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields =
       storeFields.name && storeFields.dateOfBirth && storeFields.ssn
-        ? { name: storeFields.name, dateOfBirth: storeFields.dateOfBirth, ssn: storeFields.ssn }
+        ? {
+            name: storeFields.name,
+            dateOfBirth: isDateFromApi(storeFields.dateOfBirth || '')
+              ? formatDate(storeFields.dateOfBirth || '', 'DEFAULT', { currentFormat: 'API' })
+              : storeFields.dateOfBirth,
+            ssn: storeFields.ssn,
+          }
         : { name: { firstName: '', middleName: '', lastName: '' }, dateOfBirth: '', ssn: '' };
     const form = useForm<Fields>({
       mode: 'all',
@@ -47,7 +54,9 @@ export const StepFullName: StepParams<FlowFields> = {
     const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields(fields);
+      const dateOfBirth = formatDate(fields.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' });
+
+      await updateStoreFields({ ...fields, dateOfBirth });
       moveToNextStep();
     };
 

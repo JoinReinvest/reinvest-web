@@ -38,16 +38,10 @@ export interface FlowFields {
   documentsForCorporation?: DocumentFile[];
   documentsToRemove?: DocumentFileLinkInput[];
   domicile?: {
-    forGreenCard?: {
-      birthCountry: string;
-      citizenshipCountry: string;
-    };
-    forVisa?: {
-      birthCountry: string;
-      citizenshipCountry: string;
-      visaType: string;
-    };
+    birthCountry?: string | null;
+    citizenshipCountry?: string | null;
     type?: DomicileType | null;
+    visaType?: string | null;
   };
   fiduciaryEntityInformation?: FiduciaryEntityInformation;
   identificationDocuments?: DocumentFile[];
