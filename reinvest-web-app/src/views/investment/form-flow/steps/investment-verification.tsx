@@ -11,12 +11,14 @@ import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetCorporateAccount } from 'reinvest-app-common/src/services/queries/getCorporateAccount';
+import { useStartInvestment } from 'reinvest-app-common/src/services/queries/startInvestment';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
+import { useInvestmentContext } from '../../../../providers/InvestmentProvider';
 import { BannedView } from '../../../BannedView';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -31,7 +33,9 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
+    const { investmentId } = useInvestmentContext();
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
+    const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
     const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const [isBannedAccount, setIsBannedAccount] = useState(false);
     const { userProfile, userProfileMeta } = useActiveAccount();
@@ -93,8 +97,8 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           }
         }
 
-        if (verifyAccountMeta.data?.isAccountVerified || verifyAccountMeta.data?.canUserContinueTheInvestment) {
-          moveToNextStep();
+        if ((verifyAccountMeta.data?.isAccountVerified || verifyAccountMeta.data?.canUserContinueTheInvestment) && investmentId) {
+          startInvestmentMutate({ investmentId: investmentId, approveFees: true });
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,6 +134,12 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
     }, [isCorporateRefetching, getCorporateData, updateStoreFields, storeFields]);
 
+    useEffect(() => {
+      if (startInvestmentMeta.isSuccess) {
+        moveToNextStep();
+      }
+    }, [startInvestmentMeta.isSuccess, moveToNextStep]);
+
     const onSubmit = () => {
       moveToNextStep();
     };
@@ -145,7 +155,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        {verifyAccountMeta.isLoading && !verifyAccountMeta.data && (
+        {((verifyAccountMeta.isLoading && !verifyAccountMeta.data) || (startInvestmentMeta.isLoading && !startInvestmentMeta.data)) && (
           <FormContent>
             <div className="flex flex-col gap-32">
               <div className="flex w-full flex-col items-center gap-16">
