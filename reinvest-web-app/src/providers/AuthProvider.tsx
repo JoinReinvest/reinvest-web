@@ -120,8 +120,10 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
           router.push(redirectUrl as string);
         } else {
           if (notProtectedUrls.includes(router.pathname)) {
+            console.log('go to index');
             router.push(URL.index);
           } else {
+            console.log('go to pathname');
             router.push(router.pathname || URL.index);
           }
         }
@@ -165,6 +167,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     currentUser();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log('pathname', router.pathname);
 
   if (
     ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
