@@ -105,6 +105,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   useEffect(() => {
     if (isSuccess && data && !isRefetching) {
       if (data.accounts?.length === 0) {
+        console.log('push1');
         router.push(URL.onboarding);
       } else {
         const { accounts } = data;
@@ -117,12 +118,15 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         const { redirectUrl } = query;
 
         if (redirectUrl) {
+          console.log('push2');
           router.push(redirectUrl as string);
         } else {
           if (notProtectedUrls.includes(router.pathname)) {
+            console.log('push3');
             router.push(URL.index);
           }
 
+          console.log('push4');
           router.push(router.pathname || URL.index);
         }
       }
@@ -166,23 +170,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('isRefetching', isRefetching);
-  console.log('user', user);
-  console.log('isLoading', isLoading);
-  console.log('isProtectedPage', isProtectedPage);
-  console.log('isProtectedPage && !user', isProtectedPage && !user);
   console.log('!isProtectedPage && user', !isProtectedPage && !!user);
-  console.log(
-    '!((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&\n' +
-      '    router.pathname !== URL.logout &&\n' +
-      '    router.pathname !== URL.onboarding &&\n' +
-      '    router.pathname !== URL.not_found',
-    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
-      router.pathname !== URL.logout &&
-      router.pathname !== URL.onboarding &&
-      router.pathname !== URL.not_found,
-  );
-  console.log('====================');
+  console.log('router.pathname', router.pathname);
 
   if (
     ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
