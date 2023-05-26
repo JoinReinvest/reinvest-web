@@ -89,12 +89,6 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
 
         <ButtonStack>
           <Button
-            label="Skip"
-            variant="outlined"
-            disabled
-          />
-
-          <Button
             type="submit"
             label="Continue"
             disabled={shouldButtonBeDisabled}
