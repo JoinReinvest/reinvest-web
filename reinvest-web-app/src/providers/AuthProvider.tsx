@@ -166,13 +166,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log('isProtectedPage', isProtectedPage);
-  console.log('isLoading', isLoading);
-  console.log('isRefetching', isRefetching);
-  console.log('data', data);
-
   if (
-    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || (isRefetching && !data)) &&
+    ((isProtectedPage && !user) || (!isProtectedPage && user) || isLoading || isRefetching) &&
     router.pathname !== URL.logout &&
     router.pathname !== URL.onboarding &&
     router.pathname !== URL.not_found
