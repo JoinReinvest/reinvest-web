@@ -119,11 +119,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
         if (redirectUrl) {
           router.push(redirectUrl as string);
         } else {
-          if (notProtectedUrls.includes(router.pathname)) {
-            console.log('go to index');
+          if ((notProtectedUrls.includes(router.pathname) && router.pathname !== URL.login) || (router.pathname === URL.login && user)) {
             router.push(URL.index);
           } else {
-            console.log('go to pathname');
             router.push(router.pathname || URL.index);
           }
         }
