@@ -10,7 +10,9 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
 import { useGetCorporateAccount } from 'reinvest-app-common/src/services/queries/getCorporateAccount';
+import { useGetInvestmentSummary } from 'reinvest-app-common/src/services/queries/getInvestmentSummary';
 import { useStartInvestment } from 'reinvest-app-common/src/services/queries/startInvestment';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
@@ -18,8 +20,10 @@ import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'r
 import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
+import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
 import { useInvestmentContext } from '../../../../providers/InvestmentProvider';
 import { BannedView } from '../../../BannedView';
+import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -34,8 +38,14 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const { investmentId } = useInvestmentContext();
+    const { onModalLastStep } = useModalHandler();
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
+    const { mutateAsync: abortInvestmentMutate, ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
+    const { refetch: refetchGetInvestmentSummary, ...getInvestmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
+      investmentId: investmentId || '',
+      config: { enabled: false },
+    });
     const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const [isBannedAccount, setIsBannedAccount] = useState(false);
     const { userProfile, userProfileMeta } = useActiveAccount();
@@ -96,13 +106,32 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             refetchCorporate();
           }
         }
-
-        if ((verifyAccountMeta.data?.isAccountVerified || verifyAccountMeta.data?.canUserContinueTheInvestment) && investmentId) {
-          startInvestmentMutate({ investmentId: investmentId, approveFees: true });
-        }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [verifyAccountMeta.isSuccess, initiateRecurringInvestmentMeta.isSuccess]);
+
+    useEffect(() => {
+      if (verifyAccountMeta.isSuccess) {
+        refetchGetInvestmentSummary();
+      }
+    }, [refetchGetInvestmentSummary, verifyAccountMeta.isSuccess]);
+
+    useEffect(() => {
+      if (getInvestmentSummaryMeta.isSuccess) {
+        updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
+      }
+    }, [getInvestmentSummaryMeta, updateStoreFields]);
+
+    useEffect(() => {
+      if (getInvestmentSummaryMeta.data && verifyAccountMeta.data) {
+        const { investmentFees } = getInvestmentSummaryMeta.data;
+        const { canUserContinueTheInvestment } = verifyAccountMeta.data;
+
+        if (canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
+          startInvestmentMutate({ investmentId: investmentId, approveFees: true });
+        }
+      }
+    }, [getInvestmentSummaryMeta.data, investmentId, startInvestmentMutate, verifyAccountMeta.data]);
 
     useEffect(() => {
       if (!userProfileMeta.isRefetching && userProfile && storeFields._shouldUpdateProfileDetails) {
@@ -144,6 +173,23 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
+    const abortInvestmentOnClick = async () => {
+      if (investmentId) {
+        await abortInvestmentMutate({ investmentId: investmentId });
+      }
+
+      onModalLastStep && onModalLastStep();
+    };
+
+    const startInvestmentOnClick = async () => {
+      if (investmentId) {
+        await startInvestmentMutate({ investmentId: investmentId, approveFees: true });
+        onModalLastStep && onModalLastStep();
+      }
+    };
+
+    const investmentFees = storeFields.investmentFees?.formatted || '$10';
+
     if (isBannedAccount) {
       return (
         <BannedView
@@ -155,7 +201,9 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        {((verifyAccountMeta.isLoading && !verifyAccountMeta.data) || (startInvestmentMeta.isLoading && !startInvestmentMeta.data)) && (
+        {((verifyAccountMeta.isLoading && !verifyAccountMeta.data) ||
+          (startInvestmentMeta.isLoading && !startInvestmentMeta.data) ||
+          abortInvestmentMeta.isLoading) && (
           <FormContent>
             <div className="flex flex-col gap-32">
               <div className="flex w-full flex-col items-center gap-16">
@@ -168,29 +216,65 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             </div>
           </FormContent>
         )}
-        {verifyAccountMeta.data && !verifyAccountMeta.data.isAccountVerified && !startInvestmentMeta.isLoading && (
-          <>
-            <FormContent>
-              <div className="flex flex-col gap-32">
-                <div className="flex w-full flex-col items-center gap-16">
-                  <IconXCircle />
-                </div>
+        {verifyAccountMeta.data &&
+          !verifyAccountMeta.data.isAccountVerified &&
+          (storeFields._shouldUpdateCompanyData || storeFields._shouldUpdateProfileDetails || storeFields._shouldUpdateStakeholderData) && (
+            <>
+              <FormContent>
+                <div className="flex flex-col gap-32">
+                  <div className="flex w-full flex-col items-center gap-16">
+                    <IconXCircle />
+                  </div>
 
-                <ModalTitle
-                  title="We could not verify your information"
-                  subtitle="Please update your information and we will run our verification process again."
+                  <ModalTitle
+                    title="We could not verify your information"
+                    subtitle="Please update your information and we will run our verification process again."
+                  />
+                </div>
+              </FormContent>
+              <ButtonStack>
+                <Button
+                  label="Edit Information"
+                  variant="default"
+                  type="submit"
                 />
-              </div>
-            </FormContent>
-            <ButtonStack>
-              <Button
-                label="Edit Information"
-                variant="default"
-                type="submit"
-              />
-            </ButtonStack>
-          </>
-        )}
+              </ButtonStack>
+            </>
+          )}
+        {!storeFields._shouldUpdateCompanyData &&
+          !storeFields._shouldUpdateProfileDetails &&
+          !storeFields._shouldUpdateStakeholderData &&
+          !verifyAccountMeta.isLoading &&
+          !startInvestmentMeta.isLoading &&
+          !abortInvestmentMeta.isLoading && (
+            <>
+              <FormContent>
+                <div className="flex flex-col gap-32">
+                  <div className="flex w-full flex-col items-center gap-16">
+                    <IconCircleWarning />
+                  </div>
+
+                  <ModalTitle
+                    title={`Notice: ${investmentFees} fee for manual verification`}
+                    subtitle="As your verification has failed twice, REINVEST needs to run a manual verification."
+                  />
+                </div>
+              </FormContent>
+              <ButtonStack>
+                <Button
+                  label="Submit"
+                  variant="default"
+                  onClick={startInvestmentOnClick}
+                />
+                <Button
+                  label="Cancel"
+                  variant="outlined"
+                  className="text-green-frost-01"
+                  onClick={abortInvestmentOnClick}
+                />
+              </ButtonStack>
+            </>
+          )}
       </Form>
     );
   },
