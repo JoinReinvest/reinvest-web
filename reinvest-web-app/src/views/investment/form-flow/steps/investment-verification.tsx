@@ -48,7 +48,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     });
     const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const [isBannedAccount, setIsBannedAccount] = useState(false);
-    const { userProfile, userProfileMeta } = useActiveAccount();
+    const { userProfile } = useActiveAccount();
     const {
       refetch: refetchCorporate,
       isRefetching: isCorporateRefetching,
@@ -98,10 +98,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
           });
 
-          if (shouldUpdateProfileData) {
-            userProfileMeta.refetch();
-          }
-
           if (shouldUpdateStakeholderData) {
             refetchCorporate();
           }
@@ -134,7 +130,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, [getInvestmentSummaryMeta.data, investmentId, startInvestmentMutate, verifyAccountMeta.data]);
 
     useEffect(() => {
-      if (!userProfileMeta.isRefetching && userProfile && storeFields._shouldUpdateProfileDetails) {
+      if (userProfile && storeFields._shouldUpdateProfileDetails) {
         const { details } = userProfile;
         const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
         const dateOfBirth = details?.dateOfBirth;
@@ -153,7 +149,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
         updateStoreFields({ name, dateOfBirth, residency, identificationDocuments, domicile, ssn, address, _shouldUpdateProfileDetails: true });
       }
-    }, [userProfileMeta.isRefetching, userProfile, updateStoreFields, storeFields]);
+    }, [userProfile, updateStoreFields, storeFields]);
 
     useEffect(() => {
       if (!isCorporateRefetching && getCorporateData && storeFields._shouldUpdateStakeholderData) {
