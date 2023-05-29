@@ -16,8 +16,8 @@ const TITLE_SUCCESS = `Your bank account ending in ${PLACEHOLDER} has been added
 const TITLE_FAILURE = 'We were unable to add your bank account.';
 const BUTTON_LABEL = 'Continue';
 
-export const StepConfirmation: StepParams<FlowFields> = {
-  identifier: Identifiers.CONFIRMATION,
+export const StepBankAccountConfirmation: StepParams<FlowFields> = {
+  identifier: Identifiers.BANK_ACCOUNT_CONFIRMATION,
 
   doesMeetConditionFields: fields => {
     return !!fields.bankAccount && !fields._hasCompletedFlow;

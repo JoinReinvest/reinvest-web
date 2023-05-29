@@ -18,8 +18,8 @@ import { Identifiers } from '../identifiers';
 
 const TITLE = 'Select your bank';
 
-export const StepBankSelection: StepParams<FlowFields> = {
-  identifier: Identifiers.BANK_SELECTION,
+export const StepBankAccountSelection: StepParams<FlowFields> = {
+  identifier: Identifiers.BANK_ACCOUNT_SELECTION,
 
   doesMeetConditionFields: fields => {
     return !fields.bankAccount;

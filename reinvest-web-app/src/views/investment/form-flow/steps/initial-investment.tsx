@@ -87,7 +87,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
     async function onChangeBankAccount() {
       await updateStoreFields({ bankAccount: '', _willUpdateBankAccount: true });
-      moveToStepByIdentifier(Identifiers.BANK_SELECTION);
+      moveToStepByIdentifier(Identifiers.BANK_ACCOUNT_SELECTION);
     }
 
     return (

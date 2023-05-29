@@ -1,8 +1,9 @@
 import { StepAccountSelection } from './account-selection';
 import { StepAutomaticDividend } from './automatic-dividend';
-import { StepBankSelection } from './bank-selection';
+import { StepBankAccountConfirmation } from './bank-account-confirmation';
+import { StepBankAccountLanding } from './bank-account-landing';
+import { StepBankAccountSelection } from './bank-account-selection';
 import { StepBusinessAddress } from './business-address';
-import { StepConfirmation } from './confirmation';
 import { StepCorporateApplicantAddress } from './corporate-applicant-address';
 import { StepCorporateApplicantDetails } from './corporate-applicant-details';
 import { StepCorporateApplicantIdentification } from './corporate-applicant-identification';
@@ -26,12 +27,13 @@ import { StepRecurringInvestmentInterval } from './recurring-investment-interval
 import { StepSubscriptionAgreements } from './subscription-agreements';
 
 export const STEPS = [
+  StepLanding,
   StepAccountSelection,
 
   // Bank account
-  StepLanding,
-  StepBankSelection,
-  StepConfirmation,
+  StepBankAccountLanding,
+  StepBankAccountSelection,
+  StepBankAccountConfirmation,
 
   // Investment
   StepInitialInvestment,
