@@ -39,7 +39,7 @@ export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<BeneficiaryCreationFormFields>) => {
-    const { createBeneficiary, error, isLoading, hasSucceded } = useCreateBeneficiary();
+    const { createBeneficiary, error, isLoading, hasSucceded, beneficiary } = useCreateBeneficiary();
     const { beneficiaryInitials, defaultValues } = useMemo(() => {
       const beneficiaryInitials = getBeneficiaryInitials(storeFields);
       const defaultValues: Fields = { profilePicture: storeFields?.profilePicture || {} };
@@ -54,10 +54,14 @@ export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
     });
 
     useEffect(() => {
-      if (hasSucceded) {
-        moveToNextStep();
+      async function updateStoreFieldsAndMoveToNextStep() {
+        if (hasSucceded) {
+          await updateStoreFields({ beneficiary });
+          moveToNextStep();
+        }
       }
 
+      updateStoreFieldsAndMoveToNextStep();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [hasSucceded]);
 
