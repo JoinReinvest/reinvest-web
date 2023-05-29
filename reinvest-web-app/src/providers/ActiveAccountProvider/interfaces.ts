@@ -1,24 +1,19 @@
-import { AccountOverview, AccountStats, Maybe, Profile } from 'reinvest-app-common/src/types/graphql';
-import { MutationMeta, QueryMeta } from 'types/queries';
+import { useAccountStats } from './hooks/account-stats';
+import { useAvailableAccounts } from './hooks/available-accounts';
+import { useBeneficiaries } from './hooks/beneficiaries';
+import { useOnboardedAccount } from './hooks/onboarded-account';
+import { useProfileAccounts } from './hooks/profile-account';
+import { useValidateActiveAccount } from './hooks/validate-active-account';
 
-export interface State {
-  activeAccount: AccountOverview | null;
-  activeAccountStats: Maybe<AccountStats>;
-  activeAccountStatsMeta: QueryMeta;
-  allAccounts: Maybe<AccountOverview>[];
-  arrivesFromOnboarding: boolean;
-  /** Accounts that are available to be switched to. */
-  availableAccounts: Maybe<AccountOverview>[];
+export interface State extends HookProfileAccounts, HookAvailableAccounts, HookOnboardedAccount, HookAccountStats, HookBeneficiaries, HookValidateAccount {
   /** The masked bank account of the profile */
   bankAccount: string | null;
-  individualAccount: AccountOverview | null;
-  isAbleToAddBeneficiaries: boolean;
-  isAccountBanned: boolean;
-  previousAccount: AccountOverview | null;
-  setArrivesFromOnboarding: (value: boolean) => void;
-  updateActiveAccount: (account: Maybe<AccountOverview>) => void;
   updateBankAccount: (bankAccount: string) => void;
-  userProfile: Profile | null;
-  userProfileMeta: QueryMeta;
-  validateActiveAccountMeta: MutationMeta;
 }
+
+type HookProfileAccounts = ReturnType<typeof useProfileAccounts>;
+type HookAvailableAccounts = ReturnType<typeof useAvailableAccounts>;
+type HookOnboardedAccount = ReturnType<typeof useOnboardedAccount>;
+type HookAccountStats = ReturnType<typeof useAccountStats>;
+type HookBeneficiaries = ReturnType<typeof useBeneficiaries>;
+type HookValidateAccount = ReturnType<typeof useValidateActiveAccount>;

@@ -1,9 +1,8 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
+import { useDividend } from 'hooks/dividend';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useGetDividend } from 'reinvest-app-common/src/services/queries/getDividend';
 import { NotificationObjectType } from 'reinvest-app-common/src/types/graphql';
-import { getApiClient } from 'services/getApiClient';
 import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
 
 import { FlowFields } from '../interfaces';
@@ -16,20 +15,17 @@ export const StepLoading: StepParams<FlowFields> = {
     const { notification, notificationObjectType } = useFlowsManagerContext();
 
     const isDividend = notificationObjectType === NotificationObjectType.Dividend;
-    const dividendId = notification?.onObject?.id;
+    const dividendId = notification?.onObject?.id ?? null;
 
-    const { data, isSuccess } = useGetDividend(getApiClient, {
-      dividendId: dividendId || '',
-      config: { enabled: isDividend && !!dividendId },
-    });
+    const { dividend, dividendMeta } = useDividend({ dividendId, isEnabled: isDividend });
 
     useEffect(() => {
       async function initializeStoreFields() {
-        if (isSuccess && data) {
+        if (dividendMeta.isSuccess && dividend) {
           await updateStoreFields({
-            _dividendId: data.id,
-            _amount: data.amount?.value || undefined,
-            _amountMasked: data?.amount?.formatted || undefined,
+            _dividendId: dividend.id,
+            _amount: dividend.amount?.value || undefined,
+            _amountMasked: dividend?.amount?.formatted || undefined,
           });
 
           moveToNextStep();
@@ -38,7 +34,7 @@ export const StepLoading: StepParams<FlowFields> = {
 
       initializeStoreFields();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isSuccess]);
+    }, [dividendMeta.isSuccess]);
 
     return (
       <div className="grid h-full w-full place-items-center">
