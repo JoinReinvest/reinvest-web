@@ -11,7 +11,6 @@ export const Context = createContext<State>({
   activeAccountStats: null,
   activeAccountStatsMeta: DEFAULT_QUERY_META,
   individualAccount: null,
-  bankAccount: null,
   allAccounts: [],
   availableAccounts: [],
   isAbleToAddBeneficiaries: false,
@@ -20,8 +19,6 @@ export const Context = createContext<State>({
   latestAccountOnboardedId: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   deprecateLatestAccountOnboarded: () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  updateBankAccount: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setLatestAccountOnboardedId: () => {},
   isAccountBanned: false,
