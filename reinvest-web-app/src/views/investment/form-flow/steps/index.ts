@@ -23,7 +23,6 @@ import { StepRecurringInvestment } from './recurring-investment';
 import { StepRecurringInvestmentAmount } from './recurring-investment-amount';
 import { StepRecurringInvestmentDate } from './recurring-investment-date';
 import { StepRecurringInvestmentInterval } from './recurring-investment-interval';
-import { StepRequireManualReview } from './require-manual-review';
 import { StepSubscriptionAgreements } from './subscription-agreements';
 
 export const STEPS = [
@@ -64,6 +63,5 @@ export const STEPS = [
   StepCorporateApplicantIdentification,
 
   // Investment confirmation
-  StepRequireManualReview,
   StepInvestmentCompleted,
 ];
