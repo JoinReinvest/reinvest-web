@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/services/queries/getListAccountTypesUserCanOpen';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
-import { AccountOverview, ActionName } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, AccountType, ActionName } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { MutationMeta } from 'types/queries';
 
@@ -9,6 +10,7 @@ interface Params {
 }
 
 interface Return {
+  canOpenAccount: boolean;
   isAccountBanned: boolean;
   validateActiveAccountMeta: MutationMeta;
 }
@@ -16,7 +18,14 @@ interface Return {
 export function useValidateActiveAccount({ activeAccount }: Params): Return {
   const { data: verifyAccountData, mutateAsync: verifyAccountMutate, isSuccess, isLoading, reset, error } = useVerifyAccount(getApiClient);
   const [isAccountBanned, setIsAccountBanned] = useState(false);
-  const validateActiveAccountMeta: MutationMeta = { isLoading, isSuccess, error, reset };
+  const canOpenAccount = useRef<boolean>();
+
+  const {
+    data: listAccountTypesUserCanOpen,
+    isLoading: isListAccountTypesUserCanOpenLoading,
+    isSuccess: isListAccountTypesUserCanOpenSuccess,
+  } = useGetListAccountTypesUserCanOpen(getApiClient);
+  const validateActiveAccountMeta: MutationMeta = { isLoading: isLoading || isListAccountTypesUserCanOpenLoading, isSuccess, error, reset };
 
   useEffect(() => {
     async function verifyAccount() {
@@ -29,6 +38,13 @@ export function useValidateActiveAccount({ activeAccount }: Params): Return {
   }, [activeAccount, verifyAccountMutate]);
 
   useEffect(() => {
+    if (isListAccountTypesUserCanOpenSuccess) {
+      const possibleAccountsWithoutBeneficiary = listAccountTypesUserCanOpen?.filter(account => account !== AccountType.Beneficiary) as AccountType[];
+      canOpenAccount.current = possibleAccountsWithoutBeneficiary?.length > 0 || false;
+    }
+  }, [isListAccountTypesUserCanOpenSuccess, listAccountTypesUserCanOpen]);
+
+  useEffect(() => {
     if (verifyAccountData) {
       const { requiredActions } = verifyAccountData;
       const hasBannedProfile = requiredActions?.map(requiredAction => requiredAction?.action).includes(ActionName.BanAccount);
@@ -36,5 +52,5 @@ export function useValidateActiveAccount({ activeAccount }: Params): Return {
     }
   }, [verifyAccountData]);
 
-  return { isAccountBanned, validateActiveAccountMeta };
+  return { isAccountBanned, validateActiveAccountMeta, canOpenAccount: canOpenAccount.current || false };
 }

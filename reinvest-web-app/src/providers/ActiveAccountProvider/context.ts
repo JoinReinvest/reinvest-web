@@ -26,4 +26,5 @@ export const Context = createContext<State>({
   setLatestAccountOnboardedId: () => {},
   isAccountBanned: false,
   validateActiveAccountMeta: DEFAULT_MUTATION_META,
+  canOpenAccount: true,
 });

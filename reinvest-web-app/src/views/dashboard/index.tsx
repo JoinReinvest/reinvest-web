@@ -26,7 +26,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     updateActiveAccount,
     previousAccount,
     validateActiveAccountMeta,
-    allAccounts,
+    canOpenAccount,
   } = useActiveAccount();
   const [hadArrivedFromOnboarding, setHadArrivedFromOnboarding] = useStaticState(!!latestAccountOnboardedId);
   const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(!!latestAccountOnboardedId);
@@ -52,7 +52,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         isOpen
         title={title}
         onOpenChange={() => updateActiveAccount(previousAccount)}
-        possibleAddNewAccount={allAccounts.length < 2}
+        possibleAddNewAccount={canOpenAccount}
       />
     );
   }
