@@ -34,7 +34,7 @@ const Context = createContext<State>({
 export const useFlowsManagerContext = createContextConsumer<State>(Context, 'FlowsManager');
 
 export function FlowsManagerProvider({ children }: PropsWithChildren) {
-  const { updateModalTitle } = useModalManagerContext();
+  const { updateModalTitle, setShowProfilePicture } = useModalManagerContext();
   const [currentFlowIdentifier, setCurrentFlowIdentifier] = useState<State['currentFlowIdentifier']>(null);
   const [notification, setNotification] = useState<State['notification']>(null);
   const notificationObjectType = useMemo(() => notification?.onObject?.type || null, [notification]);
@@ -54,10 +54,12 @@ export function FlowsManagerProvider({ children }: PropsWithChildren) {
 
     if (flow && payload.notification) {
       updateModalTitle(flow.modalTitle);
+      setShowProfilePicture(!!flow.displayActiveAccountProfilePicture);
       setNotification(payload.notification);
     } else {
       setCurrentFlowIdentifier(null);
       updateModalTitle(null);
+      setShowProfilePicture(false);
     }
 
     setCurrentFlowIdentifier(payload.identifier);
