@@ -16,12 +16,12 @@ import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/g
 import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { ViewAccountManagement } from 'views/account-management';
+import { ViewBeneficiaryCreation } from 'views/beneficiary-creation';
 
 import { getAccountsWithLabel } from '../utilities/accounts';
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
 import { AccountMenuActionItem } from './AccountMenuActionItem';
 import { AccountMenuFooter } from './AccountMenuFooter';
-import { ModalAddBeneficiary } from './ModalAddBeneficiary';
 import { ModalInvite } from './ModalInvite';
 
 interface Props {
@@ -183,9 +183,9 @@ export const AccountMenu = ({ activeAccount }: Props) => {
         />
       )}
 
-      <ModalAddBeneficiary
-        isOpen={isModalAddBeneficiaryOpen}
-        onOpenChange={toggleIsModalAddBeneficiaryOpen}
+      <ViewBeneficiaryCreation
+        isModalOpen={isModalAddBeneficiaryOpen}
+        onModalOpenChange={toggleIsModalAddBeneficiaryOpen}
       />
 
       <ViewAccountManagement

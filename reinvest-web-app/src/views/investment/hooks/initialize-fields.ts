@@ -20,7 +20,7 @@ export const useInitializeFields = ({ forInitialInvestment }: Params) => {
       await updateStoreFields({
         _shouldAgreeToOneTimeInvestment: true,
         _hasMoreThanAnAccount: hasMoreThanAnAvailableAccount,
-        _forInitialInvestment: forInitialInvestment,
+        _forInitialInvestment: !!forInitialInvestment,
       });
     }
 

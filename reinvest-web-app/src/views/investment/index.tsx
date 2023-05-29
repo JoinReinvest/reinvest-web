@@ -1,6 +1,8 @@
 import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
+import { ModalWhite } from 'components/ModalWhite';
 import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
+import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { InvestmentProvider } from 'providers/InvestmentProvider';
 import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
@@ -15,9 +17,11 @@ import { ModalHandlerProvider } from './providers/modal-handler';
 
 interface Props extends ModalProps {
   forInitialInvestment?: boolean;
+  setHadArrivedFromOnboarding?: (value: boolean) => void;
+  withSideModal?: boolean;
 }
 
-const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment }: Props) => {
+const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, setHadArrivedFromOnboarding, withSideModal = false }: Props) => {
   const { activeAccount } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
 
@@ -37,6 +41,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     onModalOpenChange(false);
     moveToFirstStep();
     resetStoreFields();
+    setHadArrivedFromOnboarding && setHadArrivedFromOnboarding(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
 
   const onModalClickBack = () => {
@@ -72,28 +78,55 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   }
 
   if (currentStepIdentifier === Identifiers.INVESTMENT_COMPLETED) {
-    return (
-      <ModalHandlerProvider onModalLastStep={onModalLastStep}>
-        <ModalWhiteWatermark
-          isOpen={isModalOpen}
-          onOpenChange={onModalLastStep}
-        >
-          <CurrentStepView />
-        </ModalWhiteWatermark>
-      </ModalHandlerProvider>
-    );
+    if (withSideModal) {
+      return (
+        <ModalHandlerProvider onModalLastStep={onModalLastStep}>
+          <ModalWhiteWatermarkSide
+            title="Investing"
+            isOpen={isModalOpen}
+            onOpenChange={onModalLastStep}
+          >
+            <CurrentStepView />
+          </ModalWhiteWatermarkSide>
+        </ModalHandlerProvider>
+      );
+    } else {
+      return (
+        <ModalHandlerProvider onModalLastStep={onModalLastStep}>
+          <ModalWhiteWatermark
+            isOpen={isModalOpen}
+            onOpenChange={onModalLastStep}
+          >
+            <CurrentStepView />
+          </ModalWhiteWatermark>
+        </ModalHandlerProvider>
+      );
+    }
   }
 
-  return (
-    <ModalWhiteFullscreen
-      isOpen={isModalOpen}
-      onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
-      activeAccount={activeAccount}
-      isBackButtonEnabled={!shouldDisplayBackIcon}
-    >
-      <CurrentStepView />
-    </ModalWhiteFullscreen>
-  );
+  if (withSideModal) {
+    return (
+      <ModalWhite
+        isOpen={isModalOpen}
+        onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
+        activeAccount={activeAccount}
+        title="Investing"
+      >
+        <CurrentStepView />
+      </ModalWhite>
+    );
+  } else {
+    return (
+      <ModalWhiteFullscreen
+        isOpen={isModalOpen}
+        onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
+        activeAccount={activeAccount}
+        isBackButtonEnabled={!shouldDisplayBackIcon}
+      >
+        <CurrentStepView />
+      </ModalWhiteFullscreen>
+    );
+  }
 };
 
 export const InvestmentView = (props: Props) => (

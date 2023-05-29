@@ -1,8 +1,9 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlogPostInterface } from 'components/Education/BlogCard';
+import { useStaticState } from 'hooks/static-state';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { InvestmentView } from 'views/investment';
 
@@ -27,7 +28,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     validateActiveAccountMeta,
     allAccounts,
   } = useActiveAccount();
-  const hadArrivedFromOnboarding = useRef(!!latestAccountOnboardedId);
+  const [hadArrivedFromOnboarding, setHadArrivedFromOnboarding] = useStaticState(!!latestAccountOnboardedId);
   const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(!!latestAccountOnboardedId);
 
   useEffect(() => {
@@ -68,7 +69,8 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
       <InvestmentView
         isModalOpen={isInvestmentFlowOpen}
         onModalOpenChange={toggleIsInvestmentFlowOpen}
-        forInitialInvestment={hadArrivedFromOnboarding.current}
+        forInitialInvestment={hadArrivedFromOnboarding}
+        setHadArrivedFromOnboarding={setHadArrivedFromOnboarding}
       />
     </>
   );
