@@ -18,7 +18,7 @@ import { Identifiers } from '../identifiers';
 
 const TITLE = 'Select your bank';
 
-export const StepBankSelection: StepParams<FlowFields> = {
+export const StepBankAccountSelection: StepParams<FlowFields> = {
   identifier: Identifiers.BANK_SELECTION,
 
   doesMeetConditionFields: fields => {
@@ -105,10 +105,15 @@ export const StepBankSelection: StepParams<FlowFields> = {
     }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation, updateStoreFields]);
 
     useEffect(() => {
-      if (isFulfillBankAccountSuccess) {
-        moveToNextStep();
+      async function displayConfirmationStep() {
+        if (isFulfillBankAccountSuccess) {
+          await updateStoreFields({ _justAddedBankAccount: true });
+          moveToNextStep();
+        }
       }
-    }, [isFulfillBankAccountSuccess, moveToNextStep, updateStoreFields, plaidDataForApi?.accountNumber]);
+
+      displayConfirmationStep();
+    }, [isFulfillBankAccountSuccess, moveToNextStep, plaidDataForApi?.accountNumber, updateStoreFields]);
 
     const shouldCreateBankAccountHaveSucceded = !willUpdateBankAccount && !isCreateBankAccountLoading && isCreateBankAccountSuccess;
     const shouldUpdateBankAccountHaveSucceded = willUpdateBankAccount && !isUpdateBankAccountLoading && isUpdateBankAccountSuccess;

@@ -1,8 +1,8 @@
 import { StepAccountSelection } from './account-selection';
 import { StepAutomaticDividend } from './automatic-dividend';
-import { StepBankSelection } from './bank-selection';
+import { StepBankAccountConfirmation } from './bank-account-confirmation';
+import { StepBankAccountSelection } from './bank-account-selection';
 import { StepBusinessAddress } from './business-address';
-import { StepConfirmation } from './confirmation';
 import { StepCorporateApplicantAddress } from './corporate-applicant-address';
 import { StepCorporateApplicantDetails } from './corporate-applicant-details';
 import { StepCorporateApplicantIdentification } from './corporate-applicant-identification';
@@ -30,8 +30,8 @@ export const STEPS = [
 
   // Bank account
   StepLanding,
-  StepBankSelection,
-  StepConfirmation,
+  StepBankAccountSelection,
+  StepBankAccountConfirmation,
 
   // Investment
   StepInitialInvestment,
