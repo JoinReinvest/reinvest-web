@@ -18,6 +18,14 @@ const SUBTITLE =
 export const StepRecurringInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT,
 
+  willBePartOfTheFlow: fields => {
+    return !!fields._shouldDisplayRecurringInvestment;
+  },
+
+  doesMeetConditionFields: fields => {
+    return !!fields._shouldDisplayRecurringInvestment;
+  },
+
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const [isLoading, toggleIsLoading] = useToggler(false);
 
