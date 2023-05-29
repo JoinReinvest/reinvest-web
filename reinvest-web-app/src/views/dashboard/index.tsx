@@ -36,7 +36,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  if (activeAccountStatsMeta?.isLoading || validateActiveAccountMeta?.isLoading) {
+  if (!isInvestmentFlowOpen && (activeAccountStatsMeta?.isLoading || validateActiveAccountMeta?.isLoading)) {
     return (
       <div className="absolute right-1/2 top-1/2 -translate-y-1/2 translate-x-1/2">
         <IconSpinner color="black" />
