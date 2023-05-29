@@ -20,7 +20,7 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts });
   const [bankAccount, updateBankAccount] = useState<State['bankAccount']>(null);
   const [arrivesFromOnboarding, setArrivesFromOnboarding] = useSessionStorage(StorageKeys.HAS_BEEN_ONBOARDED, false);
-  const { validateActiveAccountMeta, isAccountBanned } = useValidateActiveAccount({ activeAccount });
+  const { validateActiveAccountMeta, isAccountBanned, canOpenAccount } = useValidateActiveAccount({ activeAccount });
 
   return (
     <Context.Provider
@@ -42,6 +42,7 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
         setArrivesFromOnboarding,
         isAccountBanned,
         validateActiveAccountMeta,
+        canOpenAccount,
       }}
     >
       {children}

@@ -25,7 +25,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     updateActiveAccount,
     previousAccount,
     validateActiveAccountMeta,
-    allAccounts,
+    canOpenAccount,
   } = useActiveAccount();
   const hadArrivedFromOnboarding = useRef(arrivesFromOnboarding);
   const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
@@ -51,7 +51,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         isOpen
         title={title}
         onOpenChange={() => updateActiveAccount(previousAccount)}
-        possibleAddNewAccount={allAccounts.length < 2}
+        possibleAddNewAccount={canOpenAccount}
       />
     );
   }

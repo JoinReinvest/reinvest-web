@@ -11,6 +11,7 @@ export interface State {
   availableAccounts: Maybe<AccountOverview>[];
   /** The masked bank account of the profile */
   bankAccount: string | null;
+  canOpenAccount: boolean;
   individualAccount: AccountOverview | null;
   isAbleToAddBeneficiaries: boolean;
   isAccountBanned: boolean;

@@ -24,4 +24,5 @@ export const Context = createContext<State>({
   updateBankAccount: () => {},
   isAccountBanned: false,
   validateActiveAccountMeta: DEFAULT_MUTATION_META,
+  canOpenAccount: true,
 });
