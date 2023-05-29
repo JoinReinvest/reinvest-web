@@ -168,7 +168,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             </div>
           </FormContent>
         )}
-        {verifyAccountMeta.data && !verifyAccountMeta.data.isAccountVerified && (
+        {verifyAccountMeta.data && !verifyAccountMeta.data.isAccountVerified && !startInvestmentMeta.isLoading && (
           <>
             <FormContent>
               <div className="flex flex-col gap-32">
