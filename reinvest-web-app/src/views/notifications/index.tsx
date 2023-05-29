@@ -12,7 +12,7 @@ const TITLE = 'Notifications';
 export function InnerViewNotifications() {
   const { activeAccount } = useActiveAccount();
   const { currentFlowIdentifier, currentFlow, updateCurrentFlow } = useFlowsManagerContext();
-  const { modalTitle, updateModalTitle, isModalOpen, onModalOpenChange, showModalWithWatermark } = useModalManagerContext();
+  const { modalTitle, updateModalTitle, isModalOpen, onModalOpenChange, showModalWithWatermark, showProfilePicture } = useModalManagerContext();
 
   const onOpenChange = (state: boolean) => {
     if (!state) {
@@ -42,7 +42,7 @@ export function InnerViewNotifications() {
       isOpen={isModalOpen}
       onOpenChange={onOpenChange}
       addPaddingBottom={false}
-      hideAvatarNextToTitle
+      hideAvatarNextToTitle={!showProfilePicture}
     >
       {currentFlowIdentifier ? currentFlow?.Component : <Notifications />}
     </ModalWhite>
