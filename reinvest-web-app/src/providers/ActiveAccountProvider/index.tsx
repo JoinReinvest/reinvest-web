@@ -12,7 +12,7 @@ import { useValidateActiveAccount } from './hooks/validate-active-account';
 export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountProvider');
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
-  const { allAccounts, activeAccount, updateActiveAccount, previousAccount, userProfile, userProfileMeta } = useProfileAccounts();
+  const { allAccounts, activeAccount, updateActiveAccount, ...profileAccountsResult } = useProfileAccounts();
   const accountStatsResult = useAccountStats({ activeAccount });
   const beneficiariesResult = useBeneficiaries({ allAccounts });
   const availableAccountResult = useAvailableAccounts({ activeAccount, allAccounts });
@@ -22,13 +22,11 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   return (
     <Context.Provider
       value={{
-        userProfile,
         activeAccount,
-        previousAccount,
-        ...accountStatsResult,
-        userProfileMeta,
         allAccounts,
         updateActiveAccount,
+        ...profileAccountsResult,
+        ...accountStatsResult,
         ...availableAccountResult,
         ...beneficiariesResult,
         ...onboardedAccountResult,
