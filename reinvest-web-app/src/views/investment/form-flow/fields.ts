@@ -1,6 +1,6 @@
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { Address, CorporateCompanyTypeEnum, DocumentFileLinkInput, DomicileType } from 'reinvest-app-common/src/types/graphql';
-import { RecurringInvestmentFrequency } from 'reinvest-app-common/src/types/graphql';
+import { RecurringInvestmentFrequency, Usd } from 'reinvest-app-common/src/types/graphql';
 import { Applicant, FiduciaryEntityInformation, IndexedSchema } from 'views/onboarding/form-flow/form-fields';
 
 export interface FlowFields {
@@ -46,6 +46,7 @@ export interface FlowFields {
   fiduciaryEntityInformation?: FiduciaryEntityInformation;
   identificationDocuments?: DocumentFile[];
   investmentAmount?: number;
+  investmentFees?: Usd | null;
   name?: {
     firstName: string;
     lastName: string;

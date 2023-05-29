@@ -68,12 +68,14 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
 
   if (shouldDisplayBlackModal) {
     return (
-      <ModalBlackFullscreen
-        isOpen={isModalOpen}
-        onOpenChange={onModalClickBack}
-      >
-        <CurrentStepView />
-      </ModalBlackFullscreen>
+      <ModalHandlerProvider onModalLastStep={onModalLastStep}>
+        <ModalBlackFullscreen
+          isOpen={isModalOpen}
+          onOpenChange={onModalClickBack}
+        >
+          <CurrentStepView />
+        </ModalBlackFullscreen>
+      </ModalHandlerProvider>
     );
   }
 
