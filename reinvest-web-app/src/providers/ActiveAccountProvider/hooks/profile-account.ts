@@ -1,4 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useStaticState } from 'hooks/static-state';
+import { useEffect, useMemo, useState } from 'react';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { AccountOverview, AccountType, Maybe, Profile } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
@@ -16,7 +17,7 @@ interface Return {
 export function useProfileAccounts(): Return {
   const { data: userProfile, ...userProfileMeta } = useGetUserProfile(getApiClient);
   const [activeAccount, setActiveAccount] = useState<AccountOverview | null>(null);
-  const previousAccount = useRef<AccountOverview | null>(null);
+  const [previousAccount, setPreviousAccount] = useStaticState<AccountOverview | null>(null);
   const allAccounts = useMemo(() => userProfile?.accounts || [], [userProfile]);
 
   useEffect(() => {
@@ -35,10 +36,10 @@ export function useProfileAccounts(): Return {
 
   const updateActiveAccount = (account: Maybe<AccountOverview>) => {
     if (account) {
-      previousAccount.current = activeAccount;
+      setPreviousAccount(activeAccount);
       setActiveAccount(account);
     }
   };
 
-  return { allAccounts, activeAccount, updateActiveAccount, previousAccount: previousAccount.current, userProfile: userProfile ?? null, userProfileMeta };
+  return { allAccounts, activeAccount, updateActiveAccount, previousAccount, userProfile: userProfile ?? null, userProfileMeta };
 }
