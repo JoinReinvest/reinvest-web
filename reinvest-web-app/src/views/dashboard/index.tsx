@@ -18,21 +18,21 @@ interface Props {
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const {
-    arrivesFromOnboarding,
+    latestAccountOnboardedId,
     activeAccount,
-    setArrivesFromOnboarding,
+    deprecateLatestAccountOnboarded,
     activeAccountStatsMeta,
     isAccountBanned,
     updateActiveAccount,
     previousAccount,
     validateActiveAccountMeta,
-    allAccounts,
+    canOpenAccount,
   } = useActiveAccount();
-  const [hadArrivedFromOnboarding, setHadArrivedFromOnboarding] = useStaticState(arrivesFromOnboarding);
-  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
+  const [hadArrivedFromOnboarding, setHadArrivedFromOnboarding] = useStaticState(!!latestAccountOnboardedId);
+  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(!!latestAccountOnboardedId);
 
   useEffect(() => {
-    setArrivesFromOnboarding(false);
+    deprecateLatestAccountOnboarded();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -52,7 +52,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         isOpen
         title={title}
         onOpenChange={() => updateActiveAccount(previousAccount)}
-        possibleAddNewAccount={allAccounts.length < 2}
+        possibleAddNewAccount={canOpenAccount}
       />
     );
   }

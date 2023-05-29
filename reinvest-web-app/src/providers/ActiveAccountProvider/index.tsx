@@ -1,12 +1,11 @@
 import { PropsWithChildren, useState } from 'react';
 import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
-import { useSessionStorage } from 'usehooks-ts';
 
 import { Context } from './context';
-import { StorageKeys } from './enums';
 import { useAccountStats } from './hooks/account-stats';
 import { useAvailableAccounts } from './hooks/available-accounts';
 import { useBeneficiaries } from './hooks/beneficiaries';
+import { useOnboardedAccount } from './hooks/onboarded-account';
 import { useProfileAccounts } from './hooks/profile-account';
 import { useValidateActiveAccount } from './hooks/validate-active-account';
 import { State } from './interfaces';
@@ -15,12 +14,12 @@ export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountPro
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
   const { allAccounts, activeAccount, updateActiveAccount, previousAccount, userProfile, userProfileMeta } = useProfileAccounts();
-  const { activeAccountStats, activeAccountStatsMeta } = useAccountStats({ activeAccount });
-  const { isAbleToAddBeneficiaries } = useBeneficiaries({ allAccounts });
-  const { availableAccounts, individualAccount } = useAvailableAccounts({ activeAccount, allAccounts });
+  const accountStatsResult = useAccountStats({ activeAccount });
+  const beneficiariesResult = useBeneficiaries({ allAccounts });
+  const availableAccountResult = useAvailableAccounts({ activeAccount, allAccounts });
   const [bankAccount, updateBankAccount] = useState<State['bankAccount']>(null);
-  const [arrivesFromOnboarding, setArrivesFromOnboarding] = useSessionStorage(StorageKeys.HAS_BEEN_ONBOARDED, false);
-  const { validateActiveAccountMeta, isAccountBanned } = useValidateActiveAccount({ activeAccount });
+  const onboardedAccountResult = useOnboardedAccount({ activeAccount, allAccounts, updateActiveAccount });
+  const validateActiveAccountResult = useValidateActiveAccount({ activeAccount });
 
   return (
     <Context.Provider
@@ -28,20 +27,16 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
         userProfile,
         activeAccount,
         previousAccount,
-        activeAccountStats,
-        activeAccountStatsMeta,
+        ...accountStatsResult,
         userProfileMeta,
-        individualAccount,
         allAccounts,
         updateActiveAccount,
-        availableAccounts,
+        ...availableAccountResult,
         bankAccount,
         updateBankAccount,
-        isAbleToAddBeneficiaries,
-        arrivesFromOnboarding,
-        setArrivesFromOnboarding,
-        isAccountBanned,
-        validateActiveAccountMeta,
+        ...beneficiariesResult,
+        ...onboardedAccountResult,
+        ...validateActiveAccountResult,
       }}
     >
       {children}

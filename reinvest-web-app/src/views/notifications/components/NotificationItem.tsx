@@ -6,7 +6,7 @@ import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
 import { formatDateForNotification } from 'reinvest-app-common/src/utilities/dates';
 import { boldBracketedText } from 'utils/strings';
 
-import { NOTIFICATION_TYPE_FLOWS } from '../constants';
+import { ACTIONABLE_NOTIFICATIONS, NOTIFICATION_TYPE_FLOWS } from '../constants';
 import { useFlowsManagerContext } from '../providers/flows-manager';
 
 interface Props {
@@ -24,6 +24,7 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
 
   const description = boldBracketedText(notification?.body || '');
   const timestamp = formatDateForNotification(notification?.date || '');
+  const isActionable = notification?.notificationType ? ACTIONABLE_NOTIFICATIONS.includes(notification.notificationType) : false;
 
   function onClick() {
     const flowIdentifier = notification?.notificationType ? NOTIFICATION_TYPE_FLOWS.get(notification.notificationType) : null;
@@ -53,7 +54,7 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
           <Typography variant="paragraph">{timestamp}</Typography>
         </div>
 
-        {!notification?.isDismissible && (
+        {isActionable && (
           <div>
             <IconArrowRight />
           </div>
