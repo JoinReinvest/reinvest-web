@@ -17,9 +17,9 @@ interface Props {
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const {
-    arrivesFromOnboarding,
+    latestAccountOnboardedId,
     activeAccount,
-    setArrivesFromOnboarding,
+    deprecateLatestAccountOnboarded,
     activeAccountStatsMeta,
     isAccountBanned,
     updateActiveAccount,
@@ -27,11 +27,11 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     validateActiveAccountMeta,
     allAccounts,
   } = useActiveAccount();
-  const hadArrivedFromOnboarding = useRef(arrivesFromOnboarding);
-  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
+  const hadArrivedFromOnboarding = useRef(!!latestAccountOnboardedId);
+  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(!!latestAccountOnboardedId);
 
   useEffect(() => {
-    setArrivesFromOnboarding(false);
+    deprecateLatestAccountOnboarded();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
