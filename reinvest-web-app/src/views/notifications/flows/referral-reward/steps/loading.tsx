@@ -17,11 +17,11 @@ export const StepLoading: StepParams<FlowFields> = {
     const isDividend = notificationObjectType === NotificationObjectType.Dividend;
     const dividendId = notification?.onObject?.id;
 
-    const { dividend, meta } = useDividend({ dividendId: (isDividend && dividendId) || null });
+    const { dividend, dividendMeta } = useDividend({ dividendId: (isDividend && dividendId) || null });
 
     useEffect(() => {
       async function initializeStoreFields() {
-        if (meta.isSuccess && dividend) {
+        if (dividendMeta.isSuccess && dividend) {
           await updateStoreFields({
             _dividendId: dividend.id,
             _amount: dividend.amount?.value || undefined,
@@ -34,7 +34,7 @@ export const StepLoading: StepParams<FlowFields> = {
 
       initializeStoreFields();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [meta.isSuccess]);
+    }, [dividendMeta.isSuccess]);
 
     return (
       <div className="grid h-full w-full place-items-center">

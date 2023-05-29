@@ -5,18 +5,19 @@ import { QueryMeta } from 'types/queries';
 
 interface Params {
   dividendId: string | null;
+  isEnabled?: boolean;
 }
 
 interface Returns {
   dividend: Dividend | null;
-  meta: QueryMeta;
+  dividendMeta: QueryMeta;
 }
 
-export function useDividend({ dividendId }: Params): Returns {
-  const { data, ...meta } = useGetDividend(getApiClient, {
+export function useDividend({ dividendId, isEnabled = true }: Params): Returns {
+  const { data, ...dividendMeta } = useGetDividend(getApiClient, {
     dividendId: dividendId || '',
-    config: { enabled: !!dividendId },
+    config: { enabled: !!dividendId && isEnabled },
   });
 
-  return { dividend: data ?? null, meta };
+  return { dividend: data ?? null, dividendMeta };
 }
