@@ -1,8 +1,9 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlogPostInterface } from 'components/Education/BlogCard';
+import { useStaticState } from 'hooks/static-state';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { InvestmentView } from 'views/investment';
 
@@ -17,9 +18,9 @@ interface Props {
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const {
-    arrivesFromOnboarding,
+    latestAccountOnboardedId,
     activeAccount,
-    setArrivesFromOnboarding,
+    deprecateLatestAccountOnboarded,
     activeAccountStatsMeta,
     isAccountBanned,
     updateActiveAccount,
@@ -27,11 +28,11 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     validateActiveAccountMeta,
     canOpenAccount,
   } = useActiveAccount();
-  const hadArrivedFromOnboarding = useRef(arrivesFromOnboarding);
-  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
+  const [hadArrivedFromOnboarding, setHadArrivedFromOnboarding] = useStaticState(!!latestAccountOnboardedId);
+  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(!!latestAccountOnboardedId);
 
   useEffect(() => {
-    setArrivesFromOnboarding(false);
+    deprecateLatestAccountOnboarded();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -68,7 +69,8 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
       <InvestmentView
         isModalOpen={isInvestmentFlowOpen}
         onModalOpenChange={toggleIsInvestmentFlowOpen}
-        forInitialInvestment={hadArrivedFromOnboarding.current}
+        forInitialInvestment={hadArrivedFromOnboarding}
+        setHadArrivedFromOnboarding={setHadArrivedFromOnboarding}
       />
     </>
   );

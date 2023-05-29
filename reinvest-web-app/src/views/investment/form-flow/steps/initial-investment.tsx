@@ -12,7 +12,10 @@ import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useGetActiveRecurringInvestment } from 'reinvest-app-common/src/services/queries/getActiveRecurringInvestment';
 
+import { IconSpinner } from '../../../../assets/icons/IconSpinner';
+import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -31,6 +34,11 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     const { createInvestment, createInvestmentMeta } = useInvestmentContext();
     const { activeAccount } = useActiveAccount();
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
+    const {
+      data,
+      isLoading,
+      isSuccess: isGetActiveRecurringInvestmentSuccess,
+    } = useGetActiveRecurringInvestment(getApiClient, { accountId: activeAccount?.id || '' });
     const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
     const { handleSubmit, setValue, formState } = useForm<Fields>({
       mode: 'onChange',
@@ -69,6 +77,14 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
+    useEffect(() => {
+      if (isGetActiveRecurringInvestmentSuccess && data) {
+        updateStoreFields({ _shouldDisplayRecurringInvestment: false });
+      } else {
+        updateStoreFields({ _shouldDisplayRecurringInvestment: true });
+      }
+    }, [isGetActiveRecurringInvestmentSuccess, data, updateStoreFields]);
+
     async function onChangeBankAccount() {
       await updateStoreFields({ bankAccount: '', _willUpdateBankAccount: true });
       moveToStepByIdentifier(Identifiers.BANK_SELECTION);
@@ -76,35 +92,44 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
-          <ModalTitle
-            title="Make your initial one-time investment"
-            isTitleCenteredOnMobile
-          />
+        {isLoading && (
+          <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
+            <IconSpinner />
+          </div>
+        )}
+        {!isLoading && (
+          <>
+            <FormContent>
+              <ModalTitle
+                title="Make your initial one-time investment"
+                isTitleCenteredOnMobile
+              />
 
-          <InvestmentCard
-            defaultValue={defaultValues.amount}
-            onChange={value => setValue('amount', value, { shouldValidate: true })}
-            currentBankAccount={bankAccount}
-            onChangeBankAccount={onChangeBankAccount}
-            className="mx-auto"
-          />
+              <InvestmentCard
+                defaultValue={defaultValues.amount}
+                onChange={value => setValue('amount', value, { shouldValidate: true })}
+                currentBankAccount={bankAccount}
+                onChangeBankAccount={onChangeBankAccount}
+                className="mx-auto"
+              />
 
-          {!!errorMessage && <FormMessage message={errorMessage} />}
-        </FormContent>
+              {!!errorMessage && <FormMessage message={errorMessage} />}
+            </FormContent>
 
-        <ButtonStack>
-          <Button
-            label="Skip"
-            variant="outlined"
-            onClick={onSkipButtonClick}
-          />
-          <Button
-            type="submit"
-            label="Invest Now"
-            disabled={shouldButtonBeDisabled}
-          />
-        </ButtonStack>
+            <ButtonStack>
+              <Button
+                label="Skip"
+                variant="outlined"
+                onClick={onSkipButtonClick}
+              />
+              <Button
+                type="submit"
+                label="Invest Now"
+                disabled={shouldButtonBeDisabled}
+              />
+            </ButtonStack>
+          </>
+        )}
       </Form>
     );
   },

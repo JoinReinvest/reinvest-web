@@ -6,6 +6,7 @@ export interface FlowMeta {
   Component: ReactNode;
   identifier: FlowIdentifiers;
   modalTitle: string;
+  displayActiveAccountProfilePicture?: boolean;
 }
 
 export enum DividendAction {

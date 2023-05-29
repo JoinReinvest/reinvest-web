@@ -8,7 +8,7 @@ import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler } from 'react';
-import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -36,15 +36,19 @@ export const StepAccountCompletion: StepParams<OnboardingFormFields> = {
     return allRequiredFieldsExists(profileFields);
   },
 
-  Component: () => {
+  Component: ({ storeFields }: StepComponentProps<OnboardingFormFields>) => {
     const router = useRouter();
-    const { setArrivesFromOnboarding, userProfileMeta } = useActiveAccount();
+    const { setLatestAccountOnboardedId, userProfileMeta } = useActiveAccount();
+    const { accountId } = storeFields;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      userProfileMeta.refetch();
-      setArrivesFromOnboarding(true);
-      await router.push(URL.index);
+
+      if (accountId) {
+        userProfileMeta.refetch();
+        setLatestAccountOnboardedId(accountId);
+        await router.push(URL.index);
+      }
     };
 
     return (

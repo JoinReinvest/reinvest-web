@@ -17,11 +17,13 @@ export const Context = createContext<State>({
   isAbleToAddBeneficiaries: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateActiveAccount: () => {},
-  arrivesFromOnboarding: false,
+  latestAccountOnboardedId: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  setArrivesFromOnboarding: () => {},
+  deprecateLatestAccountOnboarded: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   updateBankAccount: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setLatestAccountOnboardedId: () => {},
   isAccountBanned: false,
   validateActiveAccountMeta: DEFAULT_MUTATION_META,
   canOpenAccount: true,
