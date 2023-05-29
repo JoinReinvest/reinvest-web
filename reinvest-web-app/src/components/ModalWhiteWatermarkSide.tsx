@@ -34,10 +34,7 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children 
               </Dialog.Close>
             </header>
 
-            <Dialog.Title
-              asChild
-              className="hidden md:block"
-            >
+            <Dialog.Title className="hidden md:block">
               <Typography variant="h3">{title}</Typography>
             </Dialog.Title>
 
