@@ -154,13 +154,18 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent>
-          <ModalTitle title="Upload Profile Picture" />
+          <ModalTitle
+            title="Upload Profile Picture"
+            isTitleCenteredOnMobile
+          />
+
           {individualDraftAccountError && <ErrorMessagesHandler error={individualDraftAccountError} />}
           {createAvatarLinkError && <ErrorMessagesHandler error={createAvatarLinkError} />}
           {openAccountError && <ErrorMessagesHandler error={openAccountError} />}
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
           {completeDraftAccountError && <ErrorMessagesHandler error={completeDraftAccountError} />}
           {completeCorporateDraftAccountError && <ErrorMessagesHandler error={completeCorporateDraftAccountError} />}
+
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
               name="profilePicture"

@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function AccountStats({ toggleDisplayInitialInvestmentFlow }: Props) {
-  const { activeAccount } = useActiveAccount();
+  const { activeAccountStats } = useActiveAccount();
 
   return (
     <div className="flex flex-col gap-16 lg:flex-row lg:gap-24">
@@ -22,7 +22,7 @@ export function AccountStats({ toggleDisplayInitialInvestmentFlow }: Props) {
         >
           Dashboard
         </Typography>
-        <Typography variant="h2">{activeAccount?.positionTotal}</Typography>
+        <Typography variant="h2">{activeAccountStats?.accountValue}</Typography>
         <Typography
           variant="paragraph-emphasized"
           className="mt-8 text-gray-02 lg:mt-0"

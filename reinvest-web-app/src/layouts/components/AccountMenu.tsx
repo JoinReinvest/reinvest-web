@@ -183,10 +183,12 @@ export const AccountMenu = ({ activeAccount }: Props) => {
         />
       )}
 
-      <ViewBeneficiaryCreation
-        isModalOpen={isModalAddBeneficiaryOpen}
-        onModalOpenChange={toggleIsModalAddBeneficiaryOpen}
-      />
+      {isAbleToAddBeneficiaries && (
+        <ViewBeneficiaryCreation
+          isModalOpen={isModalAddBeneficiaryOpen}
+          onModalOpenChange={toggleIsModalAddBeneficiaryOpen}
+        />
+      )}
 
       <ViewAccountManagement
         isModalOpen={isModalManageAccount}

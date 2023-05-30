@@ -17,6 +17,10 @@
     @apply text-h4;
   }
 
+  .typo-h4-expanded {
+    @apply text-h4 font-stretch-expanded;
+  }
+
   .typo-h5 {
     @apply text-h5 font-stretch-expanded;
   }

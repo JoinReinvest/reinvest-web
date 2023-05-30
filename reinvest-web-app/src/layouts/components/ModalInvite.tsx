@@ -25,7 +25,7 @@ export const ModalInvite = ({ isOpen, onOpenChange, referralCodeUrl }: Props) =>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
 
-        <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col justify-between px-24 pb-24 pt-40 md:px-44 md:pb-0 md:pt-80">
+        <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col justify-between px-24 pb-24 pt-40 md:max-w-415 md:px-44 md:pb-0 md:pt-80">
           <>
             <div className="flex flex-col gap-64">
               <header className="flex items-center justify-between md:hidden">
