@@ -28,6 +28,8 @@ export const StepAccountSelection: StepParams<FlowFields> = {
   identifier: Identifiers.ACCOUNT_SELECTION,
 
   doesMeetConditionFields: fields => {
+    console.log('fields', fields);
+
     return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount;
   },
 

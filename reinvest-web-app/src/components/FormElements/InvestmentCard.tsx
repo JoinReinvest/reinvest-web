@@ -11,6 +11,7 @@ import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 interface Props {
   currentBankAccount: string;
+  currentBankAccountType: string;
   onChange: (value?: number) => void;
   onChangeBankAccount: () => void;
   className?: string;
@@ -22,7 +23,7 @@ interface Fields {
   presetAmount?: string;
 }
 
-export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankAccount, onChange, className }: Props) {
+export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankAccount, onChange, className, currentBankAccountType }: Props) {
   const { activeAccount } = useActiveAccount();
   // eslint-disable-next-line security/detect-object-injection
   const presetOptions = useMemo(() => INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
@@ -97,7 +98,9 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
       />
 
       <div className="flex flex-col gap-16">
-        <Typography variant="paragraph">{currentBankAccount}</Typography>
+        <Typography variant="paragraph">
+          {currentBankAccountType} {currentBankAccount}
+        </Typography>
 
         <Typography variant="paragraph">You can have 1 bank account connected to your REINVEST profile.</Typography>
 

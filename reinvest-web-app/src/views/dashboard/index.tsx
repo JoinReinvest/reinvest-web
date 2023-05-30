@@ -57,6 +57,10 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     );
   }
 
+  console.log('isInvestmentFlowOpen', isInvestmentFlowOpen);
+  console.log('latestAccountOnboardedId', latestAccountOnboardedId);
+  console.log('hadArrivedFromOnboarding', hadArrivedFromOnboarding);
+
   return (
     <>
       <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
@@ -69,7 +73,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
       <InvestmentView
         isModalOpen={isInvestmentFlowOpen}
         onModalOpenChange={toggleIsInvestmentFlowOpen}
-        forInitialInvestment={hadArrivedFromOnboarding || true}
+        forInitialInvestment={!hadArrivedFromOnboarding}
         setHadArrivedFromOnboarding={setHadArrivedFromOnboarding}
       />
     </>

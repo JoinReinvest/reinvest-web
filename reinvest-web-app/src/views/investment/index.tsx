@@ -47,7 +47,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
 
   const onModalClickBack = () => {
     if (isFirstStep || Identifiers.ACCOUNT_SELECTION) {
-      onModalOpenChange(false);
+      onModalLastStep();
     } else {
       moveToPreviousValidStep();
     }
