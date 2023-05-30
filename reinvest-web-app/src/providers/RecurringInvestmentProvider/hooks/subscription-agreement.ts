@@ -9,6 +9,7 @@ import { MutationMeta } from 'types/queries';
 
 interface Params {
   recurringInvestment: RecurringInvestment | null;
+  enableQuery?: boolean;
 }
 
 interface Returns {
@@ -18,13 +19,13 @@ interface Returns {
   subscriptionRecurringInvestmentAgreementMeta: QueryMeta;
 }
 
-export function useSubscriptionAgreement({ recurringInvestment }: Params): Returns {
+export function useSubscriptionAgreement({ recurringInvestment, enableQuery }: Params): Returns {
   const { activeAccount } = useActiveAccount();
   const subscriptionAgreementId = useMemo(() => recurringInvestment?.subscriptionAgreementId, [recurringInvestment]);
   const { data: subscriptionRecurringInvestmentAgreement, ...subscriptionRecurringInvestmentAgreementMeta } = useGetSubscriptionAgreement(getApiClient, {
     subscriptionAgreementId: subscriptionAgreementId ?? '',
     config: {
-      enabled: !!subscriptionAgreementId,
+      enabled: !!subscriptionAgreementId && enableQuery,
     },
   });
 
