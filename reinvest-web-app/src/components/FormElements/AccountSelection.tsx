@@ -2,16 +2,18 @@ import { RadioGroup, RadioGroupItem } from '@hookooekoo/ui-radio-group';
 import { IconCheckmark } from 'assets/icons/IconCheckmark';
 import { Avatar } from 'components/Avatar';
 import { Typography } from 'components/Typography';
+import { useMemo } from 'react';
 import { FieldValues, UseControllerProps } from 'react-hook-form';
-import { AccountOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
-
-import { getLabelToDisplay } from './InputAvatar';
+import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { getAccountsWithLabel } from 'utils/accounts';
 
 interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
   options: Maybe<AccountOverview>[];
 }
 
 export function AccountSelection<FormFields extends FieldValues>({ options, ...controllerProps }: Props<FormFields>) {
+  const accounts = useMemo(() => getAccountsWithLabel(options), [options]);
+
   return (
     <RadioGroup
       className="flex flex-col gap-16"
@@ -20,7 +22,7 @@ export function AccountSelection<FormFields extends FieldValues>({ options, ...c
       orientation="vertical"
       readingDirection="ltr"
     >
-      {options.map(account => (
+      {accounts.map(account => (
         <RadioGroupItem
           key={account?.id}
           value={account?.id || ''}
@@ -28,11 +30,12 @@ export function AccountSelection<FormFields extends FieldValues>({ options, ...c
         >
           <div className="flex grow items-center gap-16">
             <Avatar
+              src={account?.avatar?.url ?? undefined}
+              label={account?.avatarLabel ?? undefined}
               isSizeFixed
               fixedSize="md"
-              accountType={account?.type || 'INDIVIDUAL'}
-              alt={`${account?.label}'s profile picture`}
-              label={getLabelToDisplay(account?.type || '')}
+              accountType={account?.type || AccountType.Individual}
+              alt={account?.avatar?.initials ?? `${account?.label}'s profile picture`}
             />
 
             <div>
