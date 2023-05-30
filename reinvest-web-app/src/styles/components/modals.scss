@@ -37,3 +37,10 @@
     @apply text-black-01;
   }
 }
+
+.modal-create-beneficiary {
+  .hkek-input-text-control-placeholder,
+  .hkek-input-masked-control-placeholder {
+    @apply typo-bonus-heading;
+  }
+}

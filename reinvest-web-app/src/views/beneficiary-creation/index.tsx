@@ -10,6 +10,7 @@ import { ModalHandlerProvider, useModalHandler } from './providers/modal-handler
 
 const MODAL_CONFIRMATION_TITLE = 'Are you sure you want to return to dashboard?';
 const MODAL_CONFIRMATION_DESCRIPTION = 'Any updates made will be lost.';
+const MODAL_CLASSNAME = 'modal-create-beneficiary';
 
 export function InnerViewBeneficiaryCreation() {
   const { activeAccount } = useActiveAccount();
@@ -43,6 +44,7 @@ export function InnerViewBeneficiaryCreation() {
         onOpenChange={handleOpenChange}
         title="Add Beneficiary"
         activeAccount={activeAccount}
+        className={MODAL_CLASSNAME}
       >
         <CurrentStepView />
       </ModalWhite>
