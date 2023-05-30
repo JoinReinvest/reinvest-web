@@ -33,6 +33,7 @@ export const StepAccountSelection: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount, updateActiveAccount, allAccounts } = useActiveAccount();
+
     const { control, handleSubmit, formState } = useForm<Fields>({
       resolver: zodResolver(schema),
       defaultValues: async () => ({ accountId: activeAccount?.id ?? undefined }),
