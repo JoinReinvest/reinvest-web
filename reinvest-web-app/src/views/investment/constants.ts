@@ -16,6 +16,7 @@ export const FLOW_STEPS_WITH_BLACK_MODAL: string[] = [
   Identifiers.CORPORATE_APPLICANT_DETAILS,
   Identifiers.PERMANENT_ADDRESS,
 ];
+
 export const FLOW_STEPS_WITH_X_BUTTON: string[] = [
   Identifiers.LANDING,
   Identifiers.BANK_SELECTION,
@@ -25,7 +26,6 @@ export const FLOW_STEPS_WITH_X_BUTTON: string[] = [
 ];
 
 export const INITIAL_STORE_FIELDS: FlowFields = {
-  _hasCompletedFlow: false,
   bankAccount: '',
   address: {},
 };
