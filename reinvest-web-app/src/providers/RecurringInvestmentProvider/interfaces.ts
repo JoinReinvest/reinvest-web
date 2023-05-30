@@ -1,3 +1,5 @@
+import { PropsWithChildren } from 'react';
+
 import { useCreateInvestment } from './hooks/create-investment';
 import { useDraftInvestment } from './hooks/draft-investment';
 import { useInitiateInvestment } from './hooks/initiate-investment';
@@ -9,3 +11,7 @@ type HookCreateInvestment = ReturnType<typeof useCreateInvestment>;
 type HookInitiateInvestment = ReturnType<typeof useInitiateInvestment>;
 type HookSubscriptionAgreement = ReturnType<typeof useSubscriptionAgreement>;
 type HookDraftInvestment = ReturnType<typeof useDraftInvestment>;
+
+export interface ProviderProps extends PropsWithChildren {
+  enableQueries?: boolean;
+}

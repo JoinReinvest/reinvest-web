@@ -1,11 +1,11 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { useActiveAccountNotifications } from 'providers/ActiveAccountNotifications';
+import { useNotifications } from 'providers/Notifications';
 
 import { EmptyListMessage } from './EmptyListMessage';
 import { NotificationsList } from './NotificationList';
 
 export function Notifications() {
-  const { notifications, notificationsMeta } = useActiveAccountNotifications();
+  const { notifications, notificationsMeta } = useNotifications();
   const hasItems = notifications.length > 0;
 
   if (notificationsMeta?.isLoading) {

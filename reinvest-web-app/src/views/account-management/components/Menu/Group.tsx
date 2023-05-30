@@ -12,7 +12,7 @@ interface Props {
 export const Group = ({ group, addSeparator }: Props) => (
   <>
     <li className="flex flex-col gap-24">
-      <Typography variant="h4">{group.label}</Typography>
+      <Typography variant="h4-expanded">{group.label}</Typography>
 
       <ul className="flex flex-col gap-16">
         {group.items.map(menuItem => (
