@@ -15,10 +15,10 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
 import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { getAccountsWithLabel } from 'utils/accounts';
 import { ViewAccountManagement } from 'views/account-management';
 import { ViewBeneficiaryCreation } from 'views/beneficiary-creation';
 
-import { getAccountsWithLabel } from '../utilities/accounts';
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
 import { AccountMenuActionItem } from './AccountMenuActionItem';
 import { AccountMenuFooter } from './AccountMenuFooter';

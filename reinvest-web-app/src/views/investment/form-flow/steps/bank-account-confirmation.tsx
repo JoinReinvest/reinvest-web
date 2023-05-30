@@ -16,22 +16,22 @@ const TITLE_SUCCESS = `Your bank account ending in ${PLACEHOLDER} has been added
 const TITLE_FAILURE = 'We were unable to add your bank account.';
 const BUTTON_LABEL = 'Continue';
 
-export const StepConfirmation: StepParams<FlowFields> = {
-  identifier: Identifiers.CONFIRMATION,
+export const StepBankAccountConfirmation: StepParams<FlowFields> = {
+  identifier: Identifiers.BANK_ACCOUNT_CONFIRMATION,
+
+  isAValidationView: true,
 
   doesMeetConditionFields: fields => {
-    return !!fields.bankAccount && !fields._hasCompletedFlow;
+    return !!fields.bankAccount && !!fields._justAddedBankAccount;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const hasSucceded = !!storeFields.bankAccount;
     const title = hasSucceded ? TITLE_SUCCESS.replace(PLACEHOLDER, storeFields.bankAccount) : TITLE_FAILURE;
     const icon = hasSucceded ? <IconCheckCircleGray /> : null;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      await updateStoreFields({ _hasCompletedFlow: true });
-
       moveToNextStep();
     };
 

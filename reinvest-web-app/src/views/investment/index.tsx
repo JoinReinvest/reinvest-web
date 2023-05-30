@@ -134,7 +134,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
 export const InvestmentView = (props: Props) => (
   <InvestmentProvider>
     <RecurringInvestmentProvider>
-      <InvestmentFlowProvider initialStoreFields={INITIAL_STORE_FIELDS}>
+      <InvestmentFlowProvider initialStoreFields={{ ...INITIAL_STORE_FIELDS, _forInitialInvestment: !!props.forInitialInvestment }}>
         <InnerInvestmentView {...props} />
       </InvestmentFlowProvider>
     </RecurringInvestmentProvider>

@@ -10,9 +10,11 @@ export function FlowInvestmentFailed() {
   const { investment, investmentMeta } = useInvestmentSummary({ investmentId });
 
   if (investmentMeta.isLoading) {
-    <div className="grid h-full w-full place-items-center">
-      <IconSpinner color="black" />
-    </div>;
+    return (
+      <div className="grid h-full w-full place-items-center">
+        <IconSpinner color="black" />
+      </div>
+    );
   }
 
   return (

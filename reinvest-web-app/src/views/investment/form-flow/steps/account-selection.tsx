@@ -27,15 +27,13 @@ const BUTTON_LABEL = 'Continue';
 export const StepAccountSelection: StepParams<FlowFields> = {
   identifier: Identifiers.ACCOUNT_SELECTION,
 
-  willBePartOfTheFlow: fields => {
-    const arrivesFromOnboarding = !!fields._forInitialInvestment;
-    const hasMoreThanOneAccount = !!fields._hasMoreThanAnAccount;
-
-    return arrivesFromOnboarding && hasMoreThanOneAccount;
+  doesMeetConditionFields: fields => {
+    return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount;
   },
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount, updateActiveAccount, allAccounts } = useActiveAccount();
+
     const { control, handleSubmit, formState } = useForm<Fields>({
       resolver: zodResolver(schema),
       defaultValues: async () => ({ accountId: activeAccount?.id ?? undefined }),

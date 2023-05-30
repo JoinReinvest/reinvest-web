@@ -5,11 +5,7 @@ import { useOnboardedAccount } from './hooks/onboarded-account';
 import { useProfileAccounts } from './hooks/profile-account';
 import { useValidateActiveAccount } from './hooks/validate-active-account';
 
-export interface State extends HookProfileAccounts, HookAvailableAccounts, HookOnboardedAccount, HookAccountStats, HookBeneficiaries, HookValidateAccount {
-  /** The masked bank account of the profile */
-  bankAccount: string | null;
-  updateBankAccount: (bankAccount: string) => void;
-}
+export interface State extends HookProfileAccounts, HookAvailableAccounts, HookOnboardedAccount, HookAccountStats, HookBeneficiaries, HookValidateAccount {}
 
 type HookProfileAccounts = ReturnType<typeof useProfileAccounts>;
 type HookAvailableAccounts = ReturnType<typeof useAvailableAccounts>;
