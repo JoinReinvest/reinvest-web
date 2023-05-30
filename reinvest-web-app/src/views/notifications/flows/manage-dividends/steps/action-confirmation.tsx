@@ -5,7 +5,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
-import { useActiveAccountNotifications } from 'providers/ActiveAccountNotifications';
+import { useNotifications } from 'providers/Notifications';
 import { FormEventHandler } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
@@ -34,7 +34,7 @@ export const StepActionConfirmation: StepParams<FlowFields> = {
 
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { resetStoreFields, moveToFirstStep } = useFlow();
-    const { markAsRead } = useActiveAccountNotifications();
+    const { markAsRead } = useNotifications();
     const { onModalOpenChange } = useModalManagerContext();
     const { updateCurrentFlow, notification } = useFlowsManagerContext();
 

@@ -1,12 +1,12 @@
 import { IconBell } from 'assets/icons/IconBell';
 import cx from 'classnames';
 import { Typography } from 'components/Typography';
-import { useActiveAccountNotifications } from 'providers/ActiveAccountNotifications';
+import { useNotifications } from 'providers/Notifications';
 
 import { useModalNotificationsContext } from '../contexts/modal-notifications';
 
 export function NotificationsButton() {
-  const { notificationStats } = useActiveAccountNotifications();
+  const { notificationStats } = useNotifications();
   const { toggleIsModalNotificationsOpen } = useModalNotificationsContext();
 
   const hasUnreadNotifications = !!notificationStats?.unreadCount;
