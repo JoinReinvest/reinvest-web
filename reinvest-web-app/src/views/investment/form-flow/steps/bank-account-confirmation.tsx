@@ -17,7 +17,7 @@ const TITLE_FAILURE = 'We were unable to add your bank account.';
 const BUTTON_LABEL = 'Continue';
 
 export const StepBankAccountConfirmation: StepParams<FlowFields> = {
-  identifier: Identifiers.CONFIRMATION,
+  identifier: Identifiers.BANK_ACCOUNT_CONFIRMATION,
 
   isAValidationView: true,
 
