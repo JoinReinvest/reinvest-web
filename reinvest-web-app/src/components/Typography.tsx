@@ -6,6 +6,7 @@ type Variants =
   | 'h2'
   | 'h3'
   | 'h4'
+  | 'h4-expanded'
   | 'h5'
   | 'h5-larger'
   | 'h6'
@@ -30,6 +31,7 @@ const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
   ['h2', 'h2'],
   ['h3', 'h3'],
   ['h4', 'h4'],
+  ['h4-expanded', 'h4'],
   ['h5', 'h5'],
   ['h5-larger', 'h5'],
   ['h6', 'h6'],
@@ -52,6 +54,7 @@ const variants = cva(undefined, {
       h2: 'typo-h2',
       h3: 'typo-h3',
       h4: 'typo-h4',
+      'h4-expanded': 'typo-h4-expanded',
       h5: 'typo-h5',
       'h5-larger': 'typo-h5-larger',
       h6: 'typo-h6',
