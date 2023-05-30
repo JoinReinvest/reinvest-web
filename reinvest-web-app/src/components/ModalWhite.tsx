@@ -15,10 +15,20 @@ interface Props extends PropsWithChildren {
   onOpenChange: (state: boolean) => void;
   title: string;
   addPaddingBottom?: boolean;
+  className?: string;
   hideAvatarNextToTitle?: boolean;
 }
 
-export const ModalWhite = ({ isOpen, onOpenChange, title, activeAccount, addPaddingBottom = true, hideAvatarNextToTitle = false, children }: Props) => {
+export const ModalWhite = ({
+  isOpen,
+  onOpenChange,
+  title,
+  activeAccount,
+  addPaddingBottom = true,
+  hideAvatarNextToTitle = false,
+  className,
+  children,
+}: Props) => {
   const avatarContainerClassName = cx({ hidden: !!hideAvatarNextToTitle });
   const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44', { 'pb-24': !!addPaddingBottom });
 
@@ -30,7 +40,7 @@ export const ModalWhite = ({ isOpen, onOpenChange, title, activeAccount, addPadd
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
 
-        <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 md:max-w-415">
+        <Dialog.Content className={cx('white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 md:max-w-415', className)}>
           <>
             <header className="flex items-center justify-between px-24 pb-22 pt-12 text-black-01 md:hidden md:px-44">
               <Dialog.Close>
