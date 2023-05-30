@@ -5,9 +5,9 @@ import { Context } from './context';
 import { useMarkAsRead } from './hooks/mark-as-read';
 import { useNotificationsStats } from './hooks/notifications-stats';
 
-export const useActiveAccountNotifications = createContextConsumer(Context, 'ActiveAccountNotificationsProvider');
+export const useNotifications = createContextConsumer(Context, 'NotificationsProvider');
 
-export const ActiveAccountNotificationsProvider = ({ children }: PropsWithChildren) => {
+export const NotificationsProvider = ({ children }: PropsWithChildren) => {
   const notificationsResult = useNotificationsStats();
   const markAsReadResult = useMarkAsRead();
 

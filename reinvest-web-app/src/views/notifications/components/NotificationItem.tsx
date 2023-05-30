@@ -1,6 +1,7 @@
 import { IconArrowRight } from 'assets/icons/IconArrowRight';
 import cx from 'classnames';
 import { Typography } from 'components/Typography';
+import { useNotifications } from 'providers/Notifications';
 import { forwardRef } from 'react';
 import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
 import { formatDateForNotification } from 'reinvest-app-common/src/utilities/dates';
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification }, ref) => {
+  const { markAsRead } = useNotifications();
   const { updateCurrentFlow } = useFlowsManagerContext();
 
   const className = cx('flex items-center gap-16 py-16 -mx-24 md:-mx-44 px-24 md:px-44 border-b border-b-gray-04', {
@@ -22,14 +24,17 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
     'cursor-pointer': !notification?.isDismissible,
   });
 
+  const notificationId = notification?.id || '';
   const description = boldBracketedText(notification?.body || '');
   const timestamp = formatDateForNotification(notification?.date || '');
   const isActionable = notification?.notificationType ? ACTIONABLE_NOTIFICATIONS.includes(notification.notificationType) : false;
 
-  function onClick() {
+  async function onClick() {
+    await markAsRead({ notificationId });
     const flowIdentifier = notification?.notificationType ? NOTIFICATION_TYPE_FLOWS.get(notification.notificationType) : null;
+    const willTriggerFlow = flowIdentifier && !notification?.isRead;
 
-    if (notification?.onObject && flowIdentifier) {
+    if (willTriggerFlow) {
       updateCurrentFlow({ identifier: flowIdentifier, notification });
     }
   }

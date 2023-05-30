@@ -1,6 +1,6 @@
 import { ActiveAccountConfigurationProvider } from 'providers/ActiveAccountConfigurationProvider';
-import { ActiveAccountNotificationsProvider } from 'providers/ActiveAccountNotifications';
 import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
+import { NotificationsProvider } from 'providers/Notifications';
 import { PropsWithChildren } from 'react';
 
 import { Header } from './components/Header';
@@ -10,13 +10,13 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
   return (
     <ActiveAccountProvider>
       <ActiveAccountConfigurationProvider>
-        <ActiveAccountNotificationsProvider>
+        <NotificationsProvider>
           <ModalNotificationsProvider>
             <Header />
 
             <main className="container mx-auto pb-20 pt-80 lg:pt-100">{children}</main>
           </ModalNotificationsProvider>
-        </ActiveAccountNotificationsProvider>
+        </NotificationsProvider>
       </ActiveAccountConfigurationProvider>
     </ActiveAccountProvider>
   );

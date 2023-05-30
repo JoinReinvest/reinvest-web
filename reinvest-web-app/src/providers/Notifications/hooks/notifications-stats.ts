@@ -29,7 +29,7 @@ export function useNotificationsStats(): Return {
     return null;
   }, [data]);
 
-  const notifications = useMemo(() => data?.pages.map(el => el.getNotifications).flat() || [], [data]);
+  const notifications = useMemo(() => data?.pages.map(page => page.getNotifications).flat() || [], [data]);
 
   return { notificationStats, notifications, notificationsMeta };
 }

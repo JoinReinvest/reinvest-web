@@ -5,7 +5,6 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
-import { useActiveAccountNotifications } from 'providers/ActiveAccountNotifications';
 import { FormEventHandler } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
@@ -34,22 +33,16 @@ export const StepActionConfirmation: StepParams<FlowFields> = {
 
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { resetStoreFields, moveToFirstStep } = useFlow();
-    const { markAsRead } = useActiveAccountNotifications();
     const { onModalOpenChange } = useModalManagerContext();
-    const { updateCurrentFlow, notification } = useFlowsManagerContext();
+    const { updateCurrentFlow } = useFlowsManagerContext();
 
     const willReinvestFunds = storeFields.action === DividendAction.REINVEST_FUNDS;
     const title = willReinvestFunds ? TITLE_REINVEST : TITLE_WITHDRAW;
     const informationMessage = willReinvestFunds ? INFORMATION_MESSAGE_REINVEST : INFORMATION_MESSAGE_WITHDRAW;
 
     const amountMasked = storeFields._amountMasked;
-    const notificationId = notification?.id;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
-      if (notificationId) {
-        await markAsRead({ notificationId });
-      }
-
       event.preventDefault();
       updateCurrentFlow({ identifier: null });
       onModalOpenChange(false);
