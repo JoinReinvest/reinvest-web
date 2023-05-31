@@ -21,7 +21,7 @@ export const StepConfirmation: StepParams<BeneficiaryCreationFormFields> = {
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields.firstName, fields.lastName, fields.beneficiary];
+    const requiredFields = [fields.firstName, fields.lastName, fields.beneficiary?.id];
 
     return allRequiredFieldsExists(requiredFields);
   },
