@@ -35,7 +35,7 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { recurringInvestment } = useRecurringInvestment();
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
@@ -45,7 +45,7 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        <FormContent>
+        <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
           <div className="flex w-full justify-center">
             <IconRecurrent />
           </div>

@@ -8,6 +8,7 @@ import { Input } from 'components/FormElements/Input';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
@@ -29,7 +30,7 @@ const schema = z
   .object({
     companyTickerSymbols: z
       .object({
-        symbol: z.string(),
+        symbol: formValidationRules.symbolTicker,
       })
       .array()
       .min(MINUMUM_COMPANY_TICKER_SYMBOLS),

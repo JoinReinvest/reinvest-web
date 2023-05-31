@@ -51,7 +51,7 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
+        <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
           <ModalTitle
             title={TITLE}
             isTitleCenteredOnMobile

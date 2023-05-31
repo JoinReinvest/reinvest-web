@@ -7,6 +7,7 @@ import { TextArea } from 'components/FormElements/TextArea';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
@@ -20,7 +21,7 @@ import { Identifiers } from '../identifiers';
 type Fields = Pick<OnboardingFormFields, 'seniorPoliticalFigure'>;
 
 const schema = z.object({
-  seniorPoliticalFigure: z.string().min(1),
+  seniorPoliticalFigure: formValidationRules.seniorPoliticalFigure,
 });
 
 export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {

@@ -71,6 +71,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         onModalOpenChange={toggleIsInvestmentFlowOpen}
         forInitialInvestment={!hadArrivedFromOnboarding}
         setHadArrivedFromOnboarding={setHadArrivedFromOnboarding}
+        withSideModal={!hadArrivedFromOnboarding}
       />
     </>
   );

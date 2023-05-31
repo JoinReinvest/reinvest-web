@@ -39,7 +39,7 @@ const LIST_ITEMS = [
 export const StepBankAccountLanding: StepParams<FlowFields> = {
   identifier: Identifiers.BANK_ACCOUNT_LANDING,
 
-  Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const {
       refetch,
@@ -87,7 +87,7 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
         )}
         {!isReadBankAccountLoading && (
           <>
-            <FormContent>
+            <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
               <div className="flex flex-col gap-48">
                 <header className="flex justify-center gap-14">
                   <LogoIcon2 className="h-25 w-auto" />
