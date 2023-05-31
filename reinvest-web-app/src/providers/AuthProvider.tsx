@@ -5,7 +5,6 @@ import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
-import { ActionName } from 'reinvest-app-common/src/types/graphql';
 
 import { getApiClient } from '../services/getApiClient';
 import { BannedView } from '../views/BannedView';
@@ -132,10 +131,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   useEffect(() => {
     if (verifyAccountData) {
-      const { requiredActions } = verifyAccountData;
-      const hasBannedProfile = requiredActions?.map(requiredAction => requiredAction?.action).includes(ActionName.BanProfile);
-
-      setIsBannedProfile(hasBannedProfile || false);
+      //TODO: add banned profile logic in RELEASE-5
+      setIsBannedProfile(false);
     }
   }, [verifyAccountData, isVerifyAccountLoading]);
 
