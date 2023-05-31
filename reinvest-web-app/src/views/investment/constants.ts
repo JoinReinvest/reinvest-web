@@ -27,5 +27,6 @@ export const FLOW_STEPS_WITH_X_BUTTON: string[] = [
 
 export const INITIAL_STORE_FIELDS: FlowFields = {
   bankAccount: '',
+  bankAccountType: '',
   address: {},
 };

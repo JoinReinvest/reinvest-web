@@ -100,7 +100,7 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
     useEffect(() => {
       if (plaidDataForApi && activeAccount?.id) {
         fulfillBankAccountMutation({ accountId: activeAccount.id, input: plaidDataForApi });
-        updateStoreFields({ bankAccount: hashBankAccountNumber(plaidDataForApi.accountNumber) });
+        updateStoreFields({ bankAccount: hashBankAccountNumber(plaidDataForApi.accountNumber), bankAccountType: plaidDataForApi.accountType });
       }
     }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation, updateStoreFields]);
 
@@ -145,4 +145,4 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
   },
 };
 
-const hashBankAccountNumber = (bankAccountFullNumber: string) => `****${bankAccountFullNumber.slice(-4)}`;
+const hashBankAccountNumber = (bankAccountFullNumber: string) => `**** **** **** **** ${bankAccountFullNumber.slice(-4)}`;

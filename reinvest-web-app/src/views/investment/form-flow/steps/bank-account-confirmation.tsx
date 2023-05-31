@@ -27,7 +27,7 @@ export const StepBankAccountConfirmation: StepParams<FlowFields> = {
 
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const hasSucceded = !!storeFields.bankAccount;
-    const title = hasSucceded ? TITLE_SUCCESS.replace(PLACEHOLDER, storeFields.bankAccount) : TITLE_FAILURE;
+    const title = hasSucceded ? TITLE_SUCCESS.replace(PLACEHOLDER, storeFields.bankAccount.replace(/ /g, '').slice(-8)) : TITLE_FAILURE;
     const icon = hasSucceded ? <IconCheckCircleGray /> : null;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
