@@ -50,7 +50,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
 
   const onModalClickBack = () => {
-    if (isFirstStep || Identifiers.ACCOUNT_SELECTION) {
+    if (isFirstStep || currentStepIdentifier === Identifiers.ACCOUNT_SELECTION) {
       onModalLastStep();
     } else {
       moveToPreviousValidStep();

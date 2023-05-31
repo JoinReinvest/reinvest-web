@@ -100,7 +100,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
           });
 
-          if (shouldUpdateStakeholderData) {
+          if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
             refetchCorporate();
           }
         }
