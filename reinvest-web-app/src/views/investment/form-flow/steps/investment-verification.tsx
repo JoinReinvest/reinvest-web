@@ -8,7 +8,7 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
 import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
@@ -57,11 +57,18 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       data: getCorporateData,
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
 
+    const startInvestmentCallback = useCallback(async () => {
+      if (investmentId) {
+        await startInvestmentMutate({ investmentId, approveFees: true });
+        await refetchAccountStats();
+      }
+    }, [investmentId, refetchAccountStats, startInvestmentMutate]);
+
     useEffect(() => {
       async function initiateInvestments() {
         if (activeAccount?.id) {
           await mutateAsync({ accountId: activeAccount.id });
-          recurringInvestment && (await initiateRecurringInvestment());
+          (await recurringInvestment) && (await initiateRecurringInvestment());
         }
       }
 
@@ -72,6 +79,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     useEffect(() => {
       if (verifyAccountMeta.isSuccess) {
         if (!verifyAccountMeta?.data?.requiredActions?.length) {
+          if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
+            startInvestmentCallback();
+          }
+
           return moveToNextStep();
         }
 
