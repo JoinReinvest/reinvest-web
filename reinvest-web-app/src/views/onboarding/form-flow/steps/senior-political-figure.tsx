@@ -7,6 +7,7 @@ import { TextArea } from 'components/FormElements/TextArea';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
@@ -16,7 +17,6 @@ import { z } from 'zod';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
-import {formValidationRules} from "reinvest-app-common/src/form-schemas";
 
 type Fields = Pick<OnboardingFormFields, 'seniorPoliticalFigure'>;
 

@@ -15,7 +15,10 @@ export const AreaChart = ({ dataPoints, domains }: Props) => {
       width="100%"
       height="100%"
     >
-      <PrimitiveAreaChart data={dataPoints}>
+      <PrimitiveAreaChart
+        data={dataPoints}
+        stackOffset="silhouette"
+      >
         <defs>
           <linearGradient
             id="colorUv"
