@@ -32,7 +32,6 @@ export const StepAccountSelection: StepParams<FlowFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    // console.log("does StepAccountSelection", fields);
     return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount;
   },
 
