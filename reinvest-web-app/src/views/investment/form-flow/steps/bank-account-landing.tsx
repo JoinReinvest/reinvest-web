@@ -54,7 +54,6 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
         retry: false,
       },
     });
-
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
 
@@ -67,11 +66,11 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
     }, []);
 
     useEffect(() => {
-      if (isReadBankAccountSuccess && readBankAccountData?.accountNumber) {
-        updateStoreFields({ bankAccount: readBankAccountData.accountNumber });
+      if (isReadBankAccountSuccess && readBankAccountData?.accountNumber && readBankAccountData?.accountType) {
+        updateStoreFields({ bankAccount: readBankAccountData.accountNumber, bankAccountType: readBankAccountData.accountType });
         moveToNextStep();
       }
-    }, [isReadBankAccountSuccess, moveToNextStep, updateStoreFields, readBankAccountData?.accountNumber]);
+    }, [isReadBankAccountSuccess, moveToNextStep, updateStoreFields, readBankAccountData?.accountNumber, readBankAccountData?.accountType]);
 
     useEffect(() => {
       if (isError) {
