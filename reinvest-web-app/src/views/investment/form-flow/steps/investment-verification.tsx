@@ -88,20 +88,24 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
         const accountIsBanned = verifyAccountMeta.data?.requiredActions?.find(requiredAction => requiredAction?.action === ActionName.BanAccount);
 
+        //TODO: this if should be upgrade in RELEASE-5
         if (accountIsBanned) {
-          return setIsBannedAccount(true);
+          return setIsBannedAccount(false);
         }
 
         if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
           const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
+            //TODO: this if should be upgrade in RELEASE-5
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview  && requiredAction.action !== ActionName.BanProfile && requiredAction.action !== ActionName.BanAccount,
           );
 
           const shouldUpdateStakeholderData = verifyAccountMeta.data?.requiredActions?.filter(
+            //TODO: this if should be upgrade in RELEASE-5
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview && requiredAction.action !== ActionName.BanProfile && requiredAction.action !== ActionName.BanAccount,
           );
 
           const shouldUpdateCompanyData = verifyAccountMeta.data?.requiredActions?.filter(
+            //TODO: this if should be upgrade in RELEASE-5
             requiredAction => requiredAction?.onObject.type === VerificationObjectType.Company && requiredAction.action !== ActionName.RequireManualReview && requiredAction.action !== ActionName.BanProfile && requiredAction.action !== ActionName.BanAccount,
           );
 
