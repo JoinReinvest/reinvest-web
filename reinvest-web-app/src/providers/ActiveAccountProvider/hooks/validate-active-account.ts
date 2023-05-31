@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/services/queries/getListAccountTypesUserCanOpen';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
-import { AccountOverview, AccountType, ActionName } from 'reinvest-app-common/src/types/graphql';
+import { AccountOverview, AccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { MutationMeta } from 'types/queries';
 
@@ -46,9 +46,8 @@ export function useValidateActiveAccount({ activeAccount }: Params): Return {
 
   useEffect(() => {
     if (verifyAccountData) {
-      const { requiredActions } = verifyAccountData;
-      const hasBannedProfile = requiredActions?.map(requiredAction => requiredAction?.action).includes(ActionName.BanAccount);
-      setIsAccountBanned(hasBannedProfile || false);
+      //TODO: Add logic to check if account is banned in RELENDER-5
+      setIsAccountBanned(false);
     }
   }, [verifyAccountData]);
 

@@ -24,7 +24,7 @@ export function useDataPoints({ chart }: Params): Return {
   const domains: ChartDataPointDomains = useMemo(() => {
     const values = dataPoints.map(dataPoint => dataPoint.value);
     const min = DEFAULT_MIN_DOMAIN;
-    const max = Math.max(...values) * MAX_DOMAIN_CAP;
+    const max = Math.round(Math.max(...values) * MAX_DOMAIN_CAP);
 
     return { min, max };
   }, [dataPoints]);

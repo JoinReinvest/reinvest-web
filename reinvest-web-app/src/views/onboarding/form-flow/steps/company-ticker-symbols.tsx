@@ -16,6 +16,7 @@ import { z } from 'zod';
 
 import { CompanyTickerSymbol, OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import {formValidationRules} from "reinvest-app-common/src/form-schemas";
 
 type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
@@ -29,7 +30,7 @@ const schema = z
   .object({
     companyTickerSymbols: z
       .object({
-        symbol: z.string(),
+        symbol: formValidationRules.symbolTicker,
       })
       .array()
       .min(MINUMUM_COMPANY_TICKER_SYMBOLS),

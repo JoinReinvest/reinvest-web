@@ -16,11 +16,12 @@ import { z } from 'zod';
 import { ErrorMessagesHandler } from '../../../../components/FormElements/ErrorMessagesHandler';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
+import {formValidationRules} from "reinvest-app-common/src/form-schemas";
 
 type Fields = Pick<OnboardingFormFields, 'finraInstitutionName'>;
 
 const schema = z.object({
-  finraInstitutionName: z.string().min(1),
+  finraInstitutionName: formValidationRules.finraInstitutionName,
 });
 
 export const StepFinraInstitution: StepParams<OnboardingFormFields> = {

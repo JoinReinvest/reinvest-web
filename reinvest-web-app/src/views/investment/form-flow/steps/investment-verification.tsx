@@ -8,9 +8,10 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
+import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
 import { useGetCorporateAccount } from 'reinvest-app-common/src/services/queries/getCorporateAccount';
 import { useGetInvestmentSummary } from 'reinvest-app-common/src/services/queries/getInvestmentSummary';
 import { useStartInvestment } from 'reinvest-app-common/src/services/queries/startInvestment';
@@ -41,6 +42,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const { onModalLastStep } = useModalHandler();
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
+    const { refetch: refetchAccountStats } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
     const { mutateAsync: abortInvestmentMutate, ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
     const { refetch: refetchGetInvestmentSummary, ...getInvestmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
       investmentId: investmentId || '',
@@ -55,11 +57,18 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       data: getCorporateData,
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
 
+    const startInvestmentCallback = useCallback(async () => {
+      if (investmentId) {
+        await startInvestmentMutate({ investmentId, approveFees: true });
+        await refetchAccountStats();
+      }
+    }, [investmentId, refetchAccountStats, startInvestmentMutate]);
+
     useEffect(() => {
       async function initiateInvestments() {
         if (activeAccount?.id) {
           await mutateAsync({ accountId: activeAccount.id });
-          recurringInvestment && (await initiateRecurringInvestment());
+          (await recurringInvestment) && (await initiateRecurringInvestment());
         }
       }
 
@@ -70,26 +79,34 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     useEffect(() => {
       if (verifyAccountMeta.isSuccess) {
         if (!verifyAccountMeta?.data?.requiredActions?.length) {
+          if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
+            startInvestmentCallback();
+          }
+
           return moveToNextStep();
         }
 
         const accountIsBanned = verifyAccountMeta.data?.requiredActions?.find(requiredAction => requiredAction?.action === ActionName.BanAccount);
 
+        //TODO: this if should be upgrade in RELEASE-5
         if (accountIsBanned) {
-          return setIsBannedAccount(true);
+          return setIsBannedAccount(false);
         }
 
         if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
           const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
-            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
+            //TODO: this if should be upgrade in RELEASE-5
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview  && requiredAction.action !== ActionName.BanProfile && requiredAction.action !== ActionName.BanAccount,
           );
 
           const shouldUpdateStakeholderData = verifyAccountMeta.data?.requiredActions?.filter(
-            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview,
+            //TODO: this if should be upgrade in RELEASE-5
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview && requiredAction.action !== ActionName.BanProfile && requiredAction.action !== ActionName.BanAccount,
           );
 
           const shouldUpdateCompanyData = verifyAccountMeta.data?.requiredActions?.filter(
-            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Company && requiredAction.action !== ActionName.RequireManualReview,
+            //TODO: this if should be upgrade in RELEASE-5
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Company && requiredAction.action !== ActionName.RequireManualReview && requiredAction.action !== ActionName.BanProfile && requiredAction.action !== ActionName.BanAccount,
           );
 
           updateStoreFields({
@@ -98,7 +115,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
           });
 
-          if (shouldUpdateStakeholderData) {
+          if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
             refetchCorporate();
           }
         }
@@ -161,9 +178,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (startInvestmentMeta.isSuccess) {
+        refetchAccountStats();
         moveToNextStep();
       }
-    }, [startInvestmentMeta.isSuccess, moveToNextStep]);
+    }, [startInvestmentMeta.isSuccess, moveToNextStep, refetchAccountStats]);
 
     const onSubmit = () => {
       moveToNextStep();

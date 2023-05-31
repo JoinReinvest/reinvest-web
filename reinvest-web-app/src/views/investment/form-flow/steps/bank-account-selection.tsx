@@ -145,4 +145,4 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
   },
 };
 
-const hashBankAccountNumber = (bankAccountFullNumber: string) => `**** **** **** **** ${bankAccountFullNumber.slice(-4)}`;
+const hashBankAccountNumber = (bankAccountFullNumber: string) => `**** **** **** ${bankAccountFullNumber.slice(-4)}`;
