@@ -100,7 +100,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         )}
         {!isLoading && (
           <>
-            <FormContent>
+            <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
               <ModalTitle
                 title="Make your initial one-time investment"
                 isTitleCenteredOnMobile

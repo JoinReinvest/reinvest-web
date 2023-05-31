@@ -27,7 +27,7 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
     return !optsInForAutomaticDividendReinvestment;
   },
 
-  Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const [isLoading, toggleIsLoading] = useToggler(false);
     const { activeAccount } = useActiveAccount();
     const {
@@ -79,7 +79,7 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
           </div>
         )}
         {!isGetAccountConfigurationRefetching && (
-          <FormContent>
+          <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
             <div className="flex flex-col gap-36">
               <ModalTitle title={TITLE} />
 

@@ -92,7 +92,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
+        <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
           <ModalTitle
             title={TITLE}
             subtitle={SUBTITLE}
