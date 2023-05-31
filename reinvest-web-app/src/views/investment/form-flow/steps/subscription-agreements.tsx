@@ -76,7 +76,10 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
 
       if (subscriptionAgreement) {
         await signSubscriptionAgreement();
-        await signRecurringInvestmentSubscriptionAgreement();
+
+        if (shouldAgreeToRecurringInvestment) {
+          await signRecurringInvestmentSubscriptionAgreement();
+        }
       }
     };
 

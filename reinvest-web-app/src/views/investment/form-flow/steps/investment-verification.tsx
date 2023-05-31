@@ -11,6 +11,7 @@ import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
+import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
 import { useGetCorporateAccount } from 'reinvest-app-common/src/services/queries/getCorporateAccount';
 import { useGetInvestmentSummary } from 'reinvest-app-common/src/services/queries/getInvestmentSummary';
 import { useStartInvestment } from 'reinvest-app-common/src/services/queries/startInvestment';
@@ -41,6 +42,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const { onModalLastStep } = useModalHandler();
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
+    const { refetch: refetchAccountStats } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
     const { mutateAsync: abortInvestmentMutate, ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
     const { refetch: refetchGetInvestmentSummary, ...getInvestmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
       investmentId: investmentId || '',
@@ -161,9 +163,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (startInvestmentMeta.isSuccess) {
+        refetchAccountStats();
         moveToNextStep();
       }
-    }, [startInvestmentMeta.isSuccess, moveToNextStep]);
+    }, [startInvestmentMeta.isSuccess, moveToNextStep, refetchAccountStats]);
 
     const onSubmit = () => {
       moveToNextStep();

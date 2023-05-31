@@ -47,7 +47,7 @@ export function useValidateActiveAccount({ activeAccount }: Params): Return {
   useEffect(() => {
     if (verifyAccountData) {
       //TODO: Add logic to check if account is banned in RELENDER-5
-      setIsAccountBanned( false);
+      setIsAccountBanned(false);
     }
   }, [verifyAccountData]);
 
