@@ -54,7 +54,6 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
         retry: false,
       },
     });
-
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
 

@@ -27,9 +27,12 @@ const BUTTON_LABEL = 'Continue';
 export const StepAccountSelection: StepParams<FlowFields> = {
   identifier: Identifiers.ACCOUNT_SELECTION,
 
-  doesMeetConditionFields: fields => {
-    console.log('fields', fields);
+  willBePartOfTheFlow: fields => {
+    return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount;
+  },
 
+  doesMeetConditionFields: fields => {
+    // console.log("does StepAccountSelection", fields);
     return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount;
   },
 

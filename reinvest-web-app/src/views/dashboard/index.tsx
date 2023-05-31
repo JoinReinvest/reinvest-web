@@ -57,10 +57,6 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     );
   }
 
-  console.log('isInvestmentFlowOpen', isInvestmentFlowOpen);
-  console.log('latestAccountOnboardedId', latestAccountOnboardedId);
-  console.log('hadArrivedFromOnboarding', hadArrivedFromOnboarding);
-
   return (
     <>
       <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />

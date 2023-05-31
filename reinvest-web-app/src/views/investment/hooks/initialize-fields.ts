@@ -16,7 +16,7 @@ export const useInitializeFields = ({ forInitialInvestment }: Params) => {
   useEffect(() => {
     async function initializeFields() {
       const hasMoreThanAnAvailableAccount = availableAccounts.length > 0;
-      console.log('hasMoreThanAnAvailableAccount', hasMoreThanAnAvailableAccount);
+
       await updateStoreFields({
         _shouldAgreeToOneTimeInvestment: true,
         _hasMoreThanAnAccount: hasMoreThanAnAvailableAccount,

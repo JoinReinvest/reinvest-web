@@ -22,7 +22,7 @@ interface Props extends ModalProps {
 }
 
 const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, setHadArrivedFromOnboarding, withSideModal = false }: Props) => {
-  const { activeAccount } = useActiveAccount();
+  const { activeAccount, deprecateLatestAccountOnboarded } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
 
   const {
@@ -31,17 +31,21 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     resetStoreFields,
     moveToFirstStep,
     getStoreFields,
+    updateStoreFields,
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
   const shouldDisplayBlackModal = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_BLACK_MODAL.includes(currentStepIdentifier), [currentStepIdentifier]);
   const shouldDisplayBackIcon = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_X_BUTTON.includes(currentStepIdentifier), [currentStepIdentifier]);
 
-  const onModalLastStep = useCallback(() => {
+  const onModalLastStep = useCallback(async () => {
+    const storeFields = getStoreFields();
+    await resetStoreFields();
+    await updateStoreFields({ _forInitialInvestment: true, _hasMoreThanAnAccount: storeFields?._hasMoreThanAnAccount });
     onModalOpenChange(false);
     moveToFirstStep();
-    resetStoreFields();
     setHadArrivedFromOnboarding && setHadArrivedFromOnboarding(false);
+    deprecateLatestAccountOnboarded();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
 

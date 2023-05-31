@@ -50,6 +50,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
     const bankAccount = storeFields.bankAccount;
+    const bankAccountType = storeFields.bankAccountType;
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
       const investment: Investment = {
@@ -80,6 +81,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
             defaultValue={defaultValues.amount}
             onChange={value => setValue('amount', value, { shouldValidate: true })}
             currentBankAccount={bankAccount}
+            currentBankAccountType={bankAccountType}
             onChangeBankAccount={onChangeBankAccount}
             className="mx-auto"
           />
