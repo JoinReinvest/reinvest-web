@@ -68,7 +68,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
+        <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
           <ModalTitle
             title={TITLE}
             subtitle={subtitle}

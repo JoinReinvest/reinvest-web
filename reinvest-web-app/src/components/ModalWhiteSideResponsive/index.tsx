@@ -10,9 +10,10 @@ interface Props extends PropsWithChildren {
   isOpen: boolean;
   onOpenChange: (state: boolean) => void;
   title: string;
+  hideFooter?: boolean;
 }
 
-export const ModalWhiteSideResponsive = ({ isOpen, onOpenChange, title, activeAccount, children }: Props) => (
+export const ModalWhiteSideResponsive = ({ isOpen, onOpenChange, title, activeAccount, hideFooter = false, children }: Props) => (
   <Dialog.Root
     open={isOpen}
     onOpenChange={onOpenChange}
@@ -31,10 +32,12 @@ export const ModalWhiteSideResponsive = ({ isOpen, onOpenChange, title, activeAc
 
           <div className="h-full px-24 pb-24 md:px-44">{children}</div>
 
-          <ModalFooter
-            modalColor="white"
-            width="lg"
-          />
+          {!hideFooter && (
+            <ModalFooter
+              modalColor="white"
+              width="lg"
+            />
+          )}
         </>
       </Dialog.Content>
     </Dialog.Portal>
