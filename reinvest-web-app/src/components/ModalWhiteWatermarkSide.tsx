@@ -24,7 +24,7 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
 
-        <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 md:max-w-415">
+        <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 overflow-hidden pb-24 md:max-w-415">
           <>
             <header className="flex items-center justify-between md:hidden">
               <LogoIcon2 />
@@ -34,7 +34,7 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children 
               </Dialog.Close>
             </header>
 
-            <Dialog.Title className="hidden md:block">
+            <Dialog.Title className="hidden px-24 pt-24 md:block md:px-44">
               <Typography variant="h3">{title}</Typography>
             </Dialog.Title>
 
@@ -44,7 +44,7 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children 
               <div className={contentClassName}>{children}</div>
             </div>
 
-            <LogoIcon className="absolute -bottom-30 -right-137 -z-10 ml-50 h-460 w-460 fill-gray-04 lg:-bottom-169 lg:-right-36 lg:h-650 lg:w-650" />
+            <LogoIcon className="absolute -bottom-30 -right-137 -z-10 ml-50 h-460 w-460 fill-gray-04 lg:-bottom-0 lg:left-94" />
           </>
         </Dialog.Content>
       </Dialog.Portal>

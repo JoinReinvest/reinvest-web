@@ -27,13 +27,15 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
   const { activeAccount } = useActiveAccount();
   // eslint-disable-next-line security/detect-object-injection
   const presetOptions = useMemo(() => INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
-  const form = useForm<Fields>({ defaultValues: async () => ({ presetAmount: '', customAmount: defaultValue }) });
+  const form = useForm<Fields>({ defaultValues: async () => ({ presetAmount: presetOptions[0]?.value, customAmount: defaultValue }) });
   const { field: presetField } = useController({ control: form.control, name: 'presetAmount' });
+  const { field: customField } = useController({ control: form.control, name: 'customAmount' });
 
   const onPresetFieldChange = (value: string) => {
     const parsedValue = parseInt(value);
-    form.setValue('customAmount', parsedValue);
+    form.resetField('customAmount');
     presetField.onChange({ target: { value } });
+    customField.onChange({ target: { value: '' } });
 
     onChange(parsedValue);
   };
@@ -81,7 +83,7 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
       </RadioGroup.Root>
 
       <InputMasked
-        name="customAmount"
+        name={customField.name}
         control={form.control}
         rules={{ onChange: onCustomFieldChange }}
         maskOptions={{
