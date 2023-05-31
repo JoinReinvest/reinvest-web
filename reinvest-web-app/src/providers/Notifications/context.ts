@@ -7,7 +7,10 @@ export const Context = createContext<State>({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   markAsRead: () => new Promise(() => {}),
   markAsReadMeta: DEFAULT_MUTATION_META,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  markUnreadNotificationsAsRead: () => new Promise(() => {}),
   notifications: [],
+  unreadNotifications: [],
   notificationStats: null,
   notificationsMeta: DEFAULT_INFINITE_QUERY_META,
 });

@@ -9,6 +9,7 @@ interface Return {
   notificationStats: Pick<NotificationsStats, 'totalCount' | 'unreadCount'> | null;
   notifications: Maybe<Notification>[];
   notificationsMeta: InfiniteQueryMeta;
+  unreadNotifications: Maybe<Notification>[];
 }
 
 export function useNotificationsStats(): Return {
@@ -30,6 +31,7 @@ export function useNotificationsStats(): Return {
   }, [data]);
 
   const notifications = useMemo(() => data?.pages.map(page => page.getNotifications).flat() || [], [data]);
+  const unreadNotifications = useMemo(() => notifications.filter(notification => !notification?.isRead), [notifications]);
 
-  return { notificationStats, notifications, notificationsMeta };
+  return { notificationStats, notifications, notificationsMeta, unreadNotifications };
 }

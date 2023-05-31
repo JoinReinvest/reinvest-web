@@ -30,7 +30,10 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
   const isActionable = notification?.notificationType ? ACTIONABLE_NOTIFICATIONS.includes(notification.notificationType) : false;
 
   async function onClick() {
-    await markAsRead({ notificationId });
+    if (!notification?.isRead) {
+      await markAsRead({ notificationId });
+    }
+
     const flowIdentifier = notification?.notificationType ? NOTIFICATION_TYPE_FLOWS.get(notification.notificationType) : null;
     const willTriggerFlow = flowIdentifier && !notification?.isRead;
 
