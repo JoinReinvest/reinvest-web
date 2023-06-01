@@ -9,15 +9,11 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { useToggler } from 'hooks/toggler';
 import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useCreateRecurringSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/createRecurringSubscriptionAgreement';
-import { SubscriptionAgreement } from 'reinvest-app-common/src/types/graphql';
 import { Schema, z } from 'zod';
 
-import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
-import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -49,43 +45,26 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
   identifier: Identifiers.SUBSCRIPTION_AGREEMENTS,
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [!!fields.oneTimeInvestment, fields.optsInForAutomaticDividendReinvestment !== undefined];
+    const requiredFields = [fields.optsInForAutomaticDividendReinvestment !== undefined];
 
     return allRequiredFieldsExists(requiredFields);
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { activeAccount } = useActiveAccount();
-    const [recurringSubscriptionAgreement, setRecurringSubscriptionAgreement] = useState<SubscriptionAgreement | null>(null);
     const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useInvestmentContext();
-    const { signRecurringInvestmentSubscriptionAgreement } = useRecurringInvestment();
+    const { signRecurringInvestmentSubscriptionAgreement, signRecurringInvestmentSubscriptionAgreementMeta } = useRecurringInvestment();
     const [isDialogInvestmentOpen, toggleIsDialogInvestmentOpen] = useToggler();
     const [isDialogRecurringAgreementOpen, toggleIsDialogRecurringAgreementOpen] = useToggler(false);
     const defaultValues: Fields = {
       agreesToOneTimeInvestment: !!storeFields.agreesToOneTimeInvestment,
       agreesToRecurringInvestment: !!storeFields.agreesToRecurringInvestment,
     };
-    const { mutateAsync: createRecurringSubscriptionAgreementMutateAsync } = useCreateRecurringSubscriptionAgreement(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
       defaultValues: async () => defaultValues,
       resolver: zodResolver(getSchema(storeFields)),
     });
-
-    useEffect(() => {
-      async function retrieveSubscriptionAgreement() {
-        const accountId = activeAccount?.id;
-
-        if (accountId) {
-          const result = await createRecurringSubscriptionAgreementMutateAsync({ accountId });
-          setRecurringSubscriptionAgreement(result);
-        }
-      }
-
-      retrieveSubscriptionAgreement();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeAccount?.id]);
 
     const shouldButtonsBeDisabled = !formState.isValid || formState.isSubmitting;
     const shouldAgreeToOneTimeInvestment = !!storeFields._shouldAgreeToOneTimeInvestment;
@@ -97,19 +76,19 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
 
       if (subscriptionAgreement) {
         await signSubscriptionAgreement();
+      }
 
-        if (shouldAgreeToRecurringInvestment) {
-          await signRecurringInvestmentSubscriptionAgreement();
-        }
+      if (shouldAgreeToRecurringInvestment) {
+        await signRecurringInvestmentSubscriptionAgreement();
       }
     };
 
     useEffect(() => {
-      if (signSubscriptionAgreementMeta.isSuccess) {
+      if (signSubscriptionAgreementMeta.isSuccess || signRecurringInvestmentSubscriptionAgreementMeta.isSuccess) {
         signSubscriptionAgreementMeta.reset();
         moveToNextStep();
       }
-    }, [signSubscriptionAgreementMeta, moveToNextStep]);
+    }, [signSubscriptionAgreementMeta, moveToNextStep, signRecurringInvestmentSubscriptionAgreementMeta]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -152,9 +131,9 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
                   {LABEL_AGREEMENT_RECURRING}
                 </CheckboxLabeled>
 
-                {recurringSubscriptionAgreement && (
+                {storeFields.recurringSubscriptionAgreement && (
                   <DialogSubscriptionAgreement
-                    subscriptionAgreement={recurringSubscriptionAgreement}
+                    subscriptionAgreement={storeFields.recurringSubscriptionAgreement}
                     isModalOpen={isDialogRecurringAgreementOpen}
                     onModalOpenChange={toggleIsDialogRecurringAgreementOpen}
                   />

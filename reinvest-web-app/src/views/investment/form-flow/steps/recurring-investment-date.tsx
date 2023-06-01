@@ -10,8 +10,11 @@ import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useCreateRecurringSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/createRecurringSubscriptionAgreement';
 import { Schema, z } from 'zod';
 
+import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
+import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -40,6 +43,8 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { createRecurringInvestment, createRecurringInvestmentMeta } = useRecurringInvestment();
+    const { activeAccount } = useActiveAccount();
+    const { mutateAsync: createRecurringSubscriptionAgreementMutateAsync } = useCreateRecurringSubscriptionAgreement(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
@@ -64,6 +69,12 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
 
       if (date && recurringInvestment?.amount && recurringInvestmentInterval) {
         await createRecurringInvestment({ date, investmentAmount: recurringInvestment.amount, frequency: recurringInvestmentInterval });
+        const accountId = activeAccount?.id;
+
+        if (accountId) {
+          const result = await createRecurringSubscriptionAgreementMutateAsync({ accountId });
+          await updateStoreFields({ recurringSubscriptionAgreement: result });
+        }
       }
     };
 
