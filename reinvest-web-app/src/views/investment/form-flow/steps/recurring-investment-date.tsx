@@ -40,6 +40,7 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { createRecurringInvestment, createRecurringInvestmentMeta } = useRecurringInvestment();
+
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
