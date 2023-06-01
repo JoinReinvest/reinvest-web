@@ -150,10 +150,9 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (getInvestmentSummaryMeta.data && verifyAccountMeta.data) {
-        const { investmentFees } = getInvestmentSummaryMeta.data;
         const { canUserContinueTheInvestment } = verifyAccountMeta.data;
 
-        if (canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
+        if (canUserContinueTheInvestment && investmentId) {
           startInvestmentMutate({ investmentId: investmentId, approveFees: true });
         }
       }
