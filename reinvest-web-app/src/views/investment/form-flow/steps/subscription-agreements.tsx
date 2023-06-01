@@ -49,7 +49,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
   identifier: Identifiers.SUBSCRIPTION_AGREEMENTS,
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [!!fields.oneTimeInvestment, fields.optsInForAutomaticDividendReinvestment !== undefined];
+    const requiredFields = [fields.optsInForAutomaticDividendReinvestment !== undefined];
 
     return allRequiredFieldsExists(requiredFields);
   },
@@ -58,7 +58,8 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
     const { activeAccount } = useActiveAccount();
     const [recurringSubscriptionAgreement, setRecurringSubscriptionAgreement] = useState<SubscriptionAgreement | null>(null);
     const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useInvestmentContext();
-    const { signRecurringInvestmentSubscriptionAgreement } = useRecurringInvestment();
+    const { signRecurringInvestmentSubscriptionAgreement, signRecurringInvestmentSubscriptionAgreementMeta } = useRecurringInvestment();
+
     const [isDialogInvestmentOpen, toggleIsDialogInvestmentOpen] = useToggler();
     const [isDialogRecurringAgreementOpen, toggleIsDialogRecurringAgreementOpen] = useToggler(false);
     const defaultValues: Fields = {
@@ -97,19 +98,19 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
 
       if (subscriptionAgreement) {
         await signSubscriptionAgreement();
+      }
 
-        if (shouldAgreeToRecurringInvestment) {
-          await signRecurringInvestmentSubscriptionAgreement();
-        }
+      if (shouldAgreeToRecurringInvestment) {
+        await signRecurringInvestmentSubscriptionAgreement();
       }
     };
 
     useEffect(() => {
-      if (signSubscriptionAgreementMeta.isSuccess) {
+      if (signSubscriptionAgreementMeta.isSuccess || signRecurringInvestmentSubscriptionAgreementMeta.isSuccess) {
         signSubscriptionAgreementMeta.reset();
         moveToNextStep();
       }
-    }, [signSubscriptionAgreementMeta, moveToNextStep]);
+    }, [signSubscriptionAgreementMeta, moveToNextStep, signRecurringInvestmentSubscriptionAgreementMeta]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -152,9 +153,9 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
                   {LABEL_AGREEMENT_RECURRING}
                 </CheckboxLabeled>
 
-                {recurringSubscriptionAgreement && (
+                {storeFields.recurringSubscriptionAgreement && (
                   <DialogSubscriptionAgreement
-                    subscriptionAgreement={recurringSubscriptionAgreement}
+                    subscriptionAgreement={storeFields.recurringSubscriptionAgreement}
                     isModalOpen={isDialogRecurringAgreementOpen}
                     onModalOpenChange={toggleIsDialogRecurringAgreementOpen}
                   />

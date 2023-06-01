@@ -75,6 +75,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (verifyAccountMeta.isSuccess) {
+        if (!storeFields._willSetUpOneTimeInvestments && storeFields._willSetUpRecurringInvestment) {
+          moveToNextStep();
+        }
+
         if (!verifyAccountMeta?.data?.requiredActions?.length) {
           if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
             startInvestmentCallback();
@@ -133,10 +137,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, [verifyAccountMeta.isSuccess, initiateRecurringInvestmentMeta.isSuccess]);
 
     useEffect(() => {
-      if (verifyAccountMeta.isSuccess) {
+      if (verifyAccountMeta.isSuccess && investmentId) {
         refetchGetInvestmentSummary();
       }
-    }, [refetchGetInvestmentSummary, verifyAccountMeta.isSuccess]);
+    }, [refetchGetInvestmentSummary, verifyAccountMeta.isSuccess, investmentId]);
 
     useEffect(() => {
       if (getInvestmentSummaryMeta.isSuccess) {
