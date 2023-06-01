@@ -3,17 +3,15 @@ import cx from 'classnames';
 import { ButtonLink } from 'components/ButtonLink';
 import { InputMasked } from 'components/FormElements/InputMasked';
 import { Typography } from 'components/Typography';
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useMemo } from 'react';
 import { useController, useForm } from 'react-hook-form';
-import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/investment-amounts';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { AmountsOption } from 'reinvest-app-common/src/constants/investment-amounts';
 
 interface Props {
   currentBankAccount: string;
   currentBankAccountType: string;
   onChange: (value?: number) => void;
   onChangeBankAccount: () => void;
+  presetOptions: AmountsOption[];
   className?: string;
   defaultValue?: number;
 }
@@ -23,10 +21,7 @@ interface Fields {
   presetAmount?: string;
 }
 
-export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankAccount, onChange, className, currentBankAccountType }: Props) {
-  const { activeAccount } = useActiveAccount();
-  // eslint-disable-next-line security/detect-object-injection
-  const presetOptions = useMemo(() => INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
+export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankAccount, onChange, className, currentBankAccountType, presetOptions }: Props) {
   const form = useForm<Fields>({ defaultValues: async () => ({ presetAmount: presetOptions[0]?.value, customAmount: defaultValue }) });
   const { field: presetField } = useController({ control: form.control, name: 'presetAmount' });
   const { field: customField } = useController({ control: form.control, name: 'customAmount' });

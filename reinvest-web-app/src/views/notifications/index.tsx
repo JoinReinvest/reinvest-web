@@ -12,18 +12,21 @@ const TITLE = 'Notifications';
 
 export function InnerViewNotifications() {
   const { activeAccount } = useActiveAccount();
+  const { notificationsMeta } = useNotifications();
   const { currentFlowIdentifier, currentFlow, updateCurrentFlow } = useFlowsManagerContext();
   const { modalTitle, updateModalTitle, isModalOpen, onModalOpenChange, showModalWithWatermark, showProfilePicture } = useModalManagerContext();
-  const { markUnreadNotificationsAsRead } = useNotifications();
 
-  const onOpenChange = async (state: boolean) => {
+  const onOpenChange = (state: boolean) => {
     if (!state) {
       updateCurrentFlow({ identifier: null });
       updateModalTitle(null);
     }
 
     onModalOpenChange(state);
-    await markUnreadNotificationsAsRead();
+
+    if (!state) {
+      notificationsMeta.refetch();
+    }
   };
 
   if (showModalWithWatermark) {
