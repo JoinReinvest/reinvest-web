@@ -10,6 +10,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { RECURRING_INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/investment-amounts';
+import { RECURRING_INVESTMENT_MIN_AMOUNT } from 'reinvest-app-common/src/constants/investment-limits';
 import { generateRecurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
@@ -56,7 +57,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
       const investment: Investment = {
-        amount,
+        amount: amount ?? RECURRING_INVESTMENT_MIN_AMOUNT,
         type: 'recurrent',
         date: new Date(),
       };
