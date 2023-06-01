@@ -1,5 +1,5 @@
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
-import { Address, CorporateCompanyTypeEnum, DocumentFileLinkInput, DomicileType } from 'reinvest-app-common/src/types/graphql';
+import { Address, CorporateCompanyTypeEnum, DocumentFileLinkInput, DomicileType, SubscriptionAgreement } from 'reinvest-app-common/src/types/graphql';
 import { RecurringInvestmentFrequency, Usd } from 'reinvest-app-common/src/types/graphql';
 import { Applicant, FiduciaryEntityInformation, IndexedSchema } from 'views/onboarding/form-flow/form-fields';
 
@@ -57,6 +57,7 @@ export interface FlowFields {
   optsInForAutomaticDividendReinvestment?: boolean;
   recurringInvestment?: Investment;
   recurringInvestmentInterval?: RecurringInvestmentFrequency;
+  recurringSubscriptionAgreement?: SubscriptionAgreement;
   residency?: DomicileType | null;
   ssn?: string;
   trustTrusteesGrantorsOrProtectors?: Applicant[];

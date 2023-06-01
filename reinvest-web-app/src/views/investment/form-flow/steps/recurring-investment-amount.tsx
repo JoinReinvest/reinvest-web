@@ -42,6 +42,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const presetOptions = useMemo(() => RECURRING_INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
+
     const schema = generateRecurringInvestmentSchema({ accountType: activeAccount?.type ?? AccountType.Individual });
     const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
     const { handleSubmit, setValue, formState } = useForm<Fields>({
