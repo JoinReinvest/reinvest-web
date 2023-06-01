@@ -69,9 +69,11 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         date: new Date(),
       };
 
-      if (amount) {
-        await createInvestment({ investmentAmount: amount });
-        await updateStoreFields({ oneTimeInvestment: investment, _shouldAgreeToOneTimeInvestment: true });
+      const amountToInvest = amount || parseInt(presetOptions[0]?.value || '500');
+
+      if (amountToInvest) {
+        await createInvestment({ investmentAmount: amountToInvest });
+        await updateStoreFields({ oneTimeInvestment: investment, _shouldAgreeToOneTimeInvestment: true, _willSetUpOneTimeInvestments: true });
       }
     };
 
