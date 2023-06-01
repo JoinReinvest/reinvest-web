@@ -10,9 +10,11 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
+import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/investment-amounts';
 import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetActiveRecurringInvestment } from 'reinvest-app-common/src/services/queries/getActiveRecurringInvestment';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { IconSpinner } from '../../../../assets/icons/IconSpinner';
 import { getApiClient } from '../../../../services/getApiClient';
@@ -33,6 +35,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { createInvestment, createInvestmentMeta } = useInvestmentContext();
     const { activeAccount } = useActiveAccount();
+    const presetOptions = useMemo(() => INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
     const {
       data,
@@ -107,6 +110,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
               />
 
               <InvestmentCard
+                presetOptions={presetOptions}
                 defaultValue={defaultValues.amount}
                 onChange={value => setValue('amount', value, { shouldValidate: true })}
                 currentBankAccount={bankAccount}
