@@ -21,10 +21,8 @@ import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'r
 import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
-import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
 import { useInvestmentContext } from '../../../../providers/InvestmentProvider';
 import { BannedView } from '../../../BannedView';
-import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -39,11 +37,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const { investmentId } = useInvestmentContext();
-    const { onModalLastStep } = useModalHandler();
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
     const { refetch: refetchAccountStats } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
-    const { mutateAsync: abortInvestmentMutate, ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
+    const { ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
     const { refetch: refetchGetInvestmentSummary, ...getInvestmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
       investmentId: investmentId || '',
       config: { enabled: false },
@@ -199,23 +196,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
-    const abortInvestmentOnClick = async () => {
-      if (investmentId) {
-        await abortInvestmentMutate({ investmentId: investmentId });
-      }
-
-      onModalLastStep && onModalLastStep();
-    };
-
-    const startInvestmentOnClick = async () => {
-      if (investmentId) {
-        await startInvestmentMutate({ investmentId: investmentId, approveFees: true });
-        onModalLastStep && onModalLastStep();
-      }
-    };
-
-    const investmentFees = storeFields.investmentFees?.formatted || '$10';
-
     if (isBannedAccount) {
       return (
         <BannedView
@@ -263,40 +243,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
                   label="Edit Information"
                   variant="default"
                   type="submit"
-                />
-              </ButtonStack>
-            </>
-          )}
-        {!storeFields._shouldUpdateCompanyData &&
-          !storeFields._shouldUpdateProfileDetails &&
-          !storeFields._shouldUpdateStakeholderData &&
-          !verifyAccountMeta.isLoading &&
-          !startInvestmentMeta.isLoading &&
-          !abortInvestmentMeta.isLoading && (
-            <>
-              <FormContent>
-                <div className="flex flex-col gap-32">
-                  <div className="flex w-full flex-col items-center gap-16">
-                    <IconCircleWarning />
-                  </div>
-
-                  <ModalTitle
-                    title={`Notice: ${investmentFees} fee for manual verification`}
-                    subtitle="As your verification has failed twice, REINVEST needs to run a manual verification."
-                  />
-                </div>
-              </FormContent>
-              <ButtonStack>
-                <Button
-                  label="Submit"
-                  variant="default"
-                  onClick={startInvestmentOnClick}
-                />
-                <Button
-                  label="Cancel"
-                  variant="outlined"
-                  className="text-green-frost-01"
-                  onClick={abortInvestmentOnClick}
                 />
               </ButtonStack>
             </>
