@@ -133,7 +133,7 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
         )}
         {!isFulfillBankAccountLoading && (shouldCreateBankAccountHaveSucceded || shouldUpdateBankAccountHaveSucceded) && plaidFrameLink && (
           <>
-            <FormContent className="gap-0">
+            <FormContent className="!gap-0">
               <Typography variant="h3">{TITLE}</Typography>
               <iframe
                 className="h-full w-full"
