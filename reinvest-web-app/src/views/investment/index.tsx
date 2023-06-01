@@ -117,6 +117,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
         onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
         activeAccount={activeAccount}
         title="Investing"
+        displayReinvestLogo={!(currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION)}
       >
         <CurrentStepView />
       </ModalWhite>

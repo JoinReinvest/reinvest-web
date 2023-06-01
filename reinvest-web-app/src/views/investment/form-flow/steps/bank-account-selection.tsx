@@ -119,7 +119,10 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
     const shouldUpdateBankAccountHaveSucceded = willUpdateBankAccount && !isUpdateBankAccountLoading && isUpdateBankAccountSuccess;
 
     return (
-      <Form onSubmit={onSubmit}>
+      <Form
+        onSubmit={onSubmit}
+        className="gap-0"
+      >
         {createBankAccountError && <ErrorMessagesHandler error={createBankAccountError} />}
         {updateBankAccountError && <ErrorMessagesHandler error={updateBankAccountError} />}
 
@@ -130,7 +133,7 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
         )}
         {!isFulfillBankAccountLoading && (shouldCreateBankAccountHaveSucceded || shouldUpdateBankAccountHaveSucceded) && plaidFrameLink && (
           <>
-            <FormContent>
+            <FormContent className="gap-0">
               <Typography variant="h3">{TITLE}</Typography>
               <iframe
                 className="h-full w-full"
