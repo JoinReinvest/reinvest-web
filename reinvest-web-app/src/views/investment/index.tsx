@@ -118,6 +118,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
         activeAccount={activeAccount}
         title="Investing"
         displayReinvestLogo={!(currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION)}
+        className={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION ? 'gap-14' : ''}
       >
         <CurrentStepView />
       </ModalWhite>
