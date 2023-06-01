@@ -48,7 +48,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
+        <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
           <div className="flex w-full justify-center">
             <IconRecurrent />
           </div>
