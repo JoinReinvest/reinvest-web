@@ -121,7 +121,7 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
     return (
       <Form
         onSubmit={onSubmit}
-        className="gap-0"
+        className="!gap-0"
       >
         {createBankAccountError && <ErrorMessagesHandler error={createBankAccountError} />}
         {updateBankAccountError && <ErrorMessagesHandler error={updateBankAccountError} />}
