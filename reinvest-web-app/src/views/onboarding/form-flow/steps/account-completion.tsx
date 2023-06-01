@@ -38,15 +38,16 @@ export const StepAccountCompletion: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields }: StepComponentProps<OnboardingFormFields>) => {
     const router = useRouter();
-    const { setLatestAccountOnboardedId, userProfileMeta } = useActiveAccount();
+    const { setLatestAccountOnboardedId, allAccountsMeta, setArrivesFromOnboarding } = useActiveAccount();
     const { accountId } = storeFields;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
 
       if (accountId) {
-        userProfileMeta.refetch();
+        allAccountsMeta.refetch();
         setLatestAccountOnboardedId(accountId);
+        setArrivesFromOnboarding(true);
         await router.push(URL.index);
       }
     };
