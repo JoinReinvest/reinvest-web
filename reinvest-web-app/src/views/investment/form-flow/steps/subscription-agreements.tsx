@@ -52,7 +52,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useInvestmentContext();
-    const { subscriptionRecurringInvestmentAgreement, signRecurringInvestmentSubscriptionAgreement } = useRecurringInvestment();
+    const { signRecurringInvestmentSubscriptionAgreement, recurringSubscriptionAgreement } = useRecurringInvestment();
     const [isDialogInvestmentOpen, toggleIsDialogInvestmentOpen] = useToggler();
     const [isDialogRecurringAgreementOpen, toggleIsDialogRecurringAgreementOpen] = useToggler(false);
     const defaultValues: Fields = {
@@ -131,9 +131,9 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
                   {LABEL_AGREEMENT_RECURRING}
                 </CheckboxLabeled>
 
-                {subscriptionRecurringInvestmentAgreement && (
+                {recurringSubscriptionAgreement && (
                   <DialogSubscriptionAgreement
-                    subscriptionAgreement={subscriptionRecurringInvestmentAgreement}
+                    subscriptionAgreement={recurringSubscriptionAgreement}
                     isModalOpen={isDialogRecurringAgreementOpen}
                     onModalOpenChange={toggleIsDialogRecurringAgreementOpen}
                   />

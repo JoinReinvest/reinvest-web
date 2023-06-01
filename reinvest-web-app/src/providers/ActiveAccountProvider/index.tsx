@@ -3,16 +3,18 @@ import { createContextConsumer } from 'reinvest-app-common/src/utilities/context
 
 import { Context } from './context';
 import { useAccountStats } from './hooks/account-stats';
+import { useAccounts } from './hooks/accounts';
 import { useAvailableAccounts } from './hooks/available-accounts';
 import { useBeneficiaries } from './hooks/beneficiaries';
 import { useOnboardedAccount } from './hooks/onboarded-account';
-import { useProfileAccounts } from './hooks/profile-account';
+import { useUserProfile } from './hooks/user-profile';
 import { useValidateActiveAccount } from './hooks/validate-active-account';
 
 export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountProvider');
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
-  const { allAccounts, activeAccount, updateActiveAccount, ...profileAccountsResult } = useProfileAccounts();
+  const profileAccountsResult = useUserProfile();
+  const { activeAccount, allAccounts, updateActiveAccount, ...accountsResult } = useAccounts();
   const accountStatsResult = useAccountStats({ activeAccount });
   const beneficiariesResult = useBeneficiaries({ allAccounts });
   const availableAccountResult = useAvailableAccounts({ activeAccount, allAccounts });
@@ -25,6 +27,7 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
         activeAccount,
         allAccounts,
         updateActiveAccount,
+        ...accountsResult,
         ...profileAccountsResult,
         ...accountStatsResult,
         ...availableAccountResult,

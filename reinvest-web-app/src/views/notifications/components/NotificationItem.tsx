@@ -2,21 +2,27 @@ import { IconArrowRight } from 'assets/icons/IconArrowRight';
 import cx from 'classnames';
 import { Typography } from 'components/Typography';
 import { useNotifications } from 'providers/Notifications';
-import { forwardRef } from 'react';
+import { useRef } from 'react';
 import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
 import { formatDateForNotification } from 'reinvest-app-common/src/utilities/dates';
 import { boldBracketedText } from 'utils/strings';
 
 import { ACTIONABLE_NOTIFICATIONS, NOTIFICATION_TYPE_FLOWS } from '../constants';
+import { useNotificationItemObserver } from '../hooks/notification-item-observer';
 import { useFlowsManagerContext } from '../providers/flows-manager';
 
 interface Props {
+  fetchMoreNotifications: () => void;
+  isLastItem: boolean;
   notification: Maybe<Notification>;
 }
 
-export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification }, ref) => {
+export function NotificationItem({ notification, isLastItem, fetchMoreNotifications }: Props) {
   const { markAsRead } = useNotifications();
   const { updateCurrentFlow } = useFlowsManagerContext();
+  const ref = useRef<HTMLLIElement>(null);
+
+  useNotificationItemObserver({ ref, isLastItem, fetchMoreNotifications });
 
   const className = cx('flex items-center gap-16 py-16 -mx-24 md:-mx-44 px-24 md:px-44 border-b border-b-gray-04', {
     'bg-green-frost-01/30 hover:bg-green-frost-01/40': !notification?.isRead,
@@ -30,12 +36,12 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
   const isActionable = notification?.notificationType ? ACTIONABLE_NOTIFICATIONS.includes(notification.notificationType) : false;
 
   async function onClick() {
-    if (!notification?.isRead) {
-      await markAsRead({ notificationId });
-    }
-
     const flowIdentifier = notification?.notificationType ? NOTIFICATION_TYPE_FLOWS.get(notification.notificationType) : null;
     const willTriggerFlow = flowIdentifier && !notification?.isRead;
+
+    if (!willTriggerFlow && !notification?.isRead) {
+      await markAsRead({ notificationId });
+    }
 
     if (willTriggerFlow) {
       updateCurrentFlow({ identifier: flowIdentifier, notification });
@@ -70,4 +76,4 @@ export const NotificationItem = forwardRef<HTMLLIElement, Props>(({ notification
       </div>
     </li>
   );
-});
+}
