@@ -1,6 +1,5 @@
 import { ModalWhite } from 'components/ModalWhite';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useNotifications } from 'providers/Notifications';
 import { ModalProps } from 'types/modal';
 
@@ -11,7 +10,6 @@ import { ModalManagerProvider, useModalManagerContext } from './providers/modal-
 const TITLE = 'Notifications';
 
 export function InnerViewNotifications() {
-  const { activeAccount } = useActiveAccount();
   const { notificationsMeta } = useNotifications();
   const { currentFlowIdentifier, currentFlow, updateCurrentFlow } = useFlowsManagerContext();
   const { modalTitle, updateModalTitle, isModalOpen, onModalOpenChange, showModalWithWatermark, showProfilePicture } = useModalManagerContext();
@@ -44,7 +42,6 @@ export function InnerViewNotifications() {
   return (
     <ModalWhite
       title={modalTitle}
-      activeAccount={activeAccount}
       isOpen={isModalOpen}
       onOpenChange={onOpenChange}
       addPaddingBottom={false}

@@ -21,6 +21,8 @@ interface Props extends ModalProps {
   withSideModal?: boolean;
 }
 
+const MODAL_TITLE = 'Investing';
+
 const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, setHadArrivedFromOnboarding, withSideModal = false }: Props) => {
   const { activeAccount, deprecateLatestAccountOnboarded } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
@@ -88,9 +90,10 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
       return (
         <ModalHandlerProvider onModalLastStep={onModalLastStep}>
           <ModalWhiteWatermarkSide
-            title="Investing"
+            title={MODAL_TITLE}
             isOpen={isModalOpen}
             onOpenChange={onModalLastStep}
+            hideSeparator
           >
             <CurrentStepView />
           </ModalWhiteWatermarkSide>
@@ -115,8 +118,11 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
       <ModalWhite
         isOpen={isModalOpen}
         onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
-        activeAccount={activeAccount}
-        title="Investing"
+        title={MODAL_TITLE}
+        addPaddingBottom
+        hideAvatarNextToTitle
+        hideHeaderOnMobile
+        hideSeparator
       >
         <CurrentStepView />
       </ModalWhite>

@@ -1,7 +1,6 @@
 import { ModalConfirmation } from 'components/ModalConfirmation';
 import { ModalWhite } from 'components/ModalWhite';
 import { useToggler } from 'hooks/toggler';
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { ModalProps } from 'types/modal';
 import { InvestmentView } from 'views/investment';
 
@@ -13,7 +12,6 @@ const MODAL_CONFIRMATION_DESCRIPTION = 'Any updates made will be lost.';
 const MODAL_CLASSNAME = 'modal-create-beneficiary';
 
 export function InnerViewBeneficiaryCreation() {
-  const { activeAccount } = useActiveAccount();
   const { CurrentStepView, getStoreFields, moveToFirstStep, resetStoreFields, meta } = useBeneficiaryCreationFlow();
   const [isConfirmationModalOpen, toggleIsConfirmationModalOpen] = useToggler(false);
   const { isBeneficiaryFlowOpen, toggleIsBeneficiaryFlowOpen, isInvestmentFlowOpen, toggleIsInvestmentFlowOpen, hasFinishedBeneficiaryCreationFlow } =
@@ -43,7 +41,6 @@ export function InnerViewBeneficiaryCreation() {
         isOpen={isBeneficiaryFlowOpen}
         onOpenChange={handleOpenChange}
         title="Add Beneficiary"
-        activeAccount={activeAccount}
         className={MODAL_CLASSNAME}
       >
         <CurrentStepView />
