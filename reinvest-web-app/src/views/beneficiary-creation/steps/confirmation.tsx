@@ -27,13 +27,14 @@ export const StepConfirmation: StepParams<BeneficiaryCreationFormFields> = {
   },
 
   Component: ({ storeFields }: StepComponentProps<BeneficiaryCreationFormFields>) => {
-    const { updateActiveAccount } = useActiveAccount();
+    const { updateActiveAccount, allAccountsMeta } = useActiveAccount();
     const { toggleIsBeneficiaryFlowOpen, toggleIsInvestmentFlowOpen, toggleHasFinishedBeneficiaryCreationFlow } = useModalHandler();
 
     const beneficiary = storeFields.beneficiary;
 
-    const onSubmit: FormEventHandler<HTMLFormElement> = event => {
+    const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
+      allAccountsMeta.refetch();
       beneficiary && updateActiveAccount({ ...beneficiary, __typename: 'AccountOverview' });
       toggleIsInvestmentFlowOpen(true);
       toggleHasFinishedBeneficiaryCreationFlow(true);
