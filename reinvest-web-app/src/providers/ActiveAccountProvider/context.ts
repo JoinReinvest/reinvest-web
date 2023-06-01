@@ -24,4 +24,5 @@ export const Context = createContext<State>({
   isAccountBanned: false,
   validateActiveAccountMeta: DEFAULT_MUTATION_META,
   canOpenAccount: true,
+  allAccountsMeta: DEFAULT_QUERY_META,
 });
