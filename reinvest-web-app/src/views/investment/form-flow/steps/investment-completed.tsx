@@ -11,6 +11,7 @@ import { FormEventHandler } from 'react';
 import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
+import { Separator } from '../../../../components/Separator';
 import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -71,14 +72,27 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
               </Typography>
 
               <div className="flex flex-col gap-32">
-                {investmentSummary?.amount.formatted && (
-                  <InvestmentInformation
-                    amount={investmentSummary.amount.formatted}
-                    type={storeFields.oneTimeInvestment ? 'one-time' : 'recurring'}
-                    date={new Date()}
-                    label={storeFields.oneTimeInvestment ? 'One Time Investment' : recurrentInvestmentLabel}
-                  />
-                )}
+                <div className="flex flex-col gap-32">
+                  {investmentSummary?.amount.formatted && (
+                    <InvestmentInformation
+                      amount={investmentSummary.amount.formatted}
+                      type={'one-time'}
+                      date={new Date()}
+                      label={'One Time Investment'}
+                    />
+                  )}
+
+                  {storeFields._willSetUpRecurringInvestment && storeFields._willSetUpOneTimeInvestments && <Separator />}
+
+                  {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && (
+                    <InvestmentInformation
+                      amount={`$${storeFields.recurringInvestment.amount}`}
+                      type={'recurring'}
+                      date={new Date()}
+                      label={recurrentInvestmentLabel}
+                    />
+                  )}
+                </div>
 
                 <div className="flex gap-8">
                   <IconWarning className="stroke-gray-01" />
