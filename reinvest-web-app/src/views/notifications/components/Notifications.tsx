@@ -8,6 +8,12 @@ export function Notifications() {
   const { notifications, notificationsMeta } = useNotifications();
   const hasItems = notifications.length > 0;
 
+  function fetchMoreNotifications() {
+    if (notificationsMeta?.hasNextPage) {
+      notificationsMeta.fetchNextPage();
+    }
+  }
+
   if (notificationsMeta?.isLoading) {
     return (
       <div className="grid h-full place-items-center">
@@ -16,5 +22,14 @@ export function Notifications() {
     );
   }
 
-  return <>{hasItems ? <NotificationsList notifications={notifications} /> : <EmptyListMessage />}</>;
+  if (!hasItems) {
+    return <EmptyListMessage />;
+  }
+
+  return (
+    <NotificationsList
+      notifications={notifications}
+      fetchMoreNotifications={fetchMoreNotifications}
+    />
+  );
 }

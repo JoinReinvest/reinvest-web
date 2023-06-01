@@ -17,4 +17,5 @@ export interface MutationMeta {
 
 export interface InfiniteQueryMeta extends QueryMeta {
   fetchNextPage: () => void;
+  hasNextPage?: boolean;
 }
