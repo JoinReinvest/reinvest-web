@@ -16,6 +16,7 @@ interface Props extends PropsWithChildren {
   title: string;
   addPaddingBottom?: boolean;
   className?: string;
+  displayReinvestLogo?: boolean;
   hideAvatarNextToTitle?: boolean;
 }
 
@@ -28,6 +29,7 @@ export const ModalWhite = ({
   hideAvatarNextToTitle = false,
   className,
   children,
+  displayReinvestLogo = true,
 }: Props) => {
   const avatarContainerClassName = cx({ hidden: !!hideAvatarNextToTitle });
   const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44', { 'pb-24': !!addPaddingBottom });
@@ -40,14 +42,14 @@ export const ModalWhite = ({
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
 
-        <Dialog.Content className={cx('white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 md:max-w-415', className)}>
+        <Dialog.Content className={cx('white-modal fixed right-0 top-0 z-50 flex flex-col md:max-w-415', className, { 'gap-24': !className })}>
           <>
             <header className="flex items-center justify-between px-24 pb-22 pt-12 text-black-01 md:hidden md:px-44">
               <Dialog.Close>
                 <IconClose />
               </Dialog.Close>
 
-              <Logo className="fill-black-01" />
+              {displayReinvestLogo && <Logo className="fill-black-01" />}
 
               <Avatar
                 src={activeAccount?.avatar?.url || placeholderImage}
