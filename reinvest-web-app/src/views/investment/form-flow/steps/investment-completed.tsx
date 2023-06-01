@@ -29,7 +29,6 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     const shouldAgreeWithRecurringInvestmentAgreement = fields._shouldAgreeToRecurringInvestment ? !!fields.agreesToRecurringInvestment : true;
 
     const requiredFields = [
-      !!fields.oneTimeInvestment,
       fields.optsInForAutomaticDividendReinvestment !== undefined,
       fields._willSetUpRecurringInvestment !== undefined,
       shouldAgreeWithOneTimeInvestmentAgreement,
@@ -55,58 +54,58 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        {investmentSummaryMeta.isLoading && (
+        {investmentSummaryMeta.isLoading && storeFields._willSetUpOneTimeInvestments && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
           </div>
         )}
 
-        {investmentSummaryMeta.isSuccess && (
-          <FormContent willLeaveContentOnTop={!storeFields?._forInitialInvestment}>
-            <div className="flex flex-col gap-40">
-              <Typography
-                variant="h5-larger"
-                className="text-center"
-              >
-                {TITLE}
-              </Typography>
+        {/*{investmentSummaryMeta.isSuccess && (*/}
+        <FormContent willLeaveContentOnTop={!storeFields?._forInitialInvestment}>
+          <div className="flex flex-col gap-40">
+            <Typography
+              variant="h5-larger"
+              className="text-center"
+            >
+              {TITLE}
+            </Typography>
 
+            <div className="flex flex-col gap-32">
               <div className="flex flex-col gap-32">
-                <div className="flex flex-col gap-32">
-                  {investmentSummary?.amount.formatted && (
-                    <InvestmentInformation
-                      amount={investmentSummary.amount.formatted}
-                      type={'one-time'}
-                      date={new Date()}
-                      label={'One Time Investment'}
-                    />
-                  )}
+                {investmentSummary?.amount.formatted && (
+                  <InvestmentInformation
+                    amount={investmentSummary.amount.formatted}
+                    type={'one-time'}
+                    date={new Date()}
+                    label={'One Time Investment'}
+                  />
+                )}
 
-                  {storeFields._willSetUpRecurringInvestment && storeFields._willSetUpOneTimeInvestments && <Separator />}
+                {storeFields._willSetUpRecurringInvestment && storeFields._willSetUpOneTimeInvestments && <Separator />}
 
-                  {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && (
-                    <InvestmentInformation
-                      amount={`$${storeFields.recurringInvestment.amount}`}
-                      type={'recurring'}
-                      date={new Date()}
-                      label={recurrentInvestmentLabel}
-                    />
-                  )}
-                </div>
+                {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && (
+                  <InvestmentInformation
+                    amount={`$${storeFields.recurringInvestment.amount}`}
+                    type={'recurring'}
+                    date={new Date()}
+                    label={recurrentInvestmentLabel}
+                  />
+                )}
+              </div>
 
-                <div className="flex gap-8">
-                  <IconWarning className="stroke-gray-01" />
-                  <Typography
-                    variant="paragraph"
-                    className="grow text-gray-01"
-                  >
-                    {MESSAGE_INFORMATION}
-                  </Typography>
-                </div>
+              <div className="flex gap-8">
+                <IconWarning className="stroke-gray-01" />
+                <Typography
+                  variant="paragraph"
+                  className="grow text-gray-01"
+                >
+                  {MESSAGE_INFORMATION}
+                </Typography>
               </div>
             </div>
-          </FormContent>
-        )}
+          </div>
+        </FormContent>
+        {/*)}*/}
         <ButtonStack>
           <Button
             type="submit"
