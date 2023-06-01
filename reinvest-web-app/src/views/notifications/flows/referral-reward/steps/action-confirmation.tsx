@@ -5,7 +5,8 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
-import { FormEventHandler } from 'react';
+import { useNotifications } from 'providers/Notifications';
+import { FormEventHandler, useEffect } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
 import { useModalManagerContext } from 'views/notifications/providers/modal-manager';
@@ -33,8 +34,20 @@ export const StepActionConfirmation: StepParams<FlowFields> = {
 
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { resetStoreFields, moveToFirstStep } = useFlow();
+    const { markAsRead } = useNotifications();
     const { onModalOpenChange } = useModalManagerContext();
-    const { updateCurrentFlow } = useFlowsManagerContext();
+    const { updateCurrentFlow, notification } = useFlowsManagerContext();
+
+    useEffect(() => {
+      async function markNotificationAsRead() {
+        if (notification?.id) {
+          await markAsRead({ notificationId: notification.id });
+        }
+      }
+
+      markNotificationAsRead();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const willReinvestFunds = storeFields.action === DividendAction.REINVEST_FUNDS;
     const title = willReinvestFunds ? TITLE_REINVEST : TITLE_WITHDRAW;
