@@ -21,18 +21,21 @@ interface Return {
 export function useHighlightedDates({ date, frequency }: Params): Return {
   const startDate = date && formatDate(date, 'API');
   const { data: dates, ...meta } = useGetScheduleSimulation(getApiClient, {
-    schedule: { startDate, frequency: frequency ?? RecurringInvestmentFrequency.Monthly },
+    schedule: { startDate, frequency: frequency ?? RecurringInvestmentFrequency.Weekly },
     config: { enabled: !!frequency && !!date },
   });
 
-  const datesToHighlight = useMemo(
-    () => [
+  const datesToHighlight = useMemo(() => {
+    if (!dates) return [];
+
+    const datesWithoutSelectedDate = dates.filter(date => date !== startDate).map(date => new Date(date));
+
+    return [
       {
-        [HIGHLIGHTED_DATE_CLASSNAME]: dates?.map(date => new Date(date)) ?? [],
+        [HIGHLIGHTED_DATE_CLASSNAME]: datesWithoutSelectedDate,
       },
-    ],
-    [dates],
-  );
+    ];
+  }, [dates, startDate]);
 
   return { datesToHighlight, meta };
 }

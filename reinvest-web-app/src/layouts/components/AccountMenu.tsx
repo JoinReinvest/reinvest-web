@@ -4,7 +4,6 @@ import { IconAddBeneficiary } from 'assets/icons/IconAddBeneficiary';
 import { IconFriendsAndFamily } from 'assets/icons/IconFriendsAndFamily';
 import { IconSignOut } from 'assets/icons/IconSignOut';
 import { IconSupport } from 'assets/icons/IconSupport';
-import placeholderPicture from 'assets/images/profile-picture-placeholder.png';
 import { Avatar } from 'components/Avatar';
 import { Button } from 'components/Button';
 import { Separator } from 'components/Separator';
@@ -68,8 +67,12 @@ export const AccountMenu = ({ activeAccount }: Props) => {
       >
         <DropdownMenu.Trigger>
           <Avatar
-            src={activeAccount.avatar?.url || placeholderPicture}
+            src={activeAccount.avatar?.url ?? undefined}
             alt={activeAccount.label || ''}
+            fixedSize="sm"
+            isSizeFixed
+            accountType={activeAccount?.type || AccountType.Individual}
+            label={activeAccount.avatar?.initials || ''}
           />
         </DropdownMenu.Trigger>
 
@@ -85,8 +88,10 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                 <header className="flex flex-col gap-16 px-24 py-16 shadow-md">
                   <div className="flex items-center gap-8">
                     <Avatar
-                      src={activeAccount.avatar?.url || placeholderPicture}
+                      src={activeAccount.avatar?.url ?? undefined}
                       alt={activeAccount.label || ''}
+                      label={activeAccount?.avatar?.initials ?? undefined}
+                      accountType={activeAccount?.type || AccountType.Individual}
                       isSizeFixed
                       fixedSize="lg"
                     />
