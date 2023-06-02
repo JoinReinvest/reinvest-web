@@ -205,7 +205,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         {((verifyAccountMeta.isLoading && !verifyAccountMeta.data) ||
           (startInvestmentMeta.isLoading && !startInvestmentMeta.data) ||
           abortInvestmentMeta.isLoading) && (
-          <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
+          <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
             <div className="flex flex-col gap-32">
               <div className="flex w-full flex-col items-center gap-16">
                 <IconSpinner />

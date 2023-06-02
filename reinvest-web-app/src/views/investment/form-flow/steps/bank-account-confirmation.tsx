@@ -37,7 +37,7 @@ export const StepBankAccountConfirmation: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
+        <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
           <div className="flex flex-col items-center gap-32">
             {icon}
 

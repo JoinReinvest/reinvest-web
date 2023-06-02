@@ -20,6 +20,8 @@ interface Props extends ModalProps {
   withSideModal?: boolean;
 }
 
+const MODAL_TITLE = 'Investing';
+
 const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false }: Props) => {
   const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
@@ -88,9 +90,10 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
       return (
         <ModalHandlerProvider onModalLastStep={onModalLastStep}>
           <ModalWhiteWatermarkSide
-            title="Investing"
+            title={MODAL_TITLE}
             isOpen={isModalOpen}
             onOpenChange={onModalLastStep}
+            hideSeparator
           >
             <CurrentStepView />
           </ModalWhiteWatermarkSide>
@@ -115,10 +118,13 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
       <ModalWhite
         isOpen={isModalOpen}
         onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
-        activeAccount={activeAccount}
-        title="Investing"
-        displayReinvestLogo={!(currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION)}
-        className={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION ? 'gap-14' : ''}
+        className={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION ? '!gap-14' : ''}
+        title={MODAL_TITLE}
+        addPaddingBottom
+        hideAvatarNextToTitle={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+        hideHeaderOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+        hideSeparator={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+        hideLogoOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
       >
         <CurrentStepView />
       </ModalWhite>
