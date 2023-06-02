@@ -89,6 +89,7 @@ export function InputAvatar<FormFields extends FieldValues>({
           avatar={
             <Avatar
               src={getImageSrc()}
+              fixedSize="xl"
               alt={altText || 'Profile picture for user'}
               isSizeFixed
               accountType={accountType}
