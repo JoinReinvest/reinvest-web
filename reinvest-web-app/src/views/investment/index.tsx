@@ -4,8 +4,8 @@ import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { InvestmentProvider } from 'providers/InvestmentProvider';
-import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
+import { InvestmentProvider, useInvestmentContext } from 'providers/InvestmentProvider';
+import { RecurringInvestmentProvider, useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
@@ -23,6 +23,8 @@ interface Props extends ModalProps {
 
 const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, setHadArrivedFromOnboarding, withSideModal = false }: Props) => {
   const { activeAccount, deprecateLatestAccountOnboarded } = useActiveAccount();
+  const { createInvestmentMeta } = useInvestmentContext();
+  const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
   useInitializeFields({ forInitialInvestment });
 
   const {
@@ -46,6 +48,9 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     moveToFirstStep();
     setHadArrivedFromOnboarding && setHadArrivedFromOnboarding(false);
     deprecateLatestAccountOnboarded();
+
+    createInvestmentMeta.reset();
+    initiateRecurringInvestmentMeta.reset();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
 
