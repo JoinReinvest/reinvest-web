@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -16,9 +18,8 @@ import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/i
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetActiveRecurringInvestment } from 'reinvest-app-common/src/services/queries/getActiveRecurringInvestment';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -84,6 +85,10 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
+    function onButtonBackClick() {
+      moveToStepByIdentifier(Identifiers.ACCOUNT_SELECTION);
+    }
+
     useEffect(() => {
       if (isGetActiveRecurringInvestmentSuccess && data) {
         updateStoreFields({ _shouldDisplayRecurringInvestment: true }); //TODO: should be false, for upgrade after demo
@@ -107,6 +112,13 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         {!isLoading && (
           <>
             <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+              {!!storeFields._forInitialInvestment && (
+                <ButtonBack
+                  hideOnMobile
+                  onClick={onButtonBackClick}
+                />
+              )}
+
               <ModalTitle
                 title="Make your initial one-time investment"
                 isTitleCenteredOnMobile
