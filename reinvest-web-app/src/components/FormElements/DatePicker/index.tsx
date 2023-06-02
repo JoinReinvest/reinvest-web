@@ -38,6 +38,7 @@ export function DatePicker<FormFields extends FieldValues>({ frequency, startDat
       allowSameDay
       selected={field.value}
       disabled={meta.isLoading}
+      adjustDateOnChange={false}
     />
   );
 }
