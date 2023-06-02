@@ -86,7 +86,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (isGetActiveRecurringInvestmentSuccess && data) {
-        updateStoreFields({ _shouldDisplayRecurringInvestment: true }); //TODO: should be false, for upgrade after demo
+        updateStoreFields({ _shouldDisplayRecurringInvestment: false });
       } else {
         updateStoreFields({ _shouldDisplayRecurringInvestment: true });
       }
