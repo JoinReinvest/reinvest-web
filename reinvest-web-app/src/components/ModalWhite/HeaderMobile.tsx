@@ -5,7 +5,11 @@ import { Logo } from 'assets/Logo';
 import { Avatar } from 'components/Avatar';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 
-export function HeaderMobile() {
+interface Props {
+  hideLogoOnMobile?: boolean;
+}
+
+export function HeaderMobile({ hideLogoOnMobile = false }: Props) {
   const { activeAccount } = useActiveAccount();
 
   return (
@@ -14,7 +18,7 @@ export function HeaderMobile() {
         <IconClose />
       </Dialog.Close>
 
-      <Logo className="fill-black-01" />
+      {!hideLogoOnMobile && <Logo className="fill-black-01" />}
 
       <Avatar
         src={activeAccount?.avatar?.url || placeholderImage}

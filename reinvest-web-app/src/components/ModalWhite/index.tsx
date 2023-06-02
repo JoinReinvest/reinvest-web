@@ -14,6 +14,7 @@ interface Props extends PropsWithChildren {
   className?: string;
   hideAvatarNextToTitle?: boolean;
   hideHeaderOnMobile?: boolean;
+  hideLogoOnMobile?: boolean;
   hideSeparator?: boolean;
 }
 
@@ -24,6 +25,7 @@ export const ModalWhite = ({
   addPaddingBottom = true,
   hideAvatarNextToTitle = false,
   hideHeaderOnMobile = false,
+  hideLogoOnMobile = false,
   hideSeparator = false,
   className,
   children,
@@ -41,7 +43,7 @@ export const ModalWhite = ({
 
         <Dialog.Content className={contentClassName}>
           <>
-            <HeaderMobile />
+            <HeaderMobile hideLogoOnMobile={hideLogoOnMobile} />
 
             <HeaderWithTitle
               title={title}

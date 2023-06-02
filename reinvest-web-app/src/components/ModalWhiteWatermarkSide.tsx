@@ -14,8 +14,8 @@ interface Props extends PropsWithChildren {
   hideSeparator?: boolean;
 }
 
-export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children, hideSeparator = false }: Props) => {
-  const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44');
+export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children, hideSeparator }: Props) => {
+  const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44 pt-32');
 
   return (
     <Dialog.Root
@@ -27,7 +27,7 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children,
 
         <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 overflow-hidden py-24 md:max-w-415">
           <>
-            <header className="flex items-center justify-between px-44 md:hidden">
+            <header className="flex items-center justify-between px-44 pt-40 md:hidden">
               <LogoIcon2 />
 
               <Dialog.Close asChild>
@@ -35,7 +35,7 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children,
               </Dialog.Close>
             </header>
 
-            <Dialog.Title className="hidden md:block md:px-44">
+            <Dialog.Title className="hidden px-24 pt-24 md:block md:px-44">
               <Typography variant="h3">{title}</Typography>
             </Dialog.Title>
 

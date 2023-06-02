@@ -8,7 +8,7 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
 import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
@@ -21,10 +21,7 @@ import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'r
 import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
-import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
 import { useInvestmentContext } from '../../../../providers/InvestmentProvider';
-import { BannedView } from '../../../BannedView';
-import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -39,17 +36,16 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const { investmentId } = useInvestmentContext();
-    const { onModalLastStep } = useModalHandler();
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
     const { refetch: refetchAccountStats } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
-    const { mutateAsync: abortInvestmentMutate, ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
+    const { ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
     const { refetch: refetchGetInvestmentSummary, ...getInvestmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
       investmentId: investmentId || '',
       config: { enabled: false },
     });
     const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
-    const [isBannedAccount, setIsBannedAccount] = useState(false);
+    // const [isBannedAccount, setIsBannedAccount] = useState(false);
     const { userProfile } = useActiveAccount();
     const {
       refetch: refetchCorporate,
@@ -78,6 +74,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (verifyAccountMeta.isSuccess) {
+        if (!storeFields._willSetUpOneTimeInvestments && storeFields._willSetUpRecurringInvestment) {
+          moveToNextStep();
+        }
+
         if (!verifyAccountMeta?.data?.requiredActions?.length) {
           if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
             startInvestmentCallback();
@@ -86,12 +86,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           return moveToNextStep();
         }
 
-        const accountIsBanned = verifyAccountMeta.data?.requiredActions?.find(requiredAction => requiredAction?.action === ActionName.BanAccount);
-
         //TODO: this if should be upgrade in RELEASE-5
-        if (accountIsBanned) {
-          return setIsBannedAccount(false);
-        }
+        // if (accountIsBanned) {
+        //   return setIsBannedAccount(false);
+        // }
 
         if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
           const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
@@ -136,10 +134,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, [verifyAccountMeta.isSuccess, initiateRecurringInvestmentMeta.isSuccess]);
 
     useEffect(() => {
-      if (verifyAccountMeta.isSuccess) {
+      if (verifyAccountMeta.isSuccess && investmentId) {
         refetchGetInvestmentSummary();
       }
-    }, [refetchGetInvestmentSummary, verifyAccountMeta.isSuccess]);
+    }, [refetchGetInvestmentSummary, verifyAccountMeta.isSuccess, investmentId]);
 
     useEffect(() => {
       if (getInvestmentSummaryMeta.isSuccess) {
@@ -150,10 +148,13 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     useEffect(() => {
       if (getInvestmentSummaryMeta.data && verifyAccountMeta.data) {
         const { investmentFees } = getInvestmentSummaryMeta.data;
-        const { canUserContinueTheInvestment } = verifyAccountMeta.data;
 
-        if (canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
+        if (verifyAccountMeta.data.canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
           startInvestmentMutate({ investmentId: investmentId, approveFees: true });
+        }
+
+        if (!verifyAccountMeta.data.canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
+          startInvestmentMutate({ investmentId: investmentId, approveFees: false });
         }
       }
     }, [getInvestmentSummaryMeta.data, investmentId, startInvestmentMutate, verifyAccountMeta.data]);
@@ -199,32 +200,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
-    const abortInvestmentOnClick = async () => {
-      if (investmentId) {
-        await abortInvestmentMutate({ investmentId: investmentId });
-      }
-
-      onModalLastStep && onModalLastStep();
-    };
-
-    const startInvestmentOnClick = async () => {
-      if (investmentId) {
-        await startInvestmentMutate({ investmentId: investmentId, approveFees: true });
-        onModalLastStep && onModalLastStep();
-      }
-    };
-
-    const investmentFees = storeFields.investmentFees?.formatted || '$10';
-
-    if (isBannedAccount) {
-      return (
-        <BannedView
-          isOpen
-          title="Verification failed. Your account has been locked."
-        />
-      );
-    }
-
     return (
       <Form onSubmit={onSubmit}>
         {((verifyAccountMeta.isLoading && !verifyAccountMeta.data) ||
@@ -263,40 +238,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
                   label="Edit Information"
                   variant="default"
                   type="submit"
-                />
-              </ButtonStack>
-            </>
-          )}
-        {!storeFields._shouldUpdateCompanyData &&
-          !storeFields._shouldUpdateProfileDetails &&
-          !storeFields._shouldUpdateStakeholderData &&
-          !verifyAccountMeta.isLoading &&
-          !startInvestmentMeta.isLoading &&
-          !abortInvestmentMeta.isLoading && (
-            <>
-              <FormContent>
-                <div className="flex flex-col gap-32">
-                  <div className="flex w-full flex-col items-center gap-16">
-                    <IconCircleWarning />
-                  </div>
-
-                  <ModalTitle
-                    title={`Notice: ${investmentFees} fee for manual verification`}
-                    subtitle="As your verification has failed twice, REINVEST needs to run a manual verification."
-                  />
-                </div>
-              </FormContent>
-              <ButtonStack>
-                <Button
-                  label="Submit"
-                  variant="default"
-                  onClick={startInvestmentOnClick}
-                />
-                <Button
-                  label="Cancel"
-                  variant="outlined"
-                  className="text-green-frost-01"
-                  onClick={abortInvestmentOnClick}
                 />
               </ButtonStack>
             </>

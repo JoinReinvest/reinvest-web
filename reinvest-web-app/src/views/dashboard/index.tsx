@@ -1,9 +1,7 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { BlogPostInterface } from 'components/Education/BlogCard';
-import { useStaticState } from 'hooks/static-state';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useEffect } from 'react';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { InvestmentView } from 'views/investment';
 
@@ -18,23 +16,16 @@ interface Props {
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const {
-    latestAccountOnboardedId,
     activeAccount,
-    deprecateLatestAccountOnboarded,
     activeAccountStatsMeta,
     isAccountBanned,
     updateActiveAccount,
     previousAccount,
     validateActiveAccountMeta,
     canOpenAccount,
+    arrivesFromOnboarding,
   } = useActiveAccount();
-  const [hadArrivedFromOnboarding, setHadArrivedFromOnboarding] = useStaticState(!!latestAccountOnboardedId);
-  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(!!latestAccountOnboardedId);
-
-  useEffect(() => {
-    deprecateLatestAccountOnboarded();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
 
   if (!isInvestmentFlowOpen && (activeAccountStatsMeta?.isLoading || validateActiveAccountMeta?.isLoading)) {
     return (
@@ -69,9 +60,8 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
       <InvestmentView
         isModalOpen={isInvestmentFlowOpen}
         onModalOpenChange={toggleIsInvestmentFlowOpen}
-        forInitialInvestment={!hadArrivedFromOnboarding}
-        setHadArrivedFromOnboarding={setHadArrivedFromOnboarding}
-        withSideModal={!hadArrivedFromOnboarding}
+        forInitialInvestment={!arrivesFromOnboarding}
+        withSideModal={!arrivesFromOnboarding}
       />
     </>
   );

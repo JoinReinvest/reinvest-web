@@ -17,14 +17,13 @@ import { ModalHandlerProvider } from './providers/modal-handler';
 
 interface Props extends ModalProps {
   forInitialInvestment?: boolean;
-  setHadArrivedFromOnboarding?: (value: boolean) => void;
   withSideModal?: boolean;
 }
 
 const MODAL_TITLE = 'Investing';
 
-const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, setHadArrivedFromOnboarding, withSideModal = false }: Props) => {
-  const { activeAccount, deprecateLatestAccountOnboarded } = useActiveAccount();
+const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false }: Props) => {
+  const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
 
   const {
@@ -34,6 +33,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     moveToFirstStep,
     getStoreFields,
     updateStoreFields,
+
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
@@ -46,8 +46,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     await updateStoreFields({ _forInitialInvestment: true, _hasMoreThanAnAccount: storeFields?._hasMoreThanAnAccount });
     onModalOpenChange(false);
     moveToFirstStep();
-    setHadArrivedFromOnboarding && setHadArrivedFromOnboarding(false);
     deprecateLatestAccountOnboarded();
+    setArrivesFromOnboarding(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
 
@@ -118,11 +118,13 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
       <ModalWhite
         isOpen={isModalOpen}
         onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
+        className={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION ? '!gap-14' : ''}
         title={MODAL_TITLE}
         addPaddingBottom
-        hideAvatarNextToTitle
-        hideHeaderOnMobile
-        hideSeparator
+        hideAvatarNextToTitle={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+        hideHeaderOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+        hideSeparator={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+        hideLogoOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
       >
         <CurrentStepView />
       </ModalWhite>

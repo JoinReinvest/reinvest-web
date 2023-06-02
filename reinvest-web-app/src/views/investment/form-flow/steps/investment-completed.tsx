@@ -7,10 +7,12 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
 import { useInvestmentContext } from 'providers/InvestmentProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { FormEventHandler } from 'react';
 import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
+import { Separator } from '../../../../components/Separator';
 import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -28,7 +30,6 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     const shouldAgreeWithRecurringInvestmentAgreement = fields._shouldAgreeToRecurringInvestment ? !!fields.agreesToRecurringInvestment : true;
 
     const requiredFields = [
-      !!fields.oneTimeInvestment,
       fields.optsInForAutomaticDividendReinvestment !== undefined,
       fields._willSetUpRecurringInvestment !== undefined,
       shouldAgreeWithOneTimeInvestmentAgreement,
@@ -39,7 +40,8 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    const { investmentSummary, investmentSummaryMeta } = useInvestmentContext();
+    const { investmentSummary, createInvestmentMeta, investmentSummaryMeta } = useInvestmentContext();
+    const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
 
     const recurrentInvestmentInterval =
@@ -49,50 +51,67 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
       await updateStoreFields({ _hasCompletedInvestment: true });
+
+      createInvestmentMeta.reset();
+      initiateRecurringInvestmentMeta.reset();
+
       onModalLastStep && onModalLastStep();
     };
 
     return (
       <Form onSubmit={onSubmit}>
-        {investmentSummaryMeta.isLoading && (
+        {investmentSummaryMeta.isLoading && storeFields._willSetUpOneTimeInvestments && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
           </div>
         )}
 
-        {investmentSummaryMeta.isSuccess && (
-          <FormContent willLeaveContentOnTop={!storeFields?._forInitialInvestment}>
-            <div className="flex flex-col gap-40">
-              <Typography
-                variant="h5-larger"
-                className="text-center"
-              >
-                {TITLE}
-              </Typography>
+        {/*{investmentSummaryMeta.isSuccess && (*/}
+        <FormContent willLeaveContentOnTop={!storeFields?._forInitialInvestment}>
+          <div className="flex flex-col gap-40">
+            <Typography
+              variant="h5-larger"
+              className="text-center"
+            >
+              {TITLE}
+            </Typography>
 
+            <div className="flex flex-col gap-32">
               <div className="flex flex-col gap-32">
                 {investmentSummary?.amount.formatted && (
                   <InvestmentInformation
                     amount={investmentSummary.amount.formatted}
-                    type={storeFields.oneTimeInvestment ? 'one-time' : 'recurring'}
+                    type={'one-time'}
                     date={new Date()}
-                    label={storeFields.oneTimeInvestment ? 'One Time Investment' : recurrentInvestmentLabel}
+                    label={'One Time Investment'}
                   />
                 )}
 
-                <div className="flex gap-8">
-                  <IconWarning className="stroke-gray-01" />
-                  <Typography
-                    variant="paragraph"
-                    className="grow text-gray-01"
-                  >
-                    {MESSAGE_INFORMATION}
-                  </Typography>
-                </div>
+                {storeFields._willSetUpRecurringInvestment && storeFields._willSetUpOneTimeInvestments && <Separator />}
+
+                {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && (
+                  <InvestmentInformation
+                    amount={`$${storeFields.recurringInvestment.amount}`}
+                    type={'recurring'}
+                    date={new Date()}
+                    label={recurrentInvestmentLabel}
+                  />
+                )}
+              </div>
+
+              <div className="flex gap-8">
+                <IconWarning className="stroke-gray-01" />
+                <Typography
+                  variant="paragraph"
+                  className="grow text-gray-01"
+                >
+                  {MESSAGE_INFORMATION}
+                </Typography>
               </div>
             </div>
-          </FormContent>
-        )}
+          </div>
+        </FormContent>
+        {/*)}*/}
         <ButtonStack>
           <Button
             type="submit"

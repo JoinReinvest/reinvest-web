@@ -1,4 +1,4 @@
-import { StorageKeys } from 'constants/storage-keys';
+import { StorageKeys } from 'constants/session-storage';
 import { useStaticState } from 'hooks/static-state';
 import { useEffect, useMemo, useState } from 'react';
 import { useGetAccountsOverview } from 'reinvest-app-common/src/services/queries/getAccountsOverview';
