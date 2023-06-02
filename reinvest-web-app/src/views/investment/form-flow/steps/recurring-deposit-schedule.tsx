@@ -55,7 +55,7 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
           {recurringInvestment && (
             <RecurringInvestmentDepositSchedule
               recurringInvestment={recurringInvestment}
-              bankAccount="JPMORGAN CHASE BANK, NA ****1234"
+              bankAccount={storeFields.bankAccount}
             />
           )}
 
