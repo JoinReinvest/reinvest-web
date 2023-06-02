@@ -31,7 +31,6 @@
   @apply flex relative items-center justify-center select-none cursor-pointer h-48 w-46.71;
 }
 
-.react-datepicker__day--keyboard-selected::after,
 .react-datepicker__day--selected::after,
 .react-datepicker__day--highlighted::after {
   @apply absolute h-40 w-38.9 rounded-full -z-10;
@@ -42,10 +41,10 @@
 .react-datepicker__day--keyboard-selected,
 .react-datepicker__day--selected {
   @apply text-green-deep;
+}
 
-  &::after {
-    @apply bg-green-frost-01;
-  }
+.react-datepicker__day--selected::after {
+  @apply bg-green-frost-01;
 }
 
 .react-datepicker__day--highlighted {
