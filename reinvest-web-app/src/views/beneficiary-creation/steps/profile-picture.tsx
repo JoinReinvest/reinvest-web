@@ -22,12 +22,11 @@ import { getBeneficiaryInitials } from '../utilities/beneficiary';
 type Fields = Required<Pick<BeneficiaryCreationFormFields, 'profilePicture'>>;
 
 const schema = z.object({
-  profilePicture: generateFileSchema(['jpeg', 'jpg', 'png'], 5.0),
+  profilePicture: generateFileSchema(['jpeg', 'jpg', 'png'], 5.0, true),
 });
 
 const TITLE = 'Upload a profile picture for your beneficiary (optional)';
 const BUTTON_LABEL = 'Continue';
-const BUTTON_SKIP_LABEL = 'Skip';
 
 export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
   identifier: Identifiers.PROFILE_PICTURE,
@@ -69,18 +68,12 @@ export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
       await updateStoreFields({ profilePicture: { fileName: file.name, file } });
     };
 
-    const onSkip = async () => {
-      await updateStoreFields({ profilePicture: undefined });
-      await createBeneficiary(storeFields);
-    };
-
     const onSubmit: SubmitHandler<Fields> = async ({ profilePicture }) => {
       await updateStoreFields({ profilePicture });
       await createBeneficiary({ ...storeFields, profilePicture });
     };
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading;
-    const shouldSkipButtonBeDisabled = formState.isSubmitting || isLoading;
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
@@ -106,12 +99,6 @@ export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
         </div>
 
         <ButtonStack useRowOnLgScreen>
-          <Button
-            label={BUTTON_SKIP_LABEL}
-            disabled={shouldSkipButtonBeDisabled}
-            onClick={onSkip}
-          />
-
           <Button
             type="submit"
             label={BUTTON_LABEL}
