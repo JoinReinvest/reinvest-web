@@ -25,6 +25,8 @@ export function InnerViewBeneficiaryCreation() {
       toggleIsConfirmationModalOpen(true);
     } else {
       toggleIsBeneficiaryFlowOpen(state);
+      await resetStoreFields();
+      moveToFirstStep();
     }
   };
 
