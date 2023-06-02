@@ -25,4 +25,7 @@ export const Context = createContext<State>({
   validateActiveAccountMeta: DEFAULT_MUTATION_META,
   canOpenAccount: true,
   allAccountsMeta: DEFAULT_QUERY_META,
+  arrivesFromOnboarding: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setArrivesFromOnboarding: () => {},
 });

@@ -8,7 +8,7 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
 import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
@@ -22,7 +22,6 @@ import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
 import { useInvestmentContext } from '../../../../providers/InvestmentProvider';
-import { BannedView } from '../../../BannedView';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -46,7 +45,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       config: { enabled: false },
     });
     const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
-    const [isBannedAccount, setIsBannedAccount] = useState(false);
+    // const [isBannedAccount, setIsBannedAccount] = useState(false);
     const { userProfile } = useActiveAccount();
     const {
       refetch: refetchCorporate,
@@ -87,12 +86,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           return moveToNextStep();
         }
 
-        const accountIsBanned = verifyAccountMeta.data?.requiredActions?.find(requiredAction => requiredAction?.action === ActionName.BanAccount);
-
         //TODO: this if should be upgrade in RELEASE-5
-        if (accountIsBanned) {
-          return setIsBannedAccount(false);
-        }
+        // if (accountIsBanned) {
+        //   return setIsBannedAccount(false);
+        // }
 
         if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
           const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
@@ -152,8 +149,12 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       if (getInvestmentSummaryMeta.data && verifyAccountMeta.data) {
         const { investmentFees } = getInvestmentSummaryMeta.data;
 
-        if (!investmentFees?.value && investmentId) {
+        if (verifyAccountMeta.data.canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
           startInvestmentMutate({ investmentId: investmentId, approveFees: true });
+        }
+
+        if (!verifyAccountMeta.data.canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
+          startInvestmentMutate({ investmentId: investmentId, approveFees: false });
         }
       }
     }, [getInvestmentSummaryMeta.data, investmentId, startInvestmentMutate, verifyAccountMeta.data]);
@@ -198,15 +199,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const onSubmit = () => {
       moveToNextStep();
     };
-
-    if (isBannedAccount) {
-      return (
-        <BannedView
-          isOpen
-          title="Verification failed. Your account has been locked."
-        />
-      );
-    }
 
     return (
       <Form onSubmit={onSubmit}>

@@ -4,8 +4,8 @@ import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { InvestmentProvider, useInvestmentContext } from 'providers/InvestmentProvider';
-import { RecurringInvestmentProvider, useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
+import { InvestmentProvider } from 'providers/InvestmentProvider';
+import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
@@ -17,14 +17,11 @@ import { ModalHandlerProvider } from './providers/modal-handler';
 
 interface Props extends ModalProps {
   forInitialInvestment?: boolean;
-  setHadArrivedFromOnboarding?: (value: boolean) => void;
   withSideModal?: boolean;
 }
 
-const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, setHadArrivedFromOnboarding, withSideModal = false }: Props) => {
-  const { activeAccount, deprecateLatestAccountOnboarded } = useActiveAccount();
-  const { createInvestmentMeta } = useInvestmentContext();
-  const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
+const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false }: Props) => {
+  const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
 
   const {
@@ -34,6 +31,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     moveToFirstStep,
     getStoreFields,
     updateStoreFields,
+
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
@@ -46,11 +44,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     await updateStoreFields({ _forInitialInvestment: true, _hasMoreThanAnAccount: storeFields?._hasMoreThanAnAccount });
     onModalOpenChange(false);
     moveToFirstStep();
-    setHadArrivedFromOnboarding && setHadArrivedFromOnboarding(false);
     deprecateLatestAccountOnboarded();
-
-    createInvestmentMeta.reset();
-    initiateRecurringInvestmentMeta.reset();
+    setArrivesFromOnboarding(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
 

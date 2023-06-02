@@ -10,13 +10,16 @@ interface Params {
 }
 
 interface Returns {
+  arrivesFromOnboarding: boolean;
   deprecateLatestAccountOnboarded: () => void;
   latestAccountOnboardedId: string | null;
+  setArrivesFromOnboarding: Dispatch<SetStateAction<boolean>>;
   setLatestAccountOnboardedId: Dispatch<SetStateAction<string | null>>;
 }
 
 export function useOnboardedAccount({ activeAccount, allAccounts, updateActiveAccount }: Params): Returns {
   const [latestAccountOnboardedId, setLatestAccountOnboardedId] = useSessionStorage<string | null>(StorageKeys.LATEST_ACCOUNT_ONBOARDED, null);
+  const [arrivesFromOnboarding, setArrivesFromOnboarding] = useSessionStorage<boolean>(StorageKeys.ARRIVES_FROM_ONBOARDING, false);
 
   const deprecateLatestAccountOnboarded = useCallback(() => {
     if (latestAccountOnboardedId) {
@@ -34,7 +37,9 @@ export function useOnboardedAccount({ activeAccount, allAccounts, updateActiveAc
     } else {
       deprecateLatestAccountOnboarded();
     }
-  }, [activeAccount, latestAccountOnboardedId, allAccounts, updateActiveAccount, deprecateLatestAccountOnboarded]);
 
-  return { latestAccountOnboardedId, deprecateLatestAccountOnboarded, setLatestAccountOnboardedId };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [activeAccount, latestAccountOnboardedId, allAccounts]);
+
+  return { latestAccountOnboardedId, deprecateLatestAccountOnboarded, setLatestAccountOnboardedId, arrivesFromOnboarding, setArrivesFromOnboarding };
 }
