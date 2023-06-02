@@ -1,5 +1,4 @@
 import { ModalWhite } from 'components/ModalWhite';
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { ComponentProps } from 'react';
 
 import { Menu } from './components/Menu';
@@ -13,7 +12,6 @@ type Props = PrimitiveProps;
 const MODAL_TITLE = 'Manage Account';
 
 const AccountManagement = () => {
-  const { activeAccount } = useActiveAccount();
   const { isModalOpen, toggleIsModalOpen, currentFlow, setCurrentFlowIdentifier } = useFlowsManager();
 
   const onOpenChange = (willBeOpen: boolean) => {
@@ -29,7 +27,6 @@ const AccountManagement = () => {
       title={MODAL_TITLE}
       isOpen={isModalOpen}
       onOpenChange={onOpenChange}
-      activeAccount={activeAccount}
     >
       {currentFlow ? currentFlow.flow : <Menu groups={MENU_GROUPS} />}
     </ModalWhite>

@@ -86,7 +86,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (isGetActiveRecurringInvestmentSuccess && data) {
-        updateStoreFields({ _shouldDisplayRecurringInvestment: false });
+        updateStoreFields({ _shouldDisplayRecurringInvestment: true }); //TODO: should be false, for upgrade after demo
       } else {
         updateStoreFields({ _shouldDisplayRecurringInvestment: true });
       }
@@ -106,7 +106,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         )}
         {!isLoading && (
           <>
-            <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
+            <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
               <ModalTitle
                 title="Make your initial one-time investment"
                 isTitleCenteredOnMobile

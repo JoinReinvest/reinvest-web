@@ -87,7 +87,7 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
         )}
         {!isReadBankAccountLoading && (
           <>
-            <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
+            <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
               <div className="flex flex-col gap-48">
                 <header className="flex justify-center gap-14">
                   <LogoIcon2 className="h-25 w-auto" />

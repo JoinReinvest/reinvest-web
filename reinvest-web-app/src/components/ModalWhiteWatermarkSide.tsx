@@ -11,10 +11,11 @@ interface Props extends PropsWithChildren {
   isOpen: boolean;
   onOpenChange: (state: boolean) => void;
   title: string;
+  hideSeparator?: boolean;
 }
 
-export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children }: Props) => {
-  const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44');
+export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children, hideSeparator }: Props) => {
+  const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44 pt-32');
 
   return (
     <Dialog.Root
@@ -24,9 +25,9 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
 
-        <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 overflow-hidden pb-24 md:max-w-415">
+        <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 overflow-hidden py-24 md:max-w-415">
           <>
-            <header className="flex items-center justify-between md:hidden">
+            <header className="flex items-center justify-between px-44 pt-40 md:hidden">
               <LogoIcon2 />
 
               <Dialog.Close asChild>
@@ -39,7 +40,7 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children 
             </Dialog.Title>
 
             <div className="h-full overflow-y-hidden">
-              <Separator className="h-1 w-full bg-gray-04 md:h-0" />
+              {!hideSeparator && <Separator className="h-1 w-full bg-gray-04 md:h-0" />}
 
               <div className={contentClassName}>{children}</div>
             </div>

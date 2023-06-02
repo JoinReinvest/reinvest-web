@@ -11,8 +11,6 @@ export const Context = createContext<State>({
   subscriptionRecurringInvestmentAgreementMeta: DEFAULT_QUERY_META,
   signRecurringInvestmentSubscriptionAgreementMeta: DEFAULT_MUTATION_META,
   createRecurringInvestmentMeta: DEFAULT_MUTATION_META,
-  recurringSubscriptionAgreement: null,
-  createRecurringSubscriptionAgreementMeta: DEFAULT_MUTATION_META,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   createRecurringInvestment: () => new Promise(() => {}),
   // eslint-disable-next-line @typescript-eslint/no-empty-function

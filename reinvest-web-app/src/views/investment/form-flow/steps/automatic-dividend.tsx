@@ -79,7 +79,7 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
           </div>
         )}
         {!isGetAccountConfigurationRefetching && (
-          <FormContent willLeaveContentOnTop={!storeFields._forInitialInvestment}>
+          <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
             <div className="flex flex-col gap-36">
               <ModalTitle title={TITLE} />
 
