@@ -18,11 +18,11 @@ interface Props {
 }
 
 export function NotificationItem({ notification, isLastItem, fetchMoreNotifications }: Props) {
-  const { markAsRead } = useNotifications();
+  const { markAsRead, notificationsMeta } = useNotifications();
   const { updateCurrentFlow } = useFlowsManagerContext();
   const ref = useRef<HTMLLIElement>(null);
 
-  useNotificationItemObserver({ ref, isLastItem, fetchMoreNotifications });
+  useNotificationItemObserver({ ref, isLastItem, fetchMoreNotifications, areThereMoreNotificationsToFetch: !!notificationsMeta?.hasNextPage });
 
   const className = cx('flex items-center gap-16 py-16 -mx-24 md:-mx-44 px-24 md:px-44 border-b border-b-gray-04', {
     'bg-green-frost-01/30 hover:bg-green-frost-01/40': !notification?.isRead,
