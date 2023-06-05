@@ -5,10 +5,9 @@ import { BlogCard, BlogPostInterface } from 'components/Education/BlogCard';
 import { EducationCard, EducationCardProps } from 'components/Education/Card';
 import { Typography } from 'components/Typography';
 import { URL } from 'constants/urls';
-import { useFetch } from 'hooks/fetch';
+import { usePosts } from 'hooks/posts';
 import { MainLayout } from 'layouts/MainLayout';
 import Image from 'next/image';
-import { GetPostsResponse } from 'types/site-api';
 
 const educationCards: EducationCardProps[] = [
   {
@@ -42,14 +41,10 @@ export const renderBlogCard = (card: BlogPostInterface) => (
 );
 
 const EducationPage = () => {
-  const { data, isLoading } = useFetch<GetPostsResponse>({
-    url: '/api/posts',
-  });
+  const { posts, meta } = usePosts();
 
-  const responseWasSuccessful = data && data.success;
-  const hasPosts = responseWasSuccessful && !!data.data.length;
-  const arePostsReady = hasPosts && !isLoading;
-  const posts = data?.data || [];
+  const hasPosts = meta.isSuccess && !!posts.length;
+  const arePostsReady = !!hasPosts && !meta.isLoading;
 
   return (
     <MainLayout>
@@ -84,7 +79,7 @@ const EducationPage = () => {
         >
           Learn the basics
         </Typography>
-        {isLoading && (
+        {meta.isLoading && (
           <Typography
             variant="h6"
             className="text-center"

@@ -1,19 +1,14 @@
-import { useFetch } from 'hooks/fetch';
+import { usePosts } from 'hooks/posts';
 import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
 import { ActiveAccountChartProvider } from 'providers/ActiveAccountChart';
-import { GetPostsResponse } from 'types/site-api';
 import { DashboardView } from 'views/dashboard';
 
 const DashboardPage: NextPage = () => {
-  const { data, isLoading } = useFetch<GetPostsResponse>({
-    url: '/api/posts',
-  });
+  const { posts, meta } = usePosts();
 
-  const responseWasSuccessful = data && data.success;
-  const hasPosts = responseWasSuccessful && !!data.data.length;
-  const arePostsReady = !!hasPosts && !isLoading;
-  const posts = data?.data || [];
+  const hasPosts = meta.isSuccess && !!posts.length;
+  const arePostsReady = !!hasPosts && !meta.isLoading;
 
   return (
     <MainLayout>
