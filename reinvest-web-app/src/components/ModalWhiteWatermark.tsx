@@ -19,7 +19,7 @@ export const ModalWhiteWatermark = ({ isOpen, onOpenChange, children }: Props) =
 
       <Dialog.Content className="white-modal fixed inset-0 z-50 flex flex-col gap-24">
         <>
-          <header className="flex items-center justify-between md:hidden">
+          <header className="flex items-center justify-between px-24 pt-40 md:px-60 md:pt-66">
             <LogoIcon2 />
 
             <Dialog.Close asChild>
