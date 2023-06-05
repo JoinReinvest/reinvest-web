@@ -91,8 +91,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
         <ModalHandlerProvider onModalLastStep={onModalLastStep}>
           <ModalWhiteWatermarkSide
             title={MODAL_TITLE}
-            isOpen={isModalOpen}
-            onOpenChange={onModalLastStep}
+            isModalOpen={isModalOpen}
+            onModalOpenChange={onModalLastStep}
             hideSeparator
           >
             <CurrentStepView />
@@ -103,8 +103,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
       return (
         <ModalHandlerProvider onModalLastStep={onModalLastStep}>
           <ModalWhiteWatermark
-            isOpen={isModalOpen}
-            onOpenChange={onModalLastStep}
+            isModalOpen={isModalOpen}
+            onModalOpenChange={onModalLastStep}
           >
             <CurrentStepView />
           </ModalWhiteWatermark>
