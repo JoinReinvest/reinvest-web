@@ -63,11 +63,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     const storeFields = getStoreFields();
 
     if (
-      (!storeFields?._willSetUpOneTimeInvestments &&
-        !storeFields?._willSetUpRecurringInvestment &&
-        storeFields?._willSetUpOneTimeInvestments !== undefined &&
-        storeFields?._willSetUpRecurringInvestment !== undefined) ||
-      (!storeFields?._willSetUpOneTimeInvestments && storeFields?._willSetUpOneTimeInvestments !== undefined && !storeFields?._shouldDisplayRecurringInvestment)
+      (storeFields?._willSetUpOneTimeInvestments === false && storeFields?._willSetUpRecurringInvestment === false) ||
+      (storeFields?._willSetUpOneTimeInvestments === false && !storeFields?._shouldDisplayRecurringInvestment)
     ) {
       onModalLastStep();
     }
