@@ -3,16 +3,14 @@ import { IconClose } from 'assets/icons/IconClose';
 import { LogoIcon } from 'assets/LogoIcon';
 import { LogoIcon2 } from 'assets/LogoIcon2';
 import { PropsWithChildren } from 'react';
+import { ModalProps } from 'types/modal';
 
-interface Props extends PropsWithChildren {
-  isOpen: boolean;
-  onOpenChange: (state: boolean) => void;
-}
+interface Props extends PropsWithChildren, ModalProps {}
 
-export const ModalWhiteWatermark = ({ isOpen, onOpenChange, children }: Props) => (
+export const ModalWhiteWatermark = ({ onModalOpenChange, isModalOpen, children }: Props) => (
   <Dialog.Root
-    open={isOpen}
-    onOpenChange={onOpenChange}
+    open={isModalOpen}
+    onOpenChange={onModalOpenChange}
   >
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
