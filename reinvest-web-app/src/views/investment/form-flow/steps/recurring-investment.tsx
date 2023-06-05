@@ -1,5 +1,6 @@
 import { IconRecurrent } from 'assets/icons/IconRecurrent';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -26,7 +27,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
     return !!fields._shouldDisplayRecurringInvestment;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const [isLoading, toggleIsLoading] = useToggler(false);
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
@@ -46,9 +47,20 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
+    function onButtonBackClick() {
+      moveToPreviousStep();
+    }
+
     return (
       <Form onSubmit={onSubmit}>
         <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+          {!!storeFields._forInitialInvestment && (
+            <ButtonBack
+              hideOnMobile
+              onClick={onButtonBackClick}
+            />
+          )}
+
           <div className="flex w-full justify-center">
             <IconRecurrent />
           </div>

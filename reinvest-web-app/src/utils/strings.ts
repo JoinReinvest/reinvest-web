@@ -3,20 +3,9 @@
  * with `Notification.body` or `SubscriptionAgreementParagraph.lines`.
  */
 export function boldBracketedText(text: string): string {
-  const words = text.split(' ');
-  const maybeHighlightedWords = words.map(word => {
-    const matchesPlaceholder = word.startsWith('{{') && word.endsWith('}}');
+  const regex = /{{(.*?)}}/g;
 
-    if (matchesPlaceholder) {
-      const wordWithoutPlaceholder = word.replace(/{{|}}/g, '');
-
-      return parseToHTML(wordWithoutPlaceholder);
-    }
-
-    return word;
-  });
-
-  return maybeHighlightedWords.join(' ');
+  return text.replace(regex, (_match, word: string) => parseToHTML(word));
 }
 
 function parseToHTML(word: string) {

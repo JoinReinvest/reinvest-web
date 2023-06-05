@@ -5,6 +5,7 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { LogoIcon2 } from 'assets/LogoIcon2';
 import { LogoPlaid } from 'assets/LogoPlaid';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -39,7 +40,7 @@ const LIST_ITEMS = [
 export const StepBankAccountLanding: StepParams<FlowFields> = {
   identifier: Identifiers.BANK_ACCOUNT_LANDING,
 
-  Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const {
       refetch,
@@ -78,6 +79,10 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
       }
     }, [isError, moveToNextStep, updateStoreFields]);
 
+    function onButtonBackClick() {
+      moveToPreviousStep();
+    }
+
     return (
       <Form onSubmit={onSubmit}>
         {isReadBankAccountLoading && (
@@ -88,6 +93,13 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
         {!isReadBankAccountLoading && (
           <>
             <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+              {!!storeFields._forInitialInvestment && (
+                <ButtonBack
+                  hideOnMobile
+                  onClick={onButtonBackClick}
+                />
+              )}
+
               <div className="flex flex-col gap-48">
                 <header className="flex justify-center gap-14">
                   <LogoIcon2 className="h-25 w-auto" />

@@ -5,6 +5,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
+import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
 import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
@@ -12,7 +13,6 @@ import { FormEventHandler } from 'react';
 import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { Separator } from '../../../../components/Separator';
 import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -47,6 +47,8 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     const recurrentInvestmentInterval =
       storeFields.recurringInvestmentInterval && RECURRING_INVESTMENT_INTERVAL_LABELS.get(storeFields.recurringInvestmentInterval);
     const recurrentInvestmentLabel = `Recurring ${recurrentInvestmentInterval} Investment`;
+
+    const showSeparator = storeFields._willSetUpRecurringInvestment && storeFields._willSetUpOneTimeInvestments;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
@@ -87,13 +89,13 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
                   />
                 )}
 
-                {storeFields._willSetUpRecurringInvestment && storeFields._willSetUpOneTimeInvestments && <Separator />}
+                {showSeparator && <Separator />}
 
-                {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && (
+                {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && storeFields.recurringInvestment?.date && (
                   <InvestmentInformation
-                    amount={`$${storeFields.recurringInvestment.amount}`}
+                    amount={storeFields.recurringInvestment.amount}
                     type={'recurring'}
-                    date={new Date()}
+                    date={storeFields.recurringInvestment.date}
                     label={recurrentInvestmentLabel}
                   />
                 )}

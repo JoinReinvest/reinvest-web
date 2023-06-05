@@ -8,5 +8,9 @@ interface Props {
 export function ParagraphLine({ line }: Props) {
   const boldedLine = boldBracketedText(line);
 
-  return <Typography variant="paragraph">{boldedLine}</Typography>;
+  return (
+    <Typography variant="paragraph">
+      <span dangerouslySetInnerHTML={{ __html: boldedLine }} />
+    </Typography>
+  );
 }
