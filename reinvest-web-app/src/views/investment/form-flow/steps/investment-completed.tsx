@@ -113,7 +113,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
             </div>
           </div>
         </FormContent>
-        {/*)}*/}
+
         <ButtonStack>
           <Button
             type="submit"
