@@ -1,6 +1,7 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { IconWarning } from 'assets/icons/IconWarning';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -27,7 +28,7 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
     return !optsInForAutomaticDividendReinvestment;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const [isLoading, toggleIsLoading] = useToggler(false);
     const { activeAccount } = useActiveAccount();
     const {
@@ -71,6 +72,10 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    function onButtonBackClick() {
+      moveToPreviousStep();
+    }
+
     return (
       <Form onSubmit={onSubmit}>
         {isGetAccountConfigurationRefetching && (
@@ -80,6 +85,13 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
         )}
         {!isGetAccountConfigurationRefetching && (
           <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+            {!!storeFields._forInitialInvestment && (
+              <ButtonBack
+                hideOnMobile
+                onClick={onButtonBackClick}
+              />
+            )}
+
             <div className="flex flex-col gap-36">
               <ModalTitle title={TITLE} />
 
