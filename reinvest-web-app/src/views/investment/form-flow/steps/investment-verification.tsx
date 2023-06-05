@@ -8,7 +8,7 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
-import { useCallback, useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
 import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
@@ -44,14 +44,14 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       investmentId: investmentId || '',
       config: { enabled: false },
     });
-    const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
-    // const [isBannedAccount, setIsBannedAccount] = useState(false);
+    const { recurringInvestment, initiateRecurringInvestment } = useRecurringInvestment();
     const { userProfile } = useActiveAccount();
     const {
       refetch: refetchCorporate,
       isRefetching: isCorporateRefetching,
       data: getCorporateData,
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
+    const [shouldUpdateData, setShouldUpdateData] = useState(false);
 
     const startInvestmentCallback = useCallback(async () => {
       if (investmentId) {
@@ -60,19 +60,25 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
     }, [investmentId, refetchAccountStats, startInvestmentMutate]);
 
+    //start verify account
     useEffect(() => {
-      async function initiateInvestments() {
+      async function initiateVerification() {
         if (activeAccount?.id) {
           await mutateAsync({ accountId: activeAccount.id });
-          (await recurringInvestment) && (await initiateRecurringInvestment());
         }
       }
 
-      initiateInvestments();
+      initiateVerification();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
+      async function initiateRecurringInvestments() {
+        if (activeAccount?.id) {
+          (await recurringInvestment) && (await initiateRecurringInvestment());
+        }
+      }
+
       if (verifyAccountMeta.isSuccess) {
         if (!storeFields._willSetUpOneTimeInvestments && storeFields._willSetUpRecurringInvestment) {
           moveToNextStep();
@@ -119,45 +125,45 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
               requiredAction.action !== ActionName.BanAccount,
           );
 
+          const _shouldUpdateProfileDetails = !!shouldUpdateProfileData?.length;
+          const _shouldUpdateCompanyData = !!shouldUpdateCompanyData?.length;
+          const _shouldUpdateStakeholderData = !!shouldUpdateStakeholderData?.length || _shouldUpdateCompanyData;
+          const _shouldUpdateData = _shouldUpdateProfileDetails || _shouldUpdateStakeholderData || _shouldUpdateCompanyData;
+
           updateStoreFields({
-            _shouldUpdateProfileDetails: !!shouldUpdateProfileData?.length,
-            _shouldUpdateStakeholderData: !!shouldUpdateStakeholderData?.length || !!shouldUpdateCompanyData?.length,
-            _shouldUpdateCompanyData: !!shouldUpdateCompanyData?.length,
+            _shouldUpdateProfileDetails: _shouldUpdateProfileDetails,
+            _shouldUpdateStakeholderData: _shouldUpdateStakeholderData,
+            _shouldUpdateCompanyData: _shouldUpdateCompanyData,
           });
+
+          setShouldUpdateData(_shouldUpdateData);
 
           if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
             refetchCorporate();
           }
+
+          if (!_shouldUpdateData && getInvestmentSummaryMeta.data) {
+            const { investmentFees } = getInvestmentSummaryMeta.data;
+
+            if (!investmentFees?.value && investmentId) {
+              startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta.data.canUserContinueTheInvestment });
+              refetchGetInvestmentSummary();
+            }
+          }
+
+          if (storeFields._willSetUpRecurringInvestment && !getInvestmentSummaryMeta.isLoading) {
+            initiateRecurringInvestments();
+          }
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [verifyAccountMeta.isSuccess, initiateRecurringInvestmentMeta.isSuccess]);
-
-    useEffect(() => {
-      if (verifyAccountMeta.isSuccess && investmentId) {
-        refetchGetInvestmentSummary();
-      }
-    }, [refetchGetInvestmentSummary, verifyAccountMeta.isSuccess, investmentId]);
+    }, [verifyAccountMeta.isSuccess]);
 
     useEffect(() => {
       if (getInvestmentSummaryMeta.isSuccess) {
         updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
       }
     }, [getInvestmentSummaryMeta, updateStoreFields]);
-
-    useEffect(() => {
-      if (getInvestmentSummaryMeta.data && verifyAccountMeta.data) {
-        const { investmentFees } = getInvestmentSummaryMeta.data;
-
-        if (verifyAccountMeta.data.canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
-          startInvestmentMutate({ investmentId: investmentId, approveFees: true });
-        }
-
-        if (!verifyAccountMeta.data.canUserContinueTheInvestment && !investmentFees?.value && investmentId) {
-          startInvestmentMutate({ investmentId: investmentId, approveFees: false });
-        }
-      }
-    }, [getInvestmentSummaryMeta.data, investmentId, startInvestmentMutate, verifyAccountMeta.data]);
 
     useEffect(() => {
       if (userProfile && storeFields._shouldUpdateProfileDetails) {
@@ -217,31 +223,29 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
             </div>
           </FormContent>
         )}
-        {verifyAccountMeta.data &&
-          !verifyAccountMeta.data.isAccountVerified &&
-          (storeFields._shouldUpdateCompanyData || storeFields._shouldUpdateProfileDetails || storeFields._shouldUpdateStakeholderData) && (
-            <>
-              <FormContent>
-                <div className="flex flex-col gap-32">
-                  <div className="flex w-full flex-col items-center gap-16">
-                    <IconXCircle />
-                  </div>
-
-                  <ModalTitle
-                    title="We could not verify your information"
-                    subtitle="Please update your information and we will run our verification process again."
-                  />
+        {verifyAccountMeta.data && !verifyAccountMeta.data.isAccountVerified && shouldUpdateData && (
+          <>
+            <FormContent>
+              <div className="flex flex-col gap-32">
+                <div className="flex w-full flex-col items-center gap-16">
+                  <IconXCircle />
                 </div>
-              </FormContent>
-              <ButtonStack>
-                <Button
-                  label="Edit Information"
-                  variant="default"
-                  type="submit"
+
+                <ModalTitle
+                  title="We could not verify your information"
+                  subtitle="Please update your information and we will run our verification process again."
                 />
-              </ButtonStack>
-            </>
-          )}
+              </div>
+            </FormContent>
+            <ButtonStack>
+              <Button
+                label="Edit Information"
+                variant="default"
+                type="submit"
+              />
+            </ButtonStack>
+          </>
+        )}
       </Form>
     );
   },
