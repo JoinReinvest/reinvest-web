@@ -1,4 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { useMemo } from 'react';
 import { QueryMeta } from 'types/queries';
 import { GetPostsResponse } from 'types/site-api';
@@ -14,7 +15,7 @@ interface Returns {
 export function usePosts(): Returns {
   const { data, ...meta } = useQuery<GetPostsResponse>({
     queryKey: QUERY_KEYS,
-    queryFn: () => fetch(URL).then(res => res.json()),
+    queryFn: () => axios.get(URL).then(res => res.data),
   });
 
   const posts = useMemo(() => data?.data || [], [data]);
