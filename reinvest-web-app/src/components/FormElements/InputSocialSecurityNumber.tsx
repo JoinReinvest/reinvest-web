@@ -15,7 +15,7 @@ export function InputSocialSecurityNumber<FormFields extends FieldValues>({ will
       willUseUnmaskedValue={false}
       willTriggerChangeOnAccept
       inputPlaceholder="000-00-0000"
-      isOnlyNumeric
+      inputMode="numeric"
     />
   );
 }
