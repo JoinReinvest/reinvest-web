@@ -24,6 +24,7 @@ export function usePlaidIntegration(): Returns {
   const { activeAccount } = useActiveAccount();
   const { updateStoreFields, getStoreFields } = useInvestmentFlow();
   const [plaidDataForApi, setPlaidDataForApi] = useState<FulfillBankAccountInput>();
+
   const { count: iFrameKey, increment: refreshIFrame } = useCounter();
 
   const { mutateAsync: createBankAccountMutation, data: createBankAccountData, ...createBankAccountMeta } = useCreateBankAccount(getApiClient);
