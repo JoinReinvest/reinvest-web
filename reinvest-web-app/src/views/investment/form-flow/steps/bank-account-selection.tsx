@@ -17,7 +17,8 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
 
   Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const willUpdateBankAccount = !!storeFields._willUpdateBankAccount;
-    const { createBankAccountMeta, createBankAccountData, updateBankAccountMeta, updateBankAccountData, fulfillBankAccountMeta } = usePlaidIntegration();
+    const { createBankAccountMeta, createBankAccountData, updateBankAccountMeta, updateBankAccountData, fulfillBankAccountMeta, iFrameKey } =
+      usePlaidIntegration();
 
     useEffect(() => {
       async function displayConfirmationStep() {
@@ -54,6 +55,7 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
         {!fulfillBankAccountMeta.isLoading && (shouldCreateBankAccountHaveSucceded || shouldUpdateBankAccountHaveSucceded) && plaidFrameLink && (
           <>
             <iframe
+              key={iFrameKey}
               src={plaidFrameLink}
               className="fixed inset-0 h-full w-full"
               title="plaid connection"
