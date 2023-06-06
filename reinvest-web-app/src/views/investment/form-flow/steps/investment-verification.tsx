@@ -7,6 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -21,7 +22,6 @@ import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'r
 import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
-import { useInvestmentContext } from '../../../../providers/InvestmentProvider';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
