@@ -7,12 +7,14 @@ import { BankAccountLink, FulfillBankAccountInput, Maybe } from 'reinvest-app-co
 import { mapPlaidDataForApi, PlaidEvent } from 'reinvest-app-common/src/utilities/plaid';
 import { getApiClient } from 'services/getApiClient';
 import { MutationMeta } from 'types/queries';
+import { useCounter } from 'usehooks-ts';
 
 import { useInvestmentFlow } from '../index';
 
 interface Returns {
   createBankAccountMeta: MutationMeta;
   fulfillBankAccountMeta: MutationMeta;
+  iFrameKey: number;
   updateBankAccountMeta: MutationMeta;
   createBankAccountData?: Maybe<BankAccountLink>;
   updateBankAccountData?: Maybe<BankAccountLink>;
@@ -22,6 +24,7 @@ export function usePlaidIntegration(): Returns {
   const { activeAccount } = useActiveAccount();
   const { updateStoreFields, getStoreFields } = useInvestmentFlow();
   const [plaidDataForApi, setPlaidDataForApi] = useState<FulfillBankAccountInput>();
+  const { count: iFrameKey, increment: refreshIFrame } = useCounter();
 
   const { mutateAsync: createBankAccountMutation, data: createBankAccountData, ...createBankAccountMeta } = useCreateBankAccount(getApiClient);
 
@@ -55,6 +58,10 @@ export function usePlaidIntegration(): Returns {
         const dataForApi = mapPlaidDataForApi(data.plaidAccountDetails[0]);
         setPlaidDataForApi(dataForApi);
       }
+
+      if (data?.errorCode) {
+        refreshIFrame();
+      }
     };
 
     window.addEventListener('message', handler);
@@ -79,5 +86,5 @@ export function usePlaidIntegration(): Returns {
     fulfillBankAccount();
   }, [plaidDataForApi, activeAccount?.id, fulfillBankAccountMutation, updateStoreFields]);
 
-  return { createBankAccountData, createBankAccountMeta, updateBankAccountMeta, updateBankAccountData, fulfillBankAccountMeta };
+  return { createBankAccountData, createBankAccountMeta, updateBankAccountMeta, updateBankAccountData, fulfillBankAccountMeta, iFrameKey };
 }
