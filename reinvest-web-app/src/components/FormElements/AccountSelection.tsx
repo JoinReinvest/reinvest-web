@@ -38,7 +38,7 @@ export function AccountSelection<FormFields extends FieldValues>({ options, ...c
               alt={account?.avatar?.initials ?? `${account?.label}'s profile picture`}
             />
 
-            <div>
+            <div className="text-left">
               <Typography
                 variant="h6"
                 className="text-left"
