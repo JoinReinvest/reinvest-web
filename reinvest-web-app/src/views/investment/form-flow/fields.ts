@@ -11,7 +11,6 @@ export interface FlowFields {
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
   _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
   _forInitialInvestment?: boolean;
-  _hasCompletedInvestment?: boolean;
   _hasMoreThanAnAccount?: boolean;
   _investmentWasSuccessful?: boolean;
   _isEditingCompanyMajorStakeholderApplicant?: boolean;

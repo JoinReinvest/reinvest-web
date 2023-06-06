@@ -38,7 +38,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { investmentSummary, createInvestmentMeta, investmentSummaryMeta } = useInvestmentContext();
     const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
@@ -51,7 +51,6 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      await updateStoreFields({ _hasCompletedInvestment: true });
 
       createInvestmentMeta.reset();
       initiateRecurringInvestmentMeta.reset();
