@@ -49,13 +49,13 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const [shouldUpdateProfileDetails, setShouldUpdateProfileDetails] = useState(false);
     const [shouldUpdateStakeholderData, setShouldUpdateStakeholderData] = useState(false);
     const [shouldUpdateCompanyData, setShouldUpdateCompanyData] = useState(false);
+    const shouldUpdateData = shouldUpdateProfileDetails || shouldUpdateStakeholderData || shouldUpdateCompanyData;
 
     const {
       refetch: refetchCorporate,
       isRefetching: isCorporateRefetching,
       data: getCorporateData,
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
-    const [shouldUpdateData, setShouldUpdateData] = useState(false);
 
     const startInvestmentCallback = useCallback(async () => {
       if (investmentId) {
@@ -185,12 +185,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           setShouldUpdateCompanyData(_shouldUpdateCompanyData);
 
           updateStoreFieldsAsync({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData });
-
-          setShouldUpdateData(_shouldUpdateData);
-
-          if (_shouldUpdateProfileDetails) {
-            updateProfileDetailsCallback();
-          }
 
           if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
             refetchCorporate();
