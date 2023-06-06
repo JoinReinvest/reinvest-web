@@ -14,8 +14,14 @@ const MODAL_CLASSNAME = 'modal-create-beneficiary';
 export function InnerViewBeneficiaryCreation() {
   const { CurrentStepView, getStoreFields, moveToFirstStep, resetStoreFields, meta } = useBeneficiaryCreationFlow();
   const [isConfirmationModalOpen, toggleIsConfirmationModalOpen] = useToggler(false);
-  const { isBeneficiaryFlowOpen, toggleIsBeneficiaryFlowOpen, isInvestmentFlowOpen, toggleIsInvestmentFlowOpen, hasFinishedBeneficiaryCreationFlow } =
-    useModalHandler();
+  const {
+    isBeneficiaryFlowOpen,
+    toggleIsBeneficiaryFlowOpen,
+    isInvestmentFlowOpen,
+    toggleIsInvestmentFlowOpen,
+    hasFinishedBeneficiaryCreationFlow,
+    toggleHasFinishedBeneficiaryCreationFlow,
+  } = useModalHandler();
 
   const handleOpenChange = async (state: boolean) => {
     const storeFields = getStoreFields();
@@ -23,11 +29,17 @@ export function InnerViewBeneficiaryCreation() {
 
     if (!state && hasFilledAnyFields && !meta.isLastStep) {
       toggleIsConfirmationModalOpen(true);
-    } else {
-      toggleIsBeneficiaryFlowOpen(state);
+
+      return;
+    }
+
+    if (!state) {
       await resetStoreFields();
       moveToFirstStep();
+      toggleHasFinishedBeneficiaryCreationFlow(false);
     }
+
+    toggleIsBeneficiaryFlowOpen(state);
   };
 
   const onConfirmationAction = async () => {
