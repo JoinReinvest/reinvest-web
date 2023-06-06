@@ -81,9 +81,9 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
                 {investmentSummary?.amount.formatted && (
                   <InvestmentInformation
                     amount={investmentSummary.amount.formatted}
-                    type={'one-time'}
+                    type="one-time"
                     date={new Date()}
-                    label={'One Time Investment'}
+                    label="One Time Investment"
                   />
                 )}
 
@@ -92,7 +92,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
                 {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && storeFields.recurringInvestment?.date && (
                   <InvestmentInformation
                     amount={storeFields.recurringInvestment.amount}
-                    type={'recurring'}
+                    type="recurring"
                     date={storeFields.recurringInvestment.date}
                     label={recurrentInvestmentLabel}
                   />
