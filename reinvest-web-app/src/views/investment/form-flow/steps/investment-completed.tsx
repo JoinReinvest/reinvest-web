@@ -31,7 +31,6 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
 
     const requiredFields = [
       fields.optsInForAutomaticDividendReinvestment !== undefined,
-      fields._willSetUpRecurringInvestment !== undefined,
       shouldAgreeWithOneTimeInvestmentAgreement,
       shouldAgreeWithRecurringInvestmentAgreement,
     ];
