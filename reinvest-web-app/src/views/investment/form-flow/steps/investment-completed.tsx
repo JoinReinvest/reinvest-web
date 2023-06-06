@@ -67,7 +67,6 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
           </div>
         )}
 
-        {/*{investmentSummaryMeta.isSuccess && (*/}
         <FormContent willLeaveContentOnTop={!storeFields?._forInitialInvestment}>
           <div className="flex flex-col gap-40">
             <Typography
