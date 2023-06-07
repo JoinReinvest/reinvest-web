@@ -27,8 +27,6 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   } = useActiveAccount();
   const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
 
-  console.log('isInvestmentFlowOpen', isInvestmentFlowOpen);
-
   if (!isInvestmentFlowOpen && (activeAccountStatsMeta?.isLoading || validateActiveAccountMeta?.isLoading)) {
     return (
       <div className="absolute right-1/2 top-1/2 -translate-y-1/2 translate-x-1/2">

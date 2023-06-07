@@ -67,7 +67,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, [investmentId, refetchAccountStats, startInvestmentMutate]);
 
     const updateProfileDetailsCallback = useCallback(async () => {
-      console.log('updateProfileDetailsCallback', userProfile);
       await userProfileMeta.refetch();
 
       if (userProfile) {
@@ -241,7 +240,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     const onSubmit = async () => {
       if (shouldUpdateProfileDetails) {
-        console.log('shouldUpdateProfileDetails');
         await updateProfileDetailsCallback();
       }
 
@@ -249,7 +247,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         await updateCorporateDetailsCallback();
       }
 
-      console.log('move to next step');
       moveToNextStep();
     };
 
