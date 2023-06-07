@@ -28,6 +28,8 @@ import { Identifiers } from '../identifiers';
 const TITLE = 'We are verifying your investment.';
 const SUBTITLE = 'Verifying';
 
+type KycFlags = Pick<FlowFields, '_shouldUpdateProfileDetails' | '_shouldUpdateCompanyData' | '_shouldUpdateStakeholderData'>;
+
 export const StepInvestmentVerification: StepParams<FlowFields> = {
   identifier: Identifiers.INVESTMENT_VERIFICATION,
 
@@ -46,12 +48,16 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     });
     const { recurringInvestment, initiateRecurringInvestment } = useRecurringInvestment();
     const { userProfile } = useActiveAccount();
+    const [shouldUpdateProfileDetails, setShouldUpdateProfileDetails] = useState(false);
+    const [shouldUpdateStakeholderData, setShouldUpdateStakeholderData] = useState(false);
+    const [shouldUpdateCompanyData, setShouldUpdateCompanyData] = useState(false);
+    const shouldUpdateData = shouldUpdateProfileDetails || shouldUpdateStakeholderData || shouldUpdateCompanyData;
+
     const {
       refetch: refetchCorporate,
       isRefetching: isCorporateRefetching,
       data: getCorporateData,
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
-    const [shouldUpdateData, setShouldUpdateData] = useState(false);
 
     const startInvestmentCallback = useCallback(async () => {
       if (investmentId) {
@@ -59,6 +65,36 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         await refetchAccountStats();
       }
     }, [investmentId, refetchAccountStats, startInvestmentMutate]);
+
+    const updateProfileDetailsCallback = useCallback(async () => {
+      if (userProfile) {
+        const { details } = userProfile;
+        const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
+        const dateOfBirth = details?.dateOfBirth;
+        const identificationDocuments: DocumentFile[] = details?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
+        const residency = details?.domicile?.type;
+        const domicile = details?.domicile || { type: DomicileType.Citizen, visaType: '', birthCountry: '', citizenshipCountry: '' };
+        const ssn = details?.ssn || '';
+        const address = {
+          addressLine1: details?.address?.addressLine1 || '',
+          addressLine2: details?.address?.addressLine2 || '',
+          city: details?.address?.city || '',
+          country: details?.address?.country || '',
+          state: details?.address?.state || '',
+          zip: details?.address?.zip || '',
+        };
+
+        await updateStoreFields({ name, dateOfBirth, residency, identificationDocuments, domicile, ssn, address, _shouldUpdateProfileDetails: true });
+      }
+    }, [updateStoreFields, userProfile]);
+
+    const updateCorporateDetailsCallback = useCallback(async () => {
+      if (!isCorporateRefetching && getCorporateData) {
+        const { details } = getCorporateData;
+        const stakeholdersToStoreFields = details?.stakeholders ? formatStakeholdersForStorage(details?.stakeholders as Stakeholder[]) : [];
+        updateStoreFields({ companyMajorStakeholderApplicants: stakeholdersToStoreFields, _shouldUpdateStakeholderData: true });
+      }
+    }, [getCorporateData, isCorporateRefetching, updateStoreFields]);
 
     //start verify account
     useEffect(() => {
@@ -73,10 +109,29 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, []);
 
     useEffect(() => {
+      async function startInvestments() {
+        await refetchGetInvestmentSummary();
+
+        if (investmentId) {
+          await startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta?.data?.canUserContinueTheInvestment });
+        }
+
+        if (storeFields._willSetUpRecurringInvestment) {
+          await initiateRecurringInvestments();
+        }
+      }
       async function initiateRecurringInvestments() {
         if (activeAccount?.id) {
           (await recurringInvestment) && (await initiateRecurringInvestment());
         }
+      }
+
+      async function updateKycFlags({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData }: KycFlags) {
+        await updateStoreFields({
+          _shouldUpdateProfileDetails: _shouldUpdateProfileDetails,
+          _shouldUpdateStakeholderData: _shouldUpdateStakeholderData,
+          _shouldUpdateCompanyData: _shouldUpdateCompanyData,
+        });
       }
 
       if (verifyAccountMeta.isSuccess) {
@@ -130,28 +185,29 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           const _shouldUpdateStakeholderData = !!shouldUpdateStakeholderData?.length || _shouldUpdateCompanyData;
           const _shouldUpdateData = _shouldUpdateProfileDetails || _shouldUpdateStakeholderData || _shouldUpdateCompanyData;
 
-          updateStoreFields({
-            _shouldUpdateProfileDetails: _shouldUpdateProfileDetails,
-            _shouldUpdateStakeholderData: _shouldUpdateStakeholderData,
-            _shouldUpdateCompanyData: _shouldUpdateCompanyData,
-          });
+          setShouldUpdateProfileDetails(_shouldUpdateProfileDetails);
+          setShouldUpdateStakeholderData(_shouldUpdateStakeholderData);
+          setShouldUpdateCompanyData(_shouldUpdateCompanyData);
 
-          setShouldUpdateData(_shouldUpdateData);
+          updateKycFlags({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData });
 
           if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
             refetchCorporate();
           }
 
-          if (!_shouldUpdateData && getInvestmentSummaryMeta.data) {
-            const { investmentFees } = getInvestmentSummaryMeta.data;
+          if (!_shouldUpdateData) {
+            startInvestments();
+          }
+        }
 
-            if (!investmentFees?.value && investmentId) {
-              startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta.data.canUserContinueTheInvestment });
-              refetchGetInvestmentSummary();
-            }
+        if (verifyAccountMeta.data.canUserContinueTheInvestment) {
+          refetchGetInvestmentSummary();
+
+          if (investmentId) {
+            startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta.data.canUserContinueTheInvestment });
           }
 
-          if (storeFields._willSetUpRecurringInvestment && !getInvestmentSummaryMeta.isLoading) {
+          if (storeFields._willSetUpRecurringInvestment) {
             initiateRecurringInvestments();
           }
         }
@@ -164,28 +220,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
       }
     }, [getInvestmentSummaryMeta, updateStoreFields]);
-
-    useEffect(() => {
-      if (userProfile && storeFields._shouldUpdateProfileDetails) {
-        const { details } = userProfile;
-        const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };
-        const dateOfBirth = details?.dateOfBirth;
-        const identificationDocuments: DocumentFile[] = details?.idScan?.map(idScan => ({ id: idScan?.id, fileName: idScan?.fileName })) || [];
-        const residency = details?.domicile?.type;
-        const domicile = details?.domicile || { type: DomicileType.Citizen, visaType: '', birthCountry: '', citizenshipCountry: '' };
-        const ssn = details?.ssn || '';
-        const address = {
-          addressLine1: details?.address?.addressLine1 || '',
-          addressLine2: details?.address?.addressLine2 || '',
-          city: details?.address?.city || '',
-          country: details?.address?.country || '',
-          state: details?.address?.state || '',
-          zip: details?.address?.zip || '',
-        };
-
-        updateStoreFields({ name, dateOfBirth, residency, identificationDocuments, domicile, ssn, address, _shouldUpdateProfileDetails: true });
-      }
-    }, [userProfile, updateStoreFields, storeFields]);
 
     useEffect(() => {
       if (!isCorporateRefetching && getCorporateData && storeFields._shouldUpdateStakeholderData) {
@@ -202,7 +236,15 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
     }, [startInvestmentMeta.isSuccess, moveToNextStep, refetchAccountStats]);
 
-    const onSubmit = () => {
+    const onSubmit = async () => {
+      if (shouldUpdateProfileDetails) {
+        await updateProfileDetailsCallback();
+      }
+
+      if (shouldUpdateCompanyData || shouldUpdateStakeholderData) {
+        await updateCorporateDetailsCallback();
+      }
+
       moveToNextStep();
     };
 

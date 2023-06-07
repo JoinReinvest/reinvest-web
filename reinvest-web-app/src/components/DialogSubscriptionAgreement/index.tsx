@@ -22,6 +22,7 @@ export function DialogSubscriptionAgreement({ isModalOpen, onModalOpenChange, su
     <Dialog
       isOpen={isModalOpen}
       onOpenChange={onModalOpenChange}
+      color="white"
     >
       <>
         {title && <ModalTitle title={title} />}
