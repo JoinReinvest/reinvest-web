@@ -36,7 +36,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { createInvestment, createInvestmentMeta } = useInvestmentContext();
-    const { activeAccount, userProfileMeta } = useActiveAccount();
+    const { activeAccount } = useActiveAccount();
     const presetOptions = useMemo(() => INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
     const {
@@ -50,10 +50,6 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
       defaultValues: async () => defaultValues,
       resolver: zodResolver(schema),
     });
-
-    useEffect(() => {
-      userProfileMeta.refetch();
-    }, []);
 
     useEffect(() => {
       if (createInvestmentMeta.isSuccess) {
