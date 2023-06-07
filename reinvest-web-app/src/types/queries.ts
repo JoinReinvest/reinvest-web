@@ -6,6 +6,7 @@ export interface QueryMeta {
   isRefetching: boolean;
   isSuccess: boolean;
   refetch: () => void;
+  remove: () => void;
 }
 
 export interface MutationMeta {

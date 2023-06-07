@@ -1,27 +1,25 @@
-import { useCallback } from 'react';
 import { useMarkNotificationAsRead } from 'reinvest-app-common/src/services/queries/markNotificationAsRead';
-import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
-import { MutationMeta } from 'types/queries';
+import { MutationMeta, QueryMeta } from 'types/queries';
 
 interface Params {
-  unreadNotifications: Maybe<Notification>[];
+  notificationsMeta: QueryMeta;
 }
 
 interface Return {
   markAsRead: (params: { notificationId: string }) => Promise<boolean>;
   markAsReadMeta: MutationMeta;
-  markUnreadNotificationsAsRead: () => Promise<void>;
 }
 
-export function useMarkAsRead({ unreadNotifications }: Params): Return {
-  const { mutateAsync: markAsRead, ...markAsReadMeta } = useMarkNotificationAsRead(getApiClient);
+export function useMarkAsRead({ notificationsMeta }: Params): Return {
+  const { mutateAsync, ...markAsReadMeta } = useMarkNotificationAsRead(getApiClient);
 
-  const markUnreadNotificationsAsRead = useCallback(async () => {
-    const promises = unreadNotifications.map(notification => markAsRead({ notificationId: notification?.id || '' }));
+  const markAsRead: Return['markAsRead'] = async ({ notificationId }) => {
+    const result = await mutateAsync({ notificationId });
+    notificationsMeta.refetch();
 
-    await Promise.all(promises);
-  }, [unreadNotifications, markAsRead]);
+    return result;
+  };
 
-  return { markAsRead, markAsReadMeta, markUnreadNotificationsAsRead };
+  return { markAsRead, markAsReadMeta };
 }

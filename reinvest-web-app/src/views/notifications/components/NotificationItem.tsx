@@ -2,7 +2,7 @@ import { IconArrowRight } from 'assets/icons/IconArrowRight';
 import cx from 'classnames';
 import { Typography } from 'components/Typography';
 import { useNotifications } from 'providers/Notifications';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { Maybe, Notification } from 'reinvest-app-common/src/types/graphql';
 import { formatDateForNotification } from 'reinvest-app-common/src/utilities/dates';
 import { boldBracketedText } from 'utils/strings';
@@ -12,21 +12,23 @@ import { useNotificationItemObserver } from '../hooks/notification-item-observer
 import { useFlowsManagerContext } from '../providers/flows-manager';
 
 interface Props {
+  areThereMoreNotificationsToFetch: boolean;
   fetchMoreNotifications: () => void;
   isLastItem: boolean;
   notification: Maybe<Notification>;
 }
 
-export function NotificationItem({ notification, isLastItem, fetchMoreNotifications }: Props) {
-  const { markAsRead, notificationsMeta } = useNotifications();
+export function NotificationItem({ notification, isLastItem, fetchMoreNotifications, areThereMoreNotificationsToFetch }: Props) {
+  const [hasReadNotifications, setHasReadNotifications] = useState(!!notification?.isRead);
+  const { markAsRead } = useNotifications();
   const { updateCurrentFlow } = useFlowsManagerContext();
   const ref = useRef<HTMLLIElement>(null);
 
-  useNotificationItemObserver({ ref, isLastItem, fetchMoreNotifications, areThereMoreNotificationsToFetch: !!notificationsMeta?.hasNextPage });
+  useNotificationItemObserver({ ref, isLastItem, fetchMoreNotifications, areThereMoreNotificationsToFetch });
 
   const className = cx('flex items-center gap-16 py-16 -mx-24 md:-mx-44 px-24 md:px-44 border-b border-b-gray-04', {
-    'bg-green-frost-01/30 hover:bg-green-frost-01/40': !notification?.isRead,
-    'bg-white/30': !!notification?.isRead,
+    'bg-green-frost-01/30 hover:bg-green-frost-01/40': !hasReadNotifications,
+    'bg-white/30': !!hasReadNotifications,
     'cursor-pointer': !notification?.isDismissible,
   });
 
@@ -37,9 +39,10 @@ export function NotificationItem({ notification, isLastItem, fetchMoreNotificati
 
   async function onClick() {
     const flowIdentifier = notification?.notificationType ? NOTIFICATION_TYPE_FLOWS.get(notification.notificationType) : null;
-    const willTriggerFlow = flowIdentifier && !notification?.isRead;
+    const willTriggerFlow = isActionable && flowIdentifier;
 
-    if (!willTriggerFlow && !notification?.isRead) {
+    if (!willTriggerFlow) {
+      setHasReadNotifications(true);
       await markAsRead({ notificationId });
     }
 

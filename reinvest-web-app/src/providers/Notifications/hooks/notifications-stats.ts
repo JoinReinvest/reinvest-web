@@ -1,7 +1,7 @@
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useMemo } from 'react';
 import { useGetNotifications } from 'reinvest-app-common/src/services/queries/getNotifications';
-import { Maybe, Notification, NotificationsStats } from 'reinvest-app-common/src/types/graphql';
+import { Maybe, Notification, NotificationFilter, NotificationsStats } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { InfiniteQueryMeta } from 'types/queries';
 
@@ -9,7 +9,6 @@ interface Return {
   notificationStats: Pick<NotificationsStats, 'totalCount' | 'unreadCount'> | null;
   notifications: Maybe<Notification>[];
   notificationsMeta: InfiniteQueryMeta;
-  unreadNotifications: Maybe<Notification>[];
 }
 
 export function useNotificationsStats(): Return {
@@ -17,6 +16,7 @@ export function useNotificationsStats(): Return {
 
   const { data, ...notificationsMeta } = useGetNotifications(getApiClient, {
     accountId: activeAccount?.id || '',
+    filter: NotificationFilter.All,
     config: { enabled: !!activeAccount?.id },
   });
 
@@ -31,7 +31,6 @@ export function useNotificationsStats(): Return {
   }, [data]);
 
   const notifications = useMemo(() => data?.pages.map(page => page.getNotifications).flat() || [], [data]);
-  const unreadNotifications = useMemo(() => notifications.filter(notification => !notification?.isRead), [notifications]);
 
-  return { notificationStats, notifications, notificationsMeta, unreadNotifications };
+  return { notificationStats, notifications, notificationsMeta };
 }
