@@ -38,7 +38,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { investmentSummary, createInvestmentMeta, investmentSummaryMeta } = useInvestmentContext();
     const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
@@ -51,7 +51,6 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      await updateStoreFields({ _hasCompletedInvestment: true });
 
       createInvestmentMeta.reset();
       initiateRecurringInvestmentMeta.reset();
@@ -67,8 +66,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
           </div>
         )}
 
-        {/*{investmentSummaryMeta.isSuccess && (*/}
-        <FormContent willLeaveContentOnTop={!storeFields?._forInitialInvestment}>
+        <FormContent willLeaveContentOnTop={!!storeFields?._forInitialInvestment}>
           <div className="flex flex-col gap-40">
             <Typography
               variant="h5-larger"
@@ -82,9 +80,9 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
                 {investmentSummary?.amount.formatted && (
                   <InvestmentInformation
                     amount={investmentSummary.amount.formatted}
-                    type={'one-time'}
+                    type="one-time"
                     date={new Date()}
-                    label={'One Time Investment'}
+                    label="One Time Investment"
                   />
                 )}
 
@@ -93,7 +91,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
                 {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && storeFields.recurringInvestment?.date && (
                   <InvestmentInformation
                     amount={storeFields.recurringInvestment.amount}
-                    type={'recurring'}
+                    type="recurring"
                     date={storeFields.recurringInvestment.date}
                     label={recurrentInvestmentLabel}
                   />
