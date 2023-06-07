@@ -3,7 +3,7 @@ import { ModalWhite } from 'components/ModalWhite';
 import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
-import { ActiveAccountProvider, useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { InvestmentProvider } from 'providers/InvestmentProvider';
 import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
@@ -139,13 +139,11 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
 };
 
 export const InvestmentView = (props: Props) => (
-  <ActiveAccountProvider>
-    <InvestmentProvider>
-      <RecurringInvestmentProvider enableQueries={!!props.isModalOpen}>
-        <InvestmentFlowProvider initialStoreFields={{ ...INITIAL_STORE_FIELDS, _forInitialInvestment: !!props.forInitialInvestment }}>
-          <InnerInvestmentView {...props} />
-        </InvestmentFlowProvider>
-      </RecurringInvestmentProvider>
-    </InvestmentProvider>
-  </ActiveAccountProvider>
+  <InvestmentProvider>
+    <RecurringInvestmentProvider enableQueries={!!props.isModalOpen}>
+      <InvestmentFlowProvider initialStoreFields={{ ...INITIAL_STORE_FIELDS, _forInitialInvestment: !!props.forInitialInvestment }}>
+        <InnerInvestmentView {...props} />
+      </InvestmentFlowProvider>
+    </RecurringInvestmentProvider>
+  </InvestmentProvider>
 );
