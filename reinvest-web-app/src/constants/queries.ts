@@ -15,6 +15,8 @@ export const DEFAULT_QUERY_META: QueryMeta = {
   isRefetching: false,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   refetch: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  remove: () => {},
 };
 
 export const DEFAULT_INFINITE_QUERY_META: InfiniteQueryMeta = {
