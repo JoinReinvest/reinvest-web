@@ -28,6 +28,8 @@ import { Identifiers } from '../identifiers';
 const TITLE = 'We are verifying your investment.';
 const SUBTITLE = 'Verifying';
 
+type KycFlags = Pick<FlowFields, '_shouldUpdateProfileDetails' | '_shouldUpdateCompanyData' | '_shouldUpdateStakeholderData'>;
+
 export const StepInvestmentVerification: StepParams<FlowFields> = {
   identifier: Identifiers.INVESTMENT_VERIFICATION,
 
@@ -107,21 +109,24 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, []);
 
     useEffect(() => {
+      async function startInvestments() {
+        await refetchGetInvestmentSummary();
+
+        if (investmentId) {
+          await startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta?.data?.canUserContinueTheInvestment });
+        }
+
+        if (storeFields._willSetUpRecurringInvestment) {
+          await initiateRecurringInvestments();
+        }
+      }
       async function initiateRecurringInvestments() {
         if (activeAccount?.id) {
           (await recurringInvestment) && (await initiateRecurringInvestment());
         }
       }
 
-      async function updateStoreFieldsAsync({
-        _shouldUpdateProfileDetails,
-        _shouldUpdateStakeholderData,
-        _shouldUpdateCompanyData,
-      }: {
-        _shouldUpdateCompanyData: boolean;
-        _shouldUpdateProfileDetails: boolean;
-        _shouldUpdateStakeholderData: boolean;
-      }) {
+      async function updateKycFlags({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData }: KycFlags) {
         await updateStoreFields({
           _shouldUpdateProfileDetails: _shouldUpdateProfileDetails,
           _shouldUpdateStakeholderData: _shouldUpdateStakeholderData,
@@ -184,22 +189,25 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           setShouldUpdateStakeholderData(_shouldUpdateStakeholderData);
           setShouldUpdateCompanyData(_shouldUpdateCompanyData);
 
-          updateStoreFieldsAsync({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData });
+          updateKycFlags({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData });
 
           if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
             refetchCorporate();
           }
 
-          if (!_shouldUpdateData && getInvestmentSummaryMeta.data) {
-            const { investmentFees } = getInvestmentSummaryMeta.data;
+          if (!_shouldUpdateData) {
+            startInvestments();
+          }
+        }
 
-            if (!investmentFees?.value && investmentId) {
-              startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta.data.canUserContinueTheInvestment });
-              refetchGetInvestmentSummary();
-            }
+        if (verifyAccountMeta.data.canUserContinueTheInvestment) {
+          refetchGetInvestmentSummary();
+
+          if (investmentId) {
+            startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta.data.canUserContinueTheInvestment });
           }
 
-          if (storeFields._willSetUpRecurringInvestment && !getInvestmentSummaryMeta.isLoading) {
+          if (storeFields._willSetUpRecurringInvestment) {
             initiateRecurringInvestments();
           }
         }
