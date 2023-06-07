@@ -38,6 +38,7 @@ export const StepAccountCompletion: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields }: StepComponentProps<OnboardingFormFields>) => {
     const router = useRouter();
+    const { userProfileMeta } = useActiveAccount();
     const { setLatestAccountOnboardedId, allAccountsMeta, setArrivesFromOnboarding } = useActiveAccount();
     const { accountId } = storeFields;
 
@@ -46,6 +47,7 @@ export const StepAccountCompletion: StepParams<OnboardingFormFields> = {
 
       if (accountId) {
         allAccountsMeta.refetch();
+        userProfileMeta.refetch();
         setLatestAccountOnboardedId(accountId);
         setArrivesFromOnboarding(true);
         await router.push(URL.index);
