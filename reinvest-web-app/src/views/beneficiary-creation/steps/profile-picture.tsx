@@ -7,6 +7,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
 import { Typography } from 'components/Typography';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
@@ -38,6 +39,7 @@ export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<BeneficiaryCreationFormFields>) => {
+    const { allAccountsMeta } = useActiveAccount();
     const { createBeneficiary, error, isLoading, hasSucceded, beneficiary } = useCreateBeneficiary();
     const { beneficiaryInitials, defaultValues } = useMemo(() => {
       const beneficiaryInitials = getBeneficiaryInitials(storeFields);
@@ -55,6 +57,7 @@ export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
     useEffect(() => {
       async function updateStoreFieldsAndMoveToNextStep() {
         if (hasSucceded) {
+          allAccountsMeta.refetch();
           await updateStoreFields({ beneficiary });
           moveToNextStep();
         }
