@@ -32,8 +32,6 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     resetStoreFields,
     moveToFirstStep,
     getStoreFields,
-    updateStoreFields,
-
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
@@ -41,9 +39,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   const shouldDisplayBackIcon = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_X_BUTTON.includes(currentStepIdentifier), [currentStepIdentifier]);
 
   const onModalLastStep = useCallback(async () => {
-    const storeFields = getStoreFields();
     await resetStoreFields();
-    await updateStoreFields({ _forInitialInvestment: true, _hasMoreThanAnAccount: storeFields?._hasMoreThanAnAccount });
+
     onModalOpenChange(false);
     moveToFirstStep();
     deprecateLatestAccountOnboarded();
