@@ -47,7 +47,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       config: { enabled: false },
     });
     const { recurringInvestment, initiateRecurringInvestment } = useRecurringInvestment();
-    const { userProfile, userProfileMeta } = useActiveAccount();
+    const { userProfile } = useActiveAccount();
     const [shouldUpdateProfileDetails, setShouldUpdateProfileDetails] = useState(false);
     const [shouldUpdateStakeholderData, setShouldUpdateStakeholderData] = useState(false);
     const [shouldUpdateCompanyData, setShouldUpdateCompanyData] = useState(false);
@@ -67,8 +67,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, [investmentId, refetchAccountStats, startInvestmentMutate]);
 
     const updateProfileDetailsCallback = useCallback(async () => {
-      await userProfileMeta.refetch();
-
       if (userProfile) {
         const { details } = userProfile;
         const name = { firstName: details?.firstName || '', lastName: details?.lastName || '', middleName: details?.middleName || '' };

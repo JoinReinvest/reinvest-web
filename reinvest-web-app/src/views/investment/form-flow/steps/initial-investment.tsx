@@ -69,13 +69,12 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     const bankAccountType = storeFields.bankAccountType;
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
+      const amountToInvest = amount || parseInt(presetOptions[0]?.value || ONE_TIME_INVESTMENT_MIN_AMOUNT.toString());
       const investment: Investment = {
-        amount,
+        amount: amountToInvest,
         type: 'one-time',
         date: new Date(),
       };
-
-      const amountToInvest = amount || parseInt(presetOptions[0]?.value || ONE_TIME_INVESTMENT_MIN_AMOUNT.toString());
 
       if (amountToInvest) {
         await createInvestment({ investmentAmount: amountToInvest });
