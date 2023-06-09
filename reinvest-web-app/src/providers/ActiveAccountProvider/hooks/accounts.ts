@@ -42,7 +42,7 @@ export function useAccounts(): Return {
 
     initializeActiveAccount();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [allAccounts]);
 
   const updateActiveAccount = (account: Maybe<AccountOverview>) => {
     if (account) {
