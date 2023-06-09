@@ -13,7 +13,7 @@ interface Props {
 
 export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
   const isRecurrent = type === 'recurring';
-  const maskedAmount = typeof amount === 'number' ? maskCurrency(amount) : amount;
+  const maskedAmount = typeof amount === 'number' ? maskCurrency(amount, { addDecimalPoints: true, addDollarSign: true }) : amount;
   const dateForDisplay = date && formatDate(date, 'INVESTMENT');
   const labeledDate = isRecurrent ? `Starting ${dateForDisplay}` : dateForDisplay;
 
