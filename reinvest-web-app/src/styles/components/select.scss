@@ -24,7 +24,6 @@
 
   &__value-container {
     @apply text-paragraph-large;
-    @apply child:text-white #{!important};
   }
 
   &__indicators {
