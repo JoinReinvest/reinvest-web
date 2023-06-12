@@ -5,9 +5,10 @@ import { Checklist } from './Checklist';
 interface Props {
   password: string;
   passwordConfirmation: string;
+  blackColorText?: boolean;
 }
 
-export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: Props) => {
+export const PasswordChecklist = ({ password = '', passwordConfirmation = '', blackColorText = false }: Props) => {
   const hasLowerCaseLetter = password.toUpperCase() != password;
   const hasUpperCaseLetter = password.toLowerCase() != password;
   const hasNumber = /\d/.test(password);
@@ -25,5 +26,10 @@ export const PasswordChecklist = ({ password = '', passwordConfirmation = '' }: 
     [hasLowerCaseLetter, hasUpperCaseLetter, hasNumber, hasMinumumLength, passwordsMatch],
   );
 
-  return <Checklist checks={checks} />;
+  return (
+    <Checklist
+      checks={checks}
+      blackColorText={blackColorText}
+    />
+  );
 };
