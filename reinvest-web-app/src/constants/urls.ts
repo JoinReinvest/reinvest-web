@@ -5,7 +5,7 @@ export const URL = {
   forgot_password: '/forgot-password',
   terms_conditions: '/terms-and-conditions',
   privacy_policy: '/privacy-policy',
-  community: '/community-reit',
+  community_portfolio: '/community-portfolio',
   education: '/education',
   faq: '/education/faq',
   glossary: '/education/glossary',

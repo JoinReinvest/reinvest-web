@@ -5,7 +5,7 @@ import { PropertiesList } from './components/PropertiesList';
 import { PROPERTIES } from './constants';
 import { ModalManagerProvider, useModalManager } from './providers/ModalManager';
 
-export function InnerCommunityREITView() {
+export function InnerCommunityPortfolioView() {
   const { isInvestmentModalOpen, onInvestmentModalOpenChange } = useModalManager();
 
   return (
@@ -26,8 +26,8 @@ export function InnerCommunityREITView() {
   );
 }
 
-export const CommunityREITView = () => (
+export const CommunityPortfolioView = () => (
   <ModalManagerProvider>
-    <InnerCommunityREITView />
+    <InnerCommunityPortfolioView />
   </ModalManagerProvider>
 );

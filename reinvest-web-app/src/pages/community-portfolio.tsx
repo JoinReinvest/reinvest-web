@@ -1,10 +1,10 @@
 import { MainLayout } from 'layouts/MainLayout';
-import { CommunityREITView } from 'views/community-reit';
+import { CommunityPortfolioView } from 'views/community-portfolio';
 
-function CommunityREITPage() {
+function CommunityPortfolio() {
   return (
     <MainLayout>
-      <CommunityREITView />
+      <CommunityPortfolioView />
     </MainLayout>
   );
 }
@@ -17,4 +17,4 @@ export function getStaticProps() {
   };
 }
 
-export default CommunityREITPage;
+export default CommunityPortfolio;
