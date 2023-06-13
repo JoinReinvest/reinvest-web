@@ -3,30 +3,24 @@ import { ComponentProps } from 'react';
 
 import { Menu } from './components/Menu';
 import { MENU_GROUPS } from './constants/menu';
-import { FlowsManagerProvider, useFlowsManager } from './contexts/flows-manager';
+import { FlowsManagerProvider, useFlowsManager } from './contexts/FlowsManager';
 
 type FlowsManagerProviderProps = ComponentProps<typeof FlowsManagerProvider>;
 type PrimitiveProps = Pick<FlowsManagerProviderProps, 'isModalOpen' | 'toggleIsModalOpen'>;
 type Props = PrimitiveProps;
 
-const MODAL_TITLE = 'Manage Account';
-
 const AccountManagement = () => {
-  const { isModalOpen, toggleIsModalOpen, currentFlow, setCurrentFlowIdentifier } = useFlowsManager();
+  const { modalTitle, isModalOpen, onModalOpenChange, currentFlow } = useFlowsManager();
 
-  const onOpenChange = (willBeOpen: boolean) => {
-    if (!willBeOpen) {
-      setCurrentFlowIdentifier(null);
-    }
-
-    toggleIsModalOpen(willBeOpen);
-  };
+  if (currentFlow && currentFlow?.selfManagesModal) {
+    return <>{currentFlow.flow}</>;
+  }
 
   return (
     <ModalWhite
-      title={MODAL_TITLE}
+      title={modalTitle}
       isOpen={isModalOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={onModalOpenChange}
     >
       {currentFlow ? currentFlow.flow : <Menu groups={MENU_GROUPS} />}
     </ModalWhite>

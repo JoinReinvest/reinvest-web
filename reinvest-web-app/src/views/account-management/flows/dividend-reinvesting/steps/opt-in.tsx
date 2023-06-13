@@ -10,7 +10,7 @@ import { useActiveAccountConfiguration } from 'providers/ActiveAccountConfigurat
 import { FormEventHandler, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { useFlowsManager } from '../../../contexts/flows-manager';
+import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 import { getStatusValue } from '../utilities';
