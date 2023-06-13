@@ -20,12 +20,13 @@ module.exports = withVideos(
     trailingSlash: true,
     reactStrictMode: true,
     images: {
-      domains: ['images.ctfassets.net'],
+      // TO-DO: Deprecate all domains but `images.ctfassets.net`
+      domains: ['images.ctfassets.net', 'media.istockphoto.com', 'cdn.pixabay.com', 'img.freepik.com', 'images.unsplash.com'],
       remotePatterns: [
         {
           protocol: 'https',
           hostname: 'reinvest-*-avatars.s3.us-east-1.amazonaws.com',
-          port: ''
+          port: '',
         },
       ],
     },
