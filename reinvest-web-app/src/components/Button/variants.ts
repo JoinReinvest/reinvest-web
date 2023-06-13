@@ -8,6 +8,7 @@ export const variants = cva('text-15 h-48 w-full font-medium', {
       default: ['bg-green-frost-01', 'disabled:bg-gray-04 disabled:text-gray-01'],
       outlined: ['border-2 border-green-frost-01', 'disabled:border-gray-04 disabled:text-gray-03'],
       dashed: ['border border-dashed border-green-frost-01', 'disabled:border-gray-04 disabled:text-gray-03'],
+      'outlined-red': ['border-2 border-tertiary-error-02', 'disabled:border-gray-04 disabled:text-gray-03'],
     },
     size: {
       sm: 'px-16 py-12',
@@ -18,7 +19,6 @@ export const variants = cva('text-15 h-48 w-full font-medium', {
       false: ['text-green-deep'],
     },
   },
-
   defaultVariants: {
     variant: 'default',
     size: 'sm',

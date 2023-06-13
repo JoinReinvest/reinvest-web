@@ -1,66 +1,58 @@
 import { Button } from 'components/Button';
-import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { Typography } from 'components/Typography';
-import { FormEventHandler } from 'react';
+import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
+import { ButtonBack } from '../../../../../components/ButtonBack';
+import { Typography } from '../../../../../components/Typography';
+import { useActiveAccount } from '../../../../../providers/ActiveAccountProvider';
 import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const TITLE = 'Your address.';
-const BUTTON_LABEL = 'Update Address';
+const BUTTON_LABEL = 'Continue';
+const TITLE = 'Your name';
 
-export const StepAddressDetails: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.ADDRESS_DETAILS,
+type Fields = Pick<FlowFields, 'name'>;
 
-  doesMeetConditionFields: fields => {
-    return !!fields?._currentAddress;
-  },
+export const StepCurrentName: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.CURRENT_NAME,
 
-  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { userProfile } = useActiveAccount();
+    const { handleSubmit, formState } = useForm<Fields>({ mode: 'onSubmit' });
     const { setCurrentFlowIdentifier } = useFlowsManager();
 
-    const address = storeFields?._currentAddress;
-    const addressCityWithState = [address?.city, address?.state].join(', ');
-    const addressFields = [address?.addressLine1, address?.addressLine2, addressCityWithState, address?.zip];
-    const validAddressFields = addressFields.filter(Boolean);
-
-    const onSubmit: FormEventHandler<HTMLFormElement> = event => {
-      event.preventDefault();
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const onSubmit: SubmitHandler<Fields> = async () => {
       moveToNextStep();
     };
 
-    function onButtonBackClick() {
+    const onButtonBackClick = () => {
       setCurrentFlowIdentifier(null);
-    }
+    };
 
     return (
-      <Form onSubmit={onSubmit}>
+      <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent willLeaveContentOnTop>
           <ButtonBack onClick={onButtonBackClick} />
-
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
-
             <Typography
               variant="paragraph-emphasized"
               className="flex flex-col"
             >
-              {validAddressFields.map((field, index) => (
-                <span key={index}>{field}</span>
-              ))}
+              {userProfile?.details?.firstName} {userProfile?.details?.middleName} {userProfile?.details?.lastName}
             </Typography>
           </div>
         </FormContent>
-
         <ButtonStack>
           <Button
             type="submit"
             label={BUTTON_LABEL}
+            disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>
       </Form>

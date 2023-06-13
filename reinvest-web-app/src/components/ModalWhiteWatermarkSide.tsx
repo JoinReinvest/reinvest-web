@@ -9,8 +9,8 @@ import { PropsWithChildren } from 'react';
 import { ModalProps } from 'types/modal';
 
 interface Props extends PropsWithChildren, ModalProps {
-  title: string;
   hideSeparator?: boolean;
+  title?: string;
 }
 
 export const ModalWhiteWatermarkSide = ({ isModalOpen, onModalOpenChange, title, children, hideSeparator }: Props) => {
@@ -34,9 +34,11 @@ export const ModalWhiteWatermarkSide = ({ isModalOpen, onModalOpenChange, title,
               </Dialog.Close>
             </header>
 
-            <Dialog.Title className="hidden px-24 pt-24 md:block md:px-44">
-              <Typography variant="h3">{title}</Typography>
-            </Dialog.Title>
+            {title && (
+              <Dialog.Title className="hidden px-24 pt-24 md:block md:px-44">
+                <Typography variant="h3">{title}</Typography>
+              </Dialog.Title>
+            )}
 
             <div className="h-full overflow-y-hidden">
               {!hideSeparator && <Separator className="h-1 w-full bg-gray-04 md:h-0" />}

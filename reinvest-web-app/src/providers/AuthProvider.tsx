@@ -15,6 +15,7 @@ export enum ChallengeName {
 
 interface AuthContextInterface {
   actions: {
+    changePassword: (oldPassword: string, newPassword: string) => Promise<string | Error | null>;
     confirmSignIn: (authenticationCode: string, user: CognitoUser) => Promise<CognitoUser | Error | null>;
     signIn: (email: string, password: string, redirectTo?: string) => Promise<CognitoUser | Error | null>;
     signOut: () => Promise<void>;
@@ -35,6 +36,10 @@ export const AuthContext = createContext<AuthContextInterface>({
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     signOut: async () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    changePassword: async () => {
+      return null;
+    },
   },
 });
 
@@ -88,6 +93,14 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     return confirmedUser;
   };
 
+  const changePassword = async (oldPassword: string, newPassword: string) => {
+    try {
+      return Auth.changePassword(user, oldPassword, newPassword);
+    } catch (error) {
+      return error as Error;
+    }
+  };
+
   const signOut = async () => {
     try {
       await Auth.signOut();
@@ -97,7 +110,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     }
   };
   const ctx = useMemo(() => {
-    return { user, loading, actions: { signIn, confirmSignIn, signOut } };
+    return { user, loading, actions: { signIn, confirmSignIn, signOut, changePassword } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
