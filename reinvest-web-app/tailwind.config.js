@@ -275,6 +275,7 @@ module.exports = {
       },
       lineHeight: {
         13: '1.3rem',
+        90: '90%'
       },
       transitionProperty: {
         'height-width': 'height, width',
