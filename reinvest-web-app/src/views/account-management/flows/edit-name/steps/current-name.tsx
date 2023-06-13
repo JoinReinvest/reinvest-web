@@ -8,7 +8,7 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { ButtonBack } from '../../../../../components/ButtonBack';
 import { Typography } from '../../../../../components/Typography';
 import { useActiveAccount } from '../../../../../providers/ActiveAccountProvider';
-import { useFlowsManager } from '../../../contexts/flows-manager';
+import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 

@@ -11,7 +11,7 @@ import zod, { Schema } from 'zod';
 import { ButtonBack } from '../../../../../components/ButtonBack';
 import { InputPassword } from '../../../../../components/FormElements/InputPassword';
 import { Typography } from '../../../../../components/Typography';
-import { useFlowsManager } from '../../../contexts/flows-manager';
+import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 

@@ -149,6 +149,14 @@ module.exports = {
         },
       ],
 
+      'bonus-heading-regular': [
+        '1.5rem',
+        {
+          fontWeight: '500',
+          lineHeight: '1.808rem'
+        }
+      ],
+
       button: [
         '1.4rem',
         {
