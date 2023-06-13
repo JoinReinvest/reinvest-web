@@ -12,6 +12,7 @@ type Variants =
   | 'h6'
   | 'h6-responsive'
   | 'bonus-heading'
+  | 'bonus-heading-regular'
   | 'button'
   | 'paragraph-large'
   | 'paragraph-emphasized'
@@ -60,6 +61,7 @@ const variants = cva(undefined, {
       h6: 'typo-h6',
       'h6-responsive': 'typo-h6-responsive',
       'bonus-heading': 'typo-bonus-heading',
+      'bonus-heading-regular': 'text-bonus-heading-regular',
       button: 'typo-button',
       'paragraph-large': 'typo-paragraph-large',
       'paragraph-emphasized': 'typo-paragraph-emphasized',

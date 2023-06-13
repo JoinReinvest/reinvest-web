@@ -1,7 +1,7 @@
 import { IconArrowRight } from 'assets/icons/IconArrowRight';
 import { Typography } from 'components/Typography';
 
-import { useFlowsManager } from '../../contexts/flows-manager';
+import { useFlowsManager } from '../../contexts/FlowsManager';
 import { MenuItem } from '../../interfaces/menu';
 
 interface Props {
