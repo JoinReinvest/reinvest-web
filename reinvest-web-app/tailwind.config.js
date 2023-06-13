@@ -98,6 +98,15 @@ module.exports = {
         },
       ],
 
+
+      'h2-smaller': [
+        '2.8rem',
+        {
+          letterSpacing: '-0.05em',
+          fontWeight: '400',
+        }
+      ],
+
       h3: [
         '3rem',
         {
@@ -262,6 +271,9 @@ module.exports = {
     },
 
     extend: {
+      minWidth: {
+        200: '20rem',
+      },
       maxWidth: {
         330: '33rem',
         375: '37.5rem',
@@ -269,7 +281,9 @@ module.exports = {
         720: '72.0rem',
       },
       minHeight: {
+        160: '16rem',
         180: '18rem',
+        200: '20rem',
         240: '24.0rem',
       },
       maxHeight: {
@@ -277,6 +291,9 @@ module.exports = {
         256: '25.6rem',
         284: '28.4rem',
         570: '57.0rem',
+      },
+      borderRadius: {
+        48: '4.8rem',
       },
       gridTemplateRows: {
         'full-auto': '1fr auto',
