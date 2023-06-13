@@ -56,11 +56,16 @@ export const StepCorporateApplicantIdentification: StepParams<FlowFields> = {
     const shouldButtonBeDisabled = !formState.isValid || shouldButtonLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
-      const { _isEditingCompanyMajorStakeholderApplicant } = storeFields;
+      const { _isEditingCompanyMajorStakeholderApplicant, _isEditingTrustTrusteeGrantorOrProtector } = storeFields;
 
       const currentMajorStakeholderApplicant = { ...storeFields._currentCompanyMajorStakeholder, identificationDocuments };
+      const currentTrustTrusteeGrantorOrProtector = { ...storeFields._currentTrustTrusteeGrantorOrProtector, identificationDocuments };
       const currentMajorStakeholderApplicantIndex = currentMajorStakeholderApplicant._index;
-      await updateStoreFields({ _currentCompanyMajorStakeholder: currentMajorStakeholderApplicant });
+      const currentTrustTrusteeGrantorOrProtectorIndex = currentTrustTrusteeGrantorOrProtector._index;
+      await updateStoreFields({
+        _currentCompanyMajorStakeholder: currentMajorStakeholderApplicant,
+        _currentTrustTrusteeGrantorOrProtector: currentTrustTrusteeGrantorOrProtector,
+      });
       const documentsFileLinks = (await createDocumentsFileLinksMutate({ numberOfLinks: 1 })) as PutFileLink[];
       const idScan: { fileName: string; id: string }[] = [];
 
@@ -110,6 +115,50 @@ export const StepCorporateApplicantIdentification: StepParams<FlowFields> = {
           }
 
           await updateStoreFields({ companyMajorStakeholderApplicants: stakolders });
+        }
+
+        if (
+          !!_isEditingTrustTrusteeGrantorOrProtector &&
+          typeof currentTrustTrusteeGrantorOrProtectorIndex !== 'undefined' &&
+          currentTrustTrusteeGrantorOrProtectorIndex >= 0 &&
+          activeAccount?.id &&
+          currentTrustTrusteeGrantorOrProtector.id
+        ) {
+          const dateOfBirth = formatDate(currentTrustTrusteeGrantorOrProtector.dateOfBirth || '', 'API', { currentFormat: 'DEFAULT' });
+          const { firstName, lastName, middleName, residentialAddress } = currentTrustTrusteeGrantorOrProtector;
+          const updateStakeholderInput = {
+            dateOfBirth: { dateOfBirth },
+            idScan,
+            name: {
+              firstName,
+              lastName,
+              middleName,
+            },
+            address: {
+              addressLine1: residentialAddress?.addressLine1 || '',
+              addressLine2: residentialAddress?.addressLine2 || '',
+              country: residentialAddress?.country || 'USA',
+              city: residentialAddress?.city || '',
+              zip: residentialAddress?.zip || '',
+              state: residentialAddress?.state || '',
+            },
+          };
+
+          await updateStakeholderMutate({
+            accountId: activeAccount.id,
+            stakeholderId: currentTrustTrusteeGrantorOrProtector.id,
+            input: updateStakeholderInput,
+          });
+
+          await updateStoreFields({ _shouldUpdateStakeholderData: false });
+
+          const stakolders = storeFields.trustTrusteesGrantorsOrProtectors?.filter(stakeholder => stakeholder.id !== currentTrustTrusteeGrantorOrProtector.id);
+
+          if (storeFields._currentTrustTrusteeGrantorOrProtector) {
+            stakolders?.push(storeFields._currentTrustTrusteeGrantorOrProtector);
+          }
+
+          await updateStoreFields({ trustTrusteesGrantorsOrProtectors: stakolders });
         }
 
         moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_LIST);

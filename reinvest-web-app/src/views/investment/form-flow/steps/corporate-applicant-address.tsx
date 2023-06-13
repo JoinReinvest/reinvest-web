@@ -38,7 +38,8 @@ export const StepCorporateApplicantAddress: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep, storeFields }: StepComponentProps<FlowFields>) => {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
-    const initialValuesFromStore = storeFields._currentCompanyMajorStakeholder?.residentialAddress;
+    const initialValuesFromStore =
+      storeFields._currentCompanyMajorStakeholder?.residentialAddress || storeFields._currentTrustTrusteeGrantorOrProtector?.residentialAddress;
     const defaultValues: Fields = initialValuesFromStore || initialValues;
     const {
       isSuccess: isTrustDraftAccountSuccess,
