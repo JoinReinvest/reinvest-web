@@ -13,16 +13,12 @@ import { NotificationsButton } from './NotificationsButton';
 
 const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
   {
-    label: 'Dashboard',
-    href: URL.index,
+    label: 'Community REIT',
+    href: URL.community,
   },
   {
-    label: 'Education page',
+    label: 'Education',
     href: URL.education,
-  },
-  {
-    label: 'Logout',
-    href: URL.logout,
   },
 ];
 
