@@ -1,7 +1,12 @@
 import { MainLayout } from 'layouts/MainLayout';
+import { CommunityREITView } from 'views/community-reit';
 
 function CommunityREITPage() {
-  return <MainLayout></MainLayout>;
+  return (
+    <MainLayout>
+      <CommunityREITView />
+    </MainLayout>
+  );
 }
 
 export function getStaticProps() {
