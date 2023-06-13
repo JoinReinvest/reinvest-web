@@ -6,10 +6,11 @@ import { ReactNode } from 'react';
 interface Props {
   children: ReactNode;
   isChecked: boolean;
+  blackColorText?: boolean;
 }
 
-export const CheckItem = ({ children, isChecked = false }: Props) => {
-  const labelClassName = cx({ 'text-white': isChecked, 'text-gray-02': !isChecked });
+export const CheckItem = ({ children, isChecked = false, blackColorText = false }: Props) => {
+  const labelClassName = cx({ 'text-white': isChecked && !blackColorText, 'text-gray-02': !isChecked, 'text-black-01': isChecked && blackColorText });
   const iconClassName = cx({ 'stroke-tertiary-success': isChecked, 'stroke-gray-02': !isChecked });
 
   return (

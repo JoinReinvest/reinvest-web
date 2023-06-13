@@ -30,7 +30,8 @@ export const MENU_GROUP_PROFILE: MenuGroup = {
   label: 'Profile Information',
   items: [
     { identifier: FlowIdentifiers.NAME, label: 'Name' },
-    { identifier: FlowIdentifiers.ADDRESS, label: 'Address' },
+    { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
+    { identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' },
   ],
 };
 

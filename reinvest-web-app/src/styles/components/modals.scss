@@ -19,6 +19,10 @@
 
 .black-modal {
   @apply h-full max-h-full w-full bg-black-02 text-white;
+
+  .hkek-select__value-container {
+    @apply child:text-white #{!important};
+  }
 }
 
 .hkek-dialog-overlay:has(+ .hkek-dialog-content.black-modal) {
@@ -35,6 +39,10 @@
   .hkek-input-text-control,
   .hkek-input-masked-control {
     @apply text-black-01;
+  }
+
+  .hkek-select__value-container {
+    @apply child:text-black-01 #{!important};
   }
 }
 

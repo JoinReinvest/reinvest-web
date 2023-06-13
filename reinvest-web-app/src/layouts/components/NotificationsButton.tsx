@@ -11,6 +11,7 @@ export function NotificationsButton() {
 
   const hasUnreadNotifications = !!notificationStats?.unreadCount;
   const counterClassName = cx({ 'absolute -top-4 right-0': hasUnreadNotifications, hidden: !hasUnreadNotifications });
+  const unreadCount = (notificationStats?.unreadCount ?? 0) > 99 ? '99+' : notificationStats?.unreadCount;
 
   return (
     <button
@@ -25,7 +26,7 @@ export function NotificationsButton() {
             variant="notiications-counter"
             className="text-center text-white"
           >
-            {notificationStats?.unreadCount}
+            {unreadCount}
           </Typography>
         </div>
       </div>

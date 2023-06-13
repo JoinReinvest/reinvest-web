@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import zod, { Schema } from 'zod';
+import { Schema } from 'zod';
 
 import { RegisterFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
@@ -28,12 +28,7 @@ export const StepPassword: StepParams<RegisterFormFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<RegisterFormFields>) => {
     const [error, setError] = useState<string | undefined>('');
-    const schema: Schema<Fields> = zod
-      .object({
-        password: formValidationRules.password,
-        passwordConfirmation: formValidationRules.confirm_password,
-      })
-      .refine(data => data.password === data.passwordConfirmation, { message: 'Passwords do not match', path: ['passwordConfirmation'] });
+    const schema: Schema<Fields> = formValidationRules.confirmationPassword;
 
     const { handleSubmit, control, watch, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
 
