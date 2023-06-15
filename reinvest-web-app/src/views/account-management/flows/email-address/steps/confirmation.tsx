@@ -11,7 +11,7 @@ import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const TITLE = 'Your email is updated';
+const TITLE = 'Your password is updated';
 const BUTTON_LABEL = 'Dashboard';
 
 export const StepConfirmation: StepParams<FlowFields> = {
