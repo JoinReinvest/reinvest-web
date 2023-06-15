@@ -1,5 +1,5 @@
 import { Typography } from 'components/Typography';
-import { SubscriptionAgreementSection } from 'reinvest-app-common/src/types/graphql';
+import { AgreementSection as SubscriptionAgreementSection } from 'reinvest-app-common/src/types/graphql';
 
 import { SectionParagraph } from './SectionParagraph';
 

@@ -1,10 +1,10 @@
-import { Maybe, SubscriptionAgreementParagraph } from 'reinvest-app-common/src/types/graphql';
+import { AgreementParagraph, Maybe } from 'reinvest-app-common/src/types/graphql';
 
 import { ParagraphCheckbox } from './ParagraphCheckbox';
 import { ParagraphLine } from './ParagraphLine';
 
 interface Props {
-  paragraph: Maybe<SubscriptionAgreementParagraph>;
+  paragraph: Maybe<AgreementParagraph>;
 }
 
 export const SectionParagraph = ({ paragraph }: Props) => (

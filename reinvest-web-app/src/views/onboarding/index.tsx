@@ -2,6 +2,7 @@ import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
+import { UserProfileProvider } from 'providers/UserProfile';
 import { useEffect, useState } from 'react';
 
 import { useOnboardingFormFlow } from './form-flow';
@@ -44,15 +45,17 @@ export const OnboardingFlow = () => {
   };
 
   return (
-    <ActiveAccountProvider>
-      <ModalBlackFullscreen
-        isOpen={isModalOpen}
-        onOpenChange={!shouldDisplayXButton ? onModalClickBack : goToDashboard}
-        progressBarValue={progressPercentage}
-        isBackButtonEnabled={!shouldDisplayXButton}
-      >
-        <CurrentStepView />
-      </ModalBlackFullscreen>
-    </ActiveAccountProvider>
+    <UserProfileProvider>
+      <ActiveAccountProvider>
+        <ModalBlackFullscreen
+          isOpen={isModalOpen}
+          onOpenChange={!shouldDisplayXButton ? onModalClickBack : goToDashboard}
+          progressBarValue={progressPercentage}
+          isBackButtonEnabled={!shouldDisplayXButton}
+        >
+          <CurrentStepView />
+        </ModalBlackFullscreen>
+      </ActiveAccountProvider>
+    </UserProfileProvider>
   );
 };
