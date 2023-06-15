@@ -4,6 +4,7 @@ import { createFormFlow } from 'reinvest-app-common/src/services/form-flow';
 
 import { useFlowsManager } from '../../contexts/FlowsManager';
 import { FlowFields } from './interfaces';
+import { InvestmentHistoryProvider } from './providers/InvestmentHistory';
 import { STEPS } from './steps';
 
 const [useFlow, FlowInvestmentHistoryProvider] = createFormFlow<FlowFields>({ steps: STEPS });
@@ -36,10 +37,12 @@ function InnerFlowInvestmentHistory() {
 }
 
 export const FlowInvestmentHistory = () => (
-  <FlowInvestmentHistoryProvider
-    initialStoreFields={{}}
-    isResumable
-  >
-    <InnerFlowInvestmentHistory />
-  </FlowInvestmentHistoryProvider>
+  <InvestmentHistoryProvider>
+    <FlowInvestmentHistoryProvider
+      initialStoreFields={{}}
+      isResumable
+    >
+      <InnerFlowInvestmentHistory />
+    </FlowInvestmentHistoryProvider>
+  </InvestmentHistoryProvider>
 );
