@@ -20,8 +20,9 @@ module.exports = withVideos(
     trailingSlash: true,
     reactStrictMode: true,
     images: {
-      // TO-DO: Deprecate all domains but `images.ctfassets.net`
-      domains: ['images.ctfassets.net', 'media.istockphoto.com', 'cdn.pixabay.com', 'img.freepik.com', 'images.unsplash.com'],
+      // TO-DO: Deprecate `images.unsplash.com` image domain once community REIT
+      // is connected with API.
+      domains: ['images.ctfassets.net', 'images.unsplash.com'],
       remotePatterns: [
         {
           protocol: 'https',
