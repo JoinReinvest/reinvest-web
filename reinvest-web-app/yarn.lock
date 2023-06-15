@@ -8212,7 +8212,7 @@ regexpp@^3.0.0:
 
 "reinvest-app-common@git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git":
   version "0.0.2"
-  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#ad8fdb3bec0e466f84e192335ccee7e6e0a80075"
+  resolved "git+ssh://git@github.com:JoinReinvest/reinvest-fe-common.git#fa7c5ba5f0bf21a19c86ba40189d0f7ba361d264"
   dependencies:
     "@graphql-codegen/cli" "^3.3.1"
     "@graphql-codegen/typescript" "^3.0.4"
