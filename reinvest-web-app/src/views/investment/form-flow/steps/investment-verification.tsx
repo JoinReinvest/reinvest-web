@@ -18,7 +18,7 @@ import { useGetInvestmentSummary } from 'reinvest-app-common/src/services/querie
 import { useStartInvestment } from 'reinvest-app-common/src/services/queries/startInvestment';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
-import { ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
@@ -92,9 +92,16 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       if (!isCorporateRefetching && getCorporateData) {
         const { details } = getCorporateData;
         const stakeholdersToStoreFields = details?.stakeholders ? formatStakeholdersForStorage(details?.stakeholders as Stakeholder[]) : [];
-        updateStoreFields({ companyMajorStakeholderApplicants: stakeholdersToStoreFields, _shouldUpdateStakeholderData: true });
+        const stakeholders = {
+          companyMajorStakeholderApplicants: activeAccount?.type === AccountType.Corporate ? stakeholdersToStoreFields : undefined,
+          trustTrusteesGrantorsOrProtectors: activeAccount?.type === AccountType.Trust ? stakeholdersToStoreFields : undefined,
+        };
+        await updateStoreFields({
+          ...stakeholders,
+          _shouldUpdateStakeholderData: true,
+        });
       }
-    }, [getCorporateData, isCorporateRefetching, updateStoreFields]);
+    }, [getCorporateData, isCorporateRefetching, updateStoreFields, activeAccount?.type]);
 
     //start verify account
     useEffect(() => {
