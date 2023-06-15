@@ -74,7 +74,6 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
       try {
         const hasIdScans = !!idScan?.length;
 
-        //TODO: should be upgrade when backend is ready
         if (hasIdScans) {
           const name = storeFields.name;
           await updateProfile({ input: { idScan, name } });
