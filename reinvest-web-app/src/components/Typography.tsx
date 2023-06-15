@@ -4,6 +4,7 @@ import { cva } from 'class-variance-authority';
 type Variants =
   | 'h1'
   | 'h2'
+  | 'h2-responsive'
   | 'h3'
   | 'h4'
   | 'h4-expanded'
@@ -30,6 +31,7 @@ interface Props extends Omit<PrimitiveProps, 'variant'> {
 const variantMapping = new Map<Variants, PrimitiveProps['variant']>([
   ['h1', 'h1'],
   ['h2', 'h2'],
+  ['h2-responsive', 'h2'],
   ['h3', 'h3'],
   ['h4', 'h4'],
   ['h4-expanded', 'h4'],
@@ -53,6 +55,7 @@ const variants = cva(undefined, {
     variant: {
       h1: 'typo-h1',
       h2: 'typo-h2',
+      'h2-responsive': 'typo-h2-responsive',
       h3: 'typo-h3',
       h4: 'typo-h4',
       'h4-expanded': 'typo-h4-expanded',
