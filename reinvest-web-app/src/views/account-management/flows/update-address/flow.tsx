@@ -1,4 +1,4 @@
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useUserProfile } from 'providers/UserProfile';
 import { useEffect } from 'react';
 import { createFormFlow } from 'reinvest-app-common/src/services/form-flow';
 
@@ -8,7 +8,7 @@ import { STEPS } from './steps';
 const [useFlow, FlowProvider] = createFormFlow<FlowFields>({ steps: STEPS });
 
 function InnerFlow() {
-  const { userProfile, userProfileMeta } = useActiveAccount();
+  const { userProfile, userProfileMeta } = useUserProfile();
   const { CurrentStepView, updateStoreFields } = useFlow();
 
   const hasLoadedUserProfile = userProfileMeta?.isSuccess;

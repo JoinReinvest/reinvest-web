@@ -8,7 +8,7 @@ interface Return {
   userProfileMeta: QueryMeta;
 }
 
-export function useUserProfile(): Return {
+export function useProfile(): Return {
   const { data: userProfile, ...userProfileMeta } = useGetUserProfile(getApiClient);
 
   return { userProfile: userProfile ?? null, userProfileMeta };

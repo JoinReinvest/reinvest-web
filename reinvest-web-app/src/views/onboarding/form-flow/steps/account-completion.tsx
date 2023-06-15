@@ -7,6 +7,7 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useUserProfile } from 'providers/UserProfile';
 import { FormEventHandler } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
@@ -38,7 +39,7 @@ export const StepAccountCompletion: StepParams<OnboardingFormFields> = {
 
   Component: ({ storeFields }: StepComponentProps<OnboardingFormFields>) => {
     const router = useRouter();
-    const { userProfileMeta } = useActiveAccount();
+    const { userProfileMeta } = useUserProfile();
     const { setLatestAccountOnboardedId, allAccountsMeta, setArrivesFromOnboarding } = useActiveAccount();
     const { accountId } = storeFields;
 

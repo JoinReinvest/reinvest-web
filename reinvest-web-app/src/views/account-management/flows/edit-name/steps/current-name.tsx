@@ -2,12 +2,12 @@ import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { useUserProfile } from 'providers/UserProfile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { ButtonBack } from '../../../../../components/ButtonBack';
 import { Typography } from '../../../../../components/Typography';
-import { useActiveAccount } from '../../../../../providers/ActiveAccountProvider';
 import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
@@ -21,7 +21,7 @@ export const StepCurrentName: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_NAME,
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { userProfile } = useActiveAccount();
+    const { userProfile } = useUserProfile();
     const { handleSubmit, formState } = useForm<Fields>({ mode: 'onSubmit' });
     const { setCurrentFlowIdentifier } = useFlowsManager();
 
