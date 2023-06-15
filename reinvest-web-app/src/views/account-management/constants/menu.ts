@@ -2,17 +2,30 @@ import { FlowIdentifiers } from '../enums/flow';
 import { MenuGroupIdentifiers } from '../enums/menu';
 import { MenuGroup } from '../interfaces/menu';
 
+const MENU_GROUP_INVESTING_ITEMS = [
+  { identifier: FlowIdentifiers.INVESTMENT_HISTORY, label: 'Investment History' },
+  { identifier: FlowIdentifiers.RECURRING_INVESTMENTS, label: 'Recurring Investments' },
+  { identifier: FlowIdentifiers.DIVIDEND_REINVESTING, label: 'Dividend Reinvesting' },
+  { identifier: FlowIdentifiers.WITHDRAW_FUNDS, label: 'Withdraw Funds' },
+  { identifier: FlowIdentifiers.BANK_ACCOUNT, label: 'Bank Account' },
+  { identifier: FlowIdentifiers.ACCOUNT_ACTIVITY, label: 'Account Activity' },
+];
+
+const BENEFICIARY_MENU_GROUP_INVESTING_ITEM = {
+  identifier: FlowIdentifiers.REMOVE_ACCOUNT,
+  label: 'Remove Account',
+};
+
 export const MENU_GROUP_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
   label: 'Investing',
-  items: [
-    { identifier: FlowIdentifiers.INVESTMENT_HISTORY, label: 'Investment History' },
-    { identifier: FlowIdentifiers.RECURRING_INVESTMENTS, label: 'Recurring Investments' },
-    { identifier: FlowIdentifiers.DIVIDEND_REINVESTING, label: 'Dividend Reinvesting' },
-    { identifier: FlowIdentifiers.WITHDRAW_FUNDS, label: 'Withdraw Funds' },
-    { identifier: FlowIdentifiers.BANK_ACCOUNT, label: 'Bank Account' },
-    { identifier: FlowIdentifiers.ACCOUNT_ACTIVITY, label: 'Account Activity' },
-  ],
+  items: MENU_GROUP_INVESTING_ITEMS,
+};
+
+export const BENEFICIARY_MENU_GROUP_INVESTING: MenuGroup = {
+  identifier: MenuGroupIdentifiers.INVESTING,
+  label: 'Investing',
+  items: [...MENU_GROUP_INVESTING_ITEMS, BENEFICIARY_MENU_GROUP_INVESTING_ITEM],
 };
 
 export const MENU_GROUP_SECURITY: MenuGroup = {
@@ -36,3 +49,4 @@ export const MENU_GROUP_PROFILE: MenuGroup = {
 };
 
 export const MENU_GROUPS = [MENU_GROUP_INVESTING, MENU_GROUP_SECURITY, MENU_GROUP_PROFILE];
+export const BENEFICIARY_MENU_GROUPS = [BENEFICIARY_MENU_GROUP_INVESTING, MENU_GROUP_SECURITY, MENU_GROUP_PROFILE];

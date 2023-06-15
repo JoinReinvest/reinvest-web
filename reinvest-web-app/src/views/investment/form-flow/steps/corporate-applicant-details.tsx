@@ -12,8 +12,9 @@ import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STAKEHOLDER_RESIDENCY_STATUS_OPTIONS } from 'reinvest-app-common/src/constants/residenty-status';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
+import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
 import { Applicant } from '../../../onboarding/form-flow/form-fields';
 import { APPLICANT_WITHOUT_IDENTIFICATION } from '../../../onboarding/form-flow/schemas';
 import { getDefaultValuesForApplicantWithoutIdentification } from '../../../onboarding/form-flow/utilities';
@@ -30,7 +31,9 @@ export const StepCorporateApplicantDetails: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const defaultValues = getDefaultValuesForApplicantWithoutIdentification(storeFields, DraftAccountType.Corporate);
+    const { activeAccount } = useActiveAccount();
+    const isTrustAccount = activeAccount?.type === AccountType.Trust ? DraftAccountType.Trust : DraftAccountType.Corporate;
+    const defaultValues = getDefaultValuesForApplicantWithoutIdentification(storeFields, isTrustAccount);
 
     const { control, formState, handleSubmit, watch } = useForm<Fields>({
       mode: 'onBlur',
@@ -54,13 +57,24 @@ export const StepCorporateApplicantDetails: StepParams<FlowFields> = {
     }, [fieldValue]);
 
     const onSubmit: SubmitHandler<Fields> = async fields => {
-      await updateStoreFields({
-        _currentCompanyMajorStakeholder: {
-          ...storeFields._currentCompanyMajorStakeholder,
-          ...fields,
-          _index: storeFields._currentCompanyMajorStakeholder?._index,
-        },
-      });
+      if (activeAccount?.type === AccountType.Corporate) {
+        await updateStoreFields({
+          _currentCompanyMajorStakeholder: {
+            ...storeFields._currentCompanyMajorStakeholder,
+            ...fields,
+            _index: storeFields._currentCompanyMajorStakeholder?._index,
+          },
+        });
+      } else {
+        await updateStoreFields({
+          _currentTrustTrusteeGrantorOrProtector: {
+            ...storeFields._currentTrustTrusteeGrantorOrProtector,
+            ...fields,
+            _index: storeFields._currentTrustTrusteeGrantorOrProtector?._index,
+          },
+        });
+      }
+
       moveToNextStep();
     };
 
