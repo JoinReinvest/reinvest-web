@@ -1,5 +1,6 @@
 import { FlowIdentifiers } from '../enums/flow';
 import { SubFlow } from '../interfaces/flows';
+import { FLOW_CANCEL_RECURRING_INVESTMENT } from './cancel-recurring-investment';
 import { FLOW_CHANGE_PASSWORD } from './change-password';
 import { FLOW_DIVIDEND_REINVESTING } from './dividend-reinvesting';
 import { FLOW_CHANGE_NAME } from './edit-name';
@@ -18,4 +19,5 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.REMOVE_ACCOUNT, FLOW_REMOVE_ACCOUNT],
   [FlowIdentifiers.EMAIL_ADDRESS, FLOW_EMAIL_ADDRESS],
   [FlowIdentifiers.PHONE_NUMBER, FLOW_PHONE_NUMBER],
+  [FlowIdentifiers.RECURRING_INVESTMENTS, FLOW_CANCEL_RECURRING_INVESTMENT],
 ]);
