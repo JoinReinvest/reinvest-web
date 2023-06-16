@@ -8,7 +8,6 @@ import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-type
 import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateDocumentsFileLinks } from 'reinvest-app-common/src/services/queries/createDocumentsFileLinks';
-import { useUpdateProfile } from 'reinvest-app-common/src/services/queries/updateProfile';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { DocumentFileLinkInput, PutFileLink } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
@@ -17,6 +16,7 @@ import { IconCircleError } from '../../../../../assets/icons/IconCircleError';
 import { ButtonBack } from '../../../../../components/ButtonBack';
 import { InputMultiFile } from '../../../../../components/FormElements/InputMultiFile';
 import { Typography } from '../../../../../components/Typography';
+import { useUserProfile } from '../../../../../providers/UserProfile';
 import { getApiClient } from '../../../../../services/getApiClient';
 import { useSendDocumentsToS3AndGetScanIds } from '../../../../../services/queries/useSendDocumentsToS3AndGetScanIds';
 import { FILE_SIZE_LIMIT_IN_MEGABYTES } from '../../../../onboarding/form-flow/schemas';
@@ -46,7 +46,8 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
     const defaultValues: Fields = { identificationDocuments: [] };
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
-    const { isLoading: isUpdateProfileUpdating, mutateAsync: updateProfile } = useUpdateProfile(getApiClient);
+    // const { isLoading: isUpdateProfileUpdating, mutateAsync: updateProfile } = useUpdateProfile(getApiClient);
+    const { updateUserProfile, updateUserProfileMeta } = useUserProfile();
     const { control, handleSubmit, formState, reset } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
@@ -54,7 +55,11 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
     });
 
     const shouldButtonBeDisabled =
-      !formState.isValid || formState.isSubmitting || isCreateDocumentsFileLinksLoading || isSendDocumentToS3AndGetScanIdsLoading || isUpdateProfileUpdating;
+      !formState.isValid ||
+      formState.isSubmitting ||
+      isCreateDocumentsFileLinksLoading ||
+      isSendDocumentToS3AndGetScanIdsLoading ||
+      updateUserProfileMeta.isLoading;
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const existedDocuments = identificationDocuments?.filter(document => !!document.id) as DocumentFileLinkInput[];
       const idScan = existedDocuments?.length ? [...existedDocuments] : [];
@@ -76,7 +81,7 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
 
         if (hasIdScans) {
           const name = storeFields.name;
-          await updateProfile({ input: { idScan, name } });
+          await updateUserProfile({ idScan, name });
           await updateStoreFields({ identificationDocuments: documentsWithoutFile, _hasSucceded: true });
           moveToNextStep();
         }
