@@ -46,7 +46,6 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
     const defaultValues: Fields = { identificationDocuments: [] };
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
-    // const { isLoading: isUpdateProfileUpdating, mutateAsync: updateProfile } = useUpdateProfile(getApiClient);
     const { updateUserProfile, updateUserProfileMeta } = useUserProfile();
     const { control, handleSubmit, formState, reset } = useForm<Fields>({
       mode: 'onSubmit',
