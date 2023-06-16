@@ -13,9 +13,11 @@ import { useMemo, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useUpdateEmailAddress } from 'reinvest-app-common/src/services/queries/updateEmailAddress';
 import zod, { Schema } from 'zod';
 
 import { useAuth } from '../../../../../providers/AuthProvider';
+import { getApiClient } from '../../../../../services/getApiClient';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
@@ -37,6 +39,7 @@ export const StepAuthenticationCode: StepParams<FlowFields> = {
     const { actions } = useAuth();
     const [error, setError] = useState<string | undefined>('');
     const [infoMessage, setInfoMessage] = useState('');
+    const { mutateAsync } = useUpdateEmailAddress(getApiClient);
 
     const { handleSubmit, control, formState } = useForm<Fields>({ defaultValues: storeFields, resolver: zodResolver(schema) });
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -48,6 +51,7 @@ export const StepAuthenticationCode: StepParams<FlowFields> = {
 
       if (result === 'SUCCESS') {
         await updateStoreFields({ authenticationCode, _hasSucceded: true });
+        await mutateAsync({});
         moveToNextStep();
       }
     };
