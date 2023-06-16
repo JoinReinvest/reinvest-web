@@ -9,6 +9,7 @@ import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
+import { useUserProfile } from 'providers/UserProfile';
 import { useCallback, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
@@ -47,7 +48,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       config: { enabled: false },
     });
     const { recurringInvestment, initiateRecurringInvestment } = useRecurringInvestment();
-    const { userProfile } = useActiveAccount();
+    const { userProfile } = useUserProfile();
     const [shouldUpdateProfileDetails, setShouldUpdateProfileDetails] = useState(false);
     const [shouldUpdateStakeholderData, setShouldUpdateStakeholderData] = useState(false);
     const [shouldUpdateCompanyData, setShouldUpdateCompanyData] = useState(false);

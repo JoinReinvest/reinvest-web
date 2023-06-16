@@ -1,20 +1,23 @@
 import { RefObject, useEffect } from 'react';
 
-interface Params {
-  areThereMoreNotificationsToFetch: boolean;
-  fetchMoreNotifications: () => void;
+interface Params<Element extends HTMLElement> {
+  callback: () => void;
   isLastItem: boolean;
-  ref: RefObject<HTMLLIElement>;
+  ref: RefObject<Element>;
+  willTriggerCallback: boolean;
 }
 
-export function useNotificationItemObserver({ ref, isLastItem, fetchMoreNotifications, areThereMoreNotificationsToFetch }: Params) {
+/**
+ * Userful for handling infinite scroll with `useInfiniteQuery`.
+ */
+export function useItemIntersectionObserver<Element extends HTMLElement>({ ref, isLastItem, callback, willTriggerCallback }: Params<Element>) {
   useEffect(() => {
     if (!ref?.current) return;
 
     const observer = new IntersectionObserver(([entry]) => {
       if (isLastItem && entry?.isIntersecting) {
-        if (areThereMoreNotificationsToFetch) {
-          fetchMoreNotifications();
+        if (willTriggerCallback) {
+          callback();
         }
 
         observer.unobserve(entry.target);

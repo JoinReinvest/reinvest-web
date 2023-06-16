@@ -9,6 +9,10 @@
     @apply text-h2;
   }
 
+  .typo-h2-responsive {
+    @apply text-h3 font-stretch-expanded md:text-h2-smaller md:font-stretch-normal;
+  }
+
   .typo-h3 {
     @apply text-h3 font-stretch-expanded;
   }

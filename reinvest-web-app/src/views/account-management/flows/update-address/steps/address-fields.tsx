@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
@@ -9,6 +10,7 @@ import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
 import { Typography } from 'components/Typography';
+import { useUserProfile } from 'providers/UserProfile';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
@@ -17,7 +19,6 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { Address, AddressInput } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
 import { makeRequest } from 'services/api-request';
-import { useTimeout } from 'usehooks-ts';
 
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
@@ -34,29 +35,23 @@ export const StepAddressFields: StepParams<FlowFields> = {
     return !!fields?._currentAddress;
   },
 
-  Component: ({ moveToNextStep, moveToPreviousStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ moveToNextStep, moveToPreviousStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
+    const { updateUserProfile, updateUserProfileMeta } = useUserProfile();
     const { control, handleSubmit, setValue, formState, reset } = useForm<Fields>({ mode: 'onSubmit', resolver: zodResolver(formValidationRules.address) });
     const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
 
-    // TO-DO: Deprecate once the API for `updateProfile` is implemented.
-    const [timeout, setTimeout] = useState<number | null>(null);
-    const [apiStatus, setApiStatus] = useState('idle');
-
-    useTimeout(() => {
-      setApiStatus('success');
-    }, timeout);
-
     useEffect(() => {
-      async function checkApiStatus() {
-        if (apiStatus === 'success') {
+      async function maybeMoveToNextStep() {
+        if (updateUserProfileMeta.isSuccess) {
           await updateStoreFields({ _hasSucceded: true });
+          updateUserProfileMeta.reset();
           moveToNextStep();
         }
       }
 
-      checkApiStatus();
+      maybeMoveToNextStep();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [apiStatus]);
+    }, [updateUserProfileMeta.isSuccess]);
 
     const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
       const placeId = option?.placeId;
@@ -77,19 +72,22 @@ export const StepAddressFields: StepParams<FlowFields> = {
       }
     };
 
-    const onSubmit: SubmitHandler<Fields> = async address => {
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      // Mainly for keeping country as USA
+      const currentAddress = storeFields._currentAddress;
+      const address = currentAddress ? { ...currentAddress, ...fields } : fields;
+
       await updateStoreFields({ address });
-      setApiStatus('loading');
-      setTimeout(2000);
+      await updateUserProfile({ address });
     };
 
     function onButtonBackClick() {
+      updateUserProfileMeta.reset();
       reset();
       moveToPreviousStep();
     }
 
-    // TO-DO: If the mutation is loading the button should be disabled as well
-    const shouldButtonBeLoading = isLoadingSelectedAddress || apiStatus === 'loading';
+    const shouldButtonBeLoading = isLoadingSelectedAddress || updateUserProfileMeta.isLoading;
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || shouldButtonBeLoading;
     const shouldBackButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
 
@@ -103,8 +101,7 @@ export const StepAddressFields: StepParams<FlowFields> = {
 
           <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
 
-          {/* TO-DO: use possible error from API call once it is available */}
-          {/* {error && <ErrorMessagesHandler error={error} />} */}
+          {updateUserProfileMeta.error && <ErrorMessagesHandler error={updateUserProfileMeta.error} />}
 
           <SelectAsync
             name="addressLine1"

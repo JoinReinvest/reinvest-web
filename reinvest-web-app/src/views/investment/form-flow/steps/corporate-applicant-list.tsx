@@ -89,7 +89,6 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
         await mutateAsync({
           accountId: activeAccount.id,
           input: {
-            companyType: { type: corporationType },
             address: {
               addressLine1: businessAddress.addressLine1 || '',
               addressLine2: businessAddress.addressLine2 || '',
