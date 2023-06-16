@@ -7,6 +7,7 @@ import { FLOW_EMAIL_ADDRESS } from './email-address';
 import { FLOW_INVESTMENT_HISTORY } from './investment-history';
 import { FLOW_REMOVE_ACCOUNT } from './remove-account';
 import { FLOW_UPDATE_ADDRESS } from './update-address';
+import { FLOW_PHONE_NUMBER } from './update-phone-number';
 
 export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.INVESTMENT_HISTORY, FLOW_INVESTMENT_HISTORY],
@@ -16,4 +17,5 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.NAME, FLOW_CHANGE_NAME],
   [FlowIdentifiers.REMOVE_ACCOUNT, FLOW_REMOVE_ACCOUNT],
   [FlowIdentifiers.EMAIL_ADDRESS, FLOW_EMAIL_ADDRESS],
+  [FlowIdentifiers.PHONE_NUMBER, FLOW_PHONE_NUMBER],
 ]);
