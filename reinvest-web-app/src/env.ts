@@ -22,6 +22,7 @@ const envSchema = z.object({
     maps: z.object({
       apiKey: z.string(),
       urls: z.object({
+        embedded: z.string(),
         placeDetails: z.string(),
         addressSuggestions: z.string(),
       }),
@@ -52,6 +53,7 @@ export const env: envInterface = envSchema.parse({
     maps: {
       apiKey: process.env.GOOGLE_MAPS_API_KEY,
       urls: {
+        embedded: process.env.GOOGLE_MAPS_EMBEDDED_URL,
         placeDetails: process.env.GOOGLE_MAPS_PLACES_URL,
         addressSuggestions: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL,
       },
