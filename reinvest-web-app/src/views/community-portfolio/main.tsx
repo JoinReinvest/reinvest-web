@@ -1,8 +1,8 @@
+import { PROPERTIES } from 'constants/portfolio-properties';
 import { InvestmentView } from 'views/investment';
 
 import { Header } from './components/Header';
 import { PropertiesList } from './components/PropertiesList';
-import { PROPERTIES } from './constants';
 import { useModalManager } from './providers/ModalManager';
 
 export function CommunityREITView() {

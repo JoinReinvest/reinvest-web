@@ -3,11 +3,13 @@
 
 import { Address } from 'reinvest-app-common/src/types/graphql';
 
+import { Coordinates } from './maps';
+
 export interface PropertyDetails {
   address: Address;
   characteristics: PropertyCharacteristic[];
   id: string;
-  location: PropertyLocation;
+  location: Coordinates;
   meta: PropertyMeta;
   updates: PropertyUpdate[];
 }
@@ -21,11 +23,6 @@ export interface PropertyUpdate {
   author: PropertyUpdateAuthor;
   content: PropertyUpdateContent;
   date: string;
-}
-
-interface PropertyLocation {
-  latitude: number;
-  longitude: number;
 }
 
 interface PropertyUpdateAuthor {

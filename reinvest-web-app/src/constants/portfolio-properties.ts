@@ -1,7 +1,7 @@
 // TO-DO: Deprecate and use API once the properties endpoints
 // are available.
 
-import { PropertyCharacteristicType, PropertyDetails } from './interfaces';
+import { PropertyCharacteristicType, PropertyDetails } from 'types/portfolio-property';
 
 const NUMBER_OF_PROPERTIES = 6;
 
