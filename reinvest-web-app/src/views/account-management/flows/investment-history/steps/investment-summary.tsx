@@ -4,13 +4,15 @@ import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
+import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { InvestmentDetail } from '../components/InvestmentDetail';
-import { INVESTMENT_STATUS_THAT_ALLOW_CANCELLATION } from '../constants';
+import { INVESTMENT_STATUS_THAT_ALLOW_CANCELLATION, INVESTMENT_SUMMARY } from '../constants';
 import { FlowStepIdentifiers } from '../enums';
-import { useInvestmentSummary } from '../hooks/investment-summary';
+// import { useInvestmentSummary } from 'hooks/investment-summary';
 import { FlowFields } from '../interfaces';
+import { useInvestmentHistory } from '../providers/InvestmentHistory';
 import { formatInvestmentStatus, formatTradeId, getInvestmentDetails } from '../utilities';
 
 const BUTTON_LABEL = 'Cancel Transaction';
@@ -22,9 +24,31 @@ export const StepInvestmentSummary: StepParams<FlowFields> = {
     return !!fields._selectedInvesmentId;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToPreviousStep, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const investmentId = storeFields._selectedInvesmentId ?? '';
-    const { investment } = useInvestmentSummary({ investmentId });
+  Component: ({ updateStoreFields, moveToPreviousStep, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    // TO-DO: Once `Query.listInvestments` returns non-mocked investments
+    // we can retrieve the summary from the API with `useInvestmentSummary`,
+    // since `useInvestmentSummary` reads actual data from the API.
+    const investment = INVESTMENT_SUMMARY;
+    // const investmentId = storeFields._selectedInvesmentId ?? '';
+    // const { investment } = useInvestmentSummary({ investmentId });
+
+    const { cancelInvestment, cancelInvestmentMeta } = useInvestmentHistory();
+
+    useEffect(() => {
+      async function maybeMoveToNextStep() {
+        if (cancelInvestmentMeta.isSuccess && investment && investment.amount?.formatted) {
+          const tradeId = investment.tradeId;
+          const amountFormatted = investment.amount.formatted;
+          const _cancelledInvestmentDetails = { tradeId, amountFormatted };
+
+          await updateStoreFields({ _willCancelInvestment: true, _cancelledInvestmentDetails });
+          moveToNextStep();
+        }
+      }
+
+      maybeMoveToNextStep();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [cancelInvestmentMeta.isSuccess]);
 
     async function onButtonBackClick() {
       await updateStoreFields({ _selectedInvesmentId: undefined });
@@ -32,17 +56,14 @@ export const StepInvestmentSummary: StepParams<FlowFields> = {
     }
 
     async function onCancelTransactionClick() {
-      // TO-DO: Implement cancel transaction logic once the API is ready.
-      if (investment && investment.amount.formatted) {
-        const tradeId = investment.tradeId;
-        const amountFormatted = investment.amount.formatted;
+      const investmentId = investment?.id ?? '';
 
-        await updateStoreFields({ _willCancelInvestment: true, _cancelledInvestmentDetails: { tradeId, amountFormatted } });
-        moveToNextStep();
+      if (investmentId) {
+        await cancelInvestment({ investmentId });
       }
     }
 
-    if (!investment) {
+    if (!investment || cancelInvestmentMeta.isLoading) {
       return (
         <div className="grid h-full place-items-center">
           <IconSpinner />

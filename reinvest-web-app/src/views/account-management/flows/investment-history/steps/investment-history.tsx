@@ -2,12 +2,13 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { ButtonBack } from 'components/ButtonBack';
 import { Typography } from 'components/Typography';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { InvestmentOverview, Maybe } from 'reinvest-app-common/src/types/graphql';
 
 import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { InvestmentHistoryItem } from '../components/InvestmentHistoryItem';
 import { FlowStepIdentifiers } from '../enums';
-import { useInvestmentHistory } from '../hooks/investment-history';
-import { FlowFields, InvestmentOverview } from '../interfaces';
+import { FlowFields } from '../interfaces';
+import { useInvestmentHistory } from '../providers/InvestmentHistory';
 
 const TITLE = 'Investment history';
 
@@ -16,18 +17,24 @@ export const StepInvestmentHistory: StepParams<FlowFields> = {
 
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useFlowsManager();
-    const { investments, meta } = useInvestmentHistory();
+    const { investmentsList, investmentsListMeta } = useInvestmentHistory();
 
     function onButtonBackClick() {
       setCurrentFlowIdentifier(null);
     }
 
-    async function onInvestmentClick({ id }: InvestmentOverview) {
-      await updateStoreFields({ _selectedInvesmentId: id });
+    async function onInvestmentClick(investment: Maybe<InvestmentOverview>) {
+      await updateStoreFields({ _selectedInvesmentId: investment?.id });
       moveToNextStep();
     }
 
-    if (meta.isLoading) {
+    function fetchMoreInvestments() {
+      if (investmentsListMeta?.hasNextPage) {
+        investmentsListMeta.fetchNextPage();
+      }
+    }
+
+    if (investmentsListMeta.isLoading) {
       return (
         <div className="grid h-full place-items-center">
           <IconSpinner />
@@ -42,12 +49,13 @@ export const StepInvestmentHistory: StepParams<FlowFields> = {
         <Typography variant="paragraph">{TITLE}</Typography>
 
         <ul className="flex h-full flex-col gap-16">
-          {investments.map((investment, index) => (
+          {investmentsList.map((investment, index) => (
             <InvestmentHistoryItem
-              key={investment.id}
+              key={investment?.id}
               investment={investment}
-              isLastItem={index === investments.length - 1}
+              isLastItem={index === investmentsList.length - 1}
               onClick={onInvestmentClick}
+              fetchMoreItems={fetchMoreInvestments}
             />
           ))}
         </ul>
