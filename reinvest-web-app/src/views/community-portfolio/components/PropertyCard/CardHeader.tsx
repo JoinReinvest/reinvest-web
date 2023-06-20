@@ -12,7 +12,7 @@ export const CardHeader = ({ image, alt = FALLBACK_ALT }: Props) => (
     <Image
       src={image}
       alt={alt}
-      className="object-cover object-center"
+      className="object-cover object-center transition-transform ease-in group-hover:scale-105"
       fill
     />
   </header>

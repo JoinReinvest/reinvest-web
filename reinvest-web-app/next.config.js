@@ -39,6 +39,7 @@ module.exports = withVideos(
       AWS_COGNITO_REGION: process.env.AWS_COGNITO_REGION,
       API_URL: process.env.API_URL,
       GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
+      GOOGLE_MAPS_EMBEDDED_URL: process.env.GOOGLE_MAPS_EMBEDDED_URL,
       GOOGLE_MAPS_PLACES_URL: process.env.GOOGLE_MAPS_PLACES_URL,
       GOOGLE_MAPS_AUTOCOMPLETE_URL: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL,
       SENTRY_DSN: process.env.SENTRY_DSN,

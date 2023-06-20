@@ -1,4 +1,5 @@
-import { PropertyDetails } from '../../interfaces';
+import { PropertyDetails } from 'types/portfolio-property';
+
 import { ChipRating } from './ChipRating';
 import { ProjectReturn } from './ProjectReturn';
 import { PropertyAddress } from './PropertyAddress';

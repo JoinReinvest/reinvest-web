@@ -5,11 +5,12 @@ import { ButtonHTMLAttributes, forwardRef } from 'react';
 
 type PrimitiveProps = Pick<ButtonHTMLAttributes<HTMLButtonElement>, 'onClick' | 'disabled'>;
 interface Props extends PrimitiveProps {
+  className?: string;
   hideOnMobile?: boolean;
 }
 
-export const ButtonBack = forwardRef<HTMLButtonElement, Props>(({ onClick, hideOnMobile = false, disabled }, ref) => {
-  const className = cx('items-center', { flex: !hideOnMobile, 'hidden lg:flex': !!hideOnMobile });
+export const ButtonBack = forwardRef<HTMLButtonElement, Props>(({ onClick, hideOnMobile = false, disabled, className: additionalClassName }, ref) => {
+  const className = cx('items-center', { flex: !hideOnMobile, 'hidden lg:flex': !!hideOnMobile }, additionalClassName);
 
   return (
     <button

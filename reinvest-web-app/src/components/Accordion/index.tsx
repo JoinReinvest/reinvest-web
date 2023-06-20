@@ -1,27 +1,28 @@
 import { Collapsible } from '@hookooekoo/ui-collapsible';
+import { ReactNode } from 'react';
 
 import { AccordionHeader } from './AccordionHeader';
-import { AccordionProps } from './interfaces';
-import { variant } from './variants';
 
-export const Accordion = ({ isOpen = false, title, titleSize = 'sm', subtitle, isIconRounded, children, className = '', isChild = false }: AccordionProps) => {
-  const styles = variant({ isChild, className });
+interface Props {
+  children: ReactNode;
+  subtitle: string;
+  title: string;
+  className?: string;
+  isOpen?: boolean;
+}
 
-  return (
-    <Collapsible
-      isOpen={isOpen}
-      className={styles}
-      header={isOpen => (
-        <AccordionHeader
-          isOpen={isOpen}
-          title={title}
-          titleSize={titleSize}
-          subtitle={subtitle}
-          isIconRounded={isIconRounded}
-        />
-      )}
-    >
-      <div className="text-14 text-gray-01">{children}</div>
-    </Collapsible>
-  );
-};
+export const Accordion = ({ isOpen = false, title, subtitle, children, className }: Props) => (
+  <Collapsible
+    isOpen={isOpen}
+    className={className}
+    header={isOpen => (
+      <AccordionHeader
+        isOpen={isOpen}
+        title={title}
+        subtitle={subtitle}
+      />
+    )}
+  >
+    <div>{children}</div>
+  </Collapsible>
+);
