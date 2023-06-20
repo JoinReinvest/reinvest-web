@@ -1,27 +1,19 @@
 import { useForwardedRef } from '@hookooekoo/hooks-forwarded-ref';
 import { InputControl } from '@hookooekoo/ui-input-control';
-import { InputHTMLAttributes, useMemo, useState } from 'react';
-import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
+import { useState } from 'react';
+import { FieldValues, useController } from 'react-hook-form';
 
-type PrimitiveProps = Pick<InputHTMLAttributes<HTMLTextAreaElement>, 'disabled' | 'required'>;
+import { CLASSNAME } from './constants';
+import { CommonProps } from './interfaces';
 
-interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields>, PrimitiveProps {
-  maxCharacters: number;
+interface Props<FormFields extends FieldValues> extends CommonProps<FormFields> {
+  placeholder: string;
 }
 
-const CLASSNAME = 'hkek-text-area';
-
-export function TextArea<FormFields extends FieldValues>({ disabled = false, required = false, maxCharacters = 220, ...controllerProps }: Props<FormFields>) {
+export function TextAreaDefault<FormFields extends FieldValues>({ disabled = false, required = false, placeholder, ...controllerProps }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
   const [focused, setFocused] = useState(false);
   const ref = useForwardedRef(field.ref);
-  const numberOfCharacters = useMemo<number>(() => field.value?.length || 0, [field.value]);
-
-  const placeholder = useMemo(() => {
-    const numberOfCharactersLeft = maxCharacters - numberOfCharacters;
-
-    return `${numberOfCharactersLeft} Characters`;
-  }, [numberOfCharacters, maxCharacters]);
 
   const isDirty = !!focused || !!field.value;
 
@@ -53,7 +45,6 @@ export function TextArea<FormFields extends FieldValues>({ disabled = false, req
         onFocus={onFocusHandler}
         placeholder={isDirty ? '' : placeholder}
         ref={ref}
-        maxLength={maxCharacters}
         disabled={disabled}
         required={required}
         data-is-dirty={isDirty}
