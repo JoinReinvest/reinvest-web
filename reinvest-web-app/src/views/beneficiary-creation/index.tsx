@@ -64,6 +64,7 @@ export function InnerViewBeneficiaryCreation() {
         <InvestmentView
           isModalOpen={isInvestmentFlowOpen}
           onModalOpenChange={toggleIsInvestmentFlowOpen}
+          forInitialInvestment
           withSideModal
         />
       )}
