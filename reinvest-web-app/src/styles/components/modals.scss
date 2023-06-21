@@ -37,12 +37,19 @@
   @apply h-full w-full bg-white text-black-01;
 
   .hkek-input-text-control,
-  .hkek-input-masked-control {
+  .hkek-input-masked-control,
+  .hkek-text-area-control {
     @apply text-black-01;
   }
 
   .hkek-select__value-container {
     @apply child:text-black-01 #{!important};
+  }
+}
+
+.modal-withdraw-funds {
+  .hkek-text-area-control-placeholder {
+    @apply typo-bonus-heading;
   }
 }
 

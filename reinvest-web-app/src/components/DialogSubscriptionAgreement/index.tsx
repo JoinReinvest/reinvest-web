@@ -1,22 +1,24 @@
 import { Dialog } from 'components/Dialog';
 import { ModalTitle } from 'components/ModalElements/Title';
-import { Maybe, SubscriptionAgreement, SubscriptionAgreementType } from 'reinvest-app-common/src/types/graphql';
+import { FundsWithdrawalAgreement, Maybe, SubscriptionAgreement, SubscriptionAgreementType } from 'reinvest-app-common/src/types/graphql';
 import { ModalProps } from 'types/modal';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { AgreementSection } from './AgreementSection';
 
 interface Props extends ModalProps {
-  subscriptionAgreement: Maybe<SubscriptionAgreement>;
+  subscriptionAgreement: Maybe<SubscriptionAgreement | FundsWithdrawalAgreement>;
 }
 
-const TITLES = new Map<SubscriptionAgreementType, string>([
+const FUNDS_WITHDRAWAL_AGREEMENT_TITLE = 'Withdrawal request Agreement';
+const SUBSCRIPTION_AGREEMENT_TITLES = new Map<SubscriptionAgreementType, string>([
   [SubscriptionAgreementType.DirectDeposit, 'Direct Deposit Agreement'],
   [SubscriptionAgreementType.RecurringInvestment, 'Recurring Investment Agreement'],
 ]);
 
 export function DialogSubscriptionAgreement({ isModalOpen, onModalOpenChange, subscriptionAgreement }: Props) {
-  const title = subscriptionAgreement?.type && TITLES.get(subscriptionAgreement.type);
+  const isForSubscriptionAgreement = isNotForFundsWithdrawal(subscriptionAgreement);
+  const title = isForSubscriptionAgreement ? SUBSCRIPTION_AGREEMENT_TITLES.get(subscriptionAgreement.type) : FUNDS_WITHDRAWAL_AGREEMENT_TITLE;
 
   return (
     <Dialog
@@ -38,4 +40,10 @@ export function DialogSubscriptionAgreement({ isModalOpen, onModalOpenChange, su
       </>
     </Dialog>
   );
+}
+
+function isNotForFundsWithdrawal(
+  subscriptionAgreement: Maybe<SubscriptionAgreement | FundsWithdrawalAgreement>,
+): subscriptionAgreement is SubscriptionAgreement {
+  return (subscriptionAgreement as SubscriptionAgreement)?.type !== undefined;
 }
