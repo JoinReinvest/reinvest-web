@@ -1,5 +1,6 @@
 import { FlowIdentifiers } from '../enums/flow';
 import { SubFlow } from '../interfaces/flows';
+import { FLOW_BANK_ACCOUNT } from './bank-account';
 import { FLOW_CANCEL_RECURRING_INVESTMENT } from './cancel-recurring-investment';
 import { FLOW_CHANGE_PASSWORD } from './change-password';
 import { FLOW_DIVIDEND_REINVESTING } from './dividend-reinvesting';
@@ -12,6 +13,7 @@ import { FLOW_UPDATE_ADDRESS } from './update-address';
 import { FLOW_PHONE_NUMBER } from './update-phone-number';
 
 export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
+  [FlowIdentifiers.BANK_ACCOUNT, FLOW_BANK_ACCOUNT],
   [FlowIdentifiers.INVESTMENT_HISTORY, FLOW_INVESTMENT_HISTORY],
   [FlowIdentifiers.DIVIDEND_REINVESTING, FLOW_DIVIDEND_REINVESTING],
   [FlowIdentifiers.UPDATE_ADDRESS, FLOW_UPDATE_ADDRESS],

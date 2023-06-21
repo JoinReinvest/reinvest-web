@@ -9,9 +9,10 @@ interface Props {
   title: string;
   hideAvatarNextToTitle?: boolean;
   hideHeaderOnMobile?: boolean;
+  hideTitle?: boolean;
 }
 
-export function HeaderWithTitle({ title, hideHeaderOnMobile, hideAvatarNextToTitle }: Props) {
+export function HeaderWithTitle({ title, hideHeaderOnMobile, hideAvatarNextToTitle, hideTitle }: Props) {
   const { activeAccount } = useActiveAccount();
   const className = cx('items-center gap-8 px-24 md:px-44 md:pt-44', { flex: !hideHeaderOnMobile, 'hidden md:flex': !!hideHeaderOnMobile });
   const avatarContainerClassName = cx({ hidden: !!hideAvatarNextToTitle });
@@ -28,7 +29,12 @@ export function HeaderWithTitle({ title, hideHeaderOnMobile, hideAvatarNextToTit
       </div>
 
       <Dialog.Title asChild>
-        <Typography variant="h3">{title}</Typography>
+        <Typography
+          variant="h3"
+          className={cx({ hidden: hideTitle })}
+        >
+          {title}
+        </Typography>
       </Dialog.Title>
     </div>
   );

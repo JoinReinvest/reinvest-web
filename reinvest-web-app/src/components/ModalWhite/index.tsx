@@ -16,12 +16,14 @@ interface Props extends PropsWithChildren {
   hideHeaderOnMobile?: boolean;
   hideLogoOnMobile?: boolean;
   hideSeparator?: boolean;
+  hideTitle?: boolean;
 }
 
 export const ModalWhite = ({
   isOpen,
   onOpenChange,
   title,
+  hideTitle = false,
   addPaddingBottom = true,
   hideAvatarNextToTitle = false,
   hideHeaderOnMobile = false,
@@ -49,6 +51,7 @@ export const ModalWhite = ({
               title={title}
               hideAvatarNextToTitle={hideAvatarNextToTitle}
               hideHeaderOnMobile={hideHeaderOnMobile}
+              hideTitle={hideTitle}
             />
 
             <Content
