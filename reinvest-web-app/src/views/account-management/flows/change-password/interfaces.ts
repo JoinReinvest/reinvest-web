@@ -3,4 +3,5 @@ export interface FlowFields {
   password: string;
   passwordConfirmation: string;
   _hasSucceded?: boolean;
+  _wasCurrentPasswordIncorrect?: boolean;
 }
