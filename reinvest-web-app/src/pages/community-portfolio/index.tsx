@@ -1,10 +1,13 @@
 import { MainLayout } from 'layouts/MainLayout';
+import { PortfolioProvider } from 'providers/Portfolio';
 import { CommunityPortfolioView } from 'views/community-portfolio';
 
 function CommunityPortfolio() {
   return (
     <MainLayout>
-      <CommunityPortfolioView />
+      <PortfolioProvider>
+        <CommunityPortfolioView />
+      </PortfolioProvider>
     </MainLayout>
   );
 }

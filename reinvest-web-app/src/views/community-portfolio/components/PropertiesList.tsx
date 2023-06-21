@@ -1,10 +1,10 @@
 import { Typography } from 'components/Typography';
-import { PropertyDetails } from 'types/portfolio-property';
+import { Maybe, Property } from 'reinvest-app-common/src/types/graphql';
 
 import { PropertyCard } from './PropertyCard';
 
 interface Props {
-  properties: PropertyDetails[];
+  properties: Maybe<Property>[];
 }
 
 const TITLE = 'Properties';
@@ -14,10 +14,11 @@ export const PropertiesList = ({ properties }: Props) => (
     <Typography variant="h5">{TITLE}</Typography>
 
     <ul className="grid grid-cols-1 gap-24 md:grid-cols-2 lg:grid-cols-3">
-      {properties.map(property => (
+      {properties.map((property, index) => (
         <PropertyCard
-          key={property.id}
+          key={property?.name}
           property={property}
+          propertyIndex={index}
         />
       ))}
     </ul>

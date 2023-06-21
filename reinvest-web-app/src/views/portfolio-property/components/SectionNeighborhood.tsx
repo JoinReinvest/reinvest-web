@@ -1,26 +1,33 @@
 import { Map } from 'components/Map';
 import { Typography } from 'components/Typography';
-import { PropertyDetails } from 'types/portfolio-property';
+import { Maybe, Property } from 'reinvest-app-common/src/types/graphql';
 
+import { parseLocationToCoordinates } from '../utilities';
 import { PropertyCharacteristicList } from './PropertyCharasteristicList';
 
 interface Props {
-  property: PropertyDetails;
+  property: Maybe<Property>;
 }
 
 const TITLE = 'About the Neighborhood';
 
-export const SectionNeighborhood = ({ property }: Props) => (
-  <section className="flex flex-col gap-16 md:grow">
-    <Typography variant="h5">{TITLE}</Typography>
+export function SectionNeighborhood({ property }: Props) {
+  const coordinates = property?.location && parseLocationToCoordinates(property?.location);
 
-    <div className="flex flex-col gap-16 md:basis-3/4 md:gap-21">
-      <Map
-        address={property.address}
-        coordinates={property.location}
-      />
+  return (
+    <section className="flex flex-col gap-16 md:grow">
+      <Typography variant="h5">{TITLE}</Typography>
 
-      <PropertyCharacteristicList items={property.characteristics} />
-    </div>
-  </section>
-);
+      <div className="flex flex-col gap-16 md:basis-3/4 md:gap-21">
+        {property?.name && coordinates && (
+          <Map
+            title={property?.name}
+            coordinates={coordinates}
+          />
+        )}
+
+        <PropertyCharacteristicList items={property?.POIs ?? []} />
+      </div>
+    </section>
+  );
+}
