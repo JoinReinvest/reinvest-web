@@ -9,7 +9,7 @@ export const variants = cva('text-15 h-48 w-full font-medium', {
       outlined: ['border-2 border-green-frost-01', 'disabled:border-gray-04 disabled:text-gray-03'],
       dashed: ['border border-dashed border-green-frost-01', 'disabled:border-gray-04 disabled:text-gray-03'],
       'outlined-red': ['border-2 border-tertiary-error-02', 'disabled:border-gray-04 disabled:text-gray-03'],
-      error: ['bg-tertiary-error-02 text-white', 'disabled:border-gray-04 disabled:text-gray-03'],
+      error: ['bg-tertiary-error-02 text-white', 'disabled:border-gray-04 disabled:bg-gray-04 disabled:text-gray-02'],
     },
     size: {
       sm: 'px-16 py-12',
