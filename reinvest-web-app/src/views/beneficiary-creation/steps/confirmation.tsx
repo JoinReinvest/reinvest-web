@@ -8,6 +8,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { allRequiredFieldsExists } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
 import { useBeneficiaryCreationFlow } from '../flow';
 import { BeneficiaryCreationFormFields } from '../form-fields';
@@ -36,7 +37,7 @@ export const StepConfirmation: StepParams<BeneficiaryCreationFormFields> = {
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      beneficiary && updateActiveAccount({ ...beneficiary, __typename: 'AccountOverview' });
+      beneficiary && updateActiveAccount({ ...beneficiary, type: AccountType.Beneficiary, __typename: 'AccountOverview' });
       toggleIsInvestmentFlowOpen(true);
       toggleHasFinishedBeneficiaryCreationFlow(true);
       toggleIsBeneficiaryFlowOpen(false);
