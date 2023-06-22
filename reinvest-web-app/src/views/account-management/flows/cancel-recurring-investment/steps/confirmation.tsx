@@ -5,13 +5,13 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { FormEventHandler } from 'react';
-import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { useFlowsManager } from '../../../contexts/FlowsManager';
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-const TITLE = 'Your recurring investments are canceled';
+const TITLE_CANCEL = 'Your recurring investments are canceled';
+const TITLE_REINSTATE = 'Your transaction is reinstated';
 const BUTTON_LABEL = 'Dashboard';
 
 export const StepConfirmation: StepParams<FlowFields> = {
@@ -20,17 +20,20 @@ export const StepConfirmation: StepParams<FlowFields> = {
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields._hasSucceded !== undefined];
+    const requiredFields = [fields._action !== undefined];
 
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: () => {
-    const { setCurrentFlowIdentifier, onModalOpenChange } = useFlowsManager();
+  Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
+    const { onModalOpenChange } = useFlowsManager();
+
+    const action = storeFields?._action;
+    const hadCancelledRecurringInvestment = action === 'cancel';
+    const title = hadCancelledRecurringInvestment ? TITLE_CANCEL : TITLE_REINSTATE;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      setCurrentFlowIdentifier(null);
       onModalOpenChange(false);
     };
 
@@ -40,7 +43,7 @@ export const StepConfirmation: StepParams<FlowFields> = {
           <div className="flex flex-col items-center gap-24">
             <IconCheckCircle />
 
-            <Typography variant="h5">{TITLE}</Typography>
+            <Typography variant="h5">{title}</Typography>
           </div>
         </FormContent>
 
