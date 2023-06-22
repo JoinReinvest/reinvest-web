@@ -10,6 +10,8 @@ export interface State {
   modalTitle: string;
   onModalOpenChange: (state: boolean) => void;
   setCurrentFlowIdentifier: (state: FlowIdentifiers | null) => void;
+  shouldRefetchAccounts: boolean;
+  toggleShouldRefetchAccounts: (state: boolean) => void;
 }
 
 type PrimitiveProps = Pick<State, 'isModalOpen'>;
