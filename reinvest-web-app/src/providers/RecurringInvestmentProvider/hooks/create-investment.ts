@@ -15,6 +15,7 @@ interface CreateRecurringInvestmentInvestmentParams {
 type CreateRecurringInvestmentInvestment = (parameters: CreateRecurringInvestmentInvestmentParams) => Promise<void>;
 
 interface Params {
+  activeRecurringInvestmentMeta: QueryMeta;
   recurringInvestmentMeta: QueryMeta;
 }
 
@@ -23,7 +24,7 @@ interface Returns {
   createRecurringInvestmentMeta: MutationMeta;
 }
 
-export function useCreateInvestment({ recurringInvestmentMeta }: Params): Returns {
+export function useCreateInvestment({ recurringInvestmentMeta, activeRecurringInvestmentMeta }: Params): Returns {
   const { activeAccount } = useActiveAccount();
   const { mutateAsync, isLoading, isSuccess, error, reset } = useCreateRecurringInvestment(getApiClient);
   const createRecurringInvestmentMeta: MutationMeta = { isLoading, isSuccess, error, reset };
@@ -36,6 +37,7 @@ export function useCreateInvestment({ recurringInvestmentMeta }: Params): Return
 
       await mutateAsync({ accountId, amount, schedule: { startDate, frequency } });
       recurringInvestmentMeta.refetch();
+      activeRecurringInvestmentMeta.refetch();
     }
   };
 
