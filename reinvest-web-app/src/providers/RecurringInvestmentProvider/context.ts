@@ -4,6 +4,8 @@ import { createContext } from 'react';
 import { State } from './interfaces';
 
 export const Context = createContext<State>({
+  activeRecurringInvestment: null,
+  activeRecurringInvestmentMeta: DEFAULT_QUERY_META,
   recurringInvestment: null,
   recurringInvestmentMeta: DEFAULT_QUERY_META,
   initiateRecurringInvestmentMeta: DEFAULT_MUTATION_META,
@@ -17,4 +19,14 @@ export const Context = createContext<State>({
   initiateRecurringInvestment: () => new Promise(() => {}),
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   signRecurringInvestmentSubscriptionAgreement: () => new Promise(() => {}),
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  deactivateRecurringInvestment: () => new Promise(() => {}),
+  deactivateRecurringInvestmentMeta: DEFAULT_MUTATION_META,
+  deactivateRecurringInvestmentResult: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  unsuspendRecurringInvestment: () => new Promise(() => {}),
+  unsuspendRecurringInvestmentMeta: DEFAULT_MUTATION_META,
+  unsuspendRecurringInvestmentResult: null,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  toggleEnableDraftQuery: () => {},
 });

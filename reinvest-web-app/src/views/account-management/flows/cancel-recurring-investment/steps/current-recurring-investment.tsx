@@ -1,93 +1,112 @@
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { useForm } from 'react-hook-form';
+import { Typography } from 'components/Typography';
+import { useCurrentBankAccount } from 'hooks/current-bank-account';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
+import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useGetActiveRecurringInvestment } from 'reinvest-app-common/src/services/queries/getActiveRecurringInvestment';
-import { useReadBankAccount } from 'reinvest-app-common/src/services/queries/readBankAccount';
+import { RecurringInvestmentStatus } from 'reinvest-app-common/src/types/graphql';
 
-import { IconBank } from '../../../../../assets/icons/IconBank';
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { Separator } from '../../../../../components/Separator';
-import { Typography } from '../../../../../components/Typography';
-import { useActiveAccount } from '../../../../../providers/ActiveAccountProvider';
-import { getApiClient } from '../../../../../services/getApiClient';
 import { useFlowsManager } from '../../../contexts/FlowsManager';
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { BankDetails } from '../components/BankDetails';
+import { RecurringInvestmentDetails } from '../components/RecurringInvestmentDetails';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-const BUTTON_LABEL = 'Cancel Transaction';
 const TITLE = 'Recurring Investment';
+const BUTTON_CANCEL_LABEL = 'Cancel Transaction';
+const BUTTON_REINSTATE_LABEL = 'Reinstate';
 
 export const StepCurrentRecurringInvestment: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_RECURRING_INVESTMENT,
 
-  Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    const { activeAccount } = useActiveAccount();
-    const { data: bankAccount, isLoading: isBankAccountLoading } = useReadBankAccount(getApiClient, { accountId: activeAccount?.id ?? '' });
-    const { data, isLoading } = useGetActiveRecurringInvestment(getApiClient, { accountId: activeAccount?.id ?? '' });
-    const { handleSubmit, formState } = useForm({ mode: 'onSubmit' });
-    const { setCurrentFlowIdentifier } = useFlowsManager();
+  doesMeetConditionFields: fields => {
+    return !!fields.activeRecurringInvestment?.id;
+  },
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || isLoading || isBankAccountLoading;
-    const onSubmit = async () => {
-      await updateStoreFields({ _hasSucceded: true });
-      moveToNextStep();
-    };
+  Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+    const { setCurrentFlowIdentifier } = useFlowsManager();
+    const { currentBankAccount, currentBankAccountMeta } = useCurrentBankAccount();
+
+    const { deactivateRecurringInvestment, deactivateRecurringInvestmentMeta, unsuspendRecurringInvestment, unsuspendRecurringInvestmentMeta } =
+      useRecurringInvestment();
+
+    useEffect(() => {
+      async function validateSuccess() {
+        if (deactivateRecurringInvestmentMeta.isSuccess || unsuspendRecurringInvestmentMeta.isSuccess) {
+          moveToNextStep();
+        }
+      }
+
+      validateSuccess();
+    }, [deactivateRecurringInvestmentMeta.isSuccess, unsuspendRecurringInvestmentMeta.isSuccess, moveToNextStep]);
+
+    const activeRecurringInvestment = storeFields?.activeRecurringInvestment;
+
+    const shouldCancelButtonBeLoading = deactivateRecurringInvestmentMeta.isLoading;
+    const shouldReinstateButtonBeLoading = unsuspendRecurringInvestmentMeta.isLoading;
+
+    const shouldButtonBeDisabled = currentBankAccountMeta.isLoading || shouldCancelButtonBeLoading || shouldReinstateButtonBeLoading;
+
+    const willDisplayCancelButton = activeRecurringInvestment?.status === RecurringInvestmentStatus.Active;
+    const willDisplayReinstateButton = activeRecurringInvestment?.status === RecurringInvestmentStatus.Suspended;
+
+    async function onCancelRecurringInvestment() {
+      await updateStoreFields({ _action: 'cancel' });
+      await deactivateRecurringInvestment();
+    }
+
+    async function onReinstateRecurringInvestment() {
+      await updateStoreFields({ _action: 'reinstate' });
+      await unsuspendRecurringInvestment();
+    }
 
     const onButtonBackClick = () => {
       setCurrentFlowIdentifier(null);
     };
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form>
         <FormContent willLeaveContentOnTop>
           <ButtonBack onClick={onButtonBackClick} />
+
           <div className="flex flex-col gap-24">
             <Typography variant="h5">{TITLE}</Typography>
+
             <Typography
               variant="h6"
               className="text-gray-02"
             >
               From
             </Typography>
-            <div className="flex items-center gap-16">
-              <IconBank />
-              <Typography variant="paragraph-emphasized">
-                {bankAccount?.bankName} {bankAccount?.accountNumber}
-              </Typography>
-            </div>
-            <div className="flex flex-col gap-16">
-              <div className="flex justify-between">
-                <Typography variant="paragraph-emphasized-regular">Frequency</Typography>
-                <Typography variant="paragraph-emphasized">{data?.schedule.frequency}</Typography>
-              </div>
-              <Separator />
-              <div className="flex justify-between">
-                <Typography variant="paragraph-emphasized-regular">Amount</Typography>
-                <Typography variant="paragraph-emphasized">{data?.amount.formatted}</Typography>
-              </div>
-              <Separator />
-              <div className="flex justify-between">
-                <Typography variant="paragraph-emphasized-regular">Status</Typography>
-                <Typography
-                  variant="paragraph-emphasized"
-                  className="text-tertiary-success"
-                >
-                  {data?.status}
-                </Typography>
-              </div>
-            </div>
+
+            <BankDetails bankAccount={currentBankAccount} />
+
+            <RecurringInvestmentDetails activeRecurringInvestment={activeRecurringInvestment ?? null} />
           </div>
         </FormContent>
+
         <ButtonStack>
-          <Button
-            type="submit"
-            label={BUTTON_LABEL}
-            disabled={shouldButtonBeDisabled}
-            variant="outlined-red"
-          />
+          {willDisplayCancelButton && (
+            <Button
+              onClick={onCancelRecurringInvestment}
+              label={BUTTON_CANCEL_LABEL}
+              disabled={shouldButtonBeDisabled}
+              loading={shouldCancelButtonBeLoading}
+              variant="outlined-red"
+            />
+          )}
+
+          {willDisplayReinstateButton && (
+            <Button
+              onClick={onReinstateRecurringInvestment}
+              loading={shouldReinstateButtonBeLoading}
+              label={BUTTON_REINSTATE_LABEL}
+              disabled={shouldButtonBeDisabled}
+            />
+          )}
         </ButtonStack>
       </Form>
     );

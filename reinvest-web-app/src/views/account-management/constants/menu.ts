@@ -2,7 +2,7 @@ import { FlowIdentifiers } from '../enums/flow';
 import { MenuGroupIdentifiers } from '../enums/menu';
 import { MenuGroup } from '../interfaces/menu';
 
-const MENU_GROUP_INVESTING_ITEMS = [
+const SECTION_INVESTING_ITEMS = [
   { identifier: FlowIdentifiers.INVESTMENT_HISTORY, label: 'Investment History' },
   { identifier: FlowIdentifiers.RECURRING_INVESTMENTS, label: 'Recurring Investments' },
   { identifier: FlowIdentifiers.DIVIDEND_REINVESTING, label: 'Dividend Reinvesting' },
@@ -11,24 +11,25 @@ const MENU_GROUP_INVESTING_ITEMS = [
   { identifier: FlowIdentifiers.ACCOUNT_ACTIVITY, label: 'Account Activity' },
 ];
 
-const BENEFICIARY_MENU_GROUP_INVESTING_ITEM = {
-  identifier: FlowIdentifiers.REMOVE_ACCOUNT,
-  label: 'Remove Account',
-};
-
-export const MENU_GROUP_INVESTING: MenuGroup = {
+export const SECTION_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
   label: 'Investing',
-  items: MENU_GROUP_INVESTING_ITEMS,
+  items: SECTION_INVESTING_ITEMS,
 };
 
-export const BENEFICIARY_MENU_GROUP_INVESTING: MenuGroup = {
+export const SECTION_BENEFICIARY_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
   label: 'Investing',
-  items: [...MENU_GROUP_INVESTING_ITEMS, BENEFICIARY_MENU_GROUP_INVESTING_ITEM],
+  items: [
+    ...SECTION_INVESTING_ITEMS,
+    {
+      identifier: FlowIdentifiers.REMOVE_ACCOUNT,
+      label: 'Remove Account',
+    },
+  ],
 };
 
-export const MENU_GROUP_SECURITY: MenuGroup = {
+export const SECTION_SECURITY: MenuGroup = {
   identifier: MenuGroupIdentifiers.SIGN_IN_AND_SECURITY,
   label: 'Sign in & Security',
   items: [
@@ -38,7 +39,7 @@ export const MENU_GROUP_SECURITY: MenuGroup = {
   ],
 };
 
-export const MENU_GROUP_PROFILE: MenuGroup = {
+export const SECTION_PROFILE: MenuGroup = {
   identifier: MenuGroupIdentifiers.PROFILE_INFORMATION,
   label: 'Profile Information',
   items: [
@@ -48,5 +49,9 @@ export const MENU_GROUP_PROFILE: MenuGroup = {
   ],
 };
 
-export const MENU_GROUPS = [MENU_GROUP_INVESTING, MENU_GROUP_SECURITY, MENU_GROUP_PROFILE];
-export const BENEFICIARY_MENU_GROUPS = [BENEFICIARY_MENU_GROUP_INVESTING, MENU_GROUP_SECURITY, MENU_GROUP_PROFILE];
+export const MENU_GROUPS = {
+  investing: SECTION_INVESTING,
+  investingBeneficiary: SECTION_BENEFICIARY_INVESTING,
+  security: SECTION_SECURITY,
+  profile: SECTION_PROFILE,
+};
