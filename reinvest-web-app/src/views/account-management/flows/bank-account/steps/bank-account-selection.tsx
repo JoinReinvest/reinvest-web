@@ -1,10 +1,9 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
-import { OnBankAccountFulfillParams, usePlaidIntegration } from 'hooks/plaid-integration';
-import { useMemo } from 'react';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepParams } from 'reinvest-app-common/src/services/form-flow';
 
+import { usePlaidHandler } from '../hooks/plaid-handler';
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
 export const StepBankAccountSelection: StepParams<FlowFields> = {
@@ -12,19 +11,8 @@ export const StepBankAccountSelection: StepParams<FlowFields> = {
 
   doesMeetConditionFields: fields => !!fields._willUpdateBankAccount,
 
-  Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    async function onBankAccountFulfill({ hashedBankAccount }: OnBankAccountFulfillParams) {
-      await updateStoreFields({ hashedBankAccount });
-      moveToNextStep();
-    }
-
-    const { updateBankAccountMeta, updateBankAccountData, fulfillBankAccountMeta, iFrameKey } = usePlaidIntegration({
-      willUpdateBankAccount: true,
-      onBankAccountFulfill,
-    });
-
-    const iFrameLink = useMemo(() => updateBankAccountData?.link ?? null, [updateBankAccountData?.link]);
-
+  Component: () => {
+    const { iFrameKey, iFrameLink, updateBankAccountMeta, fulfillBankAccountMeta } = usePlaidHandler();
     const willShowIFrame = !fulfillBankAccountMeta.isLoading && !updateBankAccountMeta.isLoading && updateBankAccountMeta.isSuccess && iFrameLink;
 
     return (

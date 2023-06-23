@@ -1,5 +1,6 @@
 import { ActiveAccountConfigurationProvider } from 'providers/ActiveAccountConfigurationProvider';
 import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
+import { BankAccountProvider } from 'providers/BankAccount';
 import { NotificationsProvider } from 'providers/Notifications';
 import { UserProfileProvider } from 'providers/UserProfile';
 import { PropsWithChildren } from 'react';
@@ -12,13 +13,15 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
     <UserProfileProvider>
       <ActiveAccountProvider>
         <ActiveAccountConfigurationProvider>
-          <NotificationsProvider>
-            <ModalNotificationsProvider>
-              <Header />
+          <BankAccountProvider>
+            <NotificationsProvider>
+              <ModalNotificationsProvider>
+                <Header />
 
-              <main className="container mx-auto pb-20 pt-80 lg:pt-100">{children}</main>
-            </ModalNotificationsProvider>
-          </NotificationsProvider>
+                <main className="container mx-auto pb-20 pt-80 lg:pt-100">{children}</main>
+              </ModalNotificationsProvider>
+            </NotificationsProvider>
+          </BankAccountProvider>
         </ActiveAccountConfigurationProvider>
       </ActiveAccountProvider>
     </UserProfileProvider>
