@@ -1,19 +1,19 @@
 import { ButtonBack } from 'components/ButtonBack';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
-import { PropertyDetails } from 'types/portfolio-property';
+import { Maybe, Property } from 'reinvest-app-common/src/types/graphql';
 
 import { ButtonInvest } from './ButtonInvest';
 import { PropertyImages } from './PropertyImages';
 
 interface Props {
-  property: PropertyDetails;
+  property: Maybe<Property>;
 }
 
 export function Header({ property }: Props) {
   const router = useRouter();
 
-  const title = property.address?.addressLine1 ?? '';
+  const title = property?.address?.addressLine ?? '';
 
   function onButtonBackClick() {
     router.push(URL.community_portfolio);
@@ -28,7 +28,7 @@ export function Header({ property }: Props) {
 
       <PropertyImages
         title={title}
-        images={property.meta.images}
+        images={property?.gallery ?? []}
       />
 
       <ButtonInvest className="order-3 mt-24 justify-self-end md:order-2 md:mt-0" />

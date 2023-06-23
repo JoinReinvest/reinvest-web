@@ -1,5 +1,6 @@
 import { MainLayout } from 'layouts/MainLayout';
 import { GetServerSideProps } from 'next';
+import { PortfolioProvider } from 'providers/Portfolio';
 import { ParsedUrlQuery } from 'querystring';
 import { PortfolioPropertyView } from 'views/portfolio-property';
 
@@ -9,10 +10,12 @@ interface Props {
 
 interface Params extends ParsedUrlQuery, Props {}
 
-function CommunityPortfolioProperty() {
+function CommunityPortfolioProperty({ propertyId }: Props) {
   return (
     <MainLayout>
-      <PortfolioPropertyView />
+      <PortfolioProvider>
+        <PortfolioPropertyView propertyIndex={+propertyId} />
+      </PortfolioProvider>
     </MainLayout>
   );
 }

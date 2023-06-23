@@ -1,11 +1,11 @@
 import { Typography } from 'components/Typography';
 import Image from 'next/image';
+import { Maybe } from 'reinvest-app-common/src/types/graphql';
 import { Pagination } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
-import { PropertyDetails } from 'types/portfolio-property';
 
 interface Props {
-  images: PropertyDetails['meta']['images'];
+  images: Maybe<string>[];
   title: string;
 }
 
@@ -32,7 +32,7 @@ export const PropertyImages = ({ title, images }: Props) => (
           className="relative h-full overflow-hidden"
         >
           <Image
-            src={image}
+            src={image ?? ''}
             className="object-cover object-center"
             alt={`Property image #${index + 1}`}
             priority={index === 0}

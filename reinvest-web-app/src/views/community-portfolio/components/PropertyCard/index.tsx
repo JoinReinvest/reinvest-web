@@ -1,19 +1,20 @@
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
-import { PropertyDetails } from 'types/portfolio-property';
+import { Maybe, Property } from 'reinvest-app-common/src/types/graphql';
 
 import { CardContent } from './CardContent';
 import { CardHeader } from './CardHeader';
 
 interface Props {
-  property: PropertyDetails;
+  property: Maybe<Property>;
+  propertyIndex: number;
 }
 
-export const PropertyCard = ({ property }: Props) => {
+export const PropertyCard = ({ property, propertyIndex }: Props) => {
   const router = useRouter();
 
   function onClick() {
-    router.push(`${URL.community_portfolio}/${property.id}`);
+    router.push(`${URL.community_portfolio}/${propertyIndex}`);
   }
 
   return (
@@ -24,7 +25,7 @@ export const PropertyCard = ({ property }: Props) => {
       tabIndex={0}
     >
       <article className="group cursor-pointer">
-        <CardHeader image={property.meta.thumbnail} />
+        <CardHeader image={property?.image ?? ''} />
         <CardContent property={property} />
       </article>
     </div>
