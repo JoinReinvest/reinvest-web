@@ -1,12 +1,13 @@
 import { Button } from 'components/Button';
 import { Typography } from 'components/Typography';
+import { usePortfolio } from 'providers/Portfolio';
 
 import { useModalManager } from '../providers/ModalManager';
 
-const TITLE = 'Community REIT';
 const BUTTON_LABEL = 'Invest Now';
 
 export const Header = () => {
+  const { portfolio } = usePortfolio();
   const { onInvestmentModalOpenChange } = useModalManager();
 
   function onButtonClick() {
@@ -19,7 +20,7 @@ export const Header = () => {
         variant="h2-responsive"
         className="grow self-start"
       >
-        {TITLE}
+        {portfolio?.name}
       </Typography>
 
       <div className="min-w-full md:min-w-200">

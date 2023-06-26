@@ -1,5 +1,4 @@
-// TO-DO: Deprecate and use API once the properties endpoints
-// are available.
+// TO-DO: Deprecate once the property updates are connected.
 
 import { PropertyCharacteristicType, PropertyDetails } from 'types/portfolio-property';
 
