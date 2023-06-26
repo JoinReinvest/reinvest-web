@@ -100,7 +100,7 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
       const dataToUpdate = {
         domicile,
         name: storeFields.name,
-        address: (storeFields.address as AddressInput) || { addressLine1: '', addressLine2: '', city: '', state: '', zipCode: '' },
+        address: (storeFields?._address as AddressInput) || { addressLine1: '', addressLine2: '', city: '', state: '', zipCode: '' },
         dateOfBirth: { dateOfBirth: storeFields.dateOfBirth },
       };
 

@@ -6,7 +6,7 @@ import { getApiClient } from 'services/getApiClient';
 import { QueryMeta } from 'types/queries';
 
 interface Returns {
-  bankAccountDisplay: string;
+  bankAccountDisplay: string | null;
   currentBankAccount: BankAccount | null;
   currentBankAccountMeta: QueryMeta;
 }
@@ -17,12 +17,9 @@ export function useCurrentBankAccount(): Returns {
 
   const { data, ...currentBankAccountMeta } = useReadBankAccount(getApiClient, {
     accountId,
-    config: {
-      enabled: !!accountId,
-    },
+    config: { queryKey: [accountId], enabled: !!accountId, retry: false },
   });
-
-  const bankAccountDisplay = useMemo<string>(() => (data ? [data?.accountType, data?.accountNumber].filter(Boolean).join(' ') : ''), [data]);
+  const bankAccountDisplay = useMemo<string | null>(() => (data ? [data?.accountType, data?.accountNumber].filter(Boolean).join(' ') : null), [data]);
 
   return { bankAccountDisplay, currentBankAccount: data ?? null, currentBankAccountMeta };
 }

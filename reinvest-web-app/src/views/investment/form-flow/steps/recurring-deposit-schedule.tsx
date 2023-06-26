@@ -39,6 +39,8 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
   Component: ({ storeFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { recurringInvestment } = useRecurringInvestment();
 
+    const bankAccount = storeFields._bankAccount ?? '';
+
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
       moveToNextStep();
@@ -67,7 +69,7 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
           {recurringInvestment && (
             <RecurringInvestmentDepositSchedule
               recurringInvestment={recurringInvestment}
-              bankAccount={storeFields.bankAccount}
+              bankAccount={bankAccount}
             />
           )}
 
