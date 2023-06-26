@@ -22,6 +22,12 @@ const SECTION_INDIVIDUAL_PROFILE_ITEMS = [
   ...SECTUION_PROFILE_ITEMS,
 ];
 
+const SECTION_BENEFICIARY_PROFILE_ITEMS = [
+  { identifier: FlowIdentifiers.BENEFICIARY_NAME, label: 'Name' },
+  { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
+  ...SECTUION_PROFILE_ITEMS,
+];
+
 const SECTION_COMPANY_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' }, ...SECTUION_PROFILE_ITEMS];
 
 export const SECTION_INVESTING: MenuGroup = {
@@ -58,6 +64,12 @@ export const SECTION_INDIVIDUAL_PROFILE: MenuGroup = {
   items: SECTION_INDIVIDUAL_PROFILE_ITEMS,
 };
 
+export const SECTION_BENEFICIARY_PROFILE: MenuGroup = {
+  identifier: MenuGroupIdentifiers.PROFILE_INFORMATION,
+  label: PROFILE_LABEL,
+  items: SECTION_BENEFICIARY_PROFILE_ITEMS,
+};
+
 export const SECTION_COMPANY_PROFILE: MenuGroup = {
   identifier: MenuGroupIdentifiers.PROFILE_INFORMATION,
   label: PROFILE_LABEL,
@@ -68,6 +80,7 @@ export const MENU_GROUPS = {
   investing: SECTION_INVESTING,
   investingBeneficiary: SECTION_BENEFICIARY_INVESTING,
   security: SECTION_SECURITY,
+  beneficiaryProfile: SECTION_BENEFICIARY_PROFILE,
   individualProfile: SECTION_INDIVIDUAL_PROFILE,
   companyProfile: SECTION_COMPANY_PROFILE,
 };
