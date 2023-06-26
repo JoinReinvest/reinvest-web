@@ -5,7 +5,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { FormEventHandler } from 'react';
-import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -22,15 +22,20 @@ export const StepBankAccountConfirmation: StepParams<FlowFields> = {
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
-    return !!fields.bankAccount && !!fields._justAddedBankAccount;
+    const requiredFields = [fields._bankAccount, fields._bankAccountType, fields._justAddedBankAccount];
+
+    return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const hasSucceded = !!storeFields.bankAccount;
-    const title = hasSucceded ? TITLE_SUCCESS.replace(PLACEHOLDER, storeFields.bankAccount.replace(/ /g, '').slice(-8)) : TITLE_FAILURE;
+  Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+    const hasSucceded = !!storeFields._hasBankAccount;
+    const bankAccount = storeFields._bankAccount ?? '';
+
+    const title = hasSucceded ? TITLE_SUCCESS.replace(PLACEHOLDER, bankAccount.replace(/ /g, '')?.slice(-8)) : TITLE_FAILURE;
     const icon = hasSucceded ? <IconCheckCircleGray /> : null;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
+      await updateStoreFields({ _justAddedBankAccount: false });
       event.preventDefault();
       moveToNextStep();
     };

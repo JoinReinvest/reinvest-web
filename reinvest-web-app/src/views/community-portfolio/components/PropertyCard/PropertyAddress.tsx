@@ -1,14 +1,14 @@
 import { IconArrowRight } from 'assets/icons/IconArrowRight';
 import { Typography } from 'components/Typography';
-import { Address } from 'reinvest-app-common/src/types/graphql';
+import { Maybe, PropertyAddress } from 'reinvest-app-common/src/types/graphql';
 
 interface Props {
-  address: Address;
+  address?: Maybe<PropertyAddress>;
 }
 
 export function PropertyAddress({ address }: Props) {
-  const addressTitle = address?.addressLine1;
-  const addressSubtitle = [address?.city, address?.state, address?.zip].filter(Boolean).join(', ');
+  const addressTitle = address?.addressLine;
+  const addressSubtitle = [address?.city, address?.zip].filter(Boolean).join(', ');
 
   return (
     <div className="flex items-center justify-between">

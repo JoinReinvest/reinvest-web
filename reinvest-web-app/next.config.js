@@ -22,7 +22,7 @@ module.exports = withVideos(
     images: {
       // TO-DO: Deprecate `images.unsplash.com` image domain once community REIT
       // is connected with API.
-      domains: ['images.ctfassets.net', 'images.unsplash.com'],
+      domains: ['images.ctfassets.net', 'picsum.photos', 'images.unsplash.com'],
       remotePatterns: [
         {
           protocol: 'https',

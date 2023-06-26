@@ -14,7 +14,6 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
 import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
-import { getAccountsWithLabel } from 'utils/accounts';
 import { ViewAccountManagement } from 'views/account-management';
 import { ViewBeneficiaryCreation } from 'views/beneficiary-creation';
 
@@ -34,8 +33,6 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
   const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
   const [isModalManageAccount, toggleIsModalManageAccount] = useToggler(false);
-
-  const availableAccountsWithLabels = getAccountsWithLabel(availableAccounts);
 
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
@@ -89,7 +86,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                   <div className="flex items-center gap-8">
                     <Avatar
                       src={activeAccount.avatar?.url ?? undefined}
-                      alt={activeAccount.label || ''}
+                      alt={activeAccount.label ?? ''}
                       label={activeAccount?.avatar?.initials ?? undefined}
                       accountType={activeAccount?.type || AccountType.Individual}
                       isSizeFixed
@@ -117,15 +114,14 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                 <ul className="flex flex-col gap-16">
                   <ul className="flex max-h-146 flex-col gap-16 overflow-auto md:max-h-256">
                     {hasAvailableAccounts &&
-                      availableAccountsWithLabels.map(account => (
+                      availableAccounts.map(account => (
                         <AccountMenuAccountItem
                           key={`${account?.id}`}
                           imageSrc={account?.avatar?.url ?? undefined}
                           label={`${account?.label}`.toLowerCase()}
-                          fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
                           type={account?.type || AccountType.Individual}
-                          labelForAvatar={account?.avatarLabel}
+                          avatarInitials={account?.avatar?.initials ?? ''}
                         />
                       ))}
                   </ul>

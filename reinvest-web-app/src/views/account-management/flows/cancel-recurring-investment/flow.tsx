@@ -12,7 +12,7 @@ function InnerFlow() {
 }
 
 export const FlowCancelRecurringInvestment = () => (
-  <FlowProvider initialStoreFields={{ authenticationCode: '', _phoneNumber: '', phone: { number: '', countryCode: '' } }}>
+  <FlowProvider initialStoreFields={{}}>
     <InnerFlow />
   </FlowProvider>
 );

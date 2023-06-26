@@ -2,7 +2,10 @@ import { FlowIdentifiers } from '../enums/flow';
 import { MenuGroupIdentifiers } from '../enums/menu';
 import { MenuGroup } from '../interfaces/menu';
 
-const MENU_GROUP_INVESTING_ITEMS = [
+const INVESTING_LABEL = 'Investing';
+const PROFILE_LABEL = 'Profile Information';
+
+const SECTION_INVESTING_ITEMS = [
   { identifier: FlowIdentifiers.INVESTMENT_HISTORY, label: 'Investment History' },
   { identifier: FlowIdentifiers.RECURRING_INVESTMENTS, label: 'Recurring Investments' },
   { identifier: FlowIdentifiers.DIVIDEND_REINVESTING, label: 'Dividend Reinvesting' },
@@ -11,24 +14,35 @@ const MENU_GROUP_INVESTING_ITEMS = [
   { identifier: FlowIdentifiers.ACCOUNT_ACTIVITY, label: 'Account Activity' },
 ];
 
-const BENEFICIARY_MENU_GROUP_INVESTING_ITEM = {
-  identifier: FlowIdentifiers.REMOVE_ACCOUNT,
-  label: 'Remove Account',
-};
+const SECTUION_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' }];
 
-export const MENU_GROUP_INVESTING: MenuGroup = {
+const SECTION_INDIVIDUAL_PROFILE_ITEMS = [
+  { identifier: FlowIdentifiers.NAME, label: 'Name' },
+  { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
+  ...SECTUION_PROFILE_ITEMS,
+];
+
+const SECTION_COMPANY_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' }, ...SECTUION_PROFILE_ITEMS];
+
+export const SECTION_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
-  label: 'Investing',
-  items: MENU_GROUP_INVESTING_ITEMS,
+  label: INVESTING_LABEL,
+  items: SECTION_INVESTING_ITEMS,
 };
 
-export const BENEFICIARY_MENU_GROUP_INVESTING: MenuGroup = {
+export const SECTION_BENEFICIARY_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
-  label: 'Investing',
-  items: [...MENU_GROUP_INVESTING_ITEMS, BENEFICIARY_MENU_GROUP_INVESTING_ITEM],
+  label: INVESTING_LABEL,
+  items: [
+    ...SECTION_INVESTING_ITEMS,
+    {
+      identifier: FlowIdentifiers.REMOVE_ACCOUNT,
+      label: 'Remove Account',
+    },
+  ],
 };
 
-export const MENU_GROUP_SECURITY: MenuGroup = {
+export const SECTION_SECURITY: MenuGroup = {
   identifier: MenuGroupIdentifiers.SIGN_IN_AND_SECURITY,
   label: 'Sign in & Security',
   items: [
@@ -38,15 +52,22 @@ export const MENU_GROUP_SECURITY: MenuGroup = {
   ],
 };
 
-export const MENU_GROUP_PROFILE: MenuGroup = {
+export const SECTION_INDIVIDUAL_PROFILE: MenuGroup = {
   identifier: MenuGroupIdentifiers.PROFILE_INFORMATION,
-  label: 'Profile Information',
-  items: [
-    { identifier: FlowIdentifiers.NAME, label: 'Name' },
-    { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
-    { identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' },
-  ],
+  label: PROFILE_LABEL,
+  items: SECTION_INDIVIDUAL_PROFILE_ITEMS,
 };
 
-export const MENU_GROUPS = [MENU_GROUP_INVESTING, MENU_GROUP_SECURITY, MENU_GROUP_PROFILE];
-export const BENEFICIARY_MENU_GROUPS = [BENEFICIARY_MENU_GROUP_INVESTING, MENU_GROUP_SECURITY, MENU_GROUP_PROFILE];
+export const SECTION_COMPANY_PROFILE: MenuGroup = {
+  identifier: MenuGroupIdentifiers.PROFILE_INFORMATION,
+  label: PROFILE_LABEL,
+  items: SECTION_COMPANY_PROFILE_ITEMS,
+};
+
+export const MENU_GROUPS = {
+  investing: SECTION_INVESTING,
+  investingBeneficiary: SECTION_BENEFICIARY_INVESTING,
+  security: SECTION_SECURITY,
+  individualProfile: SECTION_INDIVIDUAL_PROFILE,
+  companyProfile: SECTION_COMPANY_PROFILE,
+};

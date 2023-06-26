@@ -61,8 +61,8 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
-    const bankAccount = storeFields.bankAccount;
-    const bankAccountType = storeFields.bankAccountType;
+    const bankAccount = storeFields._bankAccount ?? '';
+    const bankAccountType = storeFields._bankAccountType ?? '';
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
       const amountToInvest = amount || parseInt(presetOptions[0]?.value || ONE_TIME_INVESTMENT_MIN_AMOUNT.toString());
@@ -97,7 +97,7 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     }, [isGetActiveRecurringInvestmentSuccess, data, updateStoreFields]);
 
     async function onChangeBankAccount() {
-      await updateStoreFields({ bankAccount: '', _willUpdateBankAccount: true, _justAddedBankAccount: false });
+      await updateStoreFields({ _bankAccount: undefined, _bankAccountType: undefined, _willUpdateBankAccount: true, _justAddedBankAccount: false });
       moveToStepByIdentifier(Identifiers.BANK_ACCOUNT_SELECTION);
     }
 
