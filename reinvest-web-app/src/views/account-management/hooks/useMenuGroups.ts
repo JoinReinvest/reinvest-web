@@ -23,6 +23,12 @@ export function useMenuGroups(): Returns {
     return isBeneficiaryAccount ? MENU_GROUPS.investingBeneficiary : MENU_GROUPS.investing;
   }, [activeAccount?.type]);
 
+  const sectionProfileByAccountType = useMemo(() => {
+    const isIndividualOrBeneficiaryAccount = activeAccount?.type === AccountType.Individual || activeAccount?.type === AccountType.Beneficiary;
+
+    return isIndividualOrBeneficiaryAccount ? MENU_GROUPS.individualProfile : MENU_GROUPS.companyProfile;
+  }, [activeAccount?.type]);
+
   const menuGroups = useMemo(() => {
     if (activeRecurringInvestmentMeta.isSuccess) {
       const filteredSectionInvestingItems = sectionInvestingByAccountType.items.filter(({ identifier }) => {
@@ -33,7 +39,7 @@ export function useMenuGroups(): Returns {
         return true;
       });
 
-      return [{ ...sectionInvestingByAccountType, items: filteredSectionInvestingItems }, MENU_GROUPS.security, MENU_GROUPS.profile];
+      return [{ ...sectionInvestingByAccountType, items: filteredSectionInvestingItems }, MENU_GROUPS.security, sectionProfileByAccountType];
     }
 
     return [];
