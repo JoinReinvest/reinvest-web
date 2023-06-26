@@ -85,7 +85,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           zip: details?.address?.zip || '',
         };
 
-        await updateStoreFields({ name, dateOfBirth, residency, identificationDocuments, domicile, ssn, address, _shouldUpdateProfileDetails: true });
+        await updateStoreFields({ name, dateOfBirth, residency, identificationDocuments, domicile, ssn, _address: address, _shouldUpdateProfileDetails: true });
       }
     }, [updateStoreFields, userProfile]);
 
