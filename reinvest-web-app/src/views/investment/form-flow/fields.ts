@@ -4,13 +4,13 @@ import { RecurringInvestmentFrequency, Usd } from 'reinvest-app-common/src/types
 import { Applicant, FiduciaryEntityInformation, IndexedSchema } from 'views/onboarding/form-flow/form-fields';
 
 export interface FlowFields {
-  address: Address | null;
-  bankAccount: string;
-  bankAccountType: string;
-
+  _address?: Address | null;
+  _bankAccount?: string;
+  _bankAccountType?: string;
   _currentCompanyMajorStakeholder?: IndexedSchema<Applicant>;
   _currentTrustTrusteeGrantorOrProtector?: IndexedSchema<Applicant>;
   _forInitialInvestment?: boolean;
+  _hasBankAccount?: boolean;
   _hasMoreThanAnAccount?: boolean;
   _investmentWasSuccessful?: boolean;
   _isEditingCompanyMajorStakeholderApplicant?: boolean;
@@ -29,7 +29,6 @@ export interface FlowFields {
   agreesToOneTimeInvestment?: boolean;
   agreesToRecurringInvestment?: boolean;
   approvesSubscriptionAgreement?: boolean;
-  bankAccountId?: string;
   businessAddress?: Address;
   companyMajorStakeholderApplicants?: Applicant[];
   corporationLegalName?: string;

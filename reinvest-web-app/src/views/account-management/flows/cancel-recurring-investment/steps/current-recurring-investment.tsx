@@ -4,7 +4,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
-import { useCurrentBankAccount } from 'hooks/current-bank-account';
+import { useBankAccount } from 'providers/BankAccount';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -28,7 +28,7 @@ export const StepCurrentRecurringInvestment: StepParams<FlowFields> = {
 
   Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useFlowsManager();
-    const { currentBankAccount, currentBankAccountMeta } = useCurrentBankAccount();
+    const { currentBankAccount, currentBankAccountMeta } = useBankAccount();
 
     const { deactivateRecurringInvestment, deactivateRecurringInvestmentMeta, unsuspendRecurringInvestment, unsuspendRecurringInvestmentMeta } =
       useRecurringInvestment();

@@ -11,4 +11,7 @@ export const Context = createContext<State>({
   currentFlowIdentifier: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setCurrentFlowIdentifier: () => {},
+  shouldRefetchAccounts: false,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  toggleShouldRefetchAccounts: () => {},
 });

@@ -1,16 +1,15 @@
+import { IconWarning } from 'assets/icons/IconWarning';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
+import { useGoToDashboard } from 'hooks/go-to-dashboard';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler } from 'react';
-import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
+import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { IconWarning } from '../../../../../assets/icons/IconWarning';
-import { InvestmentInformation } from '../../../../../components/InvestmentInformation';
-import { useActiveAccount } from '../../../../../providers/ActiveAccountProvider';
-import { getApiClient } from '../../../../../services/getApiClient';
 import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
@@ -26,19 +25,23 @@ export const StepConfirmation: StepParams<FlowFields> = {
   isAValidationView: true,
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields._hasSucceded !== undefined];
+    const requiredFields = [fields._hasSucceded !== undefined, fields.parentAccountUpdatedValue];
 
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: () => {
-    const { setCurrentFlowIdentifier } = useFlowsManager();
-    const { activeAccount } = useActiveAccount();
-    const { data } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '' });
+  Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
+    const { individualAccount, updateActiveAccount } = useActiveAccount();
+    const { onModalOpenChange } = useFlowsManager();
+    const { maybeGoToDashboard } = useGoToDashboard();
+
+    const accountValueUpdate = storeFields?.parentAccountUpdatedValue;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      setCurrentFlowIdentifier(null);
+      onModalOpenChange(false);
+      updateActiveAccount(individualAccount);
+      maybeGoToDashboard();
     };
 
     return (
@@ -51,10 +54,11 @@ export const StepConfirmation: StepParams<FlowFields> = {
             >
               {TITLE}
             </Typography>
-            {data?.accountValue && (
+
+            {accountValueUpdate && (
               <InvestmentInformation
                 label={INVESTMENT_INFORMATION_LABEL}
-                amount={data?.accountValue}
+                amount={accountValueUpdate}
                 type="one-time"
               />
             )}

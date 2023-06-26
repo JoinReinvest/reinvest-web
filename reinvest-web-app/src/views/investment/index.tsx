@@ -9,7 +9,7 @@ import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
-import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON, INITIAL_STORE_FIELDS } from './constants';
+import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON } from './constants';
 import { InvestmentFlowProvider, useInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
@@ -149,7 +149,7 @@ export const InvestmentView = (props: Props) => {
 
   return (
     <InvestmentProvider>
-      <InvestmentFlowProvider initialStoreFields={{ ...INITIAL_STORE_FIELDS, _forInitialInvestment: !!props.forInitialInvestment }}>
+      <InvestmentFlowProvider initialStoreFields={{ _forInitialInvestment: !!props.forInitialInvestment }}>
         <InnerInvestmentView {...props} />
       </InvestmentFlowProvider>
     </InvestmentProvider>

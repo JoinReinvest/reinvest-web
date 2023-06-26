@@ -1,3 +1,5 @@
+import { useToggler } from 'hooks/toggler';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useMemo, useState } from 'react';
 import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
 
@@ -10,7 +12,9 @@ const MODAL_TITLE = 'Manage Account';
 export const useFlowsManager = createContextConsumer(Context, 'FlowsManagerProvider');
 
 export const FlowsManagerProvider = ({ isModalOpen, toggleIsModalOpen, children }: ProviderProps) => {
+  const { allAccountsMeta } = useActiveAccount();
   const [currentFlowIdentifier, setCurrentFlowIdentifier] = useState<State['currentFlowIdentifier']>(null);
+  const [shouldRefetchAccounts, toggleShouldRefetchAccounts] = useToggler(false);
 
   const currentFlow: State['currentFlow'] = useMemo(() => {
     if (currentFlowIdentifier) {
@@ -28,6 +32,11 @@ export const FlowsManagerProvider = ({ isModalOpen, toggleIsModalOpen, children 
     }
 
     toggleIsModalOpen(willBeOpen);
+
+    if (shouldRefetchAccounts) {
+      allAccountsMeta.refetch();
+      toggleShouldRefetchAccounts(false);
+    }
   };
 
   return (
@@ -39,6 +48,8 @@ export const FlowsManagerProvider = ({ isModalOpen, toggleIsModalOpen, children 
         setCurrentFlowIdentifier,
         isModalOpen,
         onModalOpenChange,
+        shouldRefetchAccounts,
+        toggleShouldRefetchAccounts,
       }}
     >
       {children}

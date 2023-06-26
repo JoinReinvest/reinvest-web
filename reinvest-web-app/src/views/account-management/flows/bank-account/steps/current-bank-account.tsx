@@ -5,7 +5,7 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
-import { useCurrentBankAccount } from 'hooks/current-bank-account';
+import { useBankAccount } from 'providers/BankAccount';
 import { FormEvent } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useFlowsManager } from 'views/account-management/contexts/FlowsManager';
@@ -13,6 +13,7 @@ import { useFlowsManager } from 'views/account-management/contexts/FlowsManager'
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
 const TITLE = 'Your bank account';
+
 const NOTICES = [
   'REINVEST allows only 1 bank account to be linked to an account at a time.',
   'If you remove your bank account, it will be removed from your beneficiary account as well.',
@@ -24,7 +25,7 @@ export const StepCurrentBankAccount: StepParams<FlowFields> = {
 
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useFlowsManager();
-    const { bankAccountDisplay, currentBankAccountMeta } = useCurrentBankAccount();
+    const { bankAccountDisplay, currentBankAccountMeta } = useBankAccount();
 
     if (currentBankAccountMeta?.isLoading) {
       return (
@@ -51,16 +52,18 @@ export const StepCurrentBankAccount: StepParams<FlowFields> = {
 
           <Typography variant="h4-expanded">{TITLE}</Typography>
 
-          <Typography variant="paragraph-emphasized">{bankAccountDisplay}</Typography>
+          <div className="flex flex-col gap-16">
+            <Typography variant="paragraph-emphasized">{bankAccountDisplay}</Typography>
 
-          {NOTICES.map((notice, index) => (
-            <Typography
-              key={index}
-              variant="paragraph-emphasized-regular"
-            >
-              {notice}
+            <Typography variant="paragraph-emphasized-regular">
+              {NOTICES.map((notice, index) => (
+                <span key={index}>
+                  {notice}
+                  <br />
+                </span>
+              ))}
             </Typography>
-          ))}
+          </div>
         </FormContent>
 
         <ButtonStack>
