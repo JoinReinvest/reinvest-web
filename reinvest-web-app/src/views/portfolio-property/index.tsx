@@ -1,4 +1,6 @@
 import { PROPERTY } from 'constants/portfolio-properties';
+import { usePortfolio } from 'providers/Portfolio';
+import { useMemo } from 'react';
 
 import { Header } from './components/Header';
 import { PropertyMetrics } from './components/PropertyMetrics';
@@ -6,19 +8,23 @@ import { SectionNeighborhood } from './components/SectionNeighborhood';
 import { SectionUpdates } from './components/SectionUpdates';
 import { InvestmentFlowProvider } from './providers/InvestmentFlow';
 
-export const PortfolioPropertyView = () => {
+interface Props {
+  propertyIndex: number;
+}
+
+export const PortfolioPropertyView = ({ propertyIndex }: Props) => {
+  const { getProperty } = usePortfolio();
+  const property = useMemo(() => getProperty(propertyIndex), [getProperty, propertyIndex]);
+
   return (
     <InvestmentFlowProvider>
       <div className="flex flex-col gap-32">
-        <Header property={PROPERTY} />
+        <Header property={property} />
 
-        <PropertyMetrics
-          address={PROPERTY.address}
-          metrics={PROPERTY.meta.metrics}
-        />
+        <PropertyMetrics property={property} />
 
         <div className="flex flex-col gap-32 md:flex-row md:gap-27">
-          <SectionNeighborhood property={PROPERTY} />
+          <SectionNeighborhood property={property} />
 
           <SectionUpdates updates={PROPERTY.updates} />
         </div>

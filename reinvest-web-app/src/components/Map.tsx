@@ -1,16 +1,14 @@
 import { Typography } from 'components/Typography';
 import { forwardRef, useMemo } from 'react';
-import { Address } from 'reinvest-app-common/src/types/graphql';
 import { MAPS_SERVICE } from 'services/maps';
 import { Coordinates } from 'types/maps';
 
 interface Props {
-  address: Address;
   coordinates: Coordinates;
+  title: string;
 }
 
-export const Map = forwardRef<HTMLIFrameElement, Props>(({ address, coordinates }, ref) => {
-  const title = useMemo(() => [address.addressLine1, address.city, address.state, address.zip].filter(Boolean).join(', '), [address]);
+export const Map = forwardRef<HTMLIFrameElement, Props>(({ title, coordinates }, ref) => {
   const url = useMemo(() => MAPS_SERVICE.getStaticMapUrl(coordinates), [coordinates]);
 
   return (
