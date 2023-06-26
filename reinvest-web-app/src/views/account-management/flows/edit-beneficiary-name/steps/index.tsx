@@ -1,4 +1,5 @@
 import { StepConfirmation } from './confirmation';
 import { StepCurrentName } from './current-name';
+import { StepLanding } from './landing';
 
-export const STEPS = [StepCurrentName, StepConfirmation];
+export const STEPS = [StepLanding, StepCurrentName, StepConfirmation];

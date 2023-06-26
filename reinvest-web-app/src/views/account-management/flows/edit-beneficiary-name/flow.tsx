@@ -11,8 +11,10 @@ function InnerFlow() {
   return <CurrentStepView />;
 }
 
-export const FlowChangeName = () => (
-  <FlowProvider initialStoreFields={{ name: { firstName: '', lastName: '' } }}>
-    <InnerFlow />
-  </FlowProvider>
-);
+export const FlowChangeName = () => {
+  return (
+    <FlowProvider initialStoreFields={{ name: { firstName: '', lastName: '' } }}>
+      <InnerFlow />
+    </FlowProvider>
+  );
+};
