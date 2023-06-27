@@ -63,7 +63,7 @@ export const StepCurrentName: StepParams<FlowFields> = {
         toggleShouldRefetchAccounts(true);
         moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
+    }, [isSuccess, moveToNextStep, toggleShouldRefetchAccounts]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
