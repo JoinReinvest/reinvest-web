@@ -9,7 +9,7 @@ interface Props {
   activity: Maybe<AccountActivity>;
   fetchMoreItems: () => void;
   isLastItem: boolean;
-  onClick: (investment: Maybe<AccountActivity>) => Promise<void>;
+  onClick: (activity: Maybe<AccountActivity>) => Promise<void>;
 }
 
 export function AccountActivityItem({ activity, isLastItem, onClick }: Props) {

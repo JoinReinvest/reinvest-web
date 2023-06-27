@@ -6,9 +6,9 @@ import { FlowFields } from './interfaces';
 import { AccountActivityProvider } from './providers/AccountActivity';
 import { STEPS } from './steps';
 
-const [useFlow, FlowInvestmentHistoryProvider] = createFormFlow<FlowFields>({ steps: STEPS });
+const [useFlow, FlowAccountActivitiesProvider] = createFormFlow<FlowFields>({ steps: STEPS });
 
-function InnerFlowInvestmentHistory() {
+function InnerFlowAccountActivities() {
   const { isModalOpen, onModalOpenChange, modalTitle } = useFlowsManager();
   const { CurrentStepView } = useFlow();
 
@@ -25,11 +25,11 @@ function InnerFlowInvestmentHistory() {
 
 export const FlowAccountActivity = () => (
   <AccountActivityProvider>
-    <FlowInvestmentHistoryProvider
+    <FlowAccountActivitiesProvider
       initialStoreFields={{}}
       isResumable
     >
-      <InnerFlowInvestmentHistory />
-    </FlowInvestmentHistoryProvider>
+      <InnerFlowAccountActivities />
+    </FlowAccountActivitiesProvider>
   </AccountActivityProvider>
 );

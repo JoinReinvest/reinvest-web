@@ -7,7 +7,6 @@ import { Separator } from '../../../../../components/Separator';
 import { AccountActivityDetail } from '../components/AccountActivityDetail';
 import { ACCOUNT_ACTIVITY_SUMMARY } from '../constants';
 import { FlowStepIdentifiers } from '../enums';
-// import { useInvestmentSummary } from 'hooks/investment-summary';
 import { FlowFields } from '../interfaces';
 import { getActivityDetails } from '../utilities';
 
