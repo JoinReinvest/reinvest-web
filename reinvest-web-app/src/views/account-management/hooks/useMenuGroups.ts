@@ -24,9 +24,15 @@ export function useMenuGroups(): Returns {
   }, [activeAccount?.type]);
 
   const sectionProfileByAccountType = useMemo(() => {
-    const isIndividualOrBeneficiaryAccount = activeAccount?.type === AccountType.Individual || activeAccount?.type === AccountType.Beneficiary;
+    const isBeneficiaryAccount = activeAccount?.type === AccountType.Beneficiary;
 
-    return isIndividualOrBeneficiaryAccount ? MENU_GROUPS.individualProfile : MENU_GROUPS.companyProfile;
+    if (isBeneficiaryAccount) {
+      return MENU_GROUPS.beneficiaryProfile;
+    }
+
+    const isIndividualAccount = activeAccount?.type === AccountType.Individual;
+
+    return isIndividualAccount ? MENU_GROUPS.individualProfile : MENU_GROUPS.companyProfile;
   }, [activeAccount?.type]);
 
   const menuGroups = useMemo(() => {
