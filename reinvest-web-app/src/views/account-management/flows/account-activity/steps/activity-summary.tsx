@@ -12,7 +12,7 @@ import { FlowFields } from '../interfaces';
 import { getActivityDetails } from '../utilities';
 
 export const StepActivitySummary: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.INVESTMENT_SUMMARY,
+  identifier: FlowStepIdentifiers.ACCOUNT_ACTIVITIES_SUMMARY,
 
   doesMeetConditionFields: fields => {
     return !!fields._selectedAccountId;

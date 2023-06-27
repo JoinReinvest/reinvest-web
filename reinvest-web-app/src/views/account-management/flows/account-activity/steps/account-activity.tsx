@@ -13,7 +13,7 @@ import { useAccountActivities } from '../providers/AccountActivity';
 const TITLE = 'Account Activity';
 
 export const StepAccountActivity: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.INVESTMENT_HISTORY,
+  identifier: FlowStepIdentifiers.ACCOUNT_ACTIVITIES,
 
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useFlowsManager();

@@ -1,4 +1,4 @@
-import { useAccountActivity } from './hooks/investments-list';
+import { useAccountActivity } from './hooks/account-activities';
 
 export type State = HookActivityAccount;
 

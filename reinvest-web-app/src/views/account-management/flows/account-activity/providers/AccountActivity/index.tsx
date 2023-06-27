@@ -2,7 +2,7 @@ import { PropsWithChildren } from 'react';
 import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
 
 import { Context } from './context';
-import { useAccountActivity } from './hooks/investments-list';
+import { useAccountActivity } from './hooks/account-activities';
 
 const PROVIDER_NAME = 'AccountActivityProvider';
 
