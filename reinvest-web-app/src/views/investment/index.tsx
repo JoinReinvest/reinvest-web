@@ -23,7 +23,7 @@ interface Props extends ModalProps {
 const MODAL_TITLE = 'Investing';
 
 const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false }: Props) => {
-  const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding } = useActiveAccount();
+  const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding, availableAccounts } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
 
   const {
@@ -32,6 +32,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     resetStoreFields,
     moveToFirstStep,
     getStoreFields,
+    updateStoreFields,
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
@@ -45,8 +46,11 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     moveToFirstStep();
     deprecateLatestAccountOnboarded();
     setArrivesFromOnboarding(false);
+
+    await updateStoreFields({ _hasMoreThanAnAccount: availableAccounts.length > 1 });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
+  }, [availableAccounts, onModalOpenChange, moveToFirstStep, resetStoreFields]);
 
   const onModalClickBack = () => {
     if (isFirstStep || currentStepIdentifier === Identifiers.ACCOUNT_SELECTION) {

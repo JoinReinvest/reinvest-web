@@ -26,7 +26,7 @@ export const useInitializeFields = ({ forInitialInvestment }: Params) => {
 
     initializeFields();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [availableAccounts.length, forInitialInvestment]);
 
   useEffect(() => {
     async function setShouldDisplayRecurringInvestment() {
