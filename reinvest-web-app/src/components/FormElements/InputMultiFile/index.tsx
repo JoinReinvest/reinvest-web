@@ -1,29 +1,21 @@
 import { IconAdd } from 'assets/icons/IconAdd';
 import { IconFileUpload } from 'assets/icons/IconFileUpload';
+import cx from 'classnames';
+import { FormMessage } from 'components/FormElements/FormMessage';
 import { Typography } from 'components/Typography';
-import { ChangeEventHandler, ReactNode, useState } from 'react';
-import { FieldValues, useController, UseControllerProps } from 'react-hook-form';
-import { mapToMimeType, PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
+import { ChangeEventHandler, useState } from 'react';
+import { FieldValues, useController } from 'react-hook-form';
+import { mapToMimeType } from 'reinvest-app-common/src/constants/mime-types';
 import { generateMultiFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 
-import { FormMessage } from './FormMessage';
-import { UploadedFile } from './InputFile/UploadedFile';
-
-interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
-  accepts?: PartialMimeTypeKeys;
-  iconOnEmpty?: ReactNode;
-  iconOnMeetsMinimum?: ReactNode;
-  maximumNumberOfFiles?: number;
-  minimumNumberOfFiles?: number;
-  onClearFileFromApi?: (document: DocumentFile) => void;
-  placeholderOnEmpty?: string;
-  placeholderOnMeetsMinimum?: string;
-  sizeLimitInMegaBytes?: number;
-}
+import { Props } from './interfaces';
+import { UploadedFile } from './UploadedFile';
 
 export function InputMultiFile<FormFields extends FieldValues>({
+  variant = 'outlined',
   accepts = ['jpeg', 'jpg', 'pdf', 'png'],
+  disabled = false,
   sizeLimitInMegaBytes = 5,
   minimumNumberOfFiles = 2,
   maximumNumberOfFiles = 5,
@@ -32,6 +24,7 @@ export function InputMultiFile<FormFields extends FieldValues>({
   iconOnEmpty = <IconFileUpload />,
   iconOnMeetsMinimum = <IconAdd className="stroke-black-01" />,
   onClearFileFromApi,
+  onFilesChange,
   ...controllerProps
 }: Props<FormFields>) {
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined);
@@ -42,6 +35,9 @@ export function InputMultiFile<FormFields extends FieldValues>({
   const hasErrorMessage = !!errorMessage;
   const placeholder = hasMinimumNumberOfFiles ? placeholderOnMeetsMinimum : placeholderOnEmpty;
   const icon = hasMinimumNumberOfFiles ? iconOnMeetsMinimum : iconOnEmpty;
+
+  const isOutlined = variant === 'outlined';
+  const className = cx('flex items-stretch gap-8', { 'flex-col': isOutlined, 'flex-col-reverse': !isOutlined });
 
   const clearFile = async (index: number, document: DocumentFile) => {
     const copyOfFiles = [...field.value];
@@ -73,13 +69,14 @@ export function InputMultiFile<FormFields extends FieldValues>({
     if (validationSchema.success) {
       setErrorMessage(undefined);
       field.onChange(listOfFiles || null);
+      onFilesChange?.();
 
       event.target.value = '';
     }
   };
 
   return (
-    <div className="flex flex-col items-stretch gap-8">
+    <div className={className}>
       <div>
         <input
           type="file"
@@ -91,11 +88,12 @@ export function InputMultiFile<FormFields extends FieldValues>({
           className="peer hidden"
           accept={acceptMimeTypes}
           multiple
+          disabled={disabled}
         />
 
         <label
           htmlFor={field.name}
-          className="flex cursor-pointer items-center justify-center gap-8 bg-green-frost-01 p-8 peer-disabled:bg-gray-04"
+          className="flex cursor-pointer items-center justify-center gap-8 bg-green-frost-01 p-8 peer-disabled:cursor-auto peer-disabled:bg-gray-04"
         >
           {icon}
 
@@ -110,6 +108,7 @@ export function InputMultiFile<FormFields extends FieldValues>({
 
       {(field?.value || []).map((document: DocumentFile, index: number) => (
         <UploadedFile
+          variant={variant}
           key={document.id || `${document.fileName}-${index}` || document.file?.name}
           fileName={document.fileName || document.file?.name || ''}
           onRemove={() => clearFile(index, document)}
