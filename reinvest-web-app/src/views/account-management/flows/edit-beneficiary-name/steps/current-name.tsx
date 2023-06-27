@@ -41,7 +41,7 @@ export const StepCurrentName: StepParams<FlowFields> = {
       resolver: zodResolver(schema),
     });
     const { mutateAsync: updateBeneficiaryAccount, isSuccess } = useUpdateBeneficiaryAccount(getApiClient);
-    const { setCurrentFlowIdentifier } = useFlowsManager();
+    const { setCurrentFlowIdentifier, toggleShouldRefetchAccounts } = useFlowsManager();
     const { activeAccount } = useActiveAccount();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
@@ -60,6 +60,7 @@ export const StepCurrentName: StepParams<FlowFields> = {
 
     useEffect(() => {
       if (isSuccess) {
+        toggleShouldRefetchAccounts(true);
         moveToNextStep();
       }
     }, [isSuccess, moveToNextStep]);
