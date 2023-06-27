@@ -7,7 +7,6 @@ import { Typography } from 'components/Typography';
 import { FormEventHandler } from 'react';
 import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { useUserProfile } from '../../../../../providers/UserProfile';
 import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
@@ -28,12 +27,10 @@ export const StepConfirmation: StepParams<FlowFields> = {
 
   Component: () => {
     const { setCurrentFlowIdentifier, onModalOpenChange } = useFlowsManager();
-    const { userProfileMeta } = useUserProfile();
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
       setCurrentFlowIdentifier(null);
-      userProfileMeta?.refetch();
       onModalOpenChange(false);
     };
 
