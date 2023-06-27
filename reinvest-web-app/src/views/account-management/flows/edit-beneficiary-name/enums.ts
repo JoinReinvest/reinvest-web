@@ -1,0 +1,5 @@
+export enum FlowStepIdentifiers {
+  LOADING = 'LOADING',
+  CURRENT_NAME = 'CURRENT_NAME',
+  CONFIRMATION = 'CONFIRMATION',
+}

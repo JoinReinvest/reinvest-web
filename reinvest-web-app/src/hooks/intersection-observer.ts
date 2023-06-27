@@ -5,16 +5,21 @@ interface Params<Element extends HTMLElement> {
   isLastItem: boolean;
   ref: RefObject<Element>;
   willTriggerCallback: boolean;
+  onIntersect?: () => void;
 }
 
 /**
  * Userful for handling infinite scroll with `useInfiniteQuery`.
  */
-export function useItemIntersectionObserver<Element extends HTMLElement>({ ref, isLastItem, callback, willTriggerCallback }: Params<Element>) {
+export function useItemIntersectionObserver<Element extends HTMLElement>({ ref, isLastItem, callback, willTriggerCallback, onIntersect }: Params<Element>) {
   useEffect(() => {
     if (!ref?.current) return;
 
     const observer = new IntersectionObserver(([entry]) => {
+      if (entry?.isIntersecting && onIntersect) {
+        onIntersect();
+      }
+
       if (isLastItem && entry?.isIntersecting) {
         if (willTriggerCallback) {
           callback();
