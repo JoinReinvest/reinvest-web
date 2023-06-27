@@ -14,21 +14,21 @@ const SECTION_INVESTING_ITEMS = [
   { identifier: FlowIdentifiers.ACCOUNT_ACTIVITY, label: 'Account Activity' },
 ];
 
-const SECTUION_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' }];
+const SECTION_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' }];
 
 const SECTION_INDIVIDUAL_PROFILE_ITEMS = [
   { identifier: FlowIdentifiers.NAME, label: 'Name' },
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
-  ...SECTUION_PROFILE_ITEMS,
+  ...SECTION_PROFILE_ITEMS,
 ];
 
 const SECTION_BENEFICIARY_PROFILE_ITEMS = [
   { identifier: FlowIdentifiers.BENEFICIARY_NAME, label: 'Name' },
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
-  ...SECTUION_PROFILE_ITEMS,
+  ...SECTION_PROFILE_ITEMS,
 ];
 
-const SECTION_COMPANY_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' }, ...SECTUION_PROFILE_ITEMS];
+const SECTION_COMPANY_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' }, ...SECTION_PROFILE_ITEMS];
 
 export const SECTION_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
