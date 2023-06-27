@@ -39,11 +39,11 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
-    const { createInvestmentMeta, investmentSummaryMeta } = useInvestmentContext();
+    const { createInvestmentMeta, investmentSummaryMeta, investmentSummary } = useInvestmentContext();
     const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
 
-    const oneTimeInvestmentAmount = storeFields.oneTimeInvestment?.amount;
+    const oneTimeInvestmentAmount = investmentSummary?.amount?.formatted;
     const recurrentInvestmentInterval =
       storeFields.recurringInvestmentInterval && RECURRING_INVESTMENT_INTERVAL_LABELS.get(storeFields.recurringInvestmentInterval);
     const recurrentInvestmentLabel = `Recurring ${recurrentInvestmentInterval} Investment`;
