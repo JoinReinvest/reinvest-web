@@ -204,14 +204,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
         if (verifyAccountMeta.data.canUserContinueTheInvestment) {
           refetchGetInvestmentSummary();
-
-          // if (investmentId) {
-          //   startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta.data.canUserContinueTheInvestment });
-          // }
-          //
-          // if (storeFields._willSetUpRecurringInvestment) {
-          //   initiateRecurringInvestments();
-          // }
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
