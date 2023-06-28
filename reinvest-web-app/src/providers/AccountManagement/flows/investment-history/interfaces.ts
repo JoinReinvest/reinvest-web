@@ -7,5 +7,6 @@ export interface FlowFields {
   };
   _investments?: Maybe<InvestmentOverview>[];
   _selectedInvesmentId?: string;
+  _userArrivedFromManageAccount?: boolean;
   _willCancelInvestment?: boolean;
 }

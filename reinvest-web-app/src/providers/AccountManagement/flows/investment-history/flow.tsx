@@ -36,13 +36,12 @@ function InnerFlowInvestmentHistory() {
   );
 }
 
-export const FlowInvestmentHistory = () => (
-  <InvestmentHistoryProvider>
-    <FlowInvestmentHistoryProvider
-      initialStoreFields={{}}
-      isResumable
-    >
-      <InnerFlowInvestmentHistory />
-    </FlowInvestmentHistoryProvider>
-  </InvestmentHistoryProvider>
-);
+export const FlowInvestmentHistory = () => {
+  return (
+    <InvestmentHistoryProvider>
+      <FlowInvestmentHistoryProvider initialStoreFields={{}}>
+        <InnerFlowInvestmentHistory />
+      </FlowInvestmentHistoryProvider>
+    </InvestmentHistoryProvider>
+  );
+};
