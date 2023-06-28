@@ -1,15 +1,15 @@
 import { IconArrowRight } from 'assets/icons/IconArrowRight';
 import { Typography } from 'components/Typography';
+import { useAccountManagement } from 'providers/AccountManagement';
 
-import { useFlowsManager } from '../../contexts/FlowsManager';
-import { MenuItem } from '../../interfaces/menu';
+import { MenuItem } from '../../interfaces';
 
 interface Props {
   item: MenuItem;
 }
 
 export function GroupItem({ item }: Props) {
-  const { setCurrentFlowIdentifier } = useFlowsManager();
+  const { setCurrentFlowIdentifier } = useAccountManagement();
 
   const onClick = () => {
     setCurrentFlowIdentifier(item.identifier);

@@ -1,21 +1,16 @@
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useMemo } from 'react';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { QueryMeta } from 'types/queries';
 
-import { MENU_GROUPS } from '../constants/menu';
-import { FlowIdentifiers } from '../enums/flow';
-import { MenuGroup } from '../interfaces/menu';
+import { MENU_GROUPS } from '../constants';
+import { MenuGroup } from '../interfaces';
 
 interface Returns {
   menuGroups: MenuGroup[];
-  meta: QueryMeta;
 }
 
 export function useMenuGroups(): Returns {
   const { activeAccount } = useActiveAccount();
-  const { activeRecurringInvestment, activeRecurringInvestmentMeta } = useRecurringInvestment();
 
   const sectionInvestingByAccountType = useMemo(() => {
     const isBeneficiaryAccount = activeAccount?.type === AccountType.Beneficiary;
@@ -35,24 +30,10 @@ export function useMenuGroups(): Returns {
     return isIndividualAccount ? MENU_GROUPS.individualProfile : MENU_GROUPS.companyProfile;
   }, [activeAccount?.type]);
 
-  const menuGroups = useMemo(() => {
-    if (activeRecurringInvestmentMeta.isSuccess) {
-      const filteredSectionInvestingItems = sectionInvestingByAccountType.items.filter(({ identifier }) => {
-        if (identifier === FlowIdentifiers.RECURRING_INVESTMENTS) {
-          return !!activeRecurringInvestment;
-        }
+  const menuGroups = useMemo(
+    () => [sectionInvestingByAccountType, MENU_GROUPS.security, sectionProfileByAccountType],
+    [sectionInvestingByAccountType, sectionProfileByAccountType],
+  );
 
-        return true;
-      });
-
-      return [{ ...sectionInvestingByAccountType, items: filteredSectionInvestingItems }, MENU_GROUPS.security, sectionProfileByAccountType];
-    }
-
-    return [];
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionInvestingByAccountType, activeRecurringInvestment, activeRecurringInvestmentMeta.isSuccess]);
-
-  // Merge meta with other queries if necessary
-  return { menuGroups, meta: activeRecurringInvestmentMeta };
+  return { menuGroups };
 }
