@@ -36,7 +36,7 @@ export function NotificationItem({ notification, isLastItem, fetchMoreNotificati
 
   useItemIntersectionObserver({ ref, willTriggerCallback: areThereMoreNotificationsToFetch, callback: fetchMoreNotifications, isLastItem, onIntersect });
 
-  const className = cx('flex items-center gap-16 py-16 -mx-24 md:-mx-44 px-24 md:px-44 border-b border-b-gray-04', {
+  const className = cx('flex items-center gap-16 py-16 -mx-24 md:-mx-44 px-24 md:px-44 border-b border-b-gray-04 justify-between', {
     'bg-green-frost-01/30 hover:bg-green-frost-01/40': !hasReadNotifications,
     'bg-white/30': !!hasReadNotifications,
     'cursor-pointer': !notification?.isDismissible,
