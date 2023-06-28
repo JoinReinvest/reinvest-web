@@ -170,9 +170,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
           router.push(redirectUrl as string);
         } else {
           if ((notProtectedUrls.includes(router.pathname) && router.pathname !== URL.login) || (router.pathname === URL.login && user)) {
-            router.push(URL.index);
+            router.push(router.pathname === URL.login ? URL.index : router.asPath);
           } else {
-            router.push(router.pathname || URL.index);
+            router.push(router.asPath);
           }
         }
       }

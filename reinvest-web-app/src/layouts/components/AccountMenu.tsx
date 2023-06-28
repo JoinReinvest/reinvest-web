@@ -10,11 +10,11 @@ import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
 import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
+import { useAccountManagement } from 'providers/AccountManagement';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
 import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
-import { ViewAccountManagement } from 'views/account-management';
 import { ViewBeneficiaryCreation } from 'views/beneficiary-creation';
 
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
@@ -32,7 +32,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isMenuOpen, toggleIsMenuOpen] = useToggler(false);
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
   const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
-  const [isModalManageAccount, toggleIsModalManageAccount] = useToggler(false);
+  const { onModalOpenChange: toggleIsModalManageAccount } = useAccountManagement();
 
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
@@ -190,11 +190,6 @@ export const AccountMenu = ({ activeAccount }: Props) => {
           onModalOpenChange={toggleIsModalAddBeneficiaryOpen}
         />
       )}
-
-      <ViewAccountManagement
-        isModalOpen={isModalManageAccount}
-        toggleIsModalOpen={toggleIsModalManageAccount}
-      />
     </>
   );
 };
