@@ -1,5 +1,7 @@
-import { useAccountActivity } from './hooks/account-activities';
+import { AccountActivity, Maybe } from 'reinvest-app-common/src/types/graphql';
+import { InfiniteQueryMeta } from 'types/queries';
 
-export type State = HookAccountActivity;
-
-type HookAccountActivity = ReturnType<typeof useAccountActivity>;
+export interface State {
+  accountActivities: Maybe<AccountActivity>[];
+  accountActivityMeta: InfiniteQueryMeta;
+}
