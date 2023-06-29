@@ -5,7 +5,6 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
-import { useGoToDashboard } from 'hooks/go-to-dashboard';
 import { useAccountManagement } from 'providers/AccountManagement';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler } from 'react';
@@ -33,7 +32,6 @@ export const StepConfirmation: StepParams<FlowFields> = {
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { individualAccount, updateActiveAccount } = useActiveAccount();
     const { onModalOpenChange } = useAccountManagement();
-    const { maybeGoToDashboard } = useGoToDashboard();
 
     const accountValueUpdate = storeFields?.parentAccountUpdatedValue;
 
@@ -41,7 +39,6 @@ export const StepConfirmation: StepParams<FlowFields> = {
       event.preventDefault();
       onModalOpenChange(false);
       updateActiveAccount(individualAccount);
-      maybeGoToDashboard();
     };
 
     return (
