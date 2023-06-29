@@ -53,6 +53,7 @@ export function RadioGroupOptions<FormFields extends FieldValues>({
               <IconCheckmark />
             </RadioGroupIndicator>
           </div>
+
           <Typography variant="paragraph-large">{title}</Typography>
         </RadioGroupItem>
       ))}

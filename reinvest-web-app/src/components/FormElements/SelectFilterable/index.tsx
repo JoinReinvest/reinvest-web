@@ -11,6 +11,7 @@ import { SelectOption, SelectOptions } from 'reinvest-app-common/src/types/selec
 export interface Props<FormFields extends FieldValues> extends UseControllerProps<FormFields> {
   options: SelectOptions;
   disabled?: boolean;
+  forWhiteBackground?: boolean;
   ignoreFilterAccents?: boolean;
   ignoreFilterCase?: boolean;
   matchFilterFrom?: 'any' | 'start';
@@ -33,6 +34,7 @@ export function SelectFilterable<FormFields extends FieldValues>({
   ignoreFilterCase = true,
   trimFilter = true,
   matchFilterFrom = 'any',
+  forWhiteBackground = false,
   ...controllerProps
 }: Props<FormFields>) {
   const { field, fieldState } = useController(controllerProps);
@@ -100,7 +102,7 @@ export function SelectFilterable<FormFields extends FieldValues>({
         components={{
           DropdownIndicator: DropdownIndicator,
         }}
-        dropdownIcon={generateIcon('arrow')}
+        dropdownIcon={generateIcon('arrow', forWhiteBackground)}
         openMenuOnFocus
         menuPortalTarget={menuPortalTargetMemoized}
       />
