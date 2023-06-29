@@ -5,7 +5,6 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Typography } from 'components/Typography';
-import { useGoToDashboard } from 'hooks/go-to-dashboard';
 import { useAccountManagement } from 'providers/AccountManagement';
 import { FormEvent } from 'react';
 import { StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -25,14 +24,12 @@ export const StepConfirmation: StepParams<FlowFields> = {
   Component: () => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
     const { fundsWithdrawalRequest } = useFundsWithdrawalManager();
-    const { maybeGoToDashboard } = useGoToDashboard();
 
     const amount = fundsWithdrawalRequest?.eligibleForWithdrawal?.formatted;
 
     function onSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();
       setCurrentFlowIdentifier(null);
-      maybeGoToDashboard();
     }
 
     return (

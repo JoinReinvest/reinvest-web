@@ -10,6 +10,8 @@ export const Context = createContext<State>({
   currentFlow: null,
   currentFlowIdentifier: null,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
+  setQueryFlow: () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   setCurrentFlowIdentifier: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   toggleShouldRefetchAccounts: () => {},

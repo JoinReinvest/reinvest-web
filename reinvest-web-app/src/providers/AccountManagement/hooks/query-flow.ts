@@ -13,6 +13,7 @@ interface Params {
 interface Returns {
   deprecateQueryFlow: () => void;
   queryFlowIdentifier: FlowIdentifiers | null;
+  setQueryFlow: (queryKey: keyof typeof QueryFlowIdentifiers) => void;
 }
 
 export function useQueryFlow({ setCurrentFlowIdentifier, onModalOpenChange }: Params): Returns {
@@ -35,6 +36,14 @@ export function useQueryFlow({ setCurrentFlowIdentifier, onModalOpenChange }: Pa
     return null;
   }, [activeQueryKey]);
 
+  function setQueryFlow(queryKey: keyof typeof QueryFlowIdentifiers) {
+    const currentRoute = router.pathname;
+    // eslint-disable-next-line security/detect-object-injection
+    const query = new URLSearchParams(QueryFlowIdentifiers[queryKey]).toString();
+
+    router.replace(`${currentRoute}?${query}`, undefined, { shallow: true });
+  }
+
   /** Use at the end of the flow that expects to be triggered with a query. */
   const deprecateQueryFlow = useCallback(() => {
     const currentRoute = router.pathname;
@@ -51,5 +60,5 @@ export function useQueryFlow({ setCurrentFlowIdentifier, onModalOpenChange }: Pa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [queryFlowIdentifier, setCurrentFlowIdentifier]);
 
-  return { queryFlowIdentifier, deprecateQueryFlow };
+  return { queryFlowIdentifier, deprecateQueryFlow, setQueryFlow };
 }
