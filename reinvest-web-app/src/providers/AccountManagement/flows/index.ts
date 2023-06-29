@@ -8,6 +8,7 @@ import { FLOW_CHANGE_PASSWORD } from './change-password';
 import { FLOW_DOCUMENTS_CORPORATE_TRUST } from './coportate-trust-documents';
 import { FLOW_DIVIDEND_REINVESTING } from './dividend-reinvesting';
 import { FLOW_CHANGE_BENEFICIARY_NAME } from './edit-beneficiary-name';
+import { FLOW_EDIT_INVESTOR_EXPERIENCE_FLOW } from './edit-investor-experience';
 import { FLOW_CHANGE_NAME } from './edit-name';
 import { FLOW_EMAIL_ADDRESS } from './email-address';
 import { FLOW_EMPLOYMENT_DETAILS } from './employment-details';
@@ -36,4 +37,5 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.EMPLOYMENT_DETAILS, FLOW_EMPLOYMENT_DETAILS],
   [FlowIdentifiers.NET_INCOME_AND_WORTH, FLOW_NET_INCOME_AND_WORTH],
   [FlowIdentifiers.UPDATE_PROFILE_PICTURE, FLOW_CHANGE_AVATAR],
+  [FlowIdentifiers.EXPERIENCE, FLOW_EDIT_INVESTOR_EXPERIENCE_FLOW],
 ]);
