@@ -11,6 +11,7 @@ import { FLOW_CHANGE_BENEFICIARY_NAME } from './edit-beneficiary-name';
 import { FLOW_EDIT_INVESTOR_EXPERIENCE_FLOW } from './edit-investor-experience';
 import { FLOW_CHANGE_NAME } from './edit-name';
 import { FLOW_EMAIL_ADDRESS } from './email-address';
+import { FLOW_EMPLOYMENT_DETAILS } from './employment-details';
 import { FLOW_FUNDS_WITHDRAWAL } from './funds-withdrawal';
 import { FLOW_INVESTMENT_HISTORY } from './investment-history';
 import { FLOW_REMOVE_ACCOUNT } from './remove-account';
@@ -32,6 +33,7 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.DOCUMENTS, FLOW_DOCUMENTS_CORPORATE_TRUST],
   [FlowIdentifiers.BENEFICIARY_NAME, FLOW_CHANGE_BENEFICIARY_NAME],
   [FlowIdentifiers.ACCOUNT_ACTIVITY, FLOW_ACCOUNT_ACTIVITY],
+  [FlowIdentifiers.EMPLOYMENT_DETAILS, FLOW_EMPLOYMENT_DETAILS],
   [FlowIdentifiers.UPDATE_PROFILE_PICTURE, FLOW_CHANGE_AVATAR],
   [FlowIdentifiers.EXPERIENCE, FLOW_EDIT_INVESTOR_EXPERIENCE_FLOW],
 ]);
