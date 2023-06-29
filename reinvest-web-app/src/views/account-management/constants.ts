@@ -1,12 +1,12 @@
 import { FlowIdentifiers } from 'providers/AccountManagement/enums';
 
 import { MenuGroupIdentifiers } from './enums';
-import { MenuGroup } from './interfaces';
+import { MenuGroup, MenuItem } from './interfaces';
 
 const INVESTING_LABEL = 'Investing';
 const PROFILE_LABEL = 'Profile Information';
 
-const SECTION_INVESTING_ITEMS = [
+const SECTION_INVESTING_ITEMS: MenuItem[] = [
   { identifier: FlowIdentifiers.INVESTMENT_HISTORY, label: 'Investment History' },
   { identifier: FlowIdentifiers.RECURRING_INVESTMENTS, label: 'Recurring Investments' },
   { identifier: FlowIdentifiers.DIVIDEND_REINVESTING, label: 'Dividend Reinvesting' },
@@ -15,21 +15,22 @@ const SECTION_INVESTING_ITEMS = [
   { identifier: FlowIdentifiers.ACCOUNT_ACTIVITY, label: 'Account Activity' },
 ];
 
-const SECTION_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' }];
+const SECTION_PROFILE_ITEMS: MenuItem[] = [{ identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' }];
 
-const SECTION_INDIVIDUAL_PROFILE_ITEMS = [
+const SECTION_INDIVIDUAL_PROFILE_ITEMS: MenuItem[] = [
   { identifier: FlowIdentifiers.NAME, label: 'Name' },
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
+  { identifier: FlowIdentifiers.EMPLOYMENT_DETAILS, label: 'Employment Details' },
   ...SECTION_PROFILE_ITEMS,
 ];
 
-const SECTION_BENEFICIARY_PROFILE_ITEMS = [
+const SECTION_BENEFICIARY_PROFILE_ITEMS: MenuItem[] = [
   { identifier: FlowIdentifiers.BENEFICIARY_NAME, label: 'Name' },
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
   ...SECTION_PROFILE_ITEMS,
 ];
 
-const SECTION_COMPANY_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' }, ...SECTION_PROFILE_ITEMS];
+const SECTION_COMPANY_PROFILE_ITEMS: MenuItem[] = [{ identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' }, ...SECTION_PROFILE_ITEMS];
 
 export const SECTION_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
