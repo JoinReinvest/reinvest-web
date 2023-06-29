@@ -15,7 +15,7 @@ const MODAL_TITLE = 'Manage Account';
 export function AccountManagementProvider({ children }: PropsWithChildren) {
   const { currentFlow, currentFlowIdentifier, setCurrentFlowIdentifier } = useCurrentFlow();
   const { isModalOpen, toggleShouldRefetchAccounts, onModalOpenChange } = useModal({ setCurrentFlowIdentifier });
-  const { queryFlowIdentifier, deprecateQueryFlow } = useQueryFlow({ setCurrentFlowIdentifier, onModalOpenChange });
+  const { queryFlowIdentifier, deprecateQueryFlow, setQueryFlow } = useQueryFlow({ setCurrentFlowIdentifier, onModalOpenChange });
 
   return (
     <Context.Provider
@@ -29,6 +29,7 @@ export function AccountManagementProvider({ children }: PropsWithChildren) {
         setCurrentFlowIdentifier,
         queryFlowIdentifier,
         deprecateQueryFlow,
+        setQueryFlow,
       }}
     >
       <>
