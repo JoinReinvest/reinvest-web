@@ -1,4 +1,4 @@
-import { MenuGroup } from '../../interfaces/menu';
+import { MenuGroup } from '../../interfaces';
 import { Group } from './Group';
 
 interface Props {

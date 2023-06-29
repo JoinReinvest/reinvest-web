@@ -1,21 +1,16 @@
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useMemo } from 'react';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { QueryMeta } from 'types/queries';
 
-import { MENU_GROUPS } from '../constants/menu';
-import { FlowIdentifiers } from '../enums/flow';
-import { MenuGroup } from '../interfaces/menu';
+import { MENU_GROUPS } from '../constants';
+import { MenuGroup } from '../interfaces';
 
 interface Returns {
   menuGroups: MenuGroup[];
-  meta: QueryMeta;
 }
 
 export function useMenuGroups(): Returns {
   const { activeAccount } = useActiveAccount();
-  const { activeRecurringInvestment, activeRecurringInvestmentMeta } = useRecurringInvestment();
 
   const sectionInvestingByAccountType = useMemo(() => {
     const isBeneficiaryAccount = activeAccount?.type === AccountType.Beneficiary;
@@ -24,29 +19,21 @@ export function useMenuGroups(): Returns {
   }, [activeAccount?.type]);
 
   const sectionProfileByAccountType = useMemo(() => {
-    const isIndividualOrBeneficiaryAccount = activeAccount?.type === AccountType.Individual || activeAccount?.type === AccountType.Beneficiary;
+    const isBeneficiaryAccount = activeAccount?.type === AccountType.Beneficiary;
 
-    return isIndividualOrBeneficiaryAccount ? MENU_GROUPS.individualProfile : MENU_GROUPS.companyProfile;
-  }, [activeAccount?.type]);
-
-  const menuGroups = useMemo(() => {
-    if (activeRecurringInvestmentMeta.isSuccess) {
-      const filteredSectionInvestingItems = sectionInvestingByAccountType.items.filter(({ identifier }) => {
-        if (identifier === FlowIdentifiers.RECURRING_INVESTMENTS) {
-          return !!activeRecurringInvestment;
-        }
-
-        return true;
-      });
-
-      return [{ ...sectionInvestingByAccountType, items: filteredSectionInvestingItems }, MENU_GROUPS.security, sectionProfileByAccountType];
+    if (isBeneficiaryAccount) {
+      return MENU_GROUPS.beneficiaryProfile;
     }
 
-    return [];
+    const isIndividualAccount = activeAccount?.type === AccountType.Individual;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sectionInvestingByAccountType, activeRecurringInvestment, activeRecurringInvestmentMeta.isSuccess]);
+    return isIndividualAccount ? MENU_GROUPS.individualProfile : MENU_GROUPS.companyProfile;
+  }, [activeAccount?.type]);
 
-  // Merge meta with other queries if necessary
-  return { menuGroups, meta: activeRecurringInvestmentMeta };
+  const menuGroups = useMemo(
+    () => [sectionInvestingByAccountType, MENU_GROUPS.security, sectionProfileByAccountType],
+    [sectionInvestingByAccountType, sectionProfileByAccountType],
+  );
+
+  return { menuGroups };
 }

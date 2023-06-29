@@ -23,6 +23,8 @@ import { AccountType, ActionName, DomicileType, Stakeholder, VerificationObjectT
 import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
+import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
+import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -42,16 +44,18 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
     const { refetch: refetchAccountStats } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
-    const { ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
+    const { mutateAsync: abortInvestmentMutate, ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
     const { refetch: refetchGetInvestmentSummary, ...getInvestmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
       investmentId: investmentId || '',
       config: { enabled: false },
     });
+    const { onModalLastStep } = useModalHandler();
     const { recurringInvestment, initiateRecurringInvestment } = useRecurringInvestment();
     const { userProfile } = useUserProfile();
     const [shouldUpdateProfileDetails, setShouldUpdateProfileDetails] = useState(false);
     const [shouldUpdateStakeholderData, setShouldUpdateStakeholderData] = useState(false);
     const [shouldUpdateCompanyData, setShouldUpdateCompanyData] = useState(false);
+    const [shouldManualVerification, setShouldManualVerification] = useState(false);
     const shouldUpdateData = shouldUpdateProfileDetails || shouldUpdateStakeholderData || shouldUpdateCompanyData;
 
     const {
@@ -62,9 +66,16 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
     const startInvestmentCallback = useCallback(async () => {
       if (investmentId) {
+        await startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta?.data?.canUserContinueTheInvestment });
+
+        if (storeFields._willSetUpRecurringInvestment && activeAccount?.id) {
+          (await recurringInvestment) && (await initiateRecurringInvestment());
+        }
+
         await startInvestmentMutate({ investmentId, approveFees: true });
         await refetchAccountStats();
       }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [investmentId, refetchAccountStats, startInvestmentMutate]);
 
     const updateProfileDetailsCallback = useCallback(async () => {
@@ -117,23 +128,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     }, []);
 
     useEffect(() => {
-      async function startInvestments() {
-        await refetchGetInvestmentSummary();
-
-        if (investmentId) {
-          await startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta?.data?.canUserContinueTheInvestment });
-        }
-
-        if (storeFields._willSetUpRecurringInvestment) {
-          await initiateRecurringInvestments();
-        }
-      }
-      async function initiateRecurringInvestments() {
-        if (activeAccount?.id) {
-          (await recurringInvestment) && (await initiateRecurringInvestment());
-        }
-      }
-
       async function updateKycFlags({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData }: KycFlags) {
         await updateStoreFields({
           _shouldUpdateProfileDetails: _shouldUpdateProfileDetails,
@@ -204,30 +198,48 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           }
 
           if (!_shouldUpdateData) {
-            startInvestments();
+            refetchGetInvestmentSummary();
           }
         }
 
         if (verifyAccountMeta.data.canUserContinueTheInvestment) {
           refetchGetInvestmentSummary();
-
-          if (investmentId) {
-            startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta.data.canUserContinueTheInvestment });
-          }
-
-          if (storeFields._willSetUpRecurringInvestment) {
-            initiateRecurringInvestments();
-          }
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [verifyAccountMeta.isSuccess]);
 
     useEffect(() => {
+      async function initiateRecurringInvestments() {
+        if (activeAccount?.id) {
+          (await recurringInvestment) && (await initiateRecurringInvestment());
+        }
+      }
+      async function startInvestments() {
+        if (investmentId) {
+          await startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta?.data?.canUserContinueTheInvestment });
+        }
+
+        if (storeFields._willSetUpRecurringInvestment) {
+          await initiateRecurringInvestments();
+        }
+      }
+
       if (getInvestmentSummaryMeta.isSuccess) {
+        const mockInvestmentFees = true;
+
+        if (mockInvestmentFees) {
+          setShouldManualVerification(true);
+        }
+
+        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !mockInvestmentFees) {
+          startInvestments();
+        }
+
         updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
       }
-    }, [getInvestmentSummaryMeta, updateStoreFields]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [getInvestmentSummaryMeta.isSuccess]);
 
     useEffect(() => {
       if (!isCorporateRefetching && getCorporateData && storeFields._shouldUpdateStakeholderData) {
@@ -243,6 +255,18 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         moveToNextStep();
       }
     }, [startInvestmentMeta.isSuccess, moveToNextStep, refetchAccountStats]);
+
+    const acceptInvestmentFees = async () => {
+      await startInvestmentCallback();
+    };
+
+    const handleAbortInvestment = async () => {
+      if (investmentId) {
+        await abortInvestmentMutate({ investmentId });
+      }
+
+      onModalLastStep && onModalLastStep();
+    };
 
     const onSubmit = async () => {
       if (shouldUpdateProfileDetails) {
@@ -260,20 +284,21 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       <Form onSubmit={onSubmit}>
         {((verifyAccountMeta.isLoading && !verifyAccountMeta.data) ||
           (startInvestmentMeta.isLoading && !startInvestmentMeta.data) ||
-          abortInvestmentMeta.isLoading) && (
-          <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
-            <div className="flex flex-col gap-32">
-              <div className="flex w-full flex-col items-center gap-16">
-                <IconSpinner />
+          abortInvestmentMeta.isLoading) &&
+          !shouldManualVerification && (
+            <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+              <div className="flex flex-col gap-32">
+                <div className="flex w-full flex-col items-center gap-16">
+                  <IconSpinner />
 
-                <Typography variant="paragraph-large">{SUBTITLE}</Typography>
+                  <Typography variant="paragraph-large">{SUBTITLE}</Typography>
+                </div>
+
+                <ModalTitle title={TITLE} />
               </div>
-
-              <ModalTitle title={TITLE} />
-            </div>
-          </FormContent>
-        )}
-        {verifyAccountMeta.data && !verifyAccountMeta.data.isAccountVerified && shouldUpdateData && (
+            </FormContent>
+          )}
+        {verifyAccountMeta.data && !verifyAccountMeta.data.isAccountVerified && shouldUpdateData && !shouldManualVerification && (
           <>
             <FormContent>
               <div className="flex flex-col gap-32">
@@ -292,6 +317,35 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
                 label="Edit Information"
                 variant="default"
                 type="submit"
+              />
+            </ButtonStack>
+          </>
+        )}
+        {!verifyAccountMeta.isLoading && !startInvestmentMeta.isLoading && !abortInvestmentMeta.isLoading && shouldManualVerification && (
+          <>
+            <FormContent>
+              <div className="flex flex-col gap-32">
+                <div className="flex w-full flex-col items-center gap-16">
+                  <IconCircleWarning />
+                </div>
+
+                <ModalTitle
+                  title="Notice: $10 fee for manual verification"
+                  subtitle="As your verification has failed twice, REINVEST needs to run a manual verification."
+                />
+              </div>
+            </FormContent>
+            <ButtonStack>
+              <Button
+                label="Submit"
+                variant="default"
+                onClick={acceptInvestmentFees}
+              />
+              <Button
+                label="Cancel"
+                variant="outlined"
+                className="text-green-frost-01"
+                onClick={handleAbortInvestment}
               />
             </ButtonStack>
           </>
