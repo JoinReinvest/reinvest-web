@@ -24,4 +24,5 @@ export enum QueryFlowIdentifiers {
   MANAGE_INVESTMENT = 'manage-investment',
   MANAGE_BANK_ACCOUNT = 'manage-bank-account',
   MANAGE_PASSWORD = 'manage-password',
+  MANAGE_RECURRING_INVESTMENT = 'manage-recurring-investment',
 }
