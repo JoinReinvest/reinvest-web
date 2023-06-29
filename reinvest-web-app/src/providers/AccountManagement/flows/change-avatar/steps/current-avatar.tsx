@@ -4,25 +4,30 @@ import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { useAccountManagement } from 'providers/AccountManagement';
+import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
+import { useUpdateBeneficiaryAccount } from 'reinvest-app-common/src/services/queries/updateBeneficiaryAccount';
+import { useUpdateCorporateAccount } from 'reinvest-app-common/src/services/queries/updateCorporateAccount';
 import { useUpdateIndividualAccount } from 'reinvest-app-common/src/services/queries/updateIndividualAccount';
+import { useUpdateTrustAccount } from 'reinvest-app-common/src/services/queries/updateTrustAccount';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { InputAvatar } from '../../../../../components/FormElements/InputAvatar';
-import { useActiveAccount } from '../../../../../providers/ActiveAccountProvider';
+import { Typography } from '../../../../../components/Typography';
 import { getApiClient } from '../../../../../services/getApiClient';
 import { sendFilesToS3Bucket } from '../../../../../services/sendFilesToS3Bucket';
-import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../../../../onboarding/form-flow/schemas';
-import { useFlowsManager } from '../../../contexts/FlowsManager';
+import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../../../../../views/onboarding/form-flow/schemas';
+import { useActiveAccount } from '../../../../ActiveAccountProvider';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
 const BUTTON_LABEL = 'Continue';
-// const TITLE = 'Type your current password';
+const TITLE = 'Edit your current profile picture';
 
 const schema = z.object({
   profilePicture: generateFileSchema(ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES, true),
@@ -31,15 +36,18 @@ const schema = z.object({
 export const StepCurrentAvatar: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_PASSWORD,
 
-  Component: ({ updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const { control, handleSubmit, formState, clearErrors } = useForm<FlowFields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
       shouldFocusError: true,
     });
-    const { setCurrentFlowIdentifier } = useFlowsManager();
-    const { mutateAsync: updateIndividualAccount } = useUpdateIndividualAccount(getApiClient);
+    const { setCurrentFlowIdentifier, toggleShouldRefetchAccounts, onModalOpenChange } = useAccountManagement();
+    const { mutateAsync: updateIndividualAccount, ...updateInvalidAccountMeta } = useUpdateIndividualAccount(getApiClient);
+    const { mutateAsync: updateBeneficiaryAccount, ...updateBeneficiaryAccountMeta } = useUpdateBeneficiaryAccount(getApiClient);
+    const { mutateAsync: updateCorporateAccount, ...updateCorporateAccountMeta } = useUpdateCorporateAccount(getApiClient);
+    const { mutateAsync: updateTrustAccount, ...updateTrustAccountMeta } = useUpdateTrustAccount(getApiClient);
     const { mutateAsync: createAvatarLink } = useCreateAvatarFileLink(getApiClient);
 
     const shouldBackButtonBeDisabled = formState.isSubmitting;
@@ -47,6 +55,12 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
 
     const onSubmit: SubmitHandler<FlowFields> = async ({ profilePicture }) => {
       const accountId = activeAccount?.id;
+      clearErrors();
+
+      if (!profilePicture) {
+        setCurrentFlowIdentifier(null);
+        onModalOpenChange(false);
+      }
 
       if (profilePicture?.file && accountId) {
         const avatarLink = await createAvatarLink({ fileName: profilePicture.fileName });
@@ -59,12 +73,20 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
           if (activeAccount?.type === AccountType.Individual) {
             await updateIndividualAccount({ accountId, input: { avatar: { id: avatarId } } });
           }
+
+          if (activeAccount?.type === AccountType.Trust) {
+            await updateTrustAccount({ accountId, input: { avatar: { id: avatarId } } });
+          }
+
+          if (activeAccount?.type === AccountType.Corporate) {
+            await updateCorporateAccount({ accountId, input: { avatar: { id: avatarId } } });
+          }
+
+          if (activeAccount?.type === AccountType.Beneficiary) {
+            await updateBeneficiaryAccount({ accountId, input: { avatar: { id: avatarId } } });
+          }
         }
       }
-
-      clearErrors();
-      await updateStoreFields({});
-      // moveToNextStep();
     };
 
     const onFileChange = async (file: File) => {
@@ -75,6 +97,21 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
       setCurrentFlowIdentifier(null);
     };
 
+    useEffect(() => {
+      const isSuccess =
+        updateInvalidAccountMeta.isSuccess ||
+        updateCorporateAccountMeta.isSuccess ||
+        updateTrustAccountMeta.isSuccess ||
+        updateBeneficiaryAccountMeta.isSuccess;
+
+      if (isSuccess) {
+        updateStoreFields({ _hasSucceded: true });
+        toggleShouldRefetchAccounts(true);
+        moveToNextStep();
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [updateInvalidAccountMeta.isSuccess, updateCorporateAccountMeta.isSuccess, updateTrustAccountMeta.isSuccess, updateBeneficiaryAccountMeta.isSuccess]);
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent willLeaveContentOnTop>
@@ -84,6 +121,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
           />
 
           <div className="flex flex-col gap-16">
+            <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
             <InputAvatar
               name="profilePicture"
               control={control}
@@ -91,6 +129,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
               sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
               onFileChange={onFileChange}
               accountType={activeAccount?.type ?? AccountType.Individual}
+              src={activeAccount?.avatar?.url ?? undefined}
             />
           </div>
         </FormContent>

@@ -4,14 +4,14 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
+import { useAccountManagement } from 'providers/AccountManagement';
 import { FormEventHandler } from 'react';
 import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { useFlowsManager } from '../../../contexts/FlowsManager';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const TITLE = 'Your password is updated';
+const TITLE = 'Your profile picture has been updated';
 const BUTTON_LABEL = 'Dashboard';
 
 export const StepConfirmation: StepParams<FlowFields> = {
@@ -26,7 +26,7 @@ export const StepConfirmation: StepParams<FlowFields> = {
   },
 
   Component: () => {
-    const { setCurrentFlowIdentifier, onModalOpenChange } = useFlowsManager();
+    const { setCurrentFlowIdentifier, onModalOpenChange } = useAccountManagement();
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
