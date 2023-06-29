@@ -11,14 +11,14 @@ import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useUpdateBeneficiaryAccount } from 'reinvest-app-common/src/services/queries/updateBeneficiaryAccount';
-import { useUpdateCorporateAccount } from 'reinvest-app-common/src/services/queries/updateCorporateAccount';
-import { useUpdateIndividualAccount } from 'reinvest-app-common/src/services/queries/updateIndividualAccount';
-import { useUpdateTrustAccount } from 'reinvest-app-common/src/services/queries/updateTrustAccount';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { InputAvatar } from '../../../../../components/FormElements/InputAvatar';
 import { Typography } from '../../../../../components/Typography';
+import { useCorporateAccount } from '../../../../../hooks/corporate-account';
+import { useIndividualAccount } from '../../../../../hooks/individual-account';
+import { useTrustAccount } from '../../../../../hooks/trust-account';
 import { getApiClient } from '../../../../../services/getApiClient';
 import { sendFilesToS3Bucket } from '../../../../../services/sendFilesToS3Bucket';
 import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../../../../../views/onboarding/form-flow/schemas';
@@ -44,10 +44,10 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
       shouldFocusError: true,
     });
     const { setCurrentFlowIdentifier, toggleShouldRefetchAccounts, onModalOpenChange } = useAccountManagement();
-    const { mutateAsync: updateIndividualAccount, ...updateInvalidAccountMeta } = useUpdateIndividualAccount(getApiClient);
     const { mutateAsync: updateBeneficiaryAccount, ...updateBeneficiaryAccountMeta } = useUpdateBeneficiaryAccount(getApiClient);
-    const { mutateAsync: updateCorporateAccount, ...updateCorporateAccountMeta } = useUpdateCorporateAccount(getApiClient);
-    const { mutateAsync: updateTrustAccount, ...updateTrustAccountMeta } = useUpdateTrustAccount(getApiClient);
+    const { updateCorporateAccount, updateCorporateAccountMeta } = useCorporateAccount({ accountId: activeAccount?.id ?? '', enabled: !!activeAccount?.id });
+    const { updateTrustAccount, updateTrustAccountMeta } = useTrustAccount({ accountId: activeAccount?.id ?? '', enabled: !!activeAccount?.id });
+    const { updateIndividualAccount, updateIndividualAccountMeta } = useIndividualAccount();
     const { mutateAsync: createAvatarLink } = useCreateAvatarFileLink(getApiClient);
 
     const shouldBackButtonBeDisabled = formState.isSubmitting;
@@ -71,15 +71,15 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
           await sendFilesToS3Bucket([{ file: profilePicture.file, url: avatarUrl, id: avatarId, fileName: profilePicture.file.name }]);
 
           if (activeAccount?.type === AccountType.Individual) {
-            await updateIndividualAccount({ accountId, input: { avatar: { id: avatarId } } });
+            await updateIndividualAccount({ avatar: { id: avatarId } });
           }
 
           if (activeAccount?.type === AccountType.Trust) {
-            await updateTrustAccount({ accountId, input: { avatar: { id: avatarId } } });
+            await updateTrustAccount({ avatar: { id: avatarId } });
           }
 
           if (activeAccount?.type === AccountType.Corporate) {
-            await updateCorporateAccount({ accountId, input: { avatar: { id: avatarId } } });
+            await updateCorporateAccount({ avatar: { id: avatarId } });
           }
 
           if (activeAccount?.type === AccountType.Beneficiary) {
@@ -99,7 +99,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
 
     useEffect(() => {
       const isSuccess =
-        updateInvalidAccountMeta.isSuccess ||
+        updateIndividualAccountMeta.isSuccess ||
         updateCorporateAccountMeta.isSuccess ||
         updateTrustAccountMeta.isSuccess ||
         updateBeneficiaryAccountMeta.isSuccess;
@@ -110,7 +110,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
         moveToNextStep();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updateInvalidAccountMeta.isSuccess, updateCorporateAccountMeta.isSuccess, updateTrustAccountMeta.isSuccess, updateBeneficiaryAccountMeta.isSuccess]);
+    }, [updateIndividualAccountMeta.isSuccess, updateCorporateAccountMeta.isSuccess, updateTrustAccountMeta.isSuccess, updateBeneficiaryAccountMeta.isSuccess]);
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
