@@ -45,8 +45,14 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
     });
     const { setCurrentFlowIdentifier, toggleShouldRefetchAccounts, onModalOpenChange } = useAccountManagement();
     const { mutateAsync: updateBeneficiaryAccount, ...updateBeneficiaryAccountMeta } = useUpdateBeneficiaryAccount(getApiClient);
-    const { updateCorporateAccount, updateCorporateAccountMeta } = useCorporateAccount({ accountId: activeAccount?.id ?? '', enabled: !!activeAccount?.id });
-    const { updateTrustAccount, updateTrustAccountMeta } = useTrustAccount({ accountId: activeAccount?.id ?? '', enabled: !!activeAccount?.id });
+    const { updateCorporateAccount, updateCorporateAccountMeta } = useCorporateAccount({
+      accountId: activeAccount?.id ?? '',
+      enabled: activeAccount?.type === AccountType.Corporate,
+    });
+    const { updateTrustAccount, updateTrustAccountMeta } = useTrustAccount({
+      accountId: activeAccount?.id ?? '',
+      enabled: activeAccount?.type === AccountType.Trust,
+    });
     const { updateIndividualAccount, updateIndividualAccountMeta } = useIndividualAccount();
     const { mutateAsync: createAvatarLink } = useCreateAvatarFileLink(getApiClient);
 
