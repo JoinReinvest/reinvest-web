@@ -8,9 +8,25 @@ export function formatTradeId(tradeId: string): string {
   return [TRADE_PREFIX, tradeId].join(' ');
 }
 
-/** Use with Tailwind's `capitalize` class */
 export function formatInvestmentStatus(status: InvestmentStatus) {
-  return status.replace('_', ' ').toLowerCase();
+  switch (status) {
+    case InvestmentStatus.Failed:
+      return 'Failed';
+    case InvestmentStatus.Finished:
+      return 'Finished';
+    case InvestmentStatus.Funded:
+      return 'Funded';
+    case InvestmentStatus.InProgress:
+      return 'In Progress';
+    case InvestmentStatus.WaitingForFeesApproval:
+      return 'Waiting for Fees Approval';
+    case InvestmentStatus.WaitingForInvestmentStart:
+      return 'Waiting for Investment Start';
+    case InvestmentStatus.WaitingForSubscriptionAgreement:
+      return 'Waiting for Subscription Agreement';
+    default:
+      return '';
+  }
 }
 
 export function getInvestmentDetails(investment: InvestmentSummary): { label: string; value: string }[] {
@@ -31,9 +47,7 @@ export function getInvestmentDetails(investment: InvestmentSummary): { label: st
     },
     {
       label: 'Bank Account',
-      // TO-DO: Replace with actual bank account number once API state is
-      // aligned with DEV environment.
-      value: '123456123456',
+      value: investment?.bankAccount?.accountNumber ?? '',
     },
   ];
 }
