@@ -13,6 +13,7 @@ import { FLOW_EMAIL_ADDRESS } from './email-address';
 import { FLOW_EMPLOYMENT_DETAILS } from './employment-details';
 import { FLOW_FUNDS_WITHDRAWAL } from './funds-withdrawal';
 import { FLOW_INVESTMENT_HISTORY } from './investment-history';
+import { FLOW_NET_INCOME_AND_WORTH } from './net-income-and-worth';
 import { FLOW_REMOVE_ACCOUNT } from './remove-account';
 import { FLOW_UPDATE_ADDRESS } from './update-address';
 import { FLOW_PHONE_NUMBER } from './update-phone-number';
@@ -33,5 +34,6 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.BENEFICIARY_NAME, FLOW_CHANGE_BENEFICIARY_NAME],
   [FlowIdentifiers.ACCOUNT_ACTIVITY, FLOW_ACCOUNT_ACTIVITY],
   [FlowIdentifiers.EMPLOYMENT_DETAILS, FLOW_EMPLOYMENT_DETAILS],
+  [FlowIdentifiers.NET_INCOME_AND_WORTH, FLOW_NET_INCOME_AND_WORTH],
   [FlowIdentifiers.UPDATE_PROFILE_PICTURE, FLOW_CHANGE_AVATAR],
 ]);
