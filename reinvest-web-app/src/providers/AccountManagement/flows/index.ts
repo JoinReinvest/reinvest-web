@@ -3,6 +3,7 @@ import { SubFlow } from '../interfaces';
 import { FLOW_ACCOUNT_ACTIVITY } from './account-activity';
 import { FLOW_BANK_ACCOUNT } from './bank-account';
 import { FLOW_CANCEL_RECURRING_INVESTMENT } from './cancel-recurring-investment';
+import { FLOW_CHANGE_AVATAR } from './change-avatar';
 import { FLOW_CHANGE_PASSWORD } from './change-password';
 import { FLOW_DOCUMENTS_CORPORATE_TRUST } from './coportate-trust-documents';
 import { FLOW_DIVIDEND_REINVESTING } from './dividend-reinvesting';
@@ -34,4 +35,5 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.ACCOUNT_ACTIVITY, FLOW_ACCOUNT_ACTIVITY],
   [FlowIdentifiers.EMPLOYMENT_DETAILS, FLOW_EMPLOYMENT_DETAILS],
   [FlowIdentifiers.NET_INCOME_AND_WORTH, FLOW_NET_INCOME_AND_WORTH],
+  [FlowIdentifiers.UPDATE_PROFILE_PICTURE, FLOW_CHANGE_AVATAR],
 ]);

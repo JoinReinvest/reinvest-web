@@ -15,6 +15,7 @@ interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseContr
   accountType?: DraftAccountType | AccountType;
   onFileChange?: (file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
+  src?: string;
 }
 
 export function InputAvatar<FormFields extends FieldValues>({
@@ -22,6 +23,7 @@ export function InputAvatar<FormFields extends FieldValues>({
   sizeLimitInMegaBytes = 5.0,
   onFileChange,
   accountType,
+  src,
   ...controllerProps
 }: Props<FormFields>) {
   const { field } = useController(controllerProps);
@@ -32,6 +34,10 @@ export function InputAvatar<FormFields extends FieldValues>({
   const imageSrc = useMemo(() => {
     if (fieldValue && fieldValue?.file) {
       return URL.createObjectURL(fieldValue.file);
+    }
+
+    if (src) {
+      return src;
     }
 
     return undefined;
