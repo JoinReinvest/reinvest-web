@@ -1,16 +1,11 @@
 import { ModalWhite } from 'components/ModalWhite';
-import { ComponentProps } from 'react';
+import { useAccountManagement } from 'providers/AccountManagement';
 
 import { Menu } from './components/Menu';
-import { FlowsManagerProvider, useFlowsManager } from './contexts/FlowsManager';
 import { useMenuGroups } from './hooks/useMenuGroups';
 
-type FlowsManagerProviderProps = ComponentProps<typeof FlowsManagerProvider>;
-type PrimitiveProps = Pick<FlowsManagerProviderProps, 'isModalOpen' | 'toggleIsModalOpen'>;
-type Props = PrimitiveProps;
-
-const AccountManagement = () => {
-  const { modalTitle, isModalOpen, onModalOpenChange, currentFlow } = useFlowsManager();
+export function ViewAccountManagement() {
+  const { modalTitle, isModalOpen, onModalOpenChange, currentFlow } = useAccountManagement();
   const { menuGroups } = useMenuGroups();
 
   if (currentFlow && currentFlow?.selfManagesModal) {
@@ -26,10 +21,4 @@ const AccountManagement = () => {
       {currentFlow ? currentFlow.flow : <Menu groups={menuGroups} />}
     </ModalWhite>
   );
-};
-
-export const ViewAccountManagement = (props: Props) => (
-  <FlowsManagerProvider {...props}>
-    <AccountManagement />
-  </FlowsManagerProvider>
-);
+}

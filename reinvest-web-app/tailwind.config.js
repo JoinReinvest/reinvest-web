@@ -304,6 +304,7 @@ module.exports = {
         256: '25.6rem',
         284: '28.4rem',
         570: '57.0rem',
+        'screen-4/5': '80vh',
       },
       margin: {
         'screen-1/2': '50vw',

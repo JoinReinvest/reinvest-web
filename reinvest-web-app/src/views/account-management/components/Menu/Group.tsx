@@ -1,7 +1,7 @@
 import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
 
-import { MenuGroup } from '../../interfaces/menu';
+import { MenuGroup } from '../../interfaces';
 import { GroupItem } from './GroupItem';
 
 interface Props {
