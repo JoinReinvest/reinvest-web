@@ -21,6 +21,7 @@ const SECTION_INDIVIDUAL_PROFILE_ITEMS: MenuItem[] = [
   { identifier: FlowIdentifiers.NAME, label: 'Name' },
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
   { identifier: FlowIdentifiers.EMPLOYMENT_DETAILS, label: 'Employment Details' },
+  { identifier: FlowIdentifiers.NET_INCOME_AND_WORTH, label: 'Net Income and Worth' },
   ...SECTION_PROFILE_ITEMS,
 ];
 

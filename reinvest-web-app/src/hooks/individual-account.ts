@@ -24,6 +24,7 @@ export function useIndividualAccount(): Returns {
     const accountId = individualAccount?.id;
 
     if (accountId) {
+      updateIndividualAccountMeta.reset();
       await mutateAsync({ input, accountId });
       individualAccountMeta.remove();
       allAccountsMeta.refetch();
