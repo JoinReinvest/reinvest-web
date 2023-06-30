@@ -20,13 +20,13 @@ import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'companyTickerSymbols'>;
 
-const STARTING_NUMBER_OF_TICKER_SYMBOLS = 3;
-const MINUMUM_COMPANY_TICKER_SYMBOLS = 1;
-const MAXIMUM_COMPANY_TICKER_SYMBOLS = 5;
-const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
-const INITIAL_VALUES = new Array(STARTING_NUMBER_OF_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
+export const STARTING_NUMBER_OF_TICKER_SYMBOLS = 3;
+export const MINUMUM_COMPANY_TICKER_SYMBOLS = 1;
+export const MAXIMUM_COMPANY_TICKER_SYMBOLS = 5;
+export const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
+export const INITIAL_VALUES = new Array(STARTING_NUMBER_OF_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
 
-const schema = z
+export const schema = z
   .object({
     companyTickerSymbols: z
       .object({

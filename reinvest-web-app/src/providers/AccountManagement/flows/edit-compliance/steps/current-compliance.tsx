@@ -14,17 +14,15 @@ import { FlowFields } from '../interfaces';
 const BUTTON_LABEL = 'Continue';
 const TITLE = 'Your compliance status';
 
-type Fields = FlowFields;
-
 export const StepCurrentCompliance: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_COMPLIANCE,
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { handleSubmit, formState } = useForm<Fields>({ mode: 'onSubmit' });
+    const { handleSubmit, formState } = useForm<FlowFields>({ mode: 'onSubmit' });
     const { setCurrentFlowIdentifier } = useAccountManagement();
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const onSubmit: SubmitHandler<Fields> = async () => {
+    const onSubmit: SubmitHandler<FlowFields> = async () => {
       moveToNextStep();
     };
 
@@ -42,6 +40,7 @@ export const StepCurrentCompliance: StepParams<FlowFields> = {
               variant="h6"
               className="flex flex-col"
             >
+              {/*TODO: task number RIA-1558*/}
               There should be compliance list
             </Typography>
           </div>
