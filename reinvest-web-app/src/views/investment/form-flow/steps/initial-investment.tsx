@@ -9,7 +9,6 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/investment-amounts';
@@ -19,6 +18,7 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { useGetActiveRecurringInvestment } from 'reinvest-app-common/src/services/queries/getActiveRecurringInvestment';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -34,8 +34,12 @@ const getDefaultValues = ({ oneTimeInvestment }: FlowFields): Fields => ({
 export const StepInitialInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.INITIAL_INVESTMENT,
 
+  willBePartOfTheFlow: fields => !fields._onlyRecurringInvestment,
+
+  doesMeetConditionFields: fields => !fields._onlyRecurringInvestment,
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
-    const { createInvestment, createInvestmentMeta } = useInvestmentContext();
+    const { createInvestment, createInvestmentMeta } = useOneTimeInvestment();
     const { activeAccount } = useActiveAccount();
     const presetOptions = useMemo(() => INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);

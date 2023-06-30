@@ -4,27 +4,28 @@ import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { InvestmentProvider } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
 import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON } from './constants';
-import { InvestmentFlowProvider, useInvestmentFlow } from './form-flow';
+import { FlowProvider, useFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
-import { ModalHandlerProvider } from './providers/modal-handler';
+import { ModalHandlerProvider } from './providers/ModalHandler';
+import { OneTimeInvestmentProvider } from './providers/OneTimeInvestment';
 
 interface Props extends ModalProps {
   forInitialInvestment?: boolean;
+  onlyRecurringInvestment?: boolean;
   withSideModal?: boolean;
 }
 
 const MODAL_TITLE = 'Investing';
 
-const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false }: Props) => {
+const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false, onlyRecurringInvestment = false }: Props) => {
   const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding, availableAccounts } = useActiveAccount();
-  useInitializeFields({ forInitialInvestment });
+  useInitializeFields({ forInitialInvestment, onlyRecurringInvestment });
 
   const {
     CurrentStepView,
@@ -34,7 +35,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     getStoreFields,
     updateStoreFields,
     meta: { currentStepIdentifier, isFirstStep },
-  } = useInvestmentFlow();
+  } = useFlow();
 
   const shouldDisplayBlackModal = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_BLACK_MODAL.includes(currentStepIdentifier), [currentStepIdentifier]);
   const shouldDisplayBackIcon = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_X_BUTTON.includes(currentStepIdentifier), [currentStepIdentifier]);
@@ -47,7 +48,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     deprecateLatestAccountOnboarded();
     setArrivesFromOnboarding(false);
 
-    await updateStoreFields({ _hasMoreThanAnAccount: availableAccounts.length > 1 });
+    await updateStoreFields({ _hasMoreThanAnAccount: availableAccounts.length > 1, _onlyRecurringInvestment: onlyRecurringInvestment });
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [availableAccounts, onModalOpenChange, moveToFirstStep, resetStoreFields]);
@@ -114,30 +115,34 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
 
   if (withSideModal) {
     return (
-      <ModalWhite
-        isOpen={isModalOpen}
-        onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
-        className={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION ? '!gap-14' : ''}
-        title={MODAL_TITLE}
-        addPaddingBottom
-        hideAvatarNextToTitle={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
-        hideHeaderOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
-        hideSeparator={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
-        hideLogoOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
-      >
-        <CurrentStepView />
-      </ModalWhite>
+      <ModalHandlerProvider onModalLastStep={onModalLastStep}>
+        <ModalWhite
+          isOpen={isModalOpen}
+          onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
+          className={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION ? '!gap-14' : ''}
+          title={MODAL_TITLE}
+          addPaddingBottom
+          hideAvatarNextToTitle={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+          hideHeaderOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+          hideSeparator={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+          hideLogoOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+        >
+          <CurrentStepView />
+        </ModalWhite>
+      </ModalHandlerProvider>
     );
   } else {
     return (
-      <ModalWhiteFullscreen
-        isOpen={isModalOpen}
-        onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
-        activeAccount={activeAccount}
-        isBackButtonEnabled={!shouldDisplayBackIcon}
-      >
-        <CurrentStepView />
-      </ModalWhiteFullscreen>
+      <ModalHandlerProvider onModalLastStep={onModalLastStep}>
+        <ModalWhiteFullscreen
+          isOpen={isModalOpen}
+          onOpenChange={!shouldDisplayBackIcon ? onModalClickBack : onModalLastStep}
+          activeAccount={activeAccount}
+          isBackButtonEnabled={!shouldDisplayBackIcon}
+        >
+          <CurrentStepView />
+        </ModalWhiteFullscreen>
+      </ModalHandlerProvider>
     );
   }
 };
@@ -152,10 +157,10 @@ export const InvestmentView = (props: Props) => {
   }, [props.isModalOpen, toggleEnableDraftQuery]);
 
   return (
-    <InvestmentProvider>
-      <InvestmentFlowProvider initialStoreFields={{ _forInitialInvestment: !!props.forInitialInvestment }}>
+    <OneTimeInvestmentProvider enabled={!props.onlyRecurringInvestment}>
+      <FlowProvider initialStoreFields={{ _forInitialInvestment: !!props.forInitialInvestment, _onlyRecurringInvestment: props.onlyRecurringInvestment }}>
         <InnerInvestmentView {...props} />
-      </InvestmentFlowProvider>
-    </InvestmentProvider>
+      </FlowProvider>
+    </OneTimeInvestmentProvider>
   );
 };

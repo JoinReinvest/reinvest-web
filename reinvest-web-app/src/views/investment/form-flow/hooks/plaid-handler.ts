@@ -3,7 +3,7 @@ import { useBankAccount } from 'providers/BankAccount';
 import { useEffect, useMemo } from 'react';
 import { MutationMeta } from 'types/queries';
 
-import { useInvestmentFlow } from '../index';
+import { useFlow } from '../index';
 
 interface Params {
   willUpdateBankAccount: boolean;
@@ -18,7 +18,7 @@ interface Returns {
 }
 
 export function usePlaidHandler({ willUpdateBankAccount }: Params): Returns {
-  const { updateStoreFields, moveToNextValidStep } = useInvestmentFlow();
+  const { updateStoreFields, moveToNextValidStep } = useFlow();
   const {
     updateBankAccount,
     updateBankAccountLink,

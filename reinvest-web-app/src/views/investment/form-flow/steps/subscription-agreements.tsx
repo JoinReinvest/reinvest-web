@@ -8,11 +8,11 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useToggler } from 'hooks/toggler';
-import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 import { Schema, z } from 'zod';
 
 import { FlowFields } from '../fields';
@@ -52,7 +52,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
-    const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useInvestmentContext();
+    const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useOneTimeInvestment();
     const { signRecurringInvestmentSubscriptionAgreement, signRecurringInvestmentSubscriptionAgreementMeta } = useRecurringInvestment();
     const [isDialogInvestmentOpen, toggleIsDialogInvestmentOpen] = useToggler();
     const [isDialogRecurringAgreementOpen, toggleIsDialogRecurringAgreementOpen] = useToggler(false);
@@ -87,6 +87,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
     useEffect(() => {
       if (signSubscriptionAgreementMeta.isSuccess && !storeFields._shouldAgreeToRecurringInvestment) {
         signSubscriptionAgreementMeta.reset();
+        signRecurringInvestmentSubscriptionAgreementMeta.reset();
         moveToNextStep();
       }
 
