@@ -26,7 +26,7 @@ const getDefaultValues = ({ statementTypes, compliances }: OnboardingFormFields)
   doNoneApply: !!compliances?.doNoneApply,
 });
 
-const schema = z
+export const schema = z
   .object({
     isAssociatedWithFinra: z.boolean().optional(),
     isAssociatedWithPubliclyTradedCompany: z.boolean().optional(),

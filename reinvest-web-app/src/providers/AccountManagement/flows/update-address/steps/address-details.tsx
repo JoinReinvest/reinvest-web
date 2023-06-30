@@ -47,7 +47,7 @@ export const StepAddressDetails: StepParams<FlowFields> = {
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
 
             <Typography
-              variant="paragraph-emphasized"
+              variant="h6"
               className="flex flex-col"
             >
               {validAddressFields.map((field, index) => (

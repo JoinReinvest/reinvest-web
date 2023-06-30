@@ -15,21 +15,34 @@ const SECTION_INVESTING_ITEMS = [
   { identifier: FlowIdentifiers.ACCOUNT_ACTIVITY, label: 'Account Activity' },
 ];
 
-const SECTION_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Address' }];
-
-const SECTION_INDIVIDUAL_PROFILE_ITEMS = [
+const PROFILE_ITEMS = [
   { identifier: FlowIdentifiers.NAME, label: 'Name' },
-  { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
-  ...SECTION_PROFILE_ITEMS,
+  { identifier: FlowIdentifiers.UPDATE_ADDRESS, label: 'Personal Address' },
+  { identifier: FlowIdentifiers.DOMICILE, label: 'Domicile' },
+  { identifier: FlowIdentifiers.EXPERIENCE, label: 'Investor Experience Level' },
+  { identifier: FlowIdentifiers.COMPLIANCE, label: 'Compliance Questions' },
 ];
+
+const INDIVIDUAL_PROFILE_ITEMS = [
+  { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
+  { identifier: FlowIdentifiers.EMPLOYMENT_DETAILS, label: 'Employment Details' },
+  { identifier: FlowIdentifiers.INCOME_AND_WORTH, label: 'Net Income And Worths' },
+];
+
+const COMPANY_PROFILE_ITEMS = [
+  { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
+  { identifier: FlowIdentifiers.BUSINESS_ADDRESS, label: 'Address' },
+  { identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' },
+];
+
+const SECTION_INDIVIDUAL_PROFILE_ITEMS = [...PROFILE_ITEMS, ...INDIVIDUAL_PROFILE_ITEMS];
 
 const SECTION_BENEFICIARY_PROFILE_ITEMS = [
   { identifier: FlowIdentifiers.BENEFICIARY_NAME, label: 'Name' },
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
-  ...SECTION_PROFILE_ITEMS,
 ];
 
-const SECTION_COMPANY_PROFILE_ITEMS = [{ identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' }, ...SECTION_PROFILE_ITEMS];
+const SECTION_COMPANY_PROFILE_ITEMS = [...PROFILE_ITEMS, ...COMPANY_PROFILE_ITEMS];
 
 export const SECTION_INVESTING: MenuGroup = {
   identifier: MenuGroupIdentifiers.INVESTING,
