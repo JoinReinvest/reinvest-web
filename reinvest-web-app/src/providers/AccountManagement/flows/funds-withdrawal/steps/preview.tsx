@@ -23,11 +23,9 @@ const BUTTON_LABEL = 'Request Fund Withdrawal';
 export const StepPreview: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.PREVIEW,
 
-  doesMeetConditionFields: fields => !!fields._canWithdrawFunds,
-
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
-    const { simulationMeta, abortRequest } = useFundsWithdrawalManager();
+    const { simulation, simulationMeta, abortRequest } = useFundsWithdrawalManager();
 
     if (simulationMeta?.isLoading) {
       return (
@@ -36,6 +34,8 @@ export const StepPreview: StepParams<FlowFields> = {
         </div>
       );
     }
+
+    const shouldButtonBeDisabled = !simulation?.canWithdraw;
 
     function onSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();
@@ -69,6 +69,7 @@ export const StepPreview: StepParams<FlowFields> = {
             variant="error"
             type="submit"
             label={BUTTON_LABEL}
+            disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>
       </Form>
