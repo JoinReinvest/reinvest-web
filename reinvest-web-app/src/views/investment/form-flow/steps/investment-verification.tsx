@@ -65,16 +65,15 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
 
     const startInvestmentCallback = useCallback(async () => {
-      if (investmentId) {
+      if (investmentId && storeFields._willSetUpOneTimeInvestments) {
         await startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta?.data?.canUserContinueTheInvestment });
-
-        if (storeFields._willSetUpRecurringInvestment && activeAccount?.id) {
-          (await recurringInvestment) && (await initiateRecurringInvestment());
-        }
-
-        await startInvestmentMutate({ investmentId, approveFees: true });
-        await refetchAccountStats();
       }
+
+      if (storeFields._willSetUpRecurringInvestment && activeAccount?.id) {
+        (await recurringInvestment) && (await initiateRecurringInvestment());
+      }
+
+      await refetchAccountStats();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [investmentId, refetchAccountStats, startInvestmentMutate]);
 
@@ -142,7 +141,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         }
 
         if (!verifyAccountMeta?.data?.requiredActions?.length) {
-          if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
+          if (verifyAccountMeta.data?.canUserContinueTheInvestment && verifyAccountMeta.data?.isAccountVerified) {
             startInvestmentCallback();
           }
 
@@ -190,7 +189,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           setShouldUpdateProfileDetails(_shouldUpdateProfileDetails);
           setShouldUpdateStakeholderData(_shouldUpdateStakeholderData);
           setShouldUpdateCompanyData(_shouldUpdateCompanyData);
-
           updateKycFlags({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData });
 
           if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
@@ -229,17 +227,17 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
         const investmentFees = getInvestmentSummaryMeta.data?.investmentFees;
 
         if (investmentFees) {
-          setShouldManualVerification(true);
+          updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
+
+          return setShouldManualVerification(true);
         }
 
-        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !investmentFees) {
+        if (verifyAccountMeta?.data?.canUserContinueTheInvestment) {
           startInvestments();
         }
-
-        updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getInvestmentSummaryMeta.isSuccess]);
+    }, [getInvestmentSummaryMeta.isSuccess, verifyAccountMeta?.data]);
 
     useEffect(() => {
       if (!isCorporateRefetching && getCorporateData && storeFields._shouldUpdateStakeholderData) {
