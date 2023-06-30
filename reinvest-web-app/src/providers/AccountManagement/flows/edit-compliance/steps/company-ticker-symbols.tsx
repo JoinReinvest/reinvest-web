@@ -6,56 +6,22 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
-import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
-import { z } from 'zod';
 
 import { ButtonBack } from '../../../../../components/ButtonBack';
 import { Typography } from '../../../../../components/Typography';
-import { CompanyTickerSymbol } from '../../../../../views/onboarding/form-flow/form-fields';
+import {
+  EMPTY_COMPANY_TICKER_SYMBOL,
+  INITIAL_VALUES,
+  MAXIMUM_COMPANY_TICKER_SYMBOLS,
+  schema,
+} from '../../../../../views/onboarding/form-flow/steps/company-ticker-symbols';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
 type Fields = Pick<FlowFields, 'companyTickerSymbols'>;
 const TITLE = 'Please list ticker symbols of the publicly traded company(s) below.';
-
-const STARTING_NUMBER_OF_TICKER_SYMBOLS = 3;
-const MINUMUM_COMPANY_TICKER_SYMBOLS = 1;
-const MAXIMUM_COMPANY_TICKER_SYMBOLS = 5;
-const EMPTY_COMPANY_TICKER_SYMBOL: CompanyTickerSymbol = { symbol: '' };
-const INITIAL_VALUES = new Array(STARTING_NUMBER_OF_TICKER_SYMBOLS).fill(undefined).map(() => EMPTY_COMPANY_TICKER_SYMBOL);
-
-const schema = z
-  .object({
-    companyTickerSymbols: z
-      .object({
-        symbol: formValidationRules.symbolTicker,
-      })
-      .array()
-      .min(MINUMUM_COMPANY_TICKER_SYMBOLS),
-  })
-  .superRefine((fields, context) => {
-    const countOfFilledFields = fields.companyTickerSymbols.filter(({ symbol }) => symbol !== '').length;
-    const hasMinimumFilled = countOfFilledFields >= MINUMUM_COMPANY_TICKER_SYMBOLS;
-    const hasExceededMaximum = countOfFilledFields > MAXIMUM_COMPANY_TICKER_SYMBOLS;
-
-    if (!hasMinimumFilled) {
-      context.addIssue({
-        code: 'custom',
-        path: ['companyTickerSymbols'],
-        message: `Must have at least ${MINUMUM_COMPANY_TICKER_SYMBOLS} ticker symbols.`,
-      });
-    }
-
-    if (hasExceededMaximum) {
-      context.addIssue({
-        code: 'custom',
-        path: ['companyTickerSymbols'],
-        message: `Must have no more than ${MAXIMUM_COMPANY_TICKER_SYMBOLS} ticker symbols.`,
-      });
-    }
-  });
 
 export const StepCompanyTickerSymbols: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.COMPANY_TICKER_SYMBOLS,
