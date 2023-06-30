@@ -1,3 +1,4 @@
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { PROPERTY } from 'constants/portfolio-properties';
 import { usePortfolio } from 'providers/Portfolio';
 import { useMemo } from 'react';
@@ -14,7 +15,16 @@ interface Props {
 
 export const PortfolioPropertyView = ({ propertyIndex }: Props) => {
   const { getProperty } = usePortfolio();
+
   const property = useMemo(() => getProperty(propertyIndex), [getProperty, propertyIndex]);
+
+  if (!property) {
+    return (
+      <div className="grid h-full w-full place-items-center">
+        <IconSpinner />
+      </div>
+    );
+  }
 
   return (
     <InvestmentFlowProvider>
