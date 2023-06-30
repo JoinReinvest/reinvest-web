@@ -48,7 +48,7 @@ export const StepCurrentPhoneNumber: StepParams<FlowFields> = {
 
             {phoneNumber && (
               <Typography
-                variant="paragraph-emphasized"
+                variant="h6"
                 className="flex flex-col"
               >
                 {phoneNumber}

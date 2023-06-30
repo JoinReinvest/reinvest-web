@@ -104,7 +104,7 @@ interface EmploymentDetails {
   occupation: string;
 }
 
-interface Compliances {
+export interface Compliances {
   doNoneApply?: boolean;
   isAssociatedWithFinra?: boolean;
   isAssociatedWithPubliclyTradedCompany?: boolean;
