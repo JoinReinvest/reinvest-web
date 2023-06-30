@@ -26,7 +26,7 @@ export function SectionNeighborhood({ property }: Props) {
           />
         )}
 
-        <PropertyCharacteristicList items={property?.POIs ?? []} />
+        {property?.POIs && <PropertyCharacteristicList items={property?.POIs} />}
       </div>
     </section>
   );

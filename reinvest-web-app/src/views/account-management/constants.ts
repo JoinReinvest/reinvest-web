@@ -26,7 +26,7 @@ const PROFILE_ITEMS = [
 const INDIVIDUAL_PROFILE_ITEMS = [
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
   { identifier: FlowIdentifiers.EMPLOYMENT_DETAILS, label: 'Employment Details' },
-  { identifier: FlowIdentifiers.INCOME_AND_WORTH, label: 'Net Income And Worths' },
+  { identifier: FlowIdentifiers.NET_INCOME_AND_WORTH, label: 'Net Income And Worth' },
 ];
 
 const COMPANY_PROFILE_ITEMS = [

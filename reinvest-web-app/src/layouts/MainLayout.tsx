@@ -15,14 +15,9 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
     <UserProfileProvider>
       <ActiveAccountProvider>
         <ActiveAccountConfigurationProvider>
-          <BankAccountProvider>
-            <AccountManagementProvider>
-              {/**
-               * Have to use the recurring investments here to
-               * know which options to show in the manage account
-               * modal.
-               */}
-              <RecurringInvestmentProvider>
+          <RecurringInvestmentProvider>
+            <BankAccountProvider>
+              <AccountManagementProvider>
                 <NotificationsProvider>
                   <ModalNotificationsProvider>
                     <Header />
@@ -30,9 +25,9 @@ export const MainLayout = ({ children }: PropsWithChildren) => {
                     <main className="container mx-auto pb-20 pt-80 lg:pt-100">{children}</main>
                   </ModalNotificationsProvider>
                 </NotificationsProvider>
-              </RecurringInvestmentProvider>
-            </AccountManagementProvider>
-          </BankAccountProvider>
+              </AccountManagementProvider>
+            </BankAccountProvider>
+          </RecurringInvestmentProvider>
         </ActiveAccountConfigurationProvider>
       </ActiveAccountProvider>
     </UserProfileProvider>
