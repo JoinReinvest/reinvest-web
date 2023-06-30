@@ -85,14 +85,28 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
     };
 
     useEffect(() => {
-      if (signSubscriptionAgreementMeta.isSuccess || signRecurringInvestmentSubscriptionAgreementMeta.isSuccess) {
+      if (signSubscriptionAgreementMeta.isSuccess && !storeFields._shouldAgreeToRecurringInvestment) {
         signSubscriptionAgreementMeta.reset();
         signRecurringInvestmentSubscriptionAgreementMeta.reset();
         moveToNextStep();
       }
 
+      if (signRecurringInvestmentSubscriptionAgreementMeta.isSuccess && !storeFields._shouldAgreeToOneTimeInvestment) {
+        signRecurringInvestmentSubscriptionAgreementMeta.reset();
+        moveToNextStep();
+      }
+
+      if (
+        signRecurringInvestmentSubscriptionAgreementMeta.isSuccess &&
+        storeFields._shouldAgreeToOneTimeInvestment &&
+        signSubscriptionAgreementMeta.isSuccess &&
+        storeFields._shouldAgreeToRecurringInvestment
+      ) {
+        signRecurringInvestmentSubscriptionAgreementMeta.reset();
+        moveToNextStep();
+      }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [signSubscriptionAgreementMeta.isSuccess, signRecurringInvestmentSubscriptionAgreementMeta.isSuccess]);
+    }, [signSubscriptionAgreementMeta, moveToNextStep, signRecurringInvestmentSubscriptionAgreementMeta]);
 
     function onButtonBackClick() {
       moveToPreviousStep();

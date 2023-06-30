@@ -20,11 +20,11 @@ import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verif
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { AccountType, ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
-import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
 import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
 import { useModalHandler } from '../../providers/ModalHandler';
+import { useOneTimeInvestment } from '../../providers/OneTimeInvestment';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -50,7 +50,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       config: { enabled: false },
     });
     const { onModalLastStep } = useModalHandler();
-    const { recurringInvestment, initiateRecurringInvestment } = useRecurringInvestment();
+    const { recurringInvestment, initiateRecurringInvestment, initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const { userProfile } = useUserProfile();
     const [shouldUpdateProfileDetails, setShouldUpdateProfileDetails] = useState(false);
     const [shouldUpdateStakeholderData, setShouldUpdateStakeholderData] = useState(false);
@@ -65,16 +65,15 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
 
     const startInvestmentCallback = useCallback(async () => {
-      if (investmentId) {
+      if (investmentId && storeFields._willSetUpOneTimeInvestments) {
         await startInvestmentMutate({ investmentId, approveFees: !verifyAccountMeta?.data?.canUserContinueTheInvestment });
-
-        if (storeFields._willSetUpRecurringInvestment && activeAccount?.id) {
-          (await recurringInvestment) && (await initiateRecurringInvestment());
-        }
-
-        await startInvestmentMutate({ investmentId, approveFees: true });
-        await refetchAccountStats();
       }
+
+      if (storeFields._willSetUpRecurringInvestment && activeAccount?.id) {
+        (await recurringInvestment) && (await initiateRecurringInvestment());
+      }
+
+      await refetchAccountStats();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [investmentId, refetchAccountStats, startInvestmentMutate]);
 
@@ -137,12 +136,8 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
 
       if (verifyAccountMeta.isSuccess) {
-        if (!storeFields._willSetUpOneTimeInvestments && storeFields._willSetUpRecurringInvestment) {
-          moveToNextStep();
-        }
-
         if (!verifyAccountMeta?.data?.requiredActions?.length) {
-          if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
+          if (verifyAccountMeta.data?.canUserContinueTheInvestment && verifyAccountMeta.data?.isAccountVerified) {
             startInvestmentCallback();
           }
 
@@ -190,7 +185,6 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           setShouldUpdateProfileDetails(_shouldUpdateProfileDetails);
           setShouldUpdateStakeholderData(_shouldUpdateStakeholderData);
           setShouldUpdateCompanyData(_shouldUpdateCompanyData);
-
           updateKycFlags({ _shouldUpdateProfileDetails, _shouldUpdateStakeholderData, _shouldUpdateCompanyData });
 
           if (shouldUpdateStakeholderData || shouldUpdateCompanyData) {
@@ -202,12 +196,22 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           }
         }
 
-        if (verifyAccountMeta.data.canUserContinueTheInvestment) {
+        if (verifyAccountMeta.data.canUserContinueTheInvestment && storeFields._shouldAgreeToOneTimeInvestment) {
           refetchGetInvestmentSummary();
+        }
+
+        if (verifyAccountMeta.data.canUserContinueTheInvestment && storeFields._shouldAgreeToRecurringInvestment) {
+          startInvestmentCallback();
         }
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [verifyAccountMeta.isSuccess]);
+
+    useEffect(() => {
+      if (initiateRecurringInvestmentMeta.isSuccess) {
+        moveToNextStep();
+      }
+    }, [initiateRecurringInvestmentMeta.isSuccess, moveToNextStep]);
 
     useEffect(() => {
       async function initiateRecurringInvestments() {
@@ -226,20 +230,20 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
 
       if (getInvestmentSummaryMeta.isSuccess) {
-        const mockInvestmentFees = true;
+        const investmentFees = getInvestmentSummaryMeta.data?.investmentFees;
 
-        if (mockInvestmentFees) {
-          setShouldManualVerification(true);
+        if (investmentFees) {
+          updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
+
+          return setShouldManualVerification(true);
         }
 
-        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !mockInvestmentFees) {
+        if (verifyAccountMeta?.data?.canUserContinueTheInvestment) {
           startInvestments();
         }
-
-        updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getInvestmentSummaryMeta.isSuccess]);
+    }, [getInvestmentSummaryMeta.isSuccess, verifyAccountMeta?.data]);
 
     useEffect(() => {
       if (!isCorporateRefetching && getCorporateData && storeFields._shouldUpdateStakeholderData) {
