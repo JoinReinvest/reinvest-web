@@ -69,7 +69,7 @@ export const StepSeniorPoliticalFigure: StepParams<OnboardingFormFields> = {
 
           {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
 
-          <TextArea
+          <TextArea.Counter
             name="seniorPoliticalFigure"
             control={control}
             maxCharacters={220}

@@ -5,16 +5,15 @@ import { IconSpinner } from 'assets/icons/IconSpinner';
 import { LogoIcon2 } from 'assets/LogoIcon2';
 import { LogoPlaid } from 'assets/LogoPlaid';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
-import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useBankAccount } from 'providers/BankAccount';
 import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useReadBankAccount } from 'reinvest-app-common/src/services/queries/readBankAccount';
-import { getApiClient } from 'services/getApiClient';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { FlowFields } from '../fields';
@@ -39,97 +38,97 @@ const LIST_ITEMS = [
 export const StepBankAccountLanding: StepParams<FlowFields> = {
   identifier: Identifiers.BANK_ACCOUNT_LANDING,
 
-  Component: ({ storeFields, moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    const { activeAccount } = useActiveAccount();
-    const {
-      refetch,
-      isError,
-      data: readBankAccountData,
-      isSuccess: isReadBankAccountSuccess,
-      isLoading: isReadBankAccountLoading,
-    } = useReadBankAccount(getApiClient, {
-      accountId: activeAccount?.id || '',
-      config: {
-        enabled: false,
-        retry: false,
-      },
-    });
+  doesMeetConditionFields: fields => {
+    return !fields._hasBankAccount || !!fields?._willUpdateBankAccount;
+  },
+
+  Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToPreviousStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+    const { currentBankAccount, currentBankAccountMeta } = useBankAccount();
+
+    useEffect(() => {
+      async function initializeBankAccountFields() {
+        if (currentBankAccountMeta.isSuccess && currentBankAccount?.accountNumber && currentBankAccount?.accountType) {
+          await updateStoreFields({
+            _hasBankAccount: true,
+            _bankAccount: currentBankAccount.accountNumber,
+            _bankAccountType: currentBankAccount.accountType,
+          });
+
+          moveToStepByIdentifier(Identifiers.INITIAL_INVESTMENT);
+        }
+      }
+
+      initializeBankAccountFields();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currentBankAccountMeta.isSuccess, currentBankAccountMeta?.isError, currentBankAccount]);
+
+    if (currentBankAccountMeta.isLoading) {
+      return (
+        <div className="grid h-full w-full place-items-center">
+          <IconSpinner />
+        </div>
+      );
+    }
+
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-
       moveToNextStep();
     };
 
-    useEffect(() => {
-      refetch();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-      if (isReadBankAccountSuccess && readBankAccountData?.accountNumber && readBankAccountData?.accountType) {
-        updateStoreFields({ bankAccount: readBankAccountData.accountNumber, bankAccountType: readBankAccountData.accountType });
-        moveToNextStep();
-      }
-    }, [isReadBankAccountSuccess, moveToNextStep, updateStoreFields, readBankAccountData?.accountNumber, readBankAccountData?.accountType]);
-
-    useEffect(() => {
-      if (isError) {
-        updateStoreFields({ bankAccount: '' });
-      }
-    }, [isError, moveToNextStep, updateStoreFields]);
+    function onButtonBackClick() {
+      moveToPreviousStep();
+    }
 
     return (
       <Form onSubmit={onSubmit}>
-        {isReadBankAccountLoading && (
-          <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
-            <IconSpinner />
-          </div>
-        )}
-        {!isReadBankAccountLoading && (
-          <>
-            <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
-              <div className="flex flex-col gap-48">
-                <header className="flex justify-center gap-14">
-                  <LogoIcon2 className="h-25 w-auto" />
+        <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+          {!!storeFields._forInitialInvestment && (
+            <ButtonBack
+              hideOnMobile
+              onClick={onButtonBackClick}
+            />
+          )}
 
-                  <Separator
-                    orientation="vertical"
-                    className="w-1 bg-black-01"
-                  />
+          <div className="flex flex-col gap-48">
+            <header className="flex justify-center gap-14">
+              <LogoIcon2 className="h-25 w-auto" />
 
-                  <LogoPlaid />
-                </header>
-
-                <div className="flex flex-col gap-40">
-                  <ModalTitle title={TITLE} />
-
-                  <ul className="flex flex-col gap-24">
-                    {LIST_ITEMS.map(({ icon, title, description }) => (
-                      <li
-                        className="flex gap-8"
-                        key={lowerCaseWithoutSpacesGenerator(title)}
-                      >
-                        {icon}
-
-                        <div className="flex flex-col gap-8">
-                          <Typography variant="paragraph-emphasized">{title}</Typography>
-                          <Typography variant="paragraph-large">{description}</Typography>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </FormContent>
-
-            <ButtonStack>
-              <Button
-                type="submit"
-                label={BUTTON_LABEL}
+              <Separator
+                orientation="vertical"
+                className="w-1 bg-black-01"
               />
-            </ButtonStack>
-          </>
-        )}
+
+              <LogoPlaid />
+            </header>
+
+            <div className="flex flex-col gap-40">
+              <ModalTitle title={TITLE} />
+
+              <ul className="flex flex-col gap-24">
+                {LIST_ITEMS.map(({ icon, title, description }) => (
+                  <li
+                    className="flex gap-8"
+                    key={lowerCaseWithoutSpacesGenerator(title)}
+                  >
+                    {icon}
+
+                    <div className="flex flex-col gap-8">
+                      <Typography variant="paragraph-emphasized">{title}</Typography>
+                      <Typography variant="paragraph-large">{description}</Typography>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        </FormContent>
+
+        <ButtonStack>
+          <Button
+            type="submit"
+            label={BUTTON_LABEL}
+          />
+        </ButtonStack>
       </Form>
     );
   },

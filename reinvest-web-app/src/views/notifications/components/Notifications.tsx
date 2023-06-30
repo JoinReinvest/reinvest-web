@@ -6,6 +6,7 @@ import { NotificationsList } from './NotificationList';
 
 export function Notifications() {
   const { notifications, notificationsMeta } = useNotifications();
+  const areThereMoreNotificationsToFetch = !!notificationsMeta?.hasNextPage;
   const hasItems = notifications.length > 0;
 
   function fetchMoreNotifications() {
@@ -30,6 +31,7 @@ export function Notifications() {
     <NotificationsList
       notifications={notifications}
       fetchMoreNotifications={fetchMoreNotifications}
+      areThereMoreNotificationsToFetch={areThereMoreNotificationsToFetch}
     />
   );
 }

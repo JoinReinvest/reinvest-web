@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -34,7 +35,7 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const defaultValues: Fields = { recurringInvestmentInterval: storeFields.recurringInvestmentInterval };
     const { handleSubmit, control, formState } = useForm<Fields>({
       mode: 'onChange',
@@ -49,9 +50,20 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
+    function onButtonBackClick() {
+      moveToPreviousStep();
+    }
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+          {!!storeFields._forInitialInvestment && (
+            <ButtonBack
+              hideOnMobile
+              onClick={onButtonBackClick}
+            />
+          )}
+
           <ModalTitle
             title={TITLE}
             isTitleCenteredOnMobile

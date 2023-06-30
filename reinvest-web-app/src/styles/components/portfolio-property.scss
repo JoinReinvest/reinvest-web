@@ -1,0 +1,29 @@
+@import 'swiper/css';
+
+.portfolio-property-header {
+  @apply flex flex-col md:grid md:grid-cols-2 md:gap-y-24;
+
+  .property-images {
+    grid-column: 1 / 4;
+  }
+}
+
+.property-images {
+  @apply w-screen relative inset-x-1/2 -mx-screen-1/2 md:w-auto md:left-0 md:right-0 md:mx-0;
+
+  .swiper-pagination-bullets {
+    @apply relative w-full bottom-24 md:bottom-32 left-24 md:left-32 flex gap-8 z-20;
+  }
+
+  .swiper-pagination-bullet {
+    @apply inline-block relative w-8 h-8 rounded-full;
+  }
+
+  .swiper-pagination-bullet:not(.swiper-pagination-bullet-active) {
+    @apply bg-white opacity-50;
+  }
+
+  .swiper-pagination-bullet.swiper-pagination-bullet-active {
+    @apply bg-white;
+  }
+}

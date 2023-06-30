@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -39,7 +40,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
     return !!fields._willSetUpRecurringInvestment;
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const presetOptions = useMemo(() => RECURRING_INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
 
@@ -53,8 +54,8 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
-    const bankAccount = storeFields.bankAccount;
-    const bankAccountType = storeFields.bankAccountType;
+    const bankAccount = storeFields._bankAccount ?? '';
+    const bankAccountType = storeFields._bankAccountType ?? '';
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
       const minAmount =
@@ -73,13 +74,24 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
     };
 
     async function onChangeBankAccount() {
-      await updateStoreFields({ bankAccount: '', _willUpdateBankAccount: true, _justAddedBankAccount: false });
+      await updateStoreFields({ _bankAccount: undefined, _bankAccountType: undefined, _willUpdateBankAccount: true, _justAddedBankAccount: false });
       moveToStepByIdentifier(Identifiers.BANK_ACCOUNT_SELECTION);
+    }
+
+    function onButtonBackClick() {
+      moveToPreviousStep();
     }
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+          {!!storeFields._forInitialInvestment && (
+            <ButtonBack
+              hideOnMobile
+              onClick={onButtonBackClick}
+            />
+          )}
+
           <ModalTitle
             title={TITLE}
             isTitleCenteredOnMobile

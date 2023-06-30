@@ -4,8 +4,6 @@ import { createContext } from 'react';
 import { State } from './interfaces';
 
 export const Context = createContext<State>({
-  userProfile: null,
-  userProfileMeta: DEFAULT_QUERY_META,
   activeAccount: null,
   previousAccount: null,
   activeAccountStats: null,

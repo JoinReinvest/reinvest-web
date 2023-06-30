@@ -8,7 +8,9 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { allRequiredFieldsExists } from 'reinvest-app-common/src/services/form-flow';
+import { AccountType } from 'reinvest-app-common/src/types/graphql';
 
+import { useBeneficiaryCreationFlow } from '../flow';
 import { BeneficiaryCreationFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 import { useModalHandler } from '../providers/modal-handler';
@@ -27,18 +29,20 @@ export const StepConfirmation: StepParams<BeneficiaryCreationFormFields> = {
   },
 
   Component: ({ storeFields }: StepComponentProps<BeneficiaryCreationFormFields>) => {
-    const { updateActiveAccount, allAccountsMeta } = useActiveAccount();
+    const { updateActiveAccount } = useActiveAccount();
     const { toggleIsBeneficiaryFlowOpen, toggleIsInvestmentFlowOpen, toggleHasFinishedBeneficiaryCreationFlow } = useModalHandler();
+    const { moveToFirstStep, resetStoreFields } = useBeneficiaryCreationFlow();
 
     const beneficiary = storeFields.beneficiary;
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
-      allAccountsMeta.refetch();
-      beneficiary && updateActiveAccount({ ...beneficiary, __typename: 'AccountOverview' });
+      beneficiary && updateActiveAccount({ ...beneficiary, type: AccountType.Beneficiary, __typename: 'AccountOverview' });
       toggleIsInvestmentFlowOpen(true);
       toggleHasFinishedBeneficiaryCreationFlow(true);
       toggleIsBeneficiaryFlowOpen(false);
+      await resetStoreFields();
+      moveToFirstStep();
     };
 
     return (

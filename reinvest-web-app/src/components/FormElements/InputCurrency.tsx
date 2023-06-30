@@ -15,7 +15,7 @@ export function InputCurrency<FormFields extends FieldValues>(props: CustomInput
           },
         },
       }}
-      isOnlyNumeric
+      inputMode="numeric"
     />
   );
 }

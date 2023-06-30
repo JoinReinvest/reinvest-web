@@ -1,4 +1,4 @@
-import { Auth, CognitoUser } from '@aws-amplify/auth';
+import { Auth, CognitoUser as PrimitiveCognitoUser } from '@aws-amplify/auth';
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
@@ -13,11 +13,21 @@ export enum ChallengeName {
   SMS_MFA = 'SMS_MFA',
 }
 
+interface CognitoUserAttributes {
+  email: string;
+}
+interface CognitoUser extends PrimitiveCognitoUser {
+  attributes?: CognitoUserAttributes;
+}
+
 interface AuthContextInterface {
   actions: {
+    changeEmail: (newEmail: string) => Promise<string | Error | null>;
+    changePassword: (oldPassword: string, newPassword: string) => Promise<string | Error | null>;
     confirmSignIn: (authenticationCode: string, user: CognitoUser) => Promise<CognitoUser | Error | null>;
     signIn: (email: string, password: string, redirectTo?: string) => Promise<CognitoUser | Error | null>;
     signOut: () => Promise<void>;
+    verifyEmail: (authenticationCode: string, email: string) => Promise<string | Error | null>;
   };
   loading: boolean;
   user: CognitoUser | null;
@@ -35,6 +45,17 @@ export const AuthContext = createContext<AuthContextInterface>({
     },
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     signOut: async () => {},
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    changePassword: async () => {
+      return null;
+    },
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    changeEmail: async () => {
+      return null;
+    },
+    verifyEmail: async () => {
+      return null;
+    },
   },
 });
 
@@ -88,6 +109,36 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     return confirmedUser;
   };
 
+  const changePassword = async (oldPassword: string, newPassword: string) => {
+    try {
+      return Auth.changePassword(user, oldPassword, newPassword);
+    } catch (error) {
+      return error as Error;
+    }
+  };
+
+  const changeEmail = async (newEmail: string) => {
+    try {
+      return Auth.updateUserAttributes(user, {
+        email: newEmail,
+      });
+    } catch (error) {
+      return error as Error;
+    }
+  };
+
+  const verifyEmail = async (authenticationCode: string, email: string) => {
+    try {
+      await Auth.verifyCurrentUserAttributeSubmit('email', authenticationCode);
+      const user = await Auth.currentAuthenticatedUser();
+      setUser({ ...user, attributes: { ...user.attributes, email } });
+
+      return 'SUCCESS';
+    } catch (error) {
+      return error as Error;
+    }
+  };
+
   const signOut = async () => {
     try {
       await Auth.signOut();
@@ -97,7 +148,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     }
   };
   const ctx = useMemo(() => {
-    return { user, loading, actions: { signIn, confirmSignIn, signOut } };
+    return { user, loading, actions: { signIn, confirmSignIn, signOut, changePassword, changeEmail, verifyEmail } };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading, user]);
 
@@ -119,9 +170,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
           router.push(redirectUrl as string);
         } else {
           if ((notProtectedUrls.includes(router.pathname) && router.pathname !== URL.login) || (router.pathname === URL.login && user)) {
-            router.push(URL.index);
+            router.push(router.pathname === URL.login ? URL.index : router.asPath);
           } else {
-            router.push(router.pathname || URL.index);
+            router.push(router.asPath);
           }
         }
       }
@@ -141,7 +192,7 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       try {
         await Auth.currentSession();
 
-        const user: CognitoUser = await Auth.currentAuthenticatedUser();
+        const user = await Auth.currentAuthenticatedUser();
 
         setLoading(false);
         setUser(user);

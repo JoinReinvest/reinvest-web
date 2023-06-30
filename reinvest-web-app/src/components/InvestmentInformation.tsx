@@ -1,3 +1,4 @@
+import { IconInvestmentDecrease } from 'assets/icons/IconInvestmentDecrease';
 import { IconInvestmentOneTime } from 'assets/icons/IconInvestmentOneTime';
 import { IconInvestmentRecurrent } from 'assets/icons/IconInvestmentRecurrent';
 import { Typography } from 'components/Typography';
@@ -7,13 +8,13 @@ import { formatDate } from 'reinvest-app-common/src/utilities/dates';
 interface Props {
   amount: number | string;
   label: string;
-  type: 'one-time' | 'recurring';
+  type: 'one-time' | 'recurring' | 'decrease';
   date?: Date;
 }
 
 export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
   const isRecurrent = type === 'recurring';
-  const maskedAmount = typeof amount === 'number' ? maskCurrency(amount) : amount;
+  const maskedAmount = typeof amount === 'number' ? maskCurrency(amount, { addDecimalPoints: true, addDollarSign: true }) : amount;
   const dateForDisplay = date && formatDate(date, 'INVESTMENT');
   const labeledDate = isRecurrent ? `Starting ${dateForDisplay}` : dateForDisplay;
 
@@ -39,4 +40,15 @@ export const InvestmentInformation = ({ label, amount, type, date }: Props) => {
   );
 };
 
-const generateIcon = (investmentType: Props['type']) => <>{investmentType === 'one-time' ? <IconInvestmentOneTime /> : <IconInvestmentRecurrent />}</>;
+const generateIcon = (investmentType: Props['type']) => {
+  switch (investmentType) {
+    case 'one-time':
+      return <IconInvestmentOneTime />;
+    case 'recurring':
+      return <IconInvestmentRecurrent />;
+    case 'decrease':
+      return <IconInvestmentDecrease />;
+    default:
+      return null;
+  }
+};

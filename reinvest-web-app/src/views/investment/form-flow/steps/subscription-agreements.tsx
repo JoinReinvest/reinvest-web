@@ -1,5 +1,6 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { DialogSubscriptionAgreement } from 'components/DialogSubscriptionAgreement';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
@@ -50,7 +51,7 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useInvestmentContext();
     const { signRecurringInvestmentSubscriptionAgreement, signRecurringInvestmentSubscriptionAgreementMeta } = useRecurringInvestment();
     const [isDialogInvestmentOpen, toggleIsDialogInvestmentOpen] = useToggler();
@@ -90,9 +91,20 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
       }
     }, [signSubscriptionAgreementMeta, moveToNextStep, signRecurringInvestmentSubscriptionAgreementMeta]);
 
+    function onButtonBackClick() {
+      moveToPreviousStep();
+    }
+
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
         <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+          {!!storeFields._forInitialInvestment && (
+            <ButtonBack
+              hideOnMobile
+              onClick={onButtonBackClick}
+            />
+          )}
+
           <ModalTitle
             title={TITLE}
             subtitle={SUBTITLE}

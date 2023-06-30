@@ -7,13 +7,11 @@ import { useAccounts } from './hooks/accounts';
 import { useAvailableAccounts } from './hooks/available-accounts';
 import { useBeneficiaries } from './hooks/beneficiaries';
 import { useOnboardedAccount } from './hooks/onboarded-account';
-import { useUserProfile } from './hooks/user-profile';
 import { useValidateActiveAccount } from './hooks/validate-active-account';
 
 export const useActiveAccount = createContextConsumer(Context, 'ActiveAccountProvider');
 
 export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
-  const profileAccountsResult = useUserProfile();
   const { activeAccount, allAccounts, updateActiveAccount, ...accountsResult } = useAccounts();
   const accountStatsResult = useAccountStats({ activeAccount });
   const beneficiariesResult = useBeneficiaries({ allAccounts });
@@ -28,7 +26,6 @@ export const ActiveAccountProvider = ({ children }: PropsWithChildren) => {
         allAccounts,
         updateActiveAccount,
         ...accountsResult,
-        ...profileAccountsResult,
         ...accountStatsResult,
         ...availableAccountResult,
         ...beneficiariesResult,

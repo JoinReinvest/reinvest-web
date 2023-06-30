@@ -6,21 +6,20 @@ import { LogoIcon2 } from 'assets/LogoIcon2';
 import cx from 'classnames';
 import { Typography } from 'components/Typography';
 import { PropsWithChildren } from 'react';
+import { ModalProps } from 'types/modal';
 
-interface Props extends PropsWithChildren {
-  isOpen: boolean;
-  onOpenChange: (state: boolean) => void;
-  title: string;
+interface Props extends PropsWithChildren, ModalProps {
   hideSeparator?: boolean;
+  title?: string;
 }
 
-export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children, hideSeparator }: Props) => {
+export const ModalWhiteWatermarkSide = ({ isModalOpen, onModalOpenChange, title, children, hideSeparator }: Props) => {
   const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44 pt-32');
 
   return (
     <Dialog.Root
-      open={isOpen}
-      onOpenChange={onOpenChange}
+      open={isModalOpen}
+      onOpenChange={onModalOpenChange}
     >
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
@@ -35,9 +34,11 @@ export const ModalWhiteWatermarkSide = ({ isOpen, onOpenChange, title, children,
               </Dialog.Close>
             </header>
 
-            <Dialog.Title className="hidden px-24 pt-24 md:block md:px-44">
-              <Typography variant="h3">{title}</Typography>
-            </Dialog.Title>
+            {title && (
+              <Dialog.Title className="hidden px-24 pt-24 md:block md:px-44">
+                <Typography variant="h3">{title}</Typography>
+              </Dialog.Title>
+            )}
 
             <div className="h-full overflow-y-hidden">
               {!hideSeparator && <Separator className="h-1 w-full bg-gray-04 md:h-0" />}

@@ -15,6 +15,7 @@ export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
             ANALYZE: process.env.ANALYZE as string,
             AWS_COGNITO_REGION: process.env.AWS_COGNITO_REGION as string,
             GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY as string,
+            GOOGLE_MAPS_EMBEDDED_URL: process.env.GOOGLE_MAPS_EMBEDDED_URL as string,
             GOOGLE_MAPS_PLACES_URL: process.env.GOOGLE_MAPS_PLACES_URL as string,
             GOOGLE_MAPS_AUTOCOMPLETE_URL: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL as string,
             SENTRY_DSN: process.env.SENTRY_DSN as string,

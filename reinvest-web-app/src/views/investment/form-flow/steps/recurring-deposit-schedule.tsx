@@ -1,6 +1,7 @@
 import { IconRecurrent } from 'assets/icons/IconRecurrent';
 import { IconWarning } from 'assets/icons/IconWarning';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -35,17 +36,30 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
     return allRequiredFieldsExists(requiredFields);
   },
 
-  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { recurringInvestment } = useRecurringInvestment();
+
+    const bankAccount = storeFields._bankAccount ?? '';
 
     const onSubmit: FormEventHandler<HTMLFormElement> = async event => {
       event.preventDefault();
       moveToNextStep();
     };
 
+    function onButtonBackClick() {
+      moveToPreviousStep();
+    }
+
     return (
       <Form onSubmit={onSubmit}>
         <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+          {!!storeFields._forInitialInvestment && (
+            <ButtonBack
+              hideOnMobile
+              onClick={onButtonBackClick}
+            />
+          )}
+
           <div className="flex w-full justify-center">
             <IconRecurrent />
           </div>
@@ -55,7 +69,7 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
           {recurringInvestment && (
             <RecurringInvestmentDepositSchedule
               recurringInvestment={recurringInvestment}
-              bankAccount="JPMORGAN CHASE BANK, NA ****1234"
+              bankAccount={bankAccount}
             />
           )}
 

@@ -95,7 +95,10 @@ export function InvestmentCard({ defaultValue, currentBankAccount, onChangeBankA
       />
 
       <div className="flex flex-col gap-16">
-        <Typography variant="paragraph">
+        <Typography
+          variant="paragraph"
+          className="truncate"
+        >
           {currentBankAccountType} {currentBankAccount}
         </Typography>
 

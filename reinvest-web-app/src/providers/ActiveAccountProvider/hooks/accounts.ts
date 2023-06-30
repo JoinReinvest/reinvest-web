@@ -24,9 +24,10 @@ export function useAccounts(): Return {
 
   useEffect(() => {
     function initializeActiveAccount() {
-      if (activeAccountId) {
-        const storedAccount = allAccounts.find(account => account?.id === activeAccountId);
-        storedAccount && setActiveAccount(storedAccount);
+      const storedAccount = allAccounts.find(account => account?.id === activeAccountId);
+
+      if (activeAccountId && storedAccount) {
+        setActiveAccount(storedAccount);
       } else {
         const nonBeneficiaryAccounts = allAccounts.filter(account => account?.type !== AccountType.Beneficiary);
 

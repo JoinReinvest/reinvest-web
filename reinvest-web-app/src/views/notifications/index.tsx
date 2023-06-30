@@ -31,8 +31,8 @@ export function InnerViewNotifications() {
     return (
       <ModalWhiteWatermarkSide
         title={modalTitle}
-        isOpen={isModalOpen}
-        onOpenChange={onOpenChange}
+        isModalOpen={isModalOpen}
+        onModalOpenChange={onOpenChange}
       >
         {currentFlowIdentifier ? currentFlow?.Component : <Notifications />}
       </ModalWhiteWatermarkSide>

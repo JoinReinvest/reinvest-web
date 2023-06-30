@@ -32,10 +32,12 @@ module.exports = {
       16: '1.6rem',
       17: '1.7rem',
       20: '2rem',
+      21: '2.1rem',
       22: '2.2rem',
       24: '2.4rem',
       25: '2.5rem',
       26: '2.6rem',
+      27: '2.7rem',
       28: '2.8rem',
       30: '3.0rem',
       32: '3.2rem',
@@ -46,10 +48,14 @@ module.exports = {
       40: '4.0rem',
       44: '4.4rem',
       46.71: '4.671rem',
+      47: '4.7rem',
       48: '4.8rem',
       50: '5.0rem',
+      52: '5.2rem',
+      55: '5.5rem',
       60: '6.0rem',
       64: '6.4rem',
+      66: '6.6rem',
       68: '6.8rem',
       72: '7.2rem',
       80: '8.0rem',
@@ -67,17 +73,22 @@ module.exports = {
       169: '16.9rem',
       180: '18.0rem',
       210: '21.0rem',
+      212: '21.2rem',
+      240: '24.0rem',
+      296: '29.6rem',
       300: '30.0rem',
+      315: '31.5rem',
       342: '34.2rem',
+      364: '36.4rem',
       415: '41.5rem',
       460: '46.0rem',
       650: '65.0rem',
     },
     fontSize: {
       base: '10px',
-      '18': '1.8rem',
-      '32': '3.2rem',
-      '48': '4.8rem',
+      18: '1.8rem',
+      32: '3.2rem',
+      48: '4.8rem',
 
       h1: [
         '5.4rem',
@@ -92,6 +103,14 @@ module.exports = {
         '5.4rem',
         {
           lineHeight: '0.9em',
+          letterSpacing: '-0.05em',
+          fontWeight: '400',
+        },
+      ],
+
+      'h2-smaller': [
+        '2.8rem',
+        {
           letterSpacing: '-0.05em',
           fontWeight: '400',
         },
@@ -148,6 +167,14 @@ module.exports = {
         },
       ],
 
+      'bonus-heading-regular': [
+        '1.5rem',
+        {
+          fontWeight: '500',
+          lineHeight: '1.808rem',
+        },
+      ],
+
       button: [
         '1.4rem',
         {
@@ -201,8 +228,8 @@ module.exports = {
         '1.0rem',
         {
           fontWeight: '400',
-          lineHeight: '1.3rem'
-        }
+          lineHeight: '1.3rem',
+        },
       ],
 
       'custom-1': [
@@ -238,7 +265,7 @@ module.exports = {
         success: '#44CB7A',
         error: {
           '01': '#FA375A',
-          '02': '#E50029'
+          '02': '#E50029',
         },
         warning: '#FAC337',
       },
@@ -253,14 +280,23 @@ module.exports = {
     },
 
     extend: {
+      minWidth: {
+        200: '20rem',
+      },
       maxWidth: {
+        200: '20rem',
+        255: '25.5rem',
         330: '33rem',
         375: '37.5rem',
         415: '41.5rem',
         720: '72.0rem',
       },
       minHeight: {
+        1: '0.1rem',
+        160: '16rem',
+        170: '17rem',
         180: '18rem',
+        200: '20rem',
         240: '24.0rem',
       },
       maxHeight: {
@@ -268,12 +304,21 @@ module.exports = {
         256: '25.6rem',
         284: '28.4rem',
         570: '57.0rem',
+        'screen-4/5': '80vh',
+      },
+      margin: {
+        'screen-1/2': '50vw',
+      },
+      borderRadius: {
+        5: '0.5rem',
+        48: '4.8rem',
       },
       gridTemplateRows: {
         'full-auto': '1fr auto',
       },
       lineHeight: {
         13: '1.3rem',
+        90: '90%',
       },
       transitionProperty: {
         'height-width': 'height, width',

@@ -1,8 +1,8 @@
 import { Indicator, Root } from '@radix-ui/react-checkbox';
 import { IconCheckmark } from 'assets/icons/IconCheckmark';
-import { SubscriptionAgreementParagraph } from 'reinvest-app-common/src/types/graphql';
+import { AgreementParagraph } from 'reinvest-app-common/src/types/graphql';
 
-type PrimitiveProps = Pick<SubscriptionAgreementParagraph, 'isCheckedOption'>;
+type PrimitiveProps = Pick<AgreementParagraph, 'isCheckedOption'>;
 type Props = PrimitiveProps;
 
 /**

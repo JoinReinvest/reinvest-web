@@ -4,7 +4,7 @@ import { ModalContent } from 'components/ModalElements/Content';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useUpdateCompanyForVerification } from 'reinvest-app-common/src/services/queries/updateCompanyForVerification';
-import { SimplifiedDomicileType } from 'reinvest-app-common/src/types/graphql';
+import { AccountType, SimplifiedDomicileType } from 'reinvest-app-common/src/types/graphql';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
 
 import { useActiveAccount } from '../../../../providers/ActiveAccountProvider';
@@ -24,7 +24,7 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
   Component: ({ storeFields, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
     const corporationLegalName = lowerCaseWithoutSpacesGenerator(storeFields.corporationLegalName || '');
-    const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || [];
+    const majorStakeholderApplicants = storeFields.companyMajorStakeholderApplicants || storeFields.trustTrusteesGrantorsOrProtectors || [];
     const { mutateAsync } = useUpdateCompanyForVerification(getApiClient);
 
     const indexedStakeholderApplicants: IndexedSchema<Applicant>[] = majorStakeholderApplicants.map((item, index) => ({
@@ -36,10 +36,18 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
       const hasIndex = applicant._index !== undefined;
 
       if (hasIndex) {
-        await updateStoreFields({
-          _currentCompanyMajorStakeholder: { ...applicant, _index: applicant._index },
-          _isEditingCompanyMajorStakeholderApplicant: true,
-        });
+        if (activeAccount?.type === AccountType.Trust) {
+          await updateStoreFields({
+            _currentTrustTrusteeGrantorOrProtector: { ...applicant, _index: applicant._index },
+            _isEditingTrustTrusteeGrantorOrProtector: true,
+          });
+        } else {
+          await updateStoreFields({
+            _currentCompanyMajorStakeholder: { ...applicant, _index: applicant._index },
+            _isEditingCompanyMajorStakeholderApplicant: true,
+          });
+        }
+
         moveToStepByIdentifier(Identifiers.CORPORATE_APPLICANT_DETAILS);
       }
     };
@@ -81,7 +89,6 @@ export const StepCorporateApplicantList: StepParams<FlowFields> = {
         await mutateAsync({
           accountId: activeAccount.id,
           input: {
-            companyType: { type: corporationType },
             address: {
               addressLine1: businessAddress.addressLine1 || '',
               addressLine2: businessAddress.addressLine2 || '',

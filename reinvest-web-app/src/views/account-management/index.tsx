@@ -1,40 +1,24 @@
 import { ModalWhite } from 'components/ModalWhite';
-import { ComponentProps } from 'react';
+import { useAccountManagement } from 'providers/AccountManagement';
 
 import { Menu } from './components/Menu';
-import { MENU_GROUPS } from './constants/menu';
-import { FlowsManagerProvider, useFlowsManager } from './contexts/flows-manager';
+import { useMenuGroups } from './hooks/useMenuGroups';
 
-type FlowsManagerProviderProps = ComponentProps<typeof FlowsManagerProvider>;
-type PrimitiveProps = Pick<FlowsManagerProviderProps, 'isModalOpen' | 'toggleIsModalOpen'>;
-type Props = PrimitiveProps;
+export function ViewAccountManagement() {
+  const { modalTitle, isModalOpen, onModalOpenChange, currentFlow } = useAccountManagement();
+  const { menuGroups } = useMenuGroups();
 
-const MODAL_TITLE = 'Manage Account';
-
-const AccountManagement = () => {
-  const { isModalOpen, toggleIsModalOpen, currentFlow, setCurrentFlowIdentifier } = useFlowsManager();
-
-  const onOpenChange = (willBeOpen: boolean) => {
-    if (!willBeOpen) {
-      setCurrentFlowIdentifier(null);
-    }
-
-    toggleIsModalOpen(willBeOpen);
-  };
+  if (currentFlow && currentFlow?.selfManagesModal) {
+    return <>{currentFlow.flow}</>;
+  }
 
   return (
     <ModalWhite
-      title={MODAL_TITLE}
+      title={modalTitle}
       isOpen={isModalOpen}
-      onOpenChange={onOpenChange}
+      onOpenChange={onModalOpenChange}
     >
-      {currentFlow ? currentFlow.flow : <Menu groups={MENU_GROUPS} />}
+      {currentFlow ? currentFlow.flow : <Menu groups={menuGroups} />}
     </ModalWhite>
   );
-};
-
-export const ViewAccountManagement = (props: Props) => (
-  <FlowsManagerProvider {...props}>
-    <AccountManagement />
-  </FlowsManagerProvider>
-);
+}

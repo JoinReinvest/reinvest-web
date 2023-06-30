@@ -5,11 +5,11 @@ import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { InvestmentProvider } from 'providers/InvestmentProvider';
-import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
-import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON, INITIAL_STORE_FIELDS } from './constants';
+import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON } from './constants';
 import { InvestmentFlowProvider, useInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
@@ -23,7 +23,7 @@ interface Props extends ModalProps {
 const MODAL_TITLE = 'Investing';
 
 const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false }: Props) => {
-  const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding } = useActiveAccount();
+  const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding, availableAccounts } = useActiveAccount();
   useInitializeFields({ forInitialInvestment });
 
   const {
@@ -33,7 +33,6 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     moveToFirstStep,
     getStoreFields,
     updateStoreFields,
-
     meta: { currentStepIdentifier, isFirstStep },
   } = useInvestmentFlow();
 
@@ -41,15 +40,17 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   const shouldDisplayBackIcon = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_X_BUTTON.includes(currentStepIdentifier), [currentStepIdentifier]);
 
   const onModalLastStep = useCallback(async () => {
-    const storeFields = getStoreFields();
     await resetStoreFields();
-    await updateStoreFields({ _forInitialInvestment: true, _hasMoreThanAnAccount: storeFields?._hasMoreThanAnAccount });
+
     onModalOpenChange(false);
     moveToFirstStep();
     deprecateLatestAccountOnboarded();
     setArrivesFromOnboarding(false);
+
+    await updateStoreFields({ _hasMoreThanAnAccount: availableAccounts.length > 1 });
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onModalOpenChange, moveToFirstStep, resetStoreFields]);
+  }, [availableAccounts, onModalOpenChange, moveToFirstStep, resetStoreFields]);
 
   const onModalClickBack = () => {
     if (isFirstStep || currentStepIdentifier === Identifiers.ACCOUNT_SELECTION) {
@@ -63,10 +64,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     const storeFields = getStoreFields();
 
     if (
-      !storeFields?._willSetUpOneTimeInvestments &&
-      !storeFields?._willSetUpRecurringInvestment &&
-      storeFields?._willSetUpOneTimeInvestments !== undefined &&
-      storeFields?._willSetUpRecurringInvestment !== undefined
+      (storeFields?._willSetUpOneTimeInvestments === false && storeFields?._willSetUpRecurringInvestment === false) ||
+      (storeFields?._willSetUpOneTimeInvestments === false && !storeFields?._shouldDisplayRecurringInvestment)
     ) {
       onModalLastStep();
     }
@@ -91,8 +90,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
         <ModalHandlerProvider onModalLastStep={onModalLastStep}>
           <ModalWhiteWatermarkSide
             title={MODAL_TITLE}
-            isOpen={isModalOpen}
-            onOpenChange={onModalLastStep}
+            isModalOpen={isModalOpen}
+            onModalOpenChange={onModalLastStep}
             hideSeparator
           >
             <CurrentStepView />
@@ -103,8 +102,8 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
       return (
         <ModalHandlerProvider onModalLastStep={onModalLastStep}>
           <ModalWhiteWatermark
-            isOpen={isModalOpen}
-            onOpenChange={onModalLastStep}
+            isModalOpen={isModalOpen}
+            onModalOpenChange={onModalLastStep}
           >
             <CurrentStepView />
           </ModalWhiteWatermark>
@@ -143,12 +142,20 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
   }
 };
 
-export const InvestmentView = (props: Props) => (
-  <InvestmentProvider>
-    <RecurringInvestmentProvider enableQueries={!!props.isModalOpen}>
-      <InvestmentFlowProvider initialStoreFields={{ ...INITIAL_STORE_FIELDS, _forInitialInvestment: !!props.forInitialInvestment }}>
+export const InvestmentView = (props: Props) => {
+  const { toggleEnableDraftQuery } = useRecurringInvestment();
+
+  useEffect(() => {
+    if (props.isModalOpen) {
+      toggleEnableDraftQuery(true);
+    }
+  }, [props.isModalOpen, toggleEnableDraftQuery]);
+
+  return (
+    <InvestmentProvider>
+      <InvestmentFlowProvider initialStoreFields={{ _forInitialInvestment: !!props.forInitialInvestment }}>
         <InnerInvestmentView {...props} />
       </InvestmentFlowProvider>
-    </RecurringInvestmentProvider>
-  </InvestmentProvider>
-);
+    </InvestmentProvider>
+  );
+};

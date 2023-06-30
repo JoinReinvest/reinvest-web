@@ -1,5 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconSpinner } from 'assets/icons/IconSpinner';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -16,9 +18,8 @@ import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/i
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetActiveRecurringInvestment } from 'reinvest-app-common/src/services/queries/getActiveRecurringInvestment';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
 
-import { IconSpinner } from '../../../../assets/icons/IconSpinner';
-import { getApiClient } from '../../../../services/getApiClient';
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -60,17 +61,16 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
-    const bankAccount = storeFields.bankAccount;
-    const bankAccountType = storeFields.bankAccountType;
+    const bankAccount = storeFields._bankAccount ?? '';
+    const bankAccountType = storeFields._bankAccountType ?? '';
 
     const onSubmit: SubmitHandler<Fields> = async ({ amount }) => {
+      const amountToInvest = amount || parseInt(presetOptions[0]?.value || ONE_TIME_INVESTMENT_MIN_AMOUNT.toString());
       const investment: Investment = {
-        amount,
+        amount: amountToInvest,
         type: 'one-time',
         date: new Date(),
       };
-
-      const amountToInvest = amount || parseInt(presetOptions[0]?.value || ONE_TIME_INVESTMENT_MIN_AMOUNT.toString());
 
       if (amountToInvest) {
         await createInvestment({ investmentAmount: amountToInvest });
@@ -84,16 +84,20 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
+    function onButtonBackClick() {
+      moveToStepByIdentifier(Identifiers.ACCOUNT_SELECTION);
+    }
+
     useEffect(() => {
       if (isGetActiveRecurringInvestmentSuccess && data) {
-        updateStoreFields({ _shouldDisplayRecurringInvestment: true }); //TODO: should be false, for upgrade after demo
+        updateStoreFields({ _shouldDisplayRecurringInvestment: false });
       } else {
         updateStoreFields({ _shouldDisplayRecurringInvestment: true });
       }
     }, [isGetActiveRecurringInvestmentSuccess, data, updateStoreFields]);
 
     async function onChangeBankAccount() {
-      await updateStoreFields({ bankAccount: '', _willUpdateBankAccount: true, _justAddedBankAccount: false });
+      await updateStoreFields({ _bankAccount: undefined, _bankAccountType: undefined, _willUpdateBankAccount: true, _justAddedBankAccount: false });
       moveToStepByIdentifier(Identifiers.BANK_ACCOUNT_SELECTION);
     }
 
@@ -107,6 +111,13 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
         {!isLoading && (
           <>
             <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
+              {!!storeFields._forInitialInvestment && (
+                <ButtonBack
+                  hideOnMobile
+                  onClick={onButtonBackClick}
+                />
+              )}
+
               <ModalTitle
                 title="Make your initial one-time investment"
                 isTitleCenteredOnMobile

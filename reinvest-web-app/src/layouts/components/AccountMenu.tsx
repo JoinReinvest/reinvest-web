@@ -10,12 +10,11 @@ import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
 import { EMAILS, URL } from 'constants/urls';
 import { useToggler } from 'hooks/toggler';
+import { useAccountManagement } from 'providers/AccountManagement';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useGetInvitationLink } from 'reinvest-app-common/src/services/queries/getInvitationLink';
 import { AccountOverview, AccountType, Maybe } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
-import { getAccountsWithLabel } from 'utils/accounts';
-import { ViewAccountManagement } from 'views/account-management';
 import { ViewBeneficiaryCreation } from 'views/beneficiary-creation';
 
 import { AccountMenuAccountItem } from './AccountMenuAccountItem';
@@ -33,9 +32,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
   const [isMenuOpen, toggleIsMenuOpen] = useToggler(false);
   const [isModalInviteOpen, toggleIsModalInviteOpen] = useToggler(false);
   const [isModalAddBeneficiaryOpen, toggleIsModalAddBeneficiaryOpen] = useToggler(false);
-  const [isModalManageAccount, toggleIsModalManageAccount] = useToggler(false);
-
-  const availableAccountsWithLabels = getAccountsWithLabel(availableAccounts);
+  const { onModalOpenChange: toggleIsModalManageAccount } = useAccountManagement();
 
   const toggleActiveAccount = (account: Maybe<AccountOverview>) => {
     updateActiveAccount(account);
@@ -68,11 +65,11 @@ export const AccountMenu = ({ activeAccount }: Props) => {
         <DropdownMenu.Trigger>
           <Avatar
             src={activeAccount.avatar?.url ?? undefined}
-            alt={activeAccount.label || ''}
+            alt={activeAccount.label ?? ''}
             fixedSize="sm"
             isSizeFixed
-            accountType={activeAccount?.type || AccountType.Individual}
-            label={activeAccount.avatar?.initials || ''}
+            accountType={activeAccount.type ?? AccountType.Individual}
+            label={activeAccount.avatar?.initials ?? ''}
           />
         </DropdownMenu.Trigger>
 
@@ -82,14 +79,14 @@ export const AccountMenu = ({ activeAccount }: Props) => {
 
             <DropdownMenu.Content
               align="end"
-              className="z-40 max-h-full w-screen overflow-auto px-24 pb-68 md:w-full md:px-0 md:pb-0"
+              className="z-40 h-full w-screen px-24 pb-68 md:w-full md:px-0 md:pb-0"
             >
-              <div className="flex w-full max-w-full flex-col gap-16 border border-gray-04 bg-white px-16 py-24 md:w-342">
+              <div className="flex max-h-screen-4/5 w-full max-w-full flex-col gap-16 overflow-y-auto border border-gray-04 bg-white px-16 py-24 md:w-342">
                 <header className="flex flex-col gap-16 px-24 py-16 shadow-md">
                   <div className="flex items-center gap-8">
                     <Avatar
                       src={activeAccount.avatar?.url ?? undefined}
-                      alt={activeAccount.label || ''}
+                      alt={activeAccount.label ?? ''}
                       label={activeAccount?.avatar?.initials ?? undefined}
                       accountType={activeAccount?.type || AccountType.Individual}
                       isSizeFixed
@@ -117,15 +114,14 @@ export const AccountMenu = ({ activeAccount }: Props) => {
                 <ul className="flex flex-col gap-16">
                   <ul className="flex max-h-146 flex-col gap-16 overflow-auto md:max-h-256">
                     {hasAvailableAccounts &&
-                      availableAccountsWithLabels.map(account => (
+                      availableAccounts.map(account => (
                         <AccountMenuAccountItem
                           key={`${account?.id}`}
                           imageSrc={account?.avatar?.url ?? undefined}
                           label={`${account?.label}`.toLowerCase()}
-                          fallbackText={account?.avatar?.initials ?? undefined}
                           onClick={() => toggleActiveAccount(account)}
                           type={account?.type || AccountType.Individual}
-                          labelForAvatar={account?.avatarLabel}
+                          avatarInitials={account?.avatar?.initials ?? ''}
                         />
                       ))}
                   </ul>
@@ -194,11 +190,6 @@ export const AccountMenu = ({ activeAccount }: Props) => {
           onModalOpenChange={toggleIsModalAddBeneficiaryOpen}
         />
       )}
-
-      <ViewAccountManagement
-        isModalOpen={isModalManageAccount}
-        toggleIsModalOpen={toggleIsModalManageAccount}
-      />
     </>
   );
 };

@@ -84,7 +84,7 @@ export const StepActionConfirmation: StepParams<FlowFields> = {
             <InvestmentInformation
               amount={amountMasked}
               label={AMOUNT_LABEL}
-              type="one-time"
+              type="decrease"
             />
           )}
 

@@ -20,7 +20,7 @@ import { makeRequest } from 'services/api-request';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
-type Fields = Exclude<FlowFields['address'], null>;
+type Fields = Exclude<Address, null>;
 
 export const StepPermanentAddress: StepParams<FlowFields> = {
   identifier: Identifiers.PERMANENT_ADDRESS,
@@ -34,12 +34,12 @@ export const StepPermanentAddress: StepParams<FlowFields> = {
     const initialValues: Fields = { addressLine1: '', addressLine2: '', city: '', state: '', zip: '', country: 'USA' };
     const defaultValues: Fields =
       {
-        addressLine1: storeFields?.address?.addressLine1 || '',
-        addressLine2: storeFields?.address?.addressLine2 || '',
-        city: storeFields?.address?.city || 'USA',
-        country: storeFields?.address?.country || '',
-        state: storeFields?.address?.state || '',
-        zip: storeFields?.address?.zip || '',
+        addressLine1: storeFields?._address?.addressLine1 || '',
+        addressLine2: storeFields?._address?.addressLine2 || '',
+        city: storeFields?._address?.city || 'USA',
+        country: storeFields?._address?.country || '',
+        state: storeFields?._address?.state || '',
+        zip: storeFields?._address?.zip || '',
       } || initialValues;
 
     const { control, formState, setValue, handleSubmit, setFocus } = useForm<Fields>({
@@ -72,7 +72,7 @@ export const StepPermanentAddress: StepParams<FlowFields> = {
     };
 
     const onSubmit: SubmitHandler<Fields> = async address => {
-      await updateStoreFields({ address: { ...address, country: 'USA' } });
+      await updateStoreFields({ _address: { ...address, country: 'USA' } });
 
       moveToNextStep();
     };
@@ -118,7 +118,7 @@ export const StepPermanentAddress: StepParams<FlowFields> = {
             <InputZipCode
               name="zip"
               control={control}
-              defaultValue={storeFields?.address?.zip}
+              defaultValue={storeFields?._address?.zip}
             />
           </div>
         </FormContent>
