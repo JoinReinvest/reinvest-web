@@ -1,4 +1,5 @@
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -6,8 +7,10 @@ import { Typography } from 'components/Typography';
 import { useManageDividends } from 'hooks/manage-dividends';
 import { FormEventHandler, useEffect } from 'react';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
 
 import { DividendAction } from '../../interfaces';
+import { useFlow } from '../flow';
 import { FlowFields } from '../interfaces';
 import { FlowStepIdentifiers } from '../step-identifiers';
 
@@ -27,6 +30,8 @@ export const StepDividend: StepParams<FlowFields> = {
   },
 
   Component: ({ updateStoreFields, storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { resetStoreFields, moveToFirstStep } = useFlow();
+    const { updateCurrentFlow } = useFlowsManagerContext();
     const { withdrawDividends, reinvestDividends, metaReinvestDividends, metaWithdrawDividends } = useManageDividends();
 
     useEffect(() => {
@@ -39,7 +44,13 @@ export const StepDividend: StepParams<FlowFields> = {
     const dividendId = storeFields._dividendId;
     const amountMasked = storeFields._amountMasked;
 
-    const isButtonDisabled = metaReinvestDividends.isLoading || metaWithdrawDividends.isLoading;
+    const shouldButtonBeLoading = metaReinvestDividends.isLoading || metaWithdrawDividends.isLoading;
+
+    async function onButtonBackClick() {
+      updateCurrentFlow({ identifier: null });
+      await resetStoreFields();
+      moveToFirstStep();
+    }
 
     const onDisagree = async () => {
       if (dividendId) {
@@ -66,6 +77,11 @@ export const StepDividend: StepParams<FlowFields> = {
           className="!gap-24"
           willLeaveContentOnTop
         >
+          <ButtonBack
+            onClick={onButtonBackClick}
+            disabled={shouldButtonBeLoading}
+          />
+
           <Typography variant="h5">{TITLE}</Typography>
 
           <div className="flex flex-col gap-8">
@@ -87,14 +103,14 @@ export const StepDividend: StepParams<FlowFields> = {
             label={BUTTON_DISAGREE_LABEL}
             onClick={onDisagree}
             variant="outlined"
-            disabled={isButtonDisabled}
+            disabled={shouldButtonBeLoading}
             loading={metaWithdrawDividends.isLoading}
           />
 
           <Button
             label={BUTTON_AGREE_LABEL}
             type="submit"
-            disabled={isButtonDisabled}
+            disabled={shouldButtonBeLoading}
             loading={metaReinvestDividends.isLoading}
           />
         </ButtonStack>

@@ -1,4 +1,5 @@
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
@@ -6,8 +7,10 @@ import { Typography } from 'components/Typography';
 import { useManageDividends } from 'hooks/manage-dividends';
 import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useFlowsManagerContext } from 'views/notifications/providers/flows-manager';
 
 import { DividendAction } from '../../interfaces';
+import { useFlow } from '../flow';
 import { FlowFields } from '../interfaces';
 import { FlowStepIdentifiers } from '../step-identifiers';
 
@@ -21,6 +24,8 @@ export const StepDividends: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.MANAGE_DIVIDENDS,
 
   Component: ({ updateStoreFields, storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { resetStoreFields, moveToFirstStep } = useFlow();
+    const { updateCurrentFlow } = useFlowsManagerContext();
     const { withdrawDividends, reinvestDividends, metaReinvestDividends, metaWithdrawDividends } = useManageDividends();
 
     useEffect(() => {
@@ -30,6 +35,7 @@ export const StepDividends: StepParams<FlowFields> = {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [metaReinvestDividends, metaWithdrawDividends]);
 
+    const shouldButtonBeLoading = metaReinvestDividends.isLoading || metaWithdrawDividends.isLoading;
     const dividendId = storeFields._dividendId;
     const amountMasked = storeFields._amountMasked;
 
@@ -49,6 +55,12 @@ export const StepDividends: StepParams<FlowFields> = {
       }
     };
 
+    async function onButtonBackClick() {
+      updateCurrentFlow({ identifier: null });
+      await resetStoreFields();
+      moveToFirstStep();
+    }
+
     return (
       <Form
         onSubmit={onAgree}
@@ -58,6 +70,11 @@ export const StepDividends: StepParams<FlowFields> = {
           className="!gap-24"
           willLeaveContentOnTop
         >
+          <ButtonBack
+            onClick={onButtonBackClick}
+            disabled={shouldButtonBeLoading}
+          />
+
           <Typography variant="h5">{TITLE}</Typography>
 
           <div className="flex flex-col gap-8">
