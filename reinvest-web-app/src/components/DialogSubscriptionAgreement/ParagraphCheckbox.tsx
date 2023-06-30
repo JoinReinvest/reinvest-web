@@ -16,12 +16,12 @@ export function ParagraphCheckbox({ isCheckedOption }: Props) {
 
   return (
     <Root
-      className="hkek-checkbox flex items-center justify-center"
+      className="hkek-checkbox grid place-items-center"
       checked={isCheckedOption}
       disabled
     >
-      <Indicator className="max-h-full max-w-full">
-        <IconCheckmark className="max-h-full max-w-full" />
+      <Indicator>
+        <IconCheckmark className="h-20 w-20" />
       </Indicator>
     </Root>
   );
