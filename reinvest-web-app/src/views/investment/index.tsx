@@ -4,7 +4,6 @@ import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { InvestmentProvider } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
@@ -14,6 +13,7 @@ import { InvestmentFlowProvider, useInvestmentFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
 import { ModalHandlerProvider } from './providers/modal-handler';
+import { OneTimeInvestmentProvider } from './providers/OneTimeInvestment';
 
 interface Props extends ModalProps {
   forInitialInvestment?: boolean;
@@ -152,10 +152,10 @@ export const InvestmentView = (props: Props) => {
   }, [props.isModalOpen, toggleEnableDraftQuery]);
 
   return (
-    <InvestmentProvider>
+    <OneTimeInvestmentProvider>
       <InvestmentFlowProvider initialStoreFields={{ _forInitialInvestment: !!props.forInitialInvestment }}>
         <InnerInvestmentView {...props} />
       </InvestmentFlowProvider>
-    </InvestmentProvider>
+    </OneTimeInvestmentProvider>
   );
 };

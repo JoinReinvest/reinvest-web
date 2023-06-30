@@ -7,11 +7,11 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
-import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { FormEventHandler } from 'react';
 import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 
 import { useModalHandler } from '../../providers/modal-handler';
 import { FlowFields } from '../fields';
@@ -39,7 +39,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
-    const { createInvestmentMeta, investmentSummaryMeta, investmentSummary } = useInvestmentContext();
+    const { createInvestmentMeta, investmentSummaryMeta, investmentSummary } = useOneTimeInvestment();
     const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
 

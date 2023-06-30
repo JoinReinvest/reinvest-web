@@ -6,11 +6,11 @@ import { useCreateInvestment } from './hooks/create-investment';
 import { useInvestmentSummary } from './hooks/investment-summary';
 import { useSubscriptionAgreement } from './hooks/subscription-agreement';
 
-const PROVIDER_NAME = 'InvestmentProvider';
+const PROVIDER_NAME = 'OneTimeInvestmentProvider';
 
-export const useInvestmentContext = createContextConsumer(Context, PROVIDER_NAME);
+export const useOneTimeInvestment = createContextConsumer(Context, PROVIDER_NAME);
 
-export function InvestmentProvider({ children }: PropsWithChildren) {
+export function OneTimeInvestmentProvider({ children }: PropsWithChildren) {
   const { investmentId, createInvestment, createInvestmentMeta } = useCreateInvestment();
   const { investmentSummary, investmentSummaryMeta } = useInvestmentSummary({ investmentId });
   const subscriptionAgreementHookResult = useSubscriptionAgreement({ investmentId });
