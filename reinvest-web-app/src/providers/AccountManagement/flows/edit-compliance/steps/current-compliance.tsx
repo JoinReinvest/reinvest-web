@@ -3,7 +3,6 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { useAccountManagement } from 'providers/AccountManagement';
-import { useUserProfile } from 'providers/UserProfile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
@@ -21,7 +20,6 @@ export const StepCurrentCompliance: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_COMPLIANCE,
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { userProfile } = useUserProfile();
     const { handleSubmit, formState } = useForm<Fields>({ mode: 'onSubmit' });
     const { setCurrentFlowIdentifier } = useAccountManagement();
 
@@ -44,7 +42,7 @@ export const StepCurrentCompliance: StepParams<FlowFields> = {
               variant="paragraph-emphasized"
               className="flex flex-col"
             >
-              {userProfile?.details?.firstName} {userProfile?.details?.middleName} {userProfile?.details?.lastName}
+              There should be compliance list
             </Typography>
           </div>
         </FormContent>
