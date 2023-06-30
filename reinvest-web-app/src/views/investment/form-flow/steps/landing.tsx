@@ -8,8 +8,16 @@ import { Identifiers } from '../identifiers';
 export const StepLanding: StepParams<FlowFields> = {
   identifier: Identifiers.LANDING,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+    const onlyForRecurringInvestment = !!storeFields._onlyRecurringInvestment;
+
     useEffect(() => {
+      if (onlyForRecurringInvestment) {
+        moveToStepByIdentifier(Identifiers.BANK_ACCOUNT_LANDING);
+
+        return;
+      }
+
       moveToNextStep();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);

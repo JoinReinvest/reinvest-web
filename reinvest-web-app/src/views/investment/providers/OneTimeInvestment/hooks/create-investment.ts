@@ -4,7 +4,6 @@ import { useCreateInvestment as useCreateOneTimeInvestment } from 'reinvest-app-
 import { parseToUsdInput } from 'reinvest-app-common/src/utilities/currency';
 import { getApiClient } from 'services/getApiClient';
 import { MutationMeta } from 'types/queries';
-
 interface CreateInvestmentParams {
   investmentAmount: number;
   accountId?: string;

@@ -34,6 +34,10 @@ const getDefaultValues = ({ oneTimeInvestment }: FlowFields): Fields => ({
 export const StepInitialInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.INITIAL_INVESTMENT,
 
+  willBePartOfTheFlow: fields => !fields._onlyRecurringInvestment,
+
+  doesMeetConditionFields: fields => !fields._onlyRecurringInvestment,
+
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { createInvestment, createInvestmentMeta } = useOneTimeInvestment();
     const { activeAccount } = useActiveAccount();

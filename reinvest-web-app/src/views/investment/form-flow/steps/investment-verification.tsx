@@ -24,7 +24,7 @@ import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestme
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
 import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
-import { useModalHandler } from '../../providers/modal-handler';
+import { useModalHandler } from '../../providers/ModalHandler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -226,13 +226,13 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
 
       if (getInvestmentSummaryMeta.isSuccess) {
-        const investmentFees = getInvestmentSummaryMeta.data?.investmentFees;
+        const mockInvestmentFees = true;
 
-        if (investmentFees) {
+        if (mockInvestmentFees) {
           setShouldManualVerification(true);
         }
 
-        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !investmentFees) {
+        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !mockInvestmentFees) {
           startInvestments();
         }
 

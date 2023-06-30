@@ -10,9 +10,13 @@ const PROVIDER_NAME = 'OneTimeInvestmentProvider';
 
 export const useOneTimeInvestment = createContextConsumer(Context, PROVIDER_NAME);
 
-export function OneTimeInvestmentProvider({ children }: PropsWithChildren) {
+interface Props extends PropsWithChildren {
+  enabled?: boolean;
+}
+
+export function OneTimeInvestmentProvider({ children, enabled = true }: Props) {
   const { investmentId, createInvestment, createInvestmentMeta } = useCreateInvestment();
-  const { investmentSummary, investmentSummaryMeta } = useInvestmentSummary({ investmentId });
+  const { investmentSummary, investmentSummaryMeta } = useInvestmentSummary({ investmentId, enabled });
   const subscriptionAgreementHookResult = useSubscriptionAgreement({ investmentId });
 
   return (

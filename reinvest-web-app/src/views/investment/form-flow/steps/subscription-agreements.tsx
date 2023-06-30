@@ -87,9 +87,12 @@ export const StepSubscriptionAgreements: StepParams<FlowFields> = {
     useEffect(() => {
       if (signSubscriptionAgreementMeta.isSuccess || signRecurringInvestmentSubscriptionAgreementMeta.isSuccess) {
         signSubscriptionAgreementMeta.reset();
+        signRecurringInvestmentSubscriptionAgreementMeta.reset();
         moveToNextStep();
       }
-    }, [signSubscriptionAgreementMeta, moveToNextStep, signRecurringInvestmentSubscriptionAgreementMeta]);
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [signSubscriptionAgreementMeta.isSuccess, signRecurringInvestmentSubscriptionAgreementMeta.isSuccess]);
 
     function onButtonBackClick() {
       moveToPreviousStep();

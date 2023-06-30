@@ -13,7 +13,7 @@ import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/co
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 
-import { useModalHandler } from '../../providers/modal-handler';
+import { useModalHandler } from '../../providers/ModalHandler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -40,10 +40,11 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
 
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { createInvestmentMeta, investmentSummaryMeta, investmentSummary } = useOneTimeInvestment();
-    const { initiateRecurringInvestmentMeta } = useRecurringInvestment();
+    const { initiateRecurringInvestmentMeta, recurringInvestment } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
 
     const oneTimeInvestmentAmount = investmentSummary?.amount?.formatted;
+    const recurringInvestmentAmount = recurringInvestment?.amount?.formatted;
     const recurrentInvestmentInterval =
       storeFields.recurringInvestmentInterval && RECURRING_INVESTMENT_INTERVAL_LABELS.get(storeFields.recurringInvestmentInterval);
     const recurrentInvestmentLabel = `Recurring ${recurrentInvestmentInterval} Investment`;
@@ -89,9 +90,9 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
 
                 {showSeparator && <Separator />}
 
-                {storeFields._willSetUpRecurringInvestment && storeFields.recurringInvestment?.amount && storeFields.recurringInvestment?.date && (
+                {storeFields._willSetUpRecurringInvestment && recurringInvestmentAmount && storeFields.recurringInvestment?.date && (
                   <InvestmentInformation
-                    amount={storeFields.recurringInvestment.amount}
+                    amount={recurringInvestmentAmount}
                     type="recurring"
                     date={storeFields.recurringInvestment.date}
                     label={recurrentInvestmentLabel}
