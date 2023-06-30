@@ -7,12 +7,12 @@ import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
-import { z } from 'zod';
 
 import { IconCircleError } from '../../../../../assets/icons/IconCircleError';
 import { ButtonBack } from '../../../../../components/ButtonBack';
 import { CheckboxLabeled } from '../../../../../components/FormElements/CheckboxLabeled';
 import { Typography } from '../../../../../components/Typography';
+import { schema } from '../../../../../views/onboarding/form-flow/steps/company-ticker-symbols';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
@@ -30,34 +30,6 @@ const getDefaultValues = ({ statementTypes, compliances }: FlowFields): Fields =
   isSeniorPoliticalFigure: statementTypes?.includes(StatementType.Politician),
   doNoneApply: !!compliances?.doNoneApply,
 });
-
-const schema = z
-  .object({
-    isAssociatedWithFinra: z.boolean().optional(),
-    isAssociatedWithPubliclyTradedCompany: z.boolean().optional(),
-    isSeniorPoliticalFigure: z.boolean().optional(),
-    doNoneApply: z.boolean().optional(),
-  })
-  .superRefine(({ isAssociatedWithFinra, isAssociatedWithPubliclyTradedCompany, isSeniorPoliticalFigure, doNoneApply }, context) => {
-    const compliances = {
-      isAssociatedWithFinra,
-      isAssociatedWithPubliclyTradedCompany,
-      isSeniorPoliticalFigure,
-    };
-
-    const areSomeCompliancesTrue = Object.values(compliances).some(Boolean);
-    const areAllCompliancesFalse = Object.values(compliances).every(value => !value);
-    const isDoNoneApplyChecked = !!doNoneApply;
-    const hasSomeCompliancesAndDoNoneApply = areSomeCompliancesTrue && isDoNoneApplyChecked;
-    const hasAllCompliancesAndDoNoneApply = areAllCompliancesFalse && !isDoNoneApplyChecked;
-
-    if (hasSomeCompliancesAndDoNoneApply || hasAllCompliancesAndDoNoneApply) {
-      context.addIssue({
-        code: 'custom',
-        message: 'Please select only one option',
-      });
-    }
-  });
 
 export const StepSelectCompliance: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.NEW_COMPLIANCE,
