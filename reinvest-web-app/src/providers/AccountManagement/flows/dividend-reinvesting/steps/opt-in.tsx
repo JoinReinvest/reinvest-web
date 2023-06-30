@@ -72,7 +72,7 @@ export const StepOptIn: StepParams<FlowFields> = {
           <div className="flex flex-col gap-16">
             <Typography variant="h5">{TITLE}</Typography>
 
-            <Typography variant="paragraph-emphasized-regular">{status}</Typography>
+            <Typography variant="h6">{status}</Typography>
 
             <WarningMessage
               message={INFORMATION_MESSAGE}

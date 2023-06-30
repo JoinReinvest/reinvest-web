@@ -39,7 +39,7 @@ export const StepCurrentCompliance: StepParams<FlowFields> = {
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
             <Typography
-              variant="paragraph-emphasized"
+              variant="h6"
               className="flex flex-col"
             >
               There should be compliance list

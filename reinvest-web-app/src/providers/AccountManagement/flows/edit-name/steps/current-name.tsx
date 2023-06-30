@@ -41,7 +41,7 @@ export const StepCurrentName: StepParams<FlowFields> = {
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
             <Typography
-              variant="paragraph-emphasized"
+              variant="h6"
               className="flex flex-col"
             >
               {userProfile?.details?.firstName} {userProfile?.details?.middleName} {userProfile?.details?.lastName}

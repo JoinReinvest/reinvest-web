@@ -40,7 +40,7 @@ export const StepCurrentEmailAddress: StepParams<FlowFields> = {
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
 
             <Typography
-              variant="paragraph-emphasized"
+              variant="h6"
               className="flex flex-col"
             >
               {user?.attributes?.email}
