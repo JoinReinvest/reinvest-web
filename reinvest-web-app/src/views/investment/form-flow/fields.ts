@@ -16,6 +16,7 @@ export interface FlowFields {
   _isEditingCompanyMajorStakeholderApplicant?: boolean;
   _isEditingTrustTrusteeGrantorOrProtector?: boolean;
   _justAddedBankAccount?: boolean;
+  _onlyRecurringInvestment?: boolean;
   _shouldAgreeToOneTimeInvestment?: boolean;
   _shouldAgreeToRecurringInvestment?: boolean;
   _shouldDisplayRecurringInvestment?: boolean;

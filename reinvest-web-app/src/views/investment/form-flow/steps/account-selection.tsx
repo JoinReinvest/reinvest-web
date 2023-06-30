@@ -28,11 +28,11 @@ export const StepAccountSelection: StepParams<FlowFields> = {
   identifier: Identifiers.ACCOUNT_SELECTION,
 
   willBePartOfTheFlow: fields => {
-    return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount;
+    return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount && !fields._onlyRecurringInvestment;
   },
 
   doesMeetConditionFields: fields => {
-    return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount;
+    return !!fields._forInitialInvestment && !!fields._hasMoreThanAnAccount && !fields._onlyRecurringInvestment;
   },
 
   Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {

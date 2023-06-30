@@ -5,6 +5,7 @@ import { QueryMeta } from 'types/queries';
 
 interface Params {
   investmentId: string | null;
+  enabled?: boolean;
 }
 
 interface Returns {
@@ -12,8 +13,11 @@ interface Returns {
   investmentSummaryMeta: QueryMeta;
 }
 
-export function useInvestmentSummary({ investmentId }: Params): Returns {
-  const { data, ...investmentSummaryMeta } = useGetInvestmentSummary(getApiClient, { investmentId: investmentId ?? '', config: { enabled: !!investmentId } });
+export function useInvestmentSummary({ investmentId, enabled }: Params): Returns {
+  const { data, ...investmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
+    investmentId: investmentId ?? '',
+    config: { enabled: !!investmentId && enabled },
+  });
 
   return { investmentSummary: data ?? null, investmentSummaryMeta };
 }

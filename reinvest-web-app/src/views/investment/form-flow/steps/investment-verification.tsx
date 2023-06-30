@@ -7,7 +7,6 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
-import { useInvestmentContext } from 'providers/InvestmentProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useUserProfile } from 'providers/UserProfile';
 import { useCallback, useEffect, useState } from 'react';
@@ -21,10 +20,11 @@ import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verif
 import { DocumentFile } from 'reinvest-app-common/src/types/document-file';
 import { AccountType, ActionName, DomicileType, Stakeholder, VerificationObjectType } from 'reinvest-app-common/src/types/graphql';
 import { getApiClient } from 'services/getApiClient';
+import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
 import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
-import { useModalHandler } from '../../providers/modal-handler';
+import { useModalHandler } from '../../providers/ModalHandler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
@@ -40,7 +40,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
-    const { investmentId } = useInvestmentContext();
+    const { investmentId } = useOneTimeInvestment();
     const { mutateAsync, ...verifyAccountMeta } = useVerifyAccount(getApiClient);
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
     const { refetch: refetchAccountStats } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
@@ -226,13 +226,13 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
 
       if (getInvestmentSummaryMeta.isSuccess) {
-        const investmentFees = getInvestmentSummaryMeta.data?.investmentFees;
+        const mockInvestmentFees = true;
 
-        if (investmentFees) {
+        if (mockInvestmentFees) {
           setShouldManualVerification(true);
         }
 
-        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !investmentFees) {
+        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !mockInvestmentFees) {
           startInvestments();
         }
 
