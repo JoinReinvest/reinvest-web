@@ -20,8 +20,8 @@ module.exports = withVideos(
     trailingSlash: true,
     reactStrictMode: true,
     images: {
-      // TO-DO: Deprecate `images.unsplash.com` image domain once community REIT
-      // is connected with API.
+      // TO-DO: Deprecate `images.unsplash.com` domain once the properties updates
+      // are connected with Contentful.
       domains: ['images.ctfassets.net', 'images.unsplash.com'],
       remotePatterns: [
         {
