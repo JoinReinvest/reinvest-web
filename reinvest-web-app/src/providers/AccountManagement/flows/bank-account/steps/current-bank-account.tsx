@@ -55,7 +55,7 @@ export const StepCurrentBankAccount: StepParams<FlowFields> = {
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized">{bankAccountDisplay}</Typography>
 
-            <Typography variant="paragraph-emphasized-regular">
+            <Typography variant="h6">
               {NOTICES.map((notice, index) => (
                 <span key={index}>
                   {notice}

@@ -226,13 +226,13 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
 
       if (getInvestmentSummaryMeta.isSuccess) {
-        const mockInvestmentFees = true;
+        const investmentFees = getInvestmentSummaryMeta.data?.investmentFees;
 
-        if (mockInvestmentFees) {
+        if (investmentFees) {
           setShouldManualVerification(true);
         }
 
-        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !mockInvestmentFees) {
+        if (!getInvestmentSummaryMeta.data?.investmentFees?.value && !investmentFees) {
           startInvestments();
         }
 

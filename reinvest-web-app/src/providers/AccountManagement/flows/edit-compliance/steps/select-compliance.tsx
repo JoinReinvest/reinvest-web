@@ -1,76 +1,60 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
-import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { FormMessage } from 'components/FormElements/FormMessage';
-import { ModalTitle } from 'components/ModalElements/Title';
 import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
-import { z } from 'zod';
 
-import { OnboardingFormFields } from '../form-fields';
-import { Identifiers } from '../identifiers';
+import { IconCircleError } from '../../../../../assets/icons/IconCircleError';
+import { ButtonBack } from '../../../../../components/ButtonBack';
+import { CheckboxLabeled } from '../../../../../components/FormElements/CheckboxLabeled';
+import { Typography } from '../../../../../components/Typography';
+import { schema } from '../../../../../views/onboarding/form-flow/steps/company-ticker-symbols';
+import { FlowStepIdentifiers } from '../enums';
+import { FlowFields } from '../interfaces';
 
-type Fields = OnboardingFormFields['compliances'] & {
+const BUTTON_LABEL = 'Confirm';
+const TITLE = 'Update your name';
+const SUBTITLE = 'Updating your name will prompt you to upload a new ID card';
+
+type Fields = FlowFields['compliances'] & {
   doNoneApply?: boolean;
 };
 
-const getDefaultValues = ({ statementTypes, compliances }: OnboardingFormFields): Fields => ({
+const getDefaultValues = ({ statementTypes, compliances }: FlowFields): Fields => ({
   isAssociatedWithFinra: statementTypes?.includes(StatementType.FinraMember),
   isAssociatedWithPubliclyTradedCompany: statementTypes?.includes(StatementType.TradingCompanyStakeholder),
   isSeniorPoliticalFigure: statementTypes?.includes(StatementType.Politician),
   doNoneApply: !!compliances?.doNoneApply,
 });
 
-export const schema = z
-  .object({
-    isAssociatedWithFinra: z.boolean().optional(),
-    isAssociatedWithPubliclyTradedCompany: z.boolean().optional(),
-    isSeniorPoliticalFigure: z.boolean().optional(),
-    doNoneApply: z.boolean().optional(),
-  })
-  .superRefine(({ isAssociatedWithFinra, isAssociatedWithPubliclyTradedCompany, isSeniorPoliticalFigure, doNoneApply }, context) => {
-    const compliances = {
-      isAssociatedWithFinra,
-      isAssociatedWithPubliclyTradedCompany,
-      isSeniorPoliticalFigure,
-    };
+export const StepSelectCompliance: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.NEW_COMPLIANCE,
 
-    const areSomeCompliancesTrue = Object.values(compliances).some(Boolean);
-    const areAllCompliancesFalse = Object.values(compliances).every(value => !value);
-    const isDoNoneApplyChecked = !!doNoneApply;
-    const hasSomeCompliancesAndDoNoneApply = areSomeCompliancesTrue && isDoNoneApplyChecked;
-    const hasAllCompliancesAndDoNoneApply = areAllCompliancesFalse && !isDoNoneApplyChecked;
-
-    if (hasSomeCompliancesAndDoNoneApply || hasAllCompliancesAndDoNoneApply) {
-      context.addIssue({
-        code: 'custom',
-        message: 'Please select only one option',
-      });
-    }
-  });
-
-export const StepCompliances: StepParams<OnboardingFormFields> = {
-  identifier: Identifiers.COMPLIANCES,
-
-  doesMeetConditionFields(fields) {
-    const requiredFields = [fields.accountType, fields.name?.firstName, fields.name?.lastName, fields.dateOfBirth, fields.residency];
-
-    return allRequiredFieldsExists(requiredFields) && !fields.isCompletedProfile;
-  },
-
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { control, formState, handleSubmit, setValue, getValues } = useForm<Fields>({
-      mode: 'all',
+  Component: ({ moveToNextStep, updateStoreFields, moveToPreviousStep, storeFields }: StepComponentProps<FlowFields>) => {
+    const { setValue, getValues, control, handleSubmit, formState, reset } = useForm<Fields>({
+      mode: 'onSubmit',
       resolver: zodResolver(schema),
       defaultValues: async () => getDefaultValues(storeFields),
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const onSubmit: SubmitHandler<Fields> = async fields => {
+      const statements = [];
+      fields.isAssociatedWithFinra && statements.push(StatementType.FinraMember);
+      fields.isAssociatedWithPubliclyTradedCompany && statements.push(StatementType.TradingCompanyStakeholder);
+      fields.isSeniorPoliticalFigure && statements.push(StatementType.Politician);
+      await updateStoreFields({ statementTypes: statements, compliances: fields });
+      moveToNextStep();
+    };
+
+    const onButtonBackClick = () => {
+      reset();
+      moveToPreviousStep();
+    };
 
     const onFieldComplianceChange = (key: Exclude<FieldPath<Fields>, 'doNoneApply'>, event: ChangeEvent<HTMLInputElement>) => {
       const value = !!event.target.value;
@@ -95,28 +79,17 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
       setValue('doNoneApply', value);
     };
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
-      const statements = [];
-      fields.isAssociatedWithFinra && statements.push(StatementType.FinraMember);
-      fields.isAssociatedWithPubliclyTradedCompany && statements.push(StatementType.TradingCompanyStakeholder);
-      fields.isSeniorPoliticalFigure && statements.push(StatementType.Politician);
-      await updateStoreFields({ statementTypes: statements, compliances: fields });
-      moveToNextStep();
-    };
-
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
-          <ModalTitle title="Do any of the following apply to you?" />
-
-          <div className="flex w-full flex-col gap-16">
-            {formState.errors.root?.message && (
-              <FormMessage
-                message={formState.errors.root?.message}
-                variant="error"
-              />
-            )}
-
+        <FormContent willLeaveContentOnTop>
+          <ButtonBack onClick={onButtonBackClick} />
+          <div className="flex flex-col gap-16">
+            <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+            <Typography variant="paragraph-small">
+              <span className="flex items-center gap-9 text-gray-01">
+                <IconCircleError className="inline-block" /> {SUBTITLE}
+              </span>
+            </Typography>
             <CheckboxLabeled
               name="isAssociatedWithFinra"
               control={control}
@@ -152,11 +125,10 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
             </CheckboxLabeled>
           </div>
         </FormContent>
-
         <ButtonStack>
           <Button
             type="submit"
-            label="Continue"
+            label={BUTTON_LABEL}
             disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>

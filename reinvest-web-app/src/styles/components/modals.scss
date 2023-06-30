@@ -45,6 +45,16 @@
   .hkek-select__value-container {
     @apply child:text-black-01 #{!important};
   }
+
+  .radio-group-options-indicator-container {
+    @apply border-gray-04 #{!important};
+  }
+
+  .hkek-radio-group-item[data-state="checked"] {
+    .radio-group-options-indicator-container {
+      @apply bg-green-frost-01 border-green-frost-01 #{!important};
+    }
+  }
 }
 
 .modal-withdraw-funds {

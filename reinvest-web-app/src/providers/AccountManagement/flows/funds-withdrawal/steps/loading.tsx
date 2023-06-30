@@ -19,7 +19,9 @@ export const StepLoading: StepParams<FlowFields> = {
         await updateStoreFields({ _canWithdrawFunds: !!simulation?.canWithdraw });
 
         if (!simulation?.canWithdraw) {
-          // TO-DO: View for cannot wihdraw funds message
+          moveToNextStep();
+
+          return;
         }
 
         if (subscriptionAgreement?.status === AgreementStatus.WaitingForSignature) {
@@ -43,12 +45,12 @@ export const StepLoading: StepParams<FlowFields> = {
         moveToNextStep();
       }
 
-      if (simulationMeta?.isSuccess && currentRequestMeta?.isSuccess && currentAgreementMeta?.isSuccess) {
+      if (simulationMeta?.isSuccess && !currentRequestMeta?.isLoading && !currentAgreementMeta?.isLoading) {
         moveToStepBasedOnState();
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [simulationMeta?.isSuccess, currentRequestMeta?.isSuccess, currentAgreementMeta?.isSuccess, fundsWithdrawalRequest?.status]);
+    }, [simulationMeta?.isSuccess, currentRequestMeta?.isLoading, currentAgreementMeta?.isLoading, fundsWithdrawalRequest?.status]);
 
     return (
       <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
