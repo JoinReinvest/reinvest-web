@@ -9,7 +9,7 @@ import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
 
 import { FLOW_STEPS_WITH_BLACK_MODAL, FLOW_STEPS_WITH_X_BUTTON } from './constants';
-import { InvestmentFlowProvider, useInvestmentFlow } from './form-flow';
+import { FlowProvider, useFlow } from './form-flow';
 import { Identifiers } from './form-flow/identifiers';
 import { useInitializeFields } from './hooks/initialize-fields';
 import { ModalHandlerProvider } from './providers/modal-handler';
@@ -34,7 +34,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
     getStoreFields,
     updateStoreFields,
     meta: { currentStepIdentifier, isFirstStep },
-  } = useInvestmentFlow();
+  } = useFlow();
 
   const shouldDisplayBlackModal = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_BLACK_MODAL.includes(currentStepIdentifier), [currentStepIdentifier]);
   const shouldDisplayBackIcon = useMemo(() => currentStepIdentifier && FLOW_STEPS_WITH_X_BUTTON.includes(currentStepIdentifier), [currentStepIdentifier]);
@@ -153,9 +153,9 @@ export const InvestmentView = (props: Props) => {
 
   return (
     <OneTimeInvestmentProvider>
-      <InvestmentFlowProvider initialStoreFields={{ _forInitialInvestment: !!props.forInitialInvestment }}>
+      <FlowProvider initialStoreFields={{ _forInitialInvestment: !!props.forInitialInvestment }}>
         <InnerInvestmentView {...props} />
-      </InvestmentFlowProvider>
+      </FlowProvider>
     </OneTimeInvestmentProvider>
   );
 };

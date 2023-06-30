@@ -2,7 +2,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 
-import { useInvestmentFlow } from '../form-flow';
+import { useFlow } from '../form-flow';
 
 interface Params {
   forInitialInvestment?: boolean;
@@ -11,7 +11,7 @@ interface Params {
 export const useInitializeFields = ({ forInitialInvestment }: Params) => {
   const { availableAccounts } = useActiveAccount();
   const { recurringInvestment, recurringInvestmentMeta } = useRecurringInvestment();
-  const { updateStoreFields } = useInvestmentFlow();
+  const { updateStoreFields } = useFlow();
 
   useEffect(() => {
     async function initializeFields() {
