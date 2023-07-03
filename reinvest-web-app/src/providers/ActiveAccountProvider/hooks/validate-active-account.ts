@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useGetListAccountTypesUserCanOpen } from 'reinvest-app-common/src/services/queries/getListAccountTypesUserCanOpen';
 import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
 import { AccountOverview, AccountType } from 'reinvest-app-common/src/types/graphql';
@@ -11,13 +11,11 @@ interface Params {
 
 interface Return {
   canOpenAccount: boolean;
-  isAccountBanned: boolean;
   validateActiveAccountMeta: MutationMeta;
 }
 
 export function useValidateActiveAccount({ activeAccount }: Params): Return {
-  const { data: verifyAccountData, mutateAsync: verifyAccountMutate, isSuccess, isLoading, reset, error } = useVerifyAccount(getApiClient);
-  const [isAccountBanned, setIsAccountBanned] = useState(false);
+  const { mutateAsync: verifyAccountMutate, isSuccess, isLoading, reset, error } = useVerifyAccount(getApiClient);
   const canOpenAccount = useRef<boolean>();
 
   const {
@@ -44,12 +42,5 @@ export function useValidateActiveAccount({ activeAccount }: Params): Return {
     }
   }, [isListAccountTypesUserCanOpenSuccess, listAccountTypesUserCanOpen]);
 
-  useEffect(() => {
-    if (verifyAccountData) {
-      //TODO: Add logic to check if account is banned in RELENDER-5
-      setIsAccountBanned(false);
-    }
-  }, [verifyAccountData]);
-
-  return { isAccountBanned, validateActiveAccountMeta, canOpenAccount: canOpenAccount.current || false };
+  return { validateActiveAccountMeta, canOpenAccount: canOpenAccount.current || false };
 }
