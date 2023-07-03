@@ -19,6 +19,7 @@ import { FLOW_NET_INCOME_AND_WORTH } from './net-income-and-worth';
 import { FLOW_RECURRING_INVESTMENT } from './recurring-investment';
 import { FLOW_REMOVE_ACCOUNT } from './remove-account';
 import { FLOW_UPDATE_ADDRESS } from './update-address';
+import { FLOW_UPDATE_BUSINESS_ADDRESS } from './update-business-address';
 import { FLOW_PHONE_NUMBER } from './update-phone-number';
 
 export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
@@ -42,4 +43,5 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.DOMICILE, FLOW_DOMICILE],
   [FlowIdentifiers.EXPERIENCE, FLOW_EDIT_INVESTOR_EXPERIENCE_FLOW],
   [FlowIdentifiers.COMPLIANCE, FLOW_CHANGE_COMPLIANCE],
+  [FlowIdentifiers.BUSINESS_ADDRESS, FLOW_UPDATE_BUSINESS_ADDRESS],
 ]);
