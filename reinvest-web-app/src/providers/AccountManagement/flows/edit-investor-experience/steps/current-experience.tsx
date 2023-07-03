@@ -1,7 +1,9 @@
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
 import { useUserProfile } from 'providers/UserProfile';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -9,12 +11,10 @@ import { EXPERIENCE_TITLES } from 'reinvest-app-common/src/constants/experiences
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { Experience } from 'reinvest-app-common/src/types/graphql';
 
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { Typography } from '../../../../../components/Typography';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const BUTTON_LABEL = 'Continue';
+const BUTTON_LABEL = 'Update Experience';
 const TITLE = 'Your actual experience';
 
 type Fields = FlowFields;
