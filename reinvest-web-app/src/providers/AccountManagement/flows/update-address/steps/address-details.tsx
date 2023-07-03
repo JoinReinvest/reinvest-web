@@ -11,7 +11,7 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const TITLE = 'Your address.';
+const TITLE = 'Your address';
 const BUTTON_LABEL = 'Update Address';
 
 export const StepAddressDetails: StepParams<FlowFields> = {
