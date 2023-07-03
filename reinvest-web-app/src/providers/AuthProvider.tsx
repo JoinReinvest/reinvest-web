@@ -70,7 +70,8 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
   const { data, isSuccess, isLoading, refetch, isRefetching, error } = useGetUserProfile(getApiClient);
-  const isBannedProfile = error instanceof Error && (error.message === 'Profile is banned' || error.name === 'Profile is banned');
+
+  const isBannedProfile = error instanceof Error && (error.message.includes('Profile is banned') || error.name === 'Profile is banned');
 
   const signIn = async (email: string, password: string): Promise<CognitoUser | Error> => {
     try {
