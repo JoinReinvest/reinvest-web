@@ -4,7 +4,13 @@ import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { InputAvatar } from 'components/FormElements/InputAvatar';
+import { Typography } from 'components/Typography';
+import { useCorporateAccount } from 'hooks/corporate-account';
+import { useIndividualAccount } from 'hooks/individual-account';
+import { useTrustAccount } from 'hooks/trust-account';
 import { useAccountManagement } from 'providers/AccountManagement';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
@@ -12,21 +18,15 @@ import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services
 import { useCreateAvatarFileLink } from 'reinvest-app-common/src/services/queries/createAvatarFileLink';
 import { useUpdateBeneficiaryAccount } from 'reinvest-app-common/src/services/queries/updateBeneficiaryAccount';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
+import { getApiClient } from 'services/getApiClient';
+import { sendFilesToS3Bucket } from 'services/sendFilesToS3Bucket';
+import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from 'views/onboarding/form-flow/schemas';
 import { z } from 'zod';
 
-import { InputAvatar } from '../../../../../components/FormElements/InputAvatar';
-import { Typography } from '../../../../../components/Typography';
-import { useCorporateAccount } from '../../../../../hooks/corporate-account';
-import { useIndividualAccount } from '../../../../../hooks/individual-account';
-import { useTrustAccount } from '../../../../../hooks/trust-account';
-import { getApiClient } from '../../../../../services/getApiClient';
-import { sendFilesToS3Bucket } from '../../../../../services/sendFilesToS3Bucket';
-import { ACCEPTED_FILES_MIME_TYPES, FILE_SIZE_LIMIT_IN_MEGABYTES } from '../../../../../views/onboarding/form-flow/schemas';
-import { useActiveAccount } from '../../../../ActiveAccountProvider';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const BUTTON_LABEL = 'Continue';
+const BUTTON_LABEL = 'Update Profile Picture';
 const TITLE = 'Edit your current profile picture';
 
 const schema = z.object({
