@@ -13,7 +13,7 @@ export function FlowInvestmentFailed() {
   useEffect(() => {
     if (investmentId) {
       setActiveInvestmentSummaryId(investmentId);
-      setQueryFlow('MANAGE_INVESTMENT');
+      setQueryFlow('MANAGE_BANK_ACCOUNT');
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
