@@ -7,7 +7,6 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { Typography } from 'components/Typography';
 import { useIndividualAccount } from 'hooks/individual-account';
-import { useAccountManagement } from 'providers/AccountManagement';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { EMPLOYMENT_STATUSES, EMPLOYMENT_STATUSES_VALUES } from 'reinvest-app-common/src/constants/employment_statuses';
@@ -30,9 +29,8 @@ const BUTTON_LABEL_FALLBACK = 'Update';
 export const StepEmploymentStatus: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.EMPLOYMENT_STATUS,
 
-  Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToStepByIdentifier, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { updateIndividualAccount, updateIndividualAccountMeta } = useIndividualAccount();
-    const { setCurrentFlowIdentifier } = useAccountManagement();
 
     const form = useForm<Fields>({
       resolver: zodResolver(schema),
@@ -60,13 +58,18 @@ export const StepEmploymentStatus: StepParams<FlowFields> = {
           await updateStoreFields({ employmentStatus });
           moveToNextStep();
         } else {
-          await updateIndividualAccount({ employmentStatus: { status: employmentStatus } });
+          await updateIndividualAccount({
+            employmentStatus: { status: employmentStatus },
+            // TO-DO: The API is not allowing to remove the employer
+            // details, uncomment this when the API is ready.
+            // employer: null
+          });
         }
       }
     };
 
     function onButtonBackClick() {
-      setCurrentFlowIdentifier(null);
+      moveToPreviousStep();
     }
 
     return (
