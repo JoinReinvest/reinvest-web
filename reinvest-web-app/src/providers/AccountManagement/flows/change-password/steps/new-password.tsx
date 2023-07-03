@@ -79,6 +79,7 @@ export const StepNewPassword: StepParams<FlowFields> = {
               name="password"
               control={control}
               required
+              iconWhite={false}
             />
 
             <InputPassword
@@ -86,6 +87,7 @@ export const StepNewPassword: StepParams<FlowFields> = {
               control={control}
               required
               placeholder="Confirm Password"
+              iconWhite={false}
             />
             <PasswordChecklist
               password={fields.password}
