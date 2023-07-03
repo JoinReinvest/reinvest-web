@@ -1,22 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
+import { Typography } from 'components/Typography';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
+import { EMPTY_COMPANY_TICKER_SYMBOL, INITIAL_VALUES, MAXIMUM_COMPANY_TICKER_SYMBOLS, schema } from 'views/onboarding/form-flow/steps/company-ticker-symbols';
 
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { Typography } from '../../../../../components/Typography';
-import {
-  EMPTY_COMPANY_TICKER_SYMBOL,
-  INITIAL_VALUES,
-  MAXIMUM_COMPANY_TICKER_SYMBOLS,
-  schema,
-} from '../../../../../views/onboarding/form-flow/steps/company-ticker-symbols';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 

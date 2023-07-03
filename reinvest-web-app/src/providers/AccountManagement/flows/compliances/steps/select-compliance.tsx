@@ -1,18 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { IconCircleError } from 'assets/icons/IconCircleError';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
+import { CheckboxLabeled } from 'components/FormElements/CheckboxLabeled';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { Typography } from 'components/Typography';
 import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { StatementType } from 'reinvest-app-common/src/types/graphql';
+import { schema } from 'views/onboarding/form-flow/steps/company-ticker-symbols';
 
-import { IconCircleError } from '../../../../../assets/icons/IconCircleError';
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { CheckboxLabeled } from '../../../../../components/FormElements/CheckboxLabeled';
-import { Typography } from '../../../../../components/Typography';
-import { schema } from '../../../../../views/onboarding/form-flow/steps/company-ticker-symbols';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
