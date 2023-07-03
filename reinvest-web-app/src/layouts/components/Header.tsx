@@ -13,6 +13,10 @@ import { NotificationsButton } from './NotificationsButton';
 
 const MENU_ITEMS: ComponentProps<typeof HeaderNavigation>['navigationItems'] = [
   {
+    label: 'Dashboard',
+    href: URL.index,
+  },
+  {
     label: 'Community REIT',
     href: URL.community_portfolio,
   },
