@@ -1,18 +1,19 @@
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { Typography } from '../../../../../components/Typography';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const BUTTON_LABEL = 'Continue';
-const TITLE = 'Your compliance status';
+const BUTTON_LABEL = 'Update Statements';
+const TITLE = 'You Compliance statements';
+const FALLBACK_CONTENT = 'None';
 
 export const StepCurrentCompliance: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_COMPLIANCE,
@@ -36,15 +37,17 @@ export const StepCurrentCompliance: StepParams<FlowFields> = {
           <ButtonBack onClick={onButtonBackClick} />
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+
             <Typography
               variant="h6"
               className="flex flex-col"
             >
               {/*TODO: task number RIA-1558*/}
-              There should be compliance list
+              {FALLBACK_CONTENT}
             </Typography>
           </div>
         </FormContent>
+
         <ButtonStack>
           <Button
             type="submit"
