@@ -57,7 +57,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
     const { mutateAsync: createAvatarLink } = useCreateAvatarFileLink(getApiClient);
 
     const shouldBackButtonBeDisabled = formState.isSubmitting;
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || !formState.isDirty;
 
     const onSubmit: SubmitHandler<FlowFields> = async ({ profilePicture }) => {
       const accountId = activeAccount?.id;
@@ -139,6 +139,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
             />
           </div>
         </FormContent>
+
         <ButtonStack>
           <Button
             type="submit"
