@@ -1,6 +1,4 @@
-import { StatementType } from 'reinvest-app-common/src/types/graphql';
-
-import { CompanyTickerSymbol, Compliances } from '../../../../views/onboarding/form-flow/form-fields';
+import { CompanyTickerSymbol, Compliances } from 'views/onboarding/form-flow/form-fields';
 
 export interface FlowFields {
   _hasSucceded?: boolean;
@@ -8,5 +6,15 @@ export interface FlowFields {
   compliances?: Compliances;
   finraInstitutionName?: string;
   seniorPoliticalFigure?: string;
-  statementTypes?: StatementType[];
+}
+
+export enum FlowStepIdentifiers {
+  LOADING = 'LOADING',
+  CURRENT_COMPLIANCE = 'CURRENT_COMPLIANCE',
+  NEW_COMPLIANCE = 'NEW_COMPLIANCE',
+  FINRA_INSTITUTION = 'FINRA_INSTITUTION',
+  COMPANY_TICKER_SYMBOLS = 'COMPANY_TICKER_SYMBOLS',
+  SENIOR_POLITICAL_FIGURES = 'SENIOR_POLITICAL_FIGURES',
+  UPDATE = 'UPDATE',
+  CONFIRMATION = 'CONFIRMATION',
 }

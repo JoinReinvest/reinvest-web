@@ -9,11 +9,9 @@ import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
 type Fields = Pick<FlowFields, 'finraInstitutionName'>;
 
@@ -26,12 +24,12 @@ const schema = z.object({
 export const StepFinraInstitution: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.FINRA_INSTITUTION,
 
-  willBePartOfTheFlow: ({ statementTypes }) => {
-    return !!statementTypes?.includes(StatementType.FinraMember);
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isAssociatedWithFinra;
   },
 
-  doesMeetConditionFields(fields) {
-    return !!fields.statementTypes?.includes(StatementType.FinraMember);
+  doesMeetConditionFields({ compliances }) {
+    return !!compliances?.isAssociatedWithFinra;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
@@ -62,6 +60,7 @@ export const StepFinraInstitution: StepParams<FlowFields> = {
           <ButtonBack onClick={onButtonBackClick} />
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+
             <Input
               name="finraInstitutionName"
               control={control}
