@@ -2,6 +2,7 @@ import { FlowIdentifiers } from '../enums';
 import { SubFlow } from '../interfaces';
 import { FLOW_ACCOUNT_ACTIVITY } from './account-activity';
 import { FLOW_BANK_ACCOUNT } from './bank-account';
+import { FLOW_BUSINESS_ADDRESS } from './business-address';
 import { FLOW_CHANGE_AVATAR } from './change-avatar';
 import { FLOW_CHANGE_PASSWORD } from './change-password';
 import { FLOW_DOCUMENTS_CORPORATE_TRUST } from './coportate-trust-documents';
@@ -19,7 +20,6 @@ import { FLOW_NET_INCOME_AND_WORTH } from './net-income-and-worth';
 import { FLOW_RECURRING_INVESTMENT } from './recurring-investment';
 import { FLOW_REMOVE_ACCOUNT } from './remove-account';
 import { FLOW_UPDATE_ADDRESS } from './update-address';
-import { FLOW_UPDATE_BUSINESS_ADDRESS } from './update-business-address';
 import { FLOW_PHONE_NUMBER } from './update-phone-number';
 
 export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
@@ -43,5 +43,5 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.DOMICILE, FLOW_DOMICILE],
   [FlowIdentifiers.EXPERIENCE, FLOW_EDIT_INVESTOR_EXPERIENCE_FLOW],
   [FlowIdentifiers.COMPLIANCE, FLOW_CHANGE_COMPLIANCE],
-  [FlowIdentifiers.BUSINESS_ADDRESS, FLOW_UPDATE_BUSINESS_ADDRESS],
+  [FlowIdentifiers.BUSINESS_ADDRESS, FLOW_BUSINESS_ADDRESS],
 ]);

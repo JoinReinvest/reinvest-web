@@ -1,9 +1,8 @@
 import { createFormFlow } from 'reinvest-app-common/src/services/form-flow';
 
-import { FlowFields } from './interfaces';
 import { STEPS } from './steps';
 
-const [useFlow, FlowProvider] = createFormFlow<FlowFields>({ steps: STEPS });
+const [useFlow, FlowProvider] = createFormFlow({ steps: STEPS });
 
 function InnerFlow() {
   const { CurrentStepView } = useFlow();
@@ -11,7 +10,7 @@ function InnerFlow() {
   return <CurrentStepView />;
 }
 
-export const FlowUpdateAddress = () => (
+export const Flow = () => (
   <FlowProvider initialStoreFields={{}}>
     <InnerFlow />
   </FlowProvider>

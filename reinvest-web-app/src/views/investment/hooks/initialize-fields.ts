@@ -1,4 +1,5 @@
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useBankAccount } from 'providers/BankAccount';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 
@@ -11,8 +12,17 @@ interface Params {
 
 export const useInitializeFields = ({ forInitialInvestment, onlyRecurringInvestment }: Params) => {
   const { availableAccounts } = useActiveAccount();
+  const { currentBankAccountMeta } = useBankAccount();
   const { recurringInvestment, recurringInvestmentMeta } = useRecurringInvestment();
   const { updateStoreFields } = useFlow();
+
+  useEffect(() => {
+    // There's a race condition when checking if the account has been connected to
+    // Plaid after onboarding them. Need to enforce a check on the query to make sure
+    // that the account is connected before allowing the user to proceed.
+    currentBankAccountMeta.remove();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     async function initializeMetaFields() {

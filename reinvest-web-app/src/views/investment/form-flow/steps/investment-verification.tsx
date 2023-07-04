@@ -23,6 +23,8 @@ import { getApiClient } from 'services/getApiClient';
 import { formatStakeholdersForStorage } from 'views/onboarding/form-flow/utilities';
 
 import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
+import { GetHelpLink } from '../../../../components/Links/GetHelp';
+import { EMAILS } from '../../../../constants/urls';
 import { useModalHandler } from '../../providers/ModalHandler';
 import { useOneTimeInvestment } from '../../providers/OneTimeInvestment';
 import { FlowFields } from '../fields';
@@ -57,6 +59,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const [shouldUpdateCompanyData, setShouldUpdateCompanyData] = useState(false);
     const [shouldManualVerification, setShouldManualVerification] = useState(false);
     const shouldUpdateData = shouldUpdateProfileDetails || shouldUpdateStakeholderData || shouldUpdateCompanyData;
+    const [isAccountBanned, setIsAccountBanned] = useState(false);
 
     const {
       refetch: refetchCorporate,
@@ -144,37 +147,23 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           return moveToNextStep();
         }
 
-        //TODO: this if should be upgrade in RELEASE-5
-        // if (accountIsBanned) {
-        //   return setIsBannedAccount(false);
-        // }
+        const accountIsBanned = verifyAccountMeta.data?.requiredActions?.filter(requiredAction => requiredAction?.action === ActionName.BanAccount);
+
+        if (accountIsBanned) {
+          return setIsAccountBanned(true);
+        }
 
         if (!verifyAccountMeta.data?.canUserContinueTheInvestment && !verifyAccountMeta.data?.isAccountVerified) {
           const shouldUpdateProfileData = verifyAccountMeta.data?.requiredActions?.filter(
-            //TODO: this if should be upgrade in RELEASE-5
-            requiredAction =>
-              requiredAction?.onObject.type === VerificationObjectType.Profile &&
-              requiredAction.action !== ActionName.RequireManualReview &&
-              requiredAction.action !== ActionName.BanProfile &&
-              requiredAction.action !== ActionName.BanAccount,
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Profile && requiredAction.action !== ActionName.RequireManualReview,
           );
 
           const shouldUpdateStakeholderData = verifyAccountMeta.data?.requiredActions?.filter(
-            //TODO: this if should be upgrade in RELEASE-5
-            requiredAction =>
-              requiredAction?.onObject.type === VerificationObjectType.Stakeholder &&
-              requiredAction.action !== ActionName.RequireManualReview &&
-              requiredAction.action !== ActionName.BanProfile &&
-              requiredAction.action !== ActionName.BanAccount,
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Stakeholder && requiredAction.action !== ActionName.RequireManualReview,
           );
 
           const shouldUpdateCompanyData = verifyAccountMeta.data?.requiredActions?.filter(
-            //TODO: this if should be upgrade in RELEASE-5
-            requiredAction =>
-              requiredAction?.onObject.type === VerificationObjectType.Company &&
-              requiredAction.action !== ActionName.RequireManualReview &&
-              requiredAction.action !== ActionName.BanProfile &&
-              requiredAction.action !== ActionName.BanAccount,
+            requiredAction => requiredAction?.onObject.type === VerificationObjectType.Company && requiredAction.action !== ActionName.RequireManualReview,
           );
 
           const _shouldUpdateProfileDetails = !!shouldUpdateProfileData?.length;
@@ -283,6 +272,29 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
 
       moveToNextStep();
     };
+
+    if (isAccountBanned) {
+      return (
+        <Form>
+          <FormContent>
+            <div className="flex flex-col gap-32">
+              <div className="flex w-full flex-col items-center gap-16">
+                <IconXCircle />
+              </div>
+
+              <ModalTitle
+                title="Verification failed. Your account has been locked."
+                subtitle={
+                  <p>
+                    Please reach out to <GetHelpLink label={EMAILS.support} />
+                  </p>
+                }
+              />
+            </div>
+          </FormContent>
+        </Form>
+      );
+    }
 
     return (
       <Form onSubmit={onSubmit}>

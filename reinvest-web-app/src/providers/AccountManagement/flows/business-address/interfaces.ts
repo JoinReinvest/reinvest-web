@@ -5,3 +5,10 @@ export interface FlowFields {
   _hasSucceded?: boolean;
   address?: Address;
 }
+
+export enum FlowStepIdentifiers {
+  LOADING = 'LOADING',
+  SUMMARY = 'SUMMARY',
+  DETAILS = 'DETAILS',
+  CONFIRMATION = 'CONFIRMATION',
+}

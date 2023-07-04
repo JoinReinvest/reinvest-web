@@ -19,7 +19,6 @@ export const Context = createContext<State>({
   deprecateLatestAccountOnboarded: () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   setLatestAccountOnboardedId: () => {},
-  isAccountBanned: false,
   validateActiveAccountMeta: DEFAULT_MUTATION_META,
   canOpenAccount: true,
   allAccountsMeta: DEFAULT_QUERY_META,

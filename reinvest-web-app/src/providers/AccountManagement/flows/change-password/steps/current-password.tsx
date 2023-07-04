@@ -70,6 +70,7 @@ export const StepCurrentPassword: StepParams<FlowFields> = {
               name="currentPassword"
               control={control}
               required
+              iconWhite={false}
             />
           </div>
         </FormContent>

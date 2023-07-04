@@ -5,38 +5,26 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
-import { FormEventHandler } from 'react';
+import { FormEvent, useMemo } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
+import { getLabelsForDisplay } from '../utilities';
 
-const TITLE = 'Your business address.';
-const BUTTON_LABEL = 'Update Business Address';
+const TITLE = 'Your Employment Details';
+const BUTTON_LABEL = 'Update Employment Details';
 
-export const StepAddressDetails: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.ADDRESS_DETAILS,
-
-  willBePartOfTheFlow: fields => {
-    return !!fields?._currentAddress;
-  },
-
-  doesMeetConditionFields: fields => {
-    return !!fields?._currentAddress;
-  },
+export const StepCurrentDetails: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.CURRENT_DETAILS,
 
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
+    const fields = useMemo(() => getLabelsForDisplay(storeFields), [storeFields]);
 
-    const address = storeFields?._currentAddress;
-    const addressCityWithState = [address?.city, address?.state].join(', ');
-    const addressFields = [address?.addressLine1, address?.addressLine2, addressCityWithState, address?.zip];
-    const validAddressFields = addressFields.filter(Boolean);
-
-    const onSubmit: FormEventHandler<HTMLFormElement> = event => {
+    function onSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();
       moveToNextStep();
-    };
+    }
 
     function onButtonBackClick() {
       setCurrentFlowIdentifier(null);
@@ -54,7 +42,7 @@ export const StepAddressDetails: StepParams<FlowFields> = {
               variant="h6"
               className="flex flex-col"
             >
-              {validAddressFields.map((field, index) => (
+              {fields.map((field, index) => (
                 <span key={index}>{field}</span>
               ))}
             </Typography>

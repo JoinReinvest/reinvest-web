@@ -10,28 +10,26 @@ import { InputZipCode } from 'components/FormElements/InputZipCode';
 import { SelectAsync } from 'components/FormElements/SelectAsync';
 import { Select } from 'components/Select';
 import { Typography } from 'components/Typography';
+import { useCorporateAccount } from 'hooks/corporate-account';
+import { useIsCorporateAccount } from 'hooks/is-corporate-account';
+import { useTrustAccount } from 'hooks/trust-account';
+import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { STATES_AS_SELECT_OPTION } from 'reinvest-app-common/src/constants/states';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType, Address, AddressInput } from 'reinvest-app-common/src/types/graphql';
+import { Address, AddressInput } from 'reinvest-app-common/src/types/graphql';
 import { AddressAsOption, addressService, loadAddressesSuggestions } from 'services/addresses';
 import { makeRequest } from 'services/api-request';
 
-import { useCorporateAccount } from '../../../../../hooks/corporate-account';
-import { useTrustAccount } from '../../../../../hooks/trust-account';
-import { useActiveAccount } from '../../../../ActiveAccountProvider';
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-type Fields = AddressInput;
-
-const TITLE = 'Enter your new business address.';
+const TITLE = 'Enter your new address.';
 const BUTTON_LABEL = 'Confirm';
 
-export const StepAddressFields: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.ADDRESS_FIELDS,
+export const StepDetails: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.DETAILS,
 
   doesMeetConditionFields: fields => {
     return !!fields?._currentAddress;
@@ -39,36 +37,26 @@ export const StepAddressFields: StepParams<FlowFields> = {
 
   Component: ({ moveToNextStep, moveToPreviousStep, updateStoreFields, storeFields }: StepComponentProps<FlowFields>) => {
     const { activeAccount } = useActiveAccount();
-    const { updateCorporateAccount, updateCorporateAccountMeta } = useCorporateAccount({
-      accountId: activeAccount?.id ?? '',
-      enabled: !!activeAccount?.id && activeAccount.type === AccountType.Corporate,
+    const accountId = activeAccount?.id ?? '';
+    const isCorporateAccount = useIsCorporateAccount();
+    const { updateTrustAccount, updateTrustAccountMeta } = useTrustAccount({ accountId, enabled: !isCorporateAccount });
+    const { updateCorporateAccount, updateCorporateAccountMeta } = useCorporateAccount({ accountId, enabled: isCorporateAccount });
+    const { control, handleSubmit, setValue, formState, reset } = useForm<AddressInput>({
+      mode: 'onSubmit',
+      resolver: zodResolver(formValidationRules.address),
     });
-    const { updateTrustAccount, updateTrustAccountMeta } = useTrustAccount({
-      accountId: activeAccount?.id ?? '',
-      enabled: !!activeAccount?.id && activeAccount.type === AccountType.Trust,
-    });
-    const { control, handleSubmit, setValue, formState, reset } = useForm<Fields>({ mode: 'onSubmit', resolver: zodResolver(formValidationRules.address) });
     const [isLoadingSelectedAddress, setIsLoadingSelectedAddress] = useState(false);
 
-    async function maybeMoveToNextStep() {
-      if (updateCorporateAccountMeta.isSuccess) {
-        updateCorporateAccountMeta.reset();
-      }
-
-      if (updateTrustAccountMeta.isSuccess) {
-        updateTrustAccountMeta.reset();
-      }
-
-      if (updateCorporateAccountMeta.isSuccess || updateTrustAccountMeta.isSuccess) {
-        await updateStoreFields({ _hasSucceded: true });
-        moveToNextStep();
-      }
-    }
-
     useEffect(() => {
-      maybeMoveToNextStep();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [updateCorporateAccountMeta.isSuccess]);
+      async function completeUpdate() {
+        if (updateCorporateAccountMeta.isSuccess || updateTrustAccountMeta.isSuccess) {
+          await updateStoreFields({ _hasSucceded: true });
+          moveToNextStep();
+        }
+      }
+
+      completeUpdate();
+    }, [updateCorporateAccountMeta.isSuccess, updateTrustAccountMeta.isSuccess, updateStoreFields, moveToNextStep]);
 
     const setValuesFromStreetAddress = async (option: AddressAsOption | null) => {
       const placeId = option?.placeId;
@@ -89,18 +77,18 @@ export const StepAddressFields: StepParams<FlowFields> = {
       }
     };
 
-    const onSubmit: SubmitHandler<Fields> = async fields => {
+    const onSubmit: SubmitHandler<AddressInput> = async fields => {
       // Mainly for keeping country as USA
       const currentAddress = storeFields._currentAddress;
       const address = currentAddress ? { ...currentAddress, ...fields } : fields;
 
       await updateStoreFields({ address });
 
-      if (activeAccount?.type === AccountType.Corporate) {
-        return updateCorporateAccount({ address });
+      if (isCorporateAccount) {
+        await updateCorporateAccount({ address });
+      } else {
+        await updateTrustAccount({ address });
       }
-
-      return updateTrustAccount({ address });
     };
 
     function onButtonBackClick() {
@@ -110,7 +98,7 @@ export const StepAddressFields: StepParams<FlowFields> = {
       moveToPreviousStep();
     }
 
-    const shouldButtonBeLoading = isLoadingSelectedAddress || updateCorporateAccountMeta.isLoading || updateTrustAccountMeta.isLoading;
+    const shouldButtonBeLoading = isLoadingSelectedAddress || updateTrustAccountMeta.isLoading || updateCorporateAccountMeta.isLoading;
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting || shouldButtonBeLoading;
     const shouldBackButtonBeDisabled = formState.isSubmitting || shouldButtonBeLoading;
 
