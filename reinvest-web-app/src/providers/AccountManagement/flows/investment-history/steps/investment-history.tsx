@@ -11,6 +11,7 @@ import { FlowFields } from '../interfaces';
 import { useInvestmentHistory } from '../providers/InvestmentHistory';
 
 const TITLE = 'Investment history';
+const EMPTY_LIST_MESSAGE = "You don't have any investments yet";
 
 export const StepInvestmentHistory: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.INVESTMENT_HISTORY,
@@ -18,6 +19,8 @@ export const StepInvestmentHistory: StepParams<FlowFields> = {
   Component: ({ updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
     const { investmentsList, investmentsListMeta } = useInvestmentHistory();
+
+    const hasInvestments = investmentsList.length > 0;
 
     function onButtonBackClick() {
       setCurrentFlowIdentifier(null);
@@ -48,17 +51,21 @@ export const StepInvestmentHistory: StepParams<FlowFields> = {
 
         <Typography variant="paragraph">{TITLE}</Typography>
 
-        <ul className="flex h-full flex-col gap-16">
-          {investmentsList.map((investment, index) => (
-            <InvestmentHistoryItem
-              key={investment?.id}
-              investment={investment}
-              isLastItem={index === investmentsList.length - 1}
-              onClick={onInvestmentClick}
-              fetchMoreItems={fetchMoreInvestments}
-            />
-          ))}
-        </ul>
+        {hasInvestments ? (
+          <ul className="flex h-full flex-col gap-16">
+            {investmentsList.map((investment, index) => (
+              <InvestmentHistoryItem
+                key={investment?.id}
+                investment={investment}
+                isLastItem={index === investmentsList.length - 1}
+                onClick={onInvestmentClick}
+                fetchMoreItems={fetchMoreInvestments}
+              />
+            ))}
+          </ul>
+        ) : (
+          <Typography variant="h6">{EMPTY_LIST_MESSAGE}</Typography>
+        )}
       </div>
     );
   },
