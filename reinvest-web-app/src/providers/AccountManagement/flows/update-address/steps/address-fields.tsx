@@ -25,7 +25,7 @@ import { FlowFields } from '../interfaces';
 
 type Fields = AddressInput;
 
-const TITLE = 'Enter your new address';
+const TITLE = 'Enter your new address.';
 const BUTTON_LABEL = 'Confirm';
 
 export const StepAddressFields: StepParams<FlowFields> = {
