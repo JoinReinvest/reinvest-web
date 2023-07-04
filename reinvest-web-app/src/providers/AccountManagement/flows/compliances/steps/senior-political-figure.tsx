@@ -9,12 +9,9 @@ import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
-
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 const TITLE = 'Please provide the name and position of this senior political figure.';
 type Fields = Pick<FlowFields, 'seniorPoliticalFigure'>;
 
@@ -25,12 +22,12 @@ const schema = z.object({
 export const StepSeniorPoliticalFigure: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.SENIOR_POLITICAL_FIGURES,
 
-  willBePartOfTheFlow: ({ statementTypes }) => {
-    return !!statementTypes?.includes(StatementType.Politician);
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isSeniorPoliticalFigure;
   },
 
-  doesMeetConditionFields(fields) {
-    return !!fields.statementTypes?.includes(StatementType.Politician);
+  doesMeetConditionFields({ compliances }) {
+    return !!compliances?.isSeniorPoliticalFigure;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {

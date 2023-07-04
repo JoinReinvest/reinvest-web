@@ -6,6 +6,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { FormMessage } from 'components/FormElements/FormMessage';
 import { ModalTitle } from 'components/ModalElements/Title';
+import { COMPANY_STATEMENT, FINRA_STATEMENT, NONE_STATEMENT, POLITICAL_STATEMENT } from 'constants/compliances';
 import { ChangeEvent } from 'react';
 import { FieldPath, SubmitHandler, useForm } from 'react-hook-form';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
@@ -122,8 +123,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
               control={control}
               rules={{ onChange: event => onFieldComplianceChange('isAssociatedWithFinra', event) }}
             >
-              Are you or anyone in your immediate household, or, for any non-natural person, any officers, directors, or any person that owns or controls 5% (or
-              greater) of the equity, associated with a FINRA member, organization, or the SEC.
+              {FINRA_STATEMENT}
             </CheckboxLabeled>
 
             <CheckboxLabeled
@@ -131,8 +131,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
               control={control}
               rules={{ onChange: event => onFieldComplianceChange('isAssociatedWithPubliclyTradedCompany', event) }}
             >
-              Are you or anyone in your household or immediate family, or, for any non-natural person, any of its directors, trustees, 10% (or more) equity
-              holder, an officer, or member of the board of directors of a publicly traded company?
+              {COMPANY_STATEMENT}
             </CheckboxLabeled>
 
             <CheckboxLabeled
@@ -140,7 +139,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
               control={control}
               rules={{ onChange: event => onFieldComplianceChange('isSeniorPoliticalFigure', event) }}
             >
-              Are you or any of your immediate family a senior political figure?
+              {POLITICAL_STATEMENT}
             </CheckboxLabeled>
 
             <CheckboxLabeled
@@ -148,7 +147,7 @@ export const StepCompliances: StepParams<OnboardingFormFields> = {
               control={control}
               rules={{ onChange: onFieldDoNoneApplyChange }}
             >
-              None of the above apply
+              {NONE_STATEMENT}
             </CheckboxLabeled>
           </div>
         </FormContent>

@@ -4,47 +4,47 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
+import { COMPANY_STATEMENT, FINRA_STATEMENT, NONE_STATEMENT, POLITICAL_STATEMENT } from 'constants/compliances';
 import { useAccountManagement } from 'providers/AccountManagement';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormEvent } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { CheckboxDisplay } from '../components/CheckboxDisplay';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-const BUTTON_LABEL = 'Update Statements';
+const BUTTON_LABEL = 'Update';
 const TITLE = 'You Compliance statements';
-const FALLBACK_CONTENT = 'None';
 
 export const StepCurrentCompliance: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_COMPLIANCE,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { handleSubmit, formState } = useForm<FlowFields>({ mode: 'onSubmit' });
+  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const onSubmit: SubmitHandler<FlowFields> = async () => {
+    async function onSubmit(event: FormEvent<HTMLFormElement>) {
+      event.preventDefault();
       moveToNextStep();
-    };
+    }
 
-    const onButtonBackClick = () => {
+    function onButtonBackClick() {
       setCurrentFlowIdentifier(null);
-    };
+    }
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={onSubmit}>
         <FormContent willLeaveContentOnTop>
           <ButtonBack onClick={onButtonBackClick} />
+
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
 
-            <Typography
-              variant="h6"
-              className="flex flex-col"
-            >
-              {/*TODO: task number RIA-1558*/}
-              {FALLBACK_CONTENT}
-            </Typography>
+            <CheckboxDisplay isChecked={!!storeFields?.compliances?.isAssociatedWithFinra}>{FINRA_STATEMENT}</CheckboxDisplay>
+
+            <CheckboxDisplay isChecked={!!storeFields?.compliances?.isAssociatedWithPubliclyTradedCompany}>{COMPANY_STATEMENT}</CheckboxDisplay>
+
+            <CheckboxDisplay isChecked={!!storeFields?.compliances?.isSeniorPoliticalFigure}>{POLITICAL_STATEMENT}</CheckboxDisplay>
+
+            <CheckboxDisplay isChecked={!!storeFields?.compliances?.doNoneApply}>{NONE_STATEMENT}</CheckboxDisplay>
           </div>
         </FormContent>
 
@@ -52,7 +52,6 @@ export const StepCurrentCompliance: StepParams<FlowFields> = {
           <Button
             type="submit"
             label={BUTTON_LABEL}
-            disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>
       </Form>
