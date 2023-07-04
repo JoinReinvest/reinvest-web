@@ -5,40 +5,51 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
-import { FormEvent } from 'react';
+import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-const TITLE = 'Beneficiary name';
-const BUTTON_LABEL = 'Update Beneficiary Name';
+const TITLE = 'Your address.';
+const BUTTON_LABEL = 'Update Address';
 
-export const StepCurrentName: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.CURRENT_NAME,
+export const StepSummary: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.SUMMARY,
+
+  doesMeetConditionFields: fields => !!fields?._currentAddress,
 
   Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
 
-    async function onSubmit(event: FormEvent<HTMLFormElement>) {
+    const address = storeFields?._currentAddress;
+    const addressCityWithState = [address?.city, address?.state].join(', ');
+    const addressFields = [address?.addressLine1, address?.addressLine2, addressCityWithState, address?.zip];
+    const validAddressFields = addressFields.filter(Boolean);
+
+    const onSubmit: FormEventHandler<HTMLFormElement> = event => {
       event.preventDefault();
       moveToNextStep();
-    }
-
-    const onButtonBackClick = () => {
-      setCurrentFlowIdentifier(null);
     };
+
+    function onButtonBackClick() {
+      setCurrentFlowIdentifier(null);
+    }
 
     return (
       <Form onSubmit={onSubmit}>
         <FormContent willLeaveContentOnTop>
           <ButtonBack onClick={onButtonBackClick} />
+
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+
             <Typography
               variant="h6"
               className="flex flex-col"
             >
-              {storeFields?.name?.firstName} {storeFields?.name?.lastName}
+              {validAddressFields.map((field, index) => (
+                <span key={index}>{field}</span>
+              ))}
             </Typography>
           </div>
         </FormContent>

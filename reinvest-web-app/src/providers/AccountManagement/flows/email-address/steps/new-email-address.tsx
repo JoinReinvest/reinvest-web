@@ -16,7 +16,7 @@ import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
 const BUTTON_LABEL = 'Confirm';
-const TITLE = 'Type your new password';
+const TITLE = 'Type your new email';
 
 type Fields = Omit<FlowFields, '_email' | 'authenticationCode'>;
 export const StepNewEmailAddress: StepParams<FlowFields> = {

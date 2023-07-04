@@ -14,10 +14,10 @@ import { StepCorporationType } from './corporation-type';
 import { StepDocumentsForCorporation } from './documents-for-corporation';
 import { StepFullName } from './full-name';
 import { StepIdentificationDocuments } from './identification-documents';
-import { StepInitialInvestment } from './initial-investment';
 import { StepInvestmentCompleted } from './investment-completed';
 import { StepInvestmentVerification } from './investment-verification';
 import { StepLanding } from './landing';
+import { StepOneTimeInvestment } from './one-time-investment';
 import { StepPermanentAddress } from './permanent-address';
 import { StepRecurringDepositSchedule } from './recurring-deposit-schedule';
 import { StepRecurringInvestment } from './recurring-investment';
@@ -36,7 +36,7 @@ export const STEPS = [
   StepBankAccountConfirmation,
 
   // Investment
-  StepInitialInvestment,
+  StepOneTimeInvestment,
 
   // Recurring investment
   StepRecurringInvestment,

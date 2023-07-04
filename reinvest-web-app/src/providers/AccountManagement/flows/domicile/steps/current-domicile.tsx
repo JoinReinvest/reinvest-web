@@ -5,40 +5,46 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
-import { FormEvent } from 'react';
+import { FormEvent, useMemo } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
+import { getLabelsForDisplay } from '../utilities';
 
-const TITLE = 'Beneficiary name';
-const BUTTON_LABEL = 'Update Beneficiary Name';
+const TITLE = 'Current Domicile';
+const BUTTON_LABEL = 'Update Domicile';
 
-export const StepCurrentName: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.CURRENT_NAME,
+export const StepCurrentDomicile: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.CURRENT_DOMICILE,
 
-  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ moveToNextStep, storeFields }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
+    const fields = useMemo(() => getLabelsForDisplay(storeFields), [storeFields]);
 
     async function onSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();
       moveToNextStep();
     }
 
-    const onButtonBackClick = () => {
+    function onButtonBackClick() {
       setCurrentFlowIdentifier(null);
-    };
+    }
 
     return (
       <Form onSubmit={onSubmit}>
         <FormContent willLeaveContentOnTop>
           <ButtonBack onClick={onButtonBackClick} />
+
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+
             <Typography
               variant="h6"
               className="flex flex-col"
             >
-              {storeFields?.name?.firstName} {storeFields?.name?.lastName}
+              {fields.map((field, index) => (
+                <span key={index}>{field}</span>
+              ))}
             </Typography>
           </div>
         </FormContent>

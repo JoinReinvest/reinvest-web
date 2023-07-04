@@ -1,5 +1,6 @@
 import { StepConfirmation } from './confirmation';
 import { StepCurrentName } from './current-name';
-import { StepLanding } from './landing';
+import { StepFields } from './fields';
+import { StepLoading } from './loading';
 
-export const STEPS = [StepLanding, StepCurrentName, StepConfirmation];
+export const STEPS = [StepLoading, StepCurrentName, StepFields, StepConfirmation];

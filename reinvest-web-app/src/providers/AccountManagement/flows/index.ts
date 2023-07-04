@@ -2,6 +2,7 @@ import { FlowIdentifiers } from '../enums';
 import { SubFlow } from '../interfaces';
 import { FLOW_ACCOUNT_ACTIVITY } from './account-activity';
 import { FLOW_BANK_ACCOUNT } from './bank-account';
+import { FLOW_BUSINESS_ADDRESS } from './business-address';
 import { FLOW_CHANGE_AVATAR } from './change-avatar';
 import { FLOW_CHANGE_PASSWORD } from './change-password';
 import { FLOW_CHANGE_COMPLIANCE } from './compliances';
@@ -42,4 +43,5 @@ export const FLOWS = new Map<FlowIdentifiers, SubFlow>([
   [FlowIdentifiers.DOMICILE, FLOW_DOMICILE],
   [FlowIdentifiers.EXPERIENCE, FLOW_EDIT_INVESTOR_EXPERIENCE_FLOW],
   [FlowIdentifiers.COMPLIANCE, FLOW_CHANGE_COMPLIANCE],
+  [FlowIdentifiers.BUSINESS_ADDRESS, FLOW_BUSINESS_ADDRESS],
 ]);

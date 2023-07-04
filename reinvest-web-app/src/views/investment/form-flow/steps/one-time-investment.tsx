@@ -9,19 +9,23 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { INVESTMENT_PRESET_AMOUNTS } from 'reinvest-app-common/src/constants/investment-amounts';
 import { ONE_TIME_INVESTMENT_MIN_AMOUNT } from 'reinvest-app-common/src/constants/investment-limits';
 import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useGetActiveRecurringInvestment } from 'reinvest-app-common/src/services/queries/getActiveRecurringInvestment';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { getApiClient } from 'services/getApiClient';
 import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
+
+const TITLE_FIRST_TIME = 'Make your initial one-time investment';
+const TITLE_DEFAULT = 'Make your one-time investment';
+const BUTTON_SKIP_LABEL = 'Skip';
+const BUTTON_LABEL = 'Invest Now';
 
 interface Fields {
   amount?: number;
@@ -31,8 +35,8 @@ const getDefaultValues = ({ oneTimeInvestment }: FlowFields): Fields => ({
   amount: oneTimeInvestment?.amount,
 });
 
-export const StepInitialInvestment: StepParams<FlowFields> = {
-  identifier: Identifiers.INITIAL_INVESTMENT,
+export const StepOneTimeInvestment: StepParams<FlowFields> = {
+  identifier: Identifiers.ONE_TIME_INVESTMENT,
 
   willBePartOfTheFlow: fields => !fields._onlyRecurringInvestment,
 
@@ -43,13 +47,9 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     const { activeAccount } = useActiveAccount();
     const presetOptions = useMemo(() => INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
     const schema = useMemo(() => generateInvestmentSchema({ accountType: activeAccount?.type || undefined }), [activeAccount]);
-    const {
-      data,
-      isLoading,
-      isSuccess: isGetActiveRecurringInvestmentSuccess,
-    } = useGetActiveRecurringInvestment(getApiClient, { accountId: activeAccount?.id || '' });
+    const { activeRecurringInvestment, activeRecurringInvestmentMeta } = useRecurringInvestment();
     const defaultValues = useMemo(() => getDefaultValues(storeFields), [storeFields]);
-    const { handleSubmit, setValue, formState } = useForm<Fields>({
+    const form = useForm<Fields>({
       mode: 'onChange',
       defaultValues: async () => defaultValues,
       resolver: zodResolver(schema),
@@ -63,8 +63,11 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
       }
     }, [createInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields, createInvestmentMeta]);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const errorMessage = formState.errors.amount?.message;
+    const title = !storeFields?._forInitialInvestment ? TITLE_FIRST_TIME : TITLE_DEFAULT;
+
+    const shouldButtonBeDisabled = !form.formState.isValid || form.formState.isSubmitting;
+    const errorMessage = form.formState.errors.amount?.message;
+
     const bankAccount = storeFields._bankAccount ?? '';
     const bankAccountType = storeFields._bankAccountType ?? '';
 
@@ -93,12 +96,12 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     }
 
     useEffect(() => {
-      if (isGetActiveRecurringInvestmentSuccess && data) {
+      if (activeRecurringInvestmentMeta.isSuccess && activeRecurringInvestment) {
         updateStoreFields({ _shouldDisplayRecurringInvestment: false });
       } else {
         updateStoreFields({ _shouldDisplayRecurringInvestment: true });
       }
-    }, [isGetActiveRecurringInvestmentSuccess, data, updateStoreFields]);
+    }, [activeRecurringInvestmentMeta.isSuccess, activeRecurringInvestment, updateStoreFields]);
 
     async function onChangeBankAccount() {
       await updateStoreFields({ _bankAccount: undefined, _bankAccountType: undefined, _willUpdateBankAccount: true, _justAddedBankAccount: false });
@@ -106,13 +109,14 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
     }
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        {isLoading && (
+      <Form onSubmit={form.handleSubmit(onSubmit)}>
+        {activeRecurringInvestmentMeta.isLoading && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
           </div>
         )}
-        {!isLoading && (
+
+        {!activeRecurringInvestmentMeta.isLoading && (
           <>
             <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
               {!!storeFields._forInitialInvestment && (
@@ -123,14 +127,14 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
               )}
 
               <ModalTitle
-                title="Make your initial one-time investment"
+                title={title}
                 isTitleCenteredOnMobile
               />
 
               <InvestmentCard
                 presetOptions={presetOptions}
                 defaultValue={defaultValues.amount}
-                onChange={value => setValue('amount', value, { shouldValidate: true })}
+                onChange={value => form.setValue('amount', value, { shouldValidate: true })}
                 currentBankAccount={bankAccount}
                 currentBankAccountType={bankAccountType}
                 onChangeBankAccount={onChangeBankAccount}
@@ -142,13 +146,14 @@ export const StepInitialInvestment: StepParams<FlowFields> = {
 
             <ButtonStack>
               <Button
-                label="Skip"
+                label={BUTTON_SKIP_LABEL}
                 variant="outlined"
                 onClick={onSkipButtonClick}
               />
+
               <Button
                 type="submit"
-                label="Invest Now"
+                label={BUTTON_LABEL}
                 disabled={shouldButtonBeDisabled}
               />
             </ButtonStack>

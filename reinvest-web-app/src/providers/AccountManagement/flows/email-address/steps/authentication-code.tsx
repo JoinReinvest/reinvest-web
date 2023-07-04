@@ -102,7 +102,7 @@ export const StepAuthenticationCode: StepParams<FlowFields> = {
         <ButtonStack>
           <Button
             type="submit"
-            label="Sign Up"
+            label="Confirm"
             disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>

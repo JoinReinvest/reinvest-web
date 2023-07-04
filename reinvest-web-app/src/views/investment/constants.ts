@@ -20,6 +20,6 @@ export const FLOW_STEPS_WITH_X_BUTTON: string[] = [
   Identifiers.LANDING,
   Identifiers.BANK_ACCOUNT_SELECTION,
   Identifiers.BANK_ACCOUNT_CONFIRMATION,
-  Identifiers.INITIAL_INVESTMENT,
+  Identifiers.ONE_TIME_INVESTMENT,
   Identifiers.INVESTMENT_COMPLETED,
 ];
