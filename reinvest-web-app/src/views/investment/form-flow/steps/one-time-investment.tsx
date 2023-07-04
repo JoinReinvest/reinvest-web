@@ -31,8 +31,8 @@ const getDefaultValues = ({ oneTimeInvestment }: FlowFields): Fields => ({
   amount: oneTimeInvestment?.amount,
 });
 
-export const StepInitialInvestment: StepParams<FlowFields> = {
-  identifier: Identifiers.INITIAL_INVESTMENT,
+export const StepOneTimeInvestment: StepParams<FlowFields> = {
+  identifier: Identifiers.ONE_TIME_INVESTMENT,
 
   willBePartOfTheFlow: fields => !fields._onlyRecurringInvestment,
 
