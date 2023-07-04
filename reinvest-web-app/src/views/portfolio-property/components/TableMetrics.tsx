@@ -39,10 +39,9 @@ export function TableMetrics({ header, rows, hideTopBorderOnMobile = false }: Pr
             <td className="flex grow items-center">
               <Typography variant="paragraph-large">{row.label}</Typography>
 
-              <IconInformation
-                onClick={row?.onAction}
-                className="stroke-gray-02"
-              />
+              <button onClick={row?.onAction}>
+                <IconInformation className="stroke-gray-02" />
+              </button>
             </td>
 
             <td className="flex items-center">
