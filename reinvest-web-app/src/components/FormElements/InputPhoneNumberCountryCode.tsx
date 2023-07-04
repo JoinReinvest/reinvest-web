@@ -8,7 +8,9 @@ const OPTIONS: SelectOptions = UNIQUE_COUNTRIES_CALLING_CODES.map(({ callingCode
   value: callingCode,
 }));
 
-type Props<FormFields extends FieldValues> = UseControllerProps<FormFields>;
+type Props<FormFields extends FieldValues> = UseControllerProps<FormFields> & {
+  forWhiteBackground?: boolean;
+};
 
 export const InputPhoneNumberCountryCode = <FormFields extends FieldValues>(props: Props<FormFields>) => (
   <Select
@@ -17,5 +19,6 @@ export const InputPhoneNumberCountryCode = <FormFields extends FieldValues>(prop
     required
     icon="arrow"
     willDisplayErrorMessage={false}
+    forWhiteBackground={props.forWhiteBackground}
   />
 );

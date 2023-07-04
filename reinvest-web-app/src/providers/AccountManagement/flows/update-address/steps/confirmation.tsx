@@ -11,7 +11,7 @@ import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/ser
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
-const TITLE = 'Your address has been updated.';
+const TITLE = 'Your address has been updated';
 const BUTTON_LABEL = 'Dashboard';
 
 export const StepConfirmation: StepParams<FlowFields> = {
