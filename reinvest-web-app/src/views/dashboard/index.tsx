@@ -8,6 +8,7 @@ import { InvestmentView } from 'views/investment';
 import { BannedView } from '../BannedView';
 import { AccountStats } from './components/AccountStats';
 import { PostList } from './components/PostList';
+import { InformationModalsProvider } from './providers/InformationModals';
 
 interface Props {
   arePostsReady: boolean;
@@ -41,7 +42,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   }
 
   return (
-    <>
+    <InformationModalsProvider>
       <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
 
       <PostList
@@ -55,6 +56,6 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         forInitialInvestment={!arrivesFromOnboarding}
         withSideModal={!arrivesFromOnboarding}
       />
-    </>
+    </InformationModalsProvider>
   );
 };
