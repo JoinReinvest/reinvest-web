@@ -8,10 +8,9 @@ import { useAccountManagement } from 'providers/AccountManagement';
 import { FormEventHandler } from 'react';
 import { allRequiredFieldsExists, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-const TITLE = 'Your name has been updated';
+const TITLE = 'Your beneficiary name has been updated';
 const BUTTON_LABEL = 'Dashboard';
 
 export const StepConfirmation: StepParams<FlowFields> = {
