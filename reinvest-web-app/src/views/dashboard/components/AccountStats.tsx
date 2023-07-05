@@ -23,6 +23,7 @@ export function AccountStats({ toggleDisplayInitialInvestmentFlow }: Props) {
           Dashboard
         </Typography>
         <Typography variant="h2">{activeAccountStats?.accountValue}</Typography>
+
         <Typography
           variant="paragraph-emphasized"
           className="mt-8 text-gray-02 lg:mt-0"

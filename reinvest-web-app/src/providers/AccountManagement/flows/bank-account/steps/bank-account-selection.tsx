@@ -1,7 +1,7 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
 import { ErrorMessagesHandler } from 'components/FormElements/ErrorMessagesHandler';
 import { Form } from 'components/FormElements/Form';
-import { StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { usePlaidHandler } from '../hooks/plaid-handler';
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
@@ -9,15 +9,18 @@ import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 export const StepBankAccountSelection: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_BANK_ACCOUNT,
 
-  doesMeetConditionFields: fields => !!fields._willUpdateBankAccount,
+  Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
+    const willUpdateBankAccount = !!storeFields?._willUpdateBankAccount;
+    const { iFrameKey, iFrameLink, updateBankAccountMeta, fulfillBankAccountMeta, createBankAccountMeta } = usePlaidHandler({ willUpdateBankAccount });
 
-  Component: () => {
-    const { iFrameKey, iFrameLink, updateBankAccountMeta, fulfillBankAccountMeta } = usePlaidHandler();
-    const willShowIFrame = !fulfillBankAccountMeta.isLoading && !updateBankAccountMeta.isLoading && updateBankAccountMeta.isSuccess && iFrameLink;
+    const shouldCreateBankAccountHaveSucceded = !willUpdateBankAccount && !createBankAccountMeta.isLoading && createBankAccountMeta.isSuccess;
+    const shouldUpdateBankAccountHaveSucceded = willUpdateBankAccount && !updateBankAccountMeta.isLoading && updateBankAccountMeta.isSuccess;
+    const willShowIFrame = !fulfillBankAccountMeta.isLoading && (shouldCreateBankAccountHaveSucceded || shouldUpdateBankAccountHaveSucceded) && iFrameLink;
 
     return (
       <Form>
-        {updateBankAccountMeta.error && <ErrorMessagesHandler error={updateBankAccountMeta.error} />}
+        {willUpdateBankAccount && updateBankAccountMeta.error && <ErrorMessagesHandler error={updateBankAccountMeta.error} />}
+        {!willUpdateBankAccount && createBankAccountMeta.error && <ErrorMessagesHandler error={createBankAccountMeta.error} />}
 
         {(fulfillBankAccountMeta.isLoading || updateBankAccountMeta.isLoading) && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">

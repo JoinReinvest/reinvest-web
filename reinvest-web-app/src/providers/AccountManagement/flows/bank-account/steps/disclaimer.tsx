@@ -17,8 +17,6 @@ const BUTTON_LABEL = 'Continue';
 export const StepDisclaimer: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.DISCLAIMER,
 
-  doesMeetConditionFields: fields => !!fields._willUpdateBankAccount,
-
   Component: ({ moveToPreviousStep, moveToNextStep }: StepComponentProps<FlowFields>) => {
     function onSubmit(event: FormEvent<HTMLFormElement>) {
       event.preventDefault();

@@ -6,7 +6,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
 import { FormEvent } from 'react';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
@@ -14,18 +14,14 @@ const PLACEHOLDER = '{}';
 
 const TITLE_SUCCESS = `Your bank account ending in ${PLACEHOLDER} has been added.`;
 const TITLE_FAILURE = 'We were unable to add your bank account.';
-const BUTTON_LABEL = 'Continue';
+const BUTTON_LABEL = 'Dashboard';
 
 export const StepConfirmation: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CONFIRMATION,
 
   isAValidationView: true,
 
-  doesMeetConditionFields: fields => {
-    const requiredFields = [fields.hashedBankAccount, fields._willUpdateBankAccount];
-
-    return allRequiredFieldsExists(requiredFields);
-  },
+  doesMeetConditionFields: fields => !!fields.hashedBankAccount,
 
   Component: ({ storeFields }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
