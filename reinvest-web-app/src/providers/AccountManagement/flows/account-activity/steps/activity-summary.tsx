@@ -5,20 +5,21 @@ import { Typography } from 'components/Typography';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { AccountActivityDetail } from '../components/AccountActivityDetail';
-import { ACCOUNT_ACTIVITY_SUMMARY } from '../constants';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
+import { useAccountActivities } from '../providers/AccountActivity';
 import { getActivityDetails } from '../utilities';
 
 export const StepActivitySummary: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.ACCOUNT_ACTIVITIES_SUMMARY,
 
   doesMeetConditionFields: fields => {
-    return !!fields._selectedAccountId;
+    return fields._selectedAccountId !== undefined;
   },
 
-  Component: ({ updateStoreFields, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
-    const accountActivity = ACCOUNT_ACTIVITY_SUMMARY;
+  Component: ({ updateStoreFields, moveToPreviousStep, storeFields }: StepComponentProps<FlowFields>) => {
+    const { accountActivities } = useAccountActivities();
+    const accountActivity = accountActivities[storeFields._selectedAccountId || 0];
 
     async function onButtonBackClick() {
       await updateStoreFields({ _selectedAccountId: undefined });
