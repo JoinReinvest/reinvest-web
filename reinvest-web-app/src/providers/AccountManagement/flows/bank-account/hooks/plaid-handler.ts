@@ -1,32 +1,58 @@
 import { OnPlaidResponseParams, usePlaidIntegration } from 'hooks/plaid-integration';
 import { useBankAccount } from 'providers/BankAccount';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { MutationMeta } from 'types/queries';
 
 import { useFlow } from '../flow';
 
+interface Params {
+  willUpdateBankAccount: boolean;
+}
+
 interface Returns {
+  createBankAccountMeta: MutationMeta;
   fulfillBankAccountMeta: MutationMeta;
   iFrameKey: number;
   iFrameLink: string;
   updateBankAccountMeta: MutationMeta;
 }
 
-export function usePlaidHandler(): Returns {
+export function usePlaidHandler({ willUpdateBankAccount }: Params): Returns {
   const { updateStoreFields, moveToNextValidStep } = useFlow();
-  const { updateBankAccount, updateBankAccountLink, fulfillBankAccount, updateBankAccountMeta, fulfillBankAccountMeta } = useBankAccount();
+
+  const {
+    updateBankAccount,
+    updateBankAccountLink,
+    fulfillBankAccount,
+    updateBankAccountMeta,
+    fulfillBankAccountMeta,
+    createBankAccount,
+    createBankAccountLink,
+    createBankAccountMeta,
+  } = useBankAccount();
 
   async function onPlaidResponse({ hashedBankAccount, plaidResponse }: OnPlaidResponseParams) {
+    fulfillBankAccountMeta.reset();
     await fulfillBankAccount({ input: plaidResponse });
     await updateStoreFields({ hashedBankAccount });
+
     moveToNextValidStep();
   }
 
   const { iFrameKey } = usePlaidIntegration({ onPlaidResponse });
 
+  const iFrameLink = useMemo(
+    () => updateBankAccountLink?.link ?? createBankAccountLink?.link ?? '',
+    [updateBankAccountLink?.link, createBankAccountLink?.link],
+  );
+
   useEffect(() => {
     async function generatePlaidLink() {
-      await updateBankAccount();
+      if (willUpdateBankAccount) {
+        await updateBankAccount();
+      } else {
+        await createBankAccount();
+      }
     }
 
     generatePlaidLink();
@@ -34,5 +60,5 @@ export function usePlaidHandler(): Returns {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return { iFrameKey, iFrameLink: updateBankAccountLink?.link ?? '', updateBankAccountMeta, fulfillBankAccountMeta };
+  return { iFrameKey, iFrameLink, updateBankAccountMeta, createBankAccountMeta, fulfillBankAccountMeta };
 }
