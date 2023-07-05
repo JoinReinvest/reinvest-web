@@ -1,55 +1,58 @@
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
+import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { FormEvent, useMemo } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { Typography } from '../../../../../components/Typography';
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
+import { getLabelsForDisplay } from '../utilities';
 
-const BUTTON_LABEL = 'Continue';
-const TITLE = 'Your compliance status';
+const TITLE = 'Your Employment Details';
+const BUTTON_LABEL = 'Update Employment Details';
 
-export const StepCurrentCompliance: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.CURRENT_COMPLIANCE,
+export const StepCurrentDetails: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.CURRENT_DETAILS,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { handleSubmit, formState } = useForm<FlowFields>({ mode: 'onSubmit' });
+  Component: ({ storeFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { setCurrentFlowIdentifier } = useAccountManagement();
+    const fields = useMemo(() => getLabelsForDisplay(storeFields), [storeFields]);
 
-    const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
-    const onSubmit: SubmitHandler<FlowFields> = async () => {
+    function onSubmit(event: FormEvent<HTMLFormElement>) {
+      event.preventDefault();
       moveToNextStep();
-    };
+    }
 
-    const onButtonBackClick = () => {
+    function onButtonBackClick() {
       setCurrentFlowIdentifier(null);
-    };
+    }
 
     return (
-      <Form onSubmit={handleSubmit(onSubmit)}>
+      <Form onSubmit={onSubmit}>
         <FormContent willLeaveContentOnTop>
           <ButtonBack onClick={onButtonBackClick} />
+
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+
             <Typography
               variant="h6"
               className="flex flex-col"
             >
-              {/*TODO: task number RIA-1558*/}
-              There should be compliance list
+              {fields.map((field, index) => (
+                <span key={index}>{field}</span>
+              ))}
             </Typography>
           </div>
         </FormContent>
+
         <ButtonStack>
           <Button
             type="submit"
             label={BUTTON_LABEL}
-            disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>
       </Form>

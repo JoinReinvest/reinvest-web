@@ -31,7 +31,7 @@ const INDIVIDUAL_PROFILE_ITEMS = [
 
 const COMPANY_PROFILE_ITEMS = [
   { identifier: FlowIdentifiers.UPDATE_PROFILE_PICTURE, label: 'Profile Picture' },
-  { identifier: FlowIdentifiers.BUSINESS_ADDRESS, label: 'Address' },
+  { identifier: FlowIdentifiers.BUSINESS_ADDRESS, label: 'Business Address' },
   { identifier: FlowIdentifiers.DOCUMENTS, label: 'Documents' },
 ];
 

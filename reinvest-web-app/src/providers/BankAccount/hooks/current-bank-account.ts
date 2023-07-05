@@ -15,10 +15,7 @@ export function useCurrentBankAccount(): Returns {
   const { activeAccount } = useActiveAccount();
   const accountId = activeAccount?.id || '';
 
-  const { data, ...currentBankAccountMeta } = useReadBankAccount(getApiClient, {
-    accountId,
-    config: { queryKey: [accountId], enabled: !!accountId, retry: false },
-  });
+  const { data, ...currentBankAccountMeta } = useReadBankAccount(getApiClient, { accountId, config: { enabled: !!accountId } });
   const bankAccountDisplay = useMemo<string | null>(() => (data ? [data?.accountType, data?.accountNumber].filter(Boolean).join(' ') : null), [data]);
 
   return { bankAccountDisplay, currentBankAccount: data ?? null, currentBankAccountMeta };

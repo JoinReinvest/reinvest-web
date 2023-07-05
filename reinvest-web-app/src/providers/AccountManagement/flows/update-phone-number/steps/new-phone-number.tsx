@@ -62,6 +62,7 @@ export const StepNewPhoneNumber: StepParams<FlowFields> = {
                   name="phone.countryCode"
                   control={control}
                   defaultValue={CALLING_CODES[0]}
+                  forWhiteBackground={true}
                 />
               </div>
 

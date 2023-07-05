@@ -29,7 +29,7 @@
     "@aws-amplify/core": "5.2.0",
     "@hookform/resolvers": "3.1.0",
     "@hookooekoo/configs-postcss": "0.1.4",
-    "@hookooekoo/configs-stylelint": "0.1.6",
+    "@hookooekoo/configs-stylelint": "0.1.7",
     "@hookooekoo/configs-tsconfig": "0.0.17",
     "@hookooekoo/eslint-config": "0.2.2",
     "@hookooekoo/ui-avatar": "0.2.4",
@@ -103,5 +103,8 @@
   "stylelint": {
     "extends": "@hookooekoo/configs-stylelint/stylelint.js"
   },
-  "prettier": "@hookooekoo/eslint-config/prettier.json"
+  "prettier": "@hookooekoo/eslint-config/prettier.json",
+  "resolutions": {
+    "cosmiconfig": "8.1.3"
+  }
 }

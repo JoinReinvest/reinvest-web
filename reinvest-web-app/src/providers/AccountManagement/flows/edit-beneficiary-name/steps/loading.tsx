@@ -3,12 +3,11 @@ import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useGetBeneficiaryAccount } from 'reinvest-app-common/src/services/queries/getBeneficiaryAccount';
 
-import { useActiveAccount } from '../../../../../providers/ActiveAccountProvider';
 import { getApiClient } from '../../../../../services/getApiClient';
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { useActiveAccount } from '../../../../ActiveAccountProvider';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-export const StepLanding: StepParams<FlowFields> = {
+export const StepLoading: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.LOADING,
 
   Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {

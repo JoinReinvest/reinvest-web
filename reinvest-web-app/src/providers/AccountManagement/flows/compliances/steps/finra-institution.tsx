@@ -1,35 +1,35 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { TextArea } from 'components/FormElements/TextArea';
+import { Input } from 'components/FormElements/Input';
+import { Typography } from 'components/Typography';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { StatementType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { Typography } from '../../../../../components/Typography';
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
-const TITLE = 'Please provide the name and position of this senior political figure.';
-type Fields = Pick<FlowFields, 'seniorPoliticalFigure'>;
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
+
+type Fields = Pick<FlowFields, 'finraInstitutionName'>;
+
+const TITLE = 'Please provide name of the FINRA institution below.';
 
 const schema = z.object({
-  seniorPoliticalFigure: formValidationRules.seniorPoliticalFigure,
+  finraInstitutionName: formValidationRules.finraInstitutionName,
 });
 
-export const StepSeniorPoliticalFigure: StepParams<FlowFields> = {
-  identifier: FlowStepIdentifiers.SENIOR_POLITICAL_FIGURES,
+export const StepFinraInstitution: StepParams<FlowFields> = {
+  identifier: FlowStepIdentifiers.FINRA_INSTITUTION,
 
-  willBePartOfTheFlow: ({ statementTypes }) => {
-    return !!statementTypes?.includes(StatementType.Politician);
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isAssociatedWithFinra;
   },
 
-  doesMeetConditionFields(fields) {
-    return !!fields.statementTypes?.includes(StatementType.Politician);
+  doesMeetConditionFields({ compliances }) {
+    return !!compliances?.isAssociatedWithFinra;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
@@ -41,10 +41,10 @@ export const StepSeniorPoliticalFigure: StepParams<FlowFields> = {
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
 
-    const onSubmit: SubmitHandler<Fields> = async ({ seniorPoliticalFigure }) => {
-      await updateStoreFields({ seniorPoliticalFigure });
+    const onSubmit: SubmitHandler<Fields> = async ({ finraInstitutionName }) => {
+      await updateStoreFields({ finraInstitutionName });
 
-      if (seniorPoliticalFigure) {
+      if (finraInstitutionName) {
         moveToNextStep();
       }
     };
@@ -61,10 +61,10 @@ export const StepSeniorPoliticalFigure: StepParams<FlowFields> = {
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
 
-            <TextArea.Counter
-              name="seniorPoliticalFigure"
+            <Input
+              name="finraInstitutionName"
               control={control}
-              maxCharacters={220}
+              placeholder="FINRA Institute Name"
             />
           </div>
         </FormContent>

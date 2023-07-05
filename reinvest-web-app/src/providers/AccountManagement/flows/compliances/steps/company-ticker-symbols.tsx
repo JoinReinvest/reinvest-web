@@ -1,24 +1,17 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/Button';
+import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { Input } from 'components/FormElements/Input';
+import { Typography } from 'components/Typography';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { StatementType } from 'reinvest-app-common/src/types/graphql';
+import { EMPTY_COMPANY_TICKER_SYMBOL, INITIAL_VALUES, MAXIMUM_COMPANY_TICKER_SYMBOLS, schema } from 'views/onboarding/form-flow/steps/company-ticker-symbols';
 
-import { ButtonBack } from '../../../../../components/ButtonBack';
-import { Typography } from '../../../../../components/Typography';
-import {
-  EMPTY_COMPANY_TICKER_SYMBOL,
-  INITIAL_VALUES,
-  MAXIMUM_COMPANY_TICKER_SYMBOLS,
-  schema,
-} from '../../../../../views/onboarding/form-flow/steps/company-ticker-symbols';
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
 type Fields = Pick<FlowFields, 'companyTickerSymbols'>;
 const TITLE = 'Please list ticker symbols of the publicly traded company(s) below.';
@@ -26,12 +19,12 @@ const TITLE = 'Please list ticker symbols of the publicly traded company(s) belo
 export const StepCompanyTickerSymbols: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.COMPANY_TICKER_SYMBOLS,
 
-  willBePartOfTheFlow: ({ statementTypes }) => {
-    return !!statementTypes?.includes(StatementType.TradingCompanyStakeholder);
+  willBePartOfTheFlow: ({ compliances }) => {
+    return !!compliances?.isAssociatedWithPubliclyTradedCompany;
   },
 
-  doesMeetConditionFields(fields) {
-    return !!fields.statementTypes?.includes(StatementType.TradingCompanyStakeholder);
+  doesMeetConditionFields({ compliances }) {
+    return !!compliances?.isAssociatedWithPubliclyTradedCompany;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
