@@ -8,7 +8,7 @@ export function formatTradeId(tradeId: string): string {
 }
 
 export function getActivityDetails(activity: AccountActivity): { label: string; value: string }[] {
-  const date = formatDate(activity.date, 'INVESTMENT_SUMMARY', { currentFormat: 'API' });
+  const [date, time] = formatDate(activity.date, 'ACCOUNT_ACTIVITY', { currentFormat: 'API' }).split(' | ');
 
   return [
     {
@@ -17,11 +17,11 @@ export function getActivityDetails(activity: AccountActivity): { label: string; 
     },
     {
       label: 'Date',
-      value: date,
+      value: date as string,
     },
     {
       label: 'Time',
-      value: '13:30',
+      value: time as string,
     },
     {
       label: 'Origin',

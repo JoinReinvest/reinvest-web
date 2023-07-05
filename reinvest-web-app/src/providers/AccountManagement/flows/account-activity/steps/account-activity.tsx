@@ -3,7 +3,6 @@ import { ButtonBack } from 'components/ButtonBack';
 import { Typography } from 'components/Typography';
 import { useAccountManagement } from 'providers/AccountManagement';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountActivity, Maybe } from 'reinvest-app-common/src/types/graphql';
 
 import { AccountActivityItem } from '../components/AccountActivityItem';
 import { FlowStepIdentifiers } from '../enums';
@@ -23,8 +22,8 @@ export const StepAccountActivity: StepParams<FlowFields> = {
       setCurrentFlowIdentifier(null);
     }
 
-    async function onActivityClick(activity: Maybe<AccountActivity>) {
-      await updateStoreFields({ _selectedAccountId: activity?.activityName });
+    async function onActivityClick(activity: number) {
+      await updateStoreFields({ _selectedAccountId: activity });
       moveToNextStep();
     }
 
@@ -54,7 +53,7 @@ export const StepAccountActivity: StepParams<FlowFields> = {
               key={activity?.activityName}
               activity={activity}
               isLastItem={index === accountActivities.length - 1}
-              onClick={onActivityClick}
+              onClick={() => onActivityClick(index)}
               fetchMoreItems={fetchMoreAccountActivities}
             />
           ))}
