@@ -6,7 +6,6 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { RadioGroupOptions } from 'components/FormElements/RadioGroupOptions';
 import { Typography } from 'components/Typography';
-import { useAccountManagement } from 'providers/AccountManagement';
 import { useUserProfile } from 'providers/UserProfile';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -30,9 +29,8 @@ const BUTTON_LABEL_FALLBACK = 'Continue';
 export const StepDomicileType: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.DOMICILE_TYPE,
 
-  Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToStepByIdentifier, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { updateUserProfile, updateUserProfileMeta } = useUserProfile();
-    const { setCurrentFlowIdentifier } = useAccountManagement();
     const form = useForm<Fields>({ resolver: zodResolver(schema), defaultValues: async () => ({ type: storeFields.type }) });
     const domicileType = form.watch('type');
     const isCitizen = useMemo(() => domicileType === DomicileType.Citizen, [domicileType]);
@@ -65,7 +63,7 @@ export const StepDomicileType: StepParams<FlowFields> = {
     };
 
     function onButtonBackClick() {
-      setCurrentFlowIdentifier(null);
+      moveToPreviousStep();
     }
 
     return (

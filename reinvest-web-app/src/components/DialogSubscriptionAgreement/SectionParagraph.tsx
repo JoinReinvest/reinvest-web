@@ -9,7 +9,9 @@ interface Props {
 
 export const SectionParagraph = ({ paragraph }: Props) => (
   <div className="flex gap-8">
-    <ParagraphCheckbox isCheckedOption={paragraph?.isCheckedOption} />
+    <div>
+      <ParagraphCheckbox isCheckedOption={paragraph?.isCheckedOption} />
+    </div>
 
     <div className="flex flex-col gap-4">
       {paragraph?.lines.map((line, index) => (

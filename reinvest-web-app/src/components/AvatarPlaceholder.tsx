@@ -9,8 +9,8 @@ interface Props {
 
 export const AvatarPlaceholder = ({ accountType, className = '', label }: Props) => {
   const styles = cx({
-    'bg-gold': accountType === DraftAccountType.Corporate,
-    'bg-gray-03': accountType === DraftAccountType.Trust,
+    'bg-gray-03': accountType === DraftAccountType.Corporate,
+    'bg-gold': accountType === DraftAccountType.Trust,
     'bg-green-deep text-white': accountType === DraftAccountType.Individual,
     'bg-green-frost-01': accountType === AccountType.Beneficiary,
     'rounded-full flex justify-center items-center': true,

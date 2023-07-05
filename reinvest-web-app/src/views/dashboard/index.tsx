@@ -8,6 +8,7 @@ import { InvestmentView } from 'views/investment';
 import { BannedView } from '../BannedView';
 import { AccountStats } from './components/AccountStats';
 import { PostList } from './components/PostList';
+import { InformationModalsProvider } from './providers/InformationModals';
 
 interface Props {
   arePostsReady: boolean;
@@ -15,16 +16,8 @@ interface Props {
 }
 
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
-  const {
-    activeAccount,
-    activeAccountStatsMeta,
-    isAccountBanned,
-    updateActiveAccount,
-    previousAccount,
-    validateActiveAccountMeta,
-    canOpenAccount,
-    arrivesFromOnboarding,
-  } = useActiveAccount();
+  const { activeAccount, activeAccountStatsMeta, updateActiveAccount, previousAccount, validateActiveAccountMeta, canOpenAccount, arrivesFromOnboarding } =
+    useActiveAccount();
   const [isInvestmentFlowOpen, toggleIsInvestmentFlowOpen] = useToggler(arrivesFromOnboarding);
 
   if (!isInvestmentFlowOpen && (activeAccountStatsMeta?.isLoading || validateActiveAccountMeta?.isLoading)) {
@@ -35,7 +28,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
     );
   }
 
-  if (isAccountBanned) {
+  if (activeAccount?.isBanned) {
     const title = `Your ${activeAccount?.type?.toLowerCase() || AccountType.Individual.toLowerCase()} account has been locked.`;
 
     return (
@@ -49,7 +42,7 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   }
 
   return (
-    <>
+    <InformationModalsProvider>
       <AccountStats toggleDisplayInitialInvestmentFlow={toggleIsInvestmentFlowOpen} />
 
       <PostList
@@ -63,6 +56,6 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
         forInitialInvestment={!arrivesFromOnboarding}
         withSideModal={!arrivesFromOnboarding}
       />
-    </>
+    </InformationModalsProvider>
   );
 };

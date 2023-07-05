@@ -4,7 +4,6 @@ import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { createContext, ReactNode, useContext, useEffect, useMemo, useState } from 'react';
 import { useGetUserProfile } from 'reinvest-app-common/src/services/queries/getProfile';
-import { useVerifyAccount } from 'reinvest-app-common/src/services/queries/verifyAccount';
 
 import { getApiClient } from '../services/getApiClient';
 import { BannedView } from '../views/BannedView';
@@ -70,9 +69,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<CognitoUser | null>(null);
-  const { data, isSuccess, isLoading, refetch, isRefetching } = useGetUserProfile(getApiClient);
-  const { mutateAsync: verifyAccountMutate, isLoading: isVerifyAccountLoading, data: verifyAccountData } = useVerifyAccount(getApiClient);
-  const [isBannedProfile, setIsBannedProfile] = useState(false);
+  const { data, isSuccess, isLoading, refetch, isRefetching, error } = useGetUserProfile(getApiClient);
+
+  const isBannedProfile = error instanceof Error && (error.message.includes('Profile is banned') || error.name === 'Profile is banned');
 
   const signIn = async (email: string, password: string): Promise<CognitoUser | Error> => {
     try {
@@ -157,12 +156,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
       if (data.accounts?.length === 0) {
         router.push(URL.onboarding);
       } else {
-        const { accounts } = data;
-
-        if (accounts && accounts[0] && accounts[0].id) {
-          verifyAccountMutate({ accountId: accounts[0].id });
-        }
-
         const query = router.query;
         const { redirectUrl } = query;
 
@@ -179,13 +172,6 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, isRefetching, isSuccess]);
-
-  useEffect(() => {
-    if (verifyAccountData) {
-      //TODO: add banned profile logic in RELEASE-5
-      setIsBannedProfile(false);
-    }
-  }, [verifyAccountData, isVerifyAccountLoading]);
 
   useEffect(() => {
     const currentUser = async () => {

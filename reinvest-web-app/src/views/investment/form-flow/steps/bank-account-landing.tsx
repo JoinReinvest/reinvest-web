@@ -43,6 +43,7 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToPreviousStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
+    const willOnlyShowRecurringInvestment = !!storeFields._onlyRecurringInvestment;
     const { currentBankAccount, currentBankAccountMeta } = useBankAccount();
 
     useEffect(() => {
@@ -54,7 +55,11 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
             _bankAccountType: currentBankAccount.accountType,
           });
 
-          moveToStepByIdentifier(Identifiers.INITIAL_INVESTMENT);
+          if (willOnlyShowRecurringInvestment) {
+            moveToStepByIdentifier(Identifiers.RECURRING_INVESTMENT);
+          } else {
+            moveToStepByIdentifier(Identifiers.ONE_TIME_INVESTMENT);
+          }
         }
       }
 

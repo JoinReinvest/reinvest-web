@@ -20,15 +20,20 @@ module.exports = withVideos(
     trailingSlash: true,
     reactStrictMode: true,
     images: {
-      // TO-DO: Deprecate `images.unsplash.com` image domain once community REIT
-      // is connected with API.
-      domains: ['images.ctfassets.net', 'picsum.photos', 'images.unsplash.com'],
+      // TO-DO: Deprecate `images.unsplash.com` domain once the properties updates
+      // are connected with Contentful.
+      domains: ['images.ctfassets.net', 'images.unsplash.com'],
       remotePatterns: [
         {
           protocol: 'https',
           hostname: 'reinvest-*-avatars.s3.us-east-1.amazonaws.com',
           port: '',
         },
+        {
+          protocol: 'https',
+          hostname: 'reinvest-*-portfolio.s3.us-east-1.amazonaws.com',
+          port: '',
+        }
       ],
     },
     env: {
