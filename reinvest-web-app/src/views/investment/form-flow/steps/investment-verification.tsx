@@ -147,7 +147,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
           return moveToNextStep();
         }
 
-        const accountIsBanned = verifyAccountMeta.data?.requiredActions?.filter(requiredAction => requiredAction?.action === ActionName.BanAccount);
+        const accountIsBanned = verifyAccountMeta.data?.requiredActions?.some(requiredAction => requiredAction?.action === ActionName.BanAccount);
 
         if (accountIsBanned) {
           return setIsAccountBanned(true);
@@ -273,7 +273,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       moveToNextStep();
     };
 
-    if (isAccountBanned) {
+    if (isAccountBanned && !verifyAccountMeta.isLoading && !startInvestmentMeta.isLoading && !abortInvestmentMeta.isLoading) {
       return (
         <Form>
           <FormContent>
