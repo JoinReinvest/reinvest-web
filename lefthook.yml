@@ -11,6 +11,6 @@ pre-commit:
     check_types:
       root: "reinvest-web-app/"
       run: yarn check-types
-    # stylelint:
-    #   root: "reinvest-web-app/"
-    #   run: yarn style-lint
+    stylelint:
+      root: "reinvest-web-app/"
+      run: yarn style-lint
