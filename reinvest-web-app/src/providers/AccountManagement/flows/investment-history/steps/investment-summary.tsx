@@ -26,9 +26,13 @@ export const StepInvestmentSummary: StepParams<FlowFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToPreviousStep, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const investmentId = storeFields._selectedInvesmentId ?? '';
-    const { investment } = useInvestmentSummary({ investmentId });
-
+    const { investment, investmentMeta } = useInvestmentSummary({ investmentId });
     const { cancelInvestment, cancelInvestmentMeta } = useInvestmentHistory();
+
+    useEffect(() => {
+      investmentMeta?.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
       async function maybeMoveToNextStep() {
@@ -59,7 +63,7 @@ export const StepInvestmentSummary: StepParams<FlowFields> = {
       }
     }
 
-    if (!investment || cancelInvestmentMeta.isLoading) {
+    if (!investment || investmentMeta.isLoading || cancelInvestmentMeta.isLoading) {
       return (
         <div className="grid h-full place-items-center">
           <IconSpinner />

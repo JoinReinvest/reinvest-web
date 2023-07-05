@@ -7,7 +7,6 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { Select } from 'components/Select';
 import { Typography } from 'components/Typography';
 import { useIndividualAccount } from 'hooks/individual-account';
-import { useAccountManagement } from 'providers/AccountManagement';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { NET_WORTHS_AS_OPTIONS } from 'reinvest-app-common/src/constants/net-worths';
@@ -28,10 +27,9 @@ const schema: Schema<FlowFields> = z.object({
 export const StepDetails: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.DETAILS,
 
-  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const form = useForm<FlowFields>({ resolver: zodResolver(schema), defaultValues: async () => storeFields });
     const { updateIndividualAccount, updateIndividualAccountMeta } = useIndividualAccount();
-    const { setCurrentFlowIdentifier } = useAccountManagement();
 
     useEffect(() => {
       if (updateIndividualAccountMeta.isSuccess) {
@@ -50,7 +48,7 @@ export const StepDetails: StepParams<FlowFields> = {
     };
 
     function onButtonBackClick() {
-      setCurrentFlowIdentifier(null);
+      moveToPreviousStep();
     }
 
     return (
