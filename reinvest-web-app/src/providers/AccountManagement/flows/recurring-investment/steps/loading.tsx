@@ -14,6 +14,11 @@ export const StepLoading: StepParams<FlowFields> = {
     const { onModalOpenChange } = useAddRecurringInvestmentModal();
 
     useEffect(() => {
+      activeRecurringInvestmentMeta.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
       async function moveToNextStepOnSuccess() {
         if (activeRecurringInvestmentMeta.isSuccess) {
           if (activeRecurringInvestment) {
