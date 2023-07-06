@@ -118,7 +118,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
 
   const changeEmail = async (newEmail: string) => {
     try {
-      return Auth.updateUserAttributes(user, {
+      const currentUser = await Auth.currentAuthenticatedUser();
+
+      return Auth.updateUserAttributes(currentUser, {
         email: newEmail,
       });
     } catch (error) {
@@ -126,11 +128,9 @@ export const AuthProvider = ({ children, isProtectedPage }: AuthProviderProps) =
     }
   };
 
-  const verifyEmail = async (authenticationCode: string, email: string) => {
+  const verifyEmail = async (authenticationCode: string) => {
     try {
       await Auth.verifyCurrentUserAttributeSubmit('email', authenticationCode);
-      const user = await Auth.currentAuthenticatedUser();
-      setUser({ ...user, attributes: { ...user.attributes, email } });
 
       return 'SUCCESS';
     } catch (error) {
