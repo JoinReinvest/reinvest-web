@@ -18,12 +18,20 @@ import { OneTimeInvestmentProvider } from './providers/OneTimeInvestment';
 interface Props extends ModalProps {
   forInitialInvestment?: boolean;
   onlyRecurringInvestment?: boolean;
+  transparentOverlay?: boolean;
   withSideModal?: boolean;
 }
 
 const MODAL_TITLE = 'Investing';
 
-const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestment, withSideModal = false, onlyRecurringInvestment = false }: Props) => {
+const InnerInvestmentView = ({
+  isModalOpen,
+  onModalOpenChange,
+  forInitialInvestment,
+  withSideModal = false,
+  onlyRecurringInvestment = false,
+  transparentOverlay = false,
+}: Props) => {
   const { activeAccount, deprecateLatestAccountOnboarded, setArrivesFromOnboarding, availableAccounts } = useActiveAccount();
   useInitializeFields({ forInitialInvestment, onlyRecurringInvestment });
 
@@ -93,6 +101,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
             title={MODAL_TITLE}
             isModalOpen={isModalOpen}
             onModalOpenChange={onModalLastStep}
+            transparentOverlay={transparentOverlay}
             hideSeparator
           >
             <CurrentStepView />
@@ -126,6 +135,7 @@ const InnerInvestmentView = ({ isModalOpen, onModalOpenChange, forInitialInvestm
           hideHeaderOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
           hideSeparator={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
           hideLogoOnMobile={currentStepIdentifier === Identifiers.BANK_ACCOUNT_SELECTION}
+          transparentOverlay={transparentOverlay}
         >
           <CurrentStepView />
         </ModalWhite>

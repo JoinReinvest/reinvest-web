@@ -8,7 +8,7 @@ import { EmptyChart } from '../../../components/ChartArea/EmptyChart';
 export function EvsChart() {
   const { dataPoints, domains, meta } = useActiveAccountChart();
 
-  const classNames = cx('flex flex-col gap-8 border border-gray-04 lg:h-auto lg:w-full lg:gap-24', {
+  const classNames = cx('flex flex-col gap-8 border border-gray-04 lg:h-auto lg:w-full lg:gap-24 bg-white', {
     'items-center justify-center': meta.isLoading,
     'h-180': dataPoints.length,
     'h-auto': !dataPoints.length,

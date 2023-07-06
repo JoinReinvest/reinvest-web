@@ -25,13 +25,12 @@ export const StepOptIn: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.OPT_IN,
 
   Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    const { updateHasAutomaticDividendsActive, automaticDividendsMeta } = useActiveAccountConfiguration();
+    const { updateHasAutomaticDividendsActive, automaticDividendsMeta, hasAutomaticDividendsActive } = useActiveAccountConfiguration();
     const { setCurrentFlowIdentifier } = useAccountManagement();
     const [shouldButtonBeLoading, setShouldButtonBeLoading] = useState({ aggree: false, disagree: false });
 
     useEffect(() => {
       if (automaticDividendsMeta.isSuccess) {
-        setCurrentFlowIdentifier(null);
         automaticDividendsMeta.reset();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -57,7 +56,9 @@ export const StepOptIn: StepParams<FlowFields> = {
       setShouldButtonBeLoading({ aggree: false, disagree: false });
     };
 
-    const shouldButtonBeDisabled = automaticDividendsMeta.isLoading;
+    const shouldAgreeButtonBeDisabled = automaticDividendsMeta.isLoading || !!hasAutomaticDividendsActive;
+    const shouldDisagreeButtonBeDisabled = automaticDividendsMeta.isLoading || !hasAutomaticDividendsActive;
+
     const statusValue = getStatusValue(!!storeFields.willOptIn);
     const status = [STATUS_LABEL, statusValue].join(' ');
 
@@ -65,7 +66,7 @@ export const StepOptIn: StepParams<FlowFields> = {
       <Form onSubmit={onAgree}>
         <FormContent willLeaveContentOnTop>
           <ButtonBack
-            disabled={shouldButtonBeDisabled}
+            disabled={automaticDividendsMeta.isLoading}
             onClick={onButtonBack}
           />
 
@@ -89,14 +90,14 @@ export const StepOptIn: StepParams<FlowFields> = {
             variant="outlined"
             label={BUTTON_DISAGREE_LABEL}
             onClick={onDisagree}
-            disabled={shouldButtonBeDisabled}
+            disabled={shouldDisagreeButtonBeDisabled}
             loading={shouldButtonBeLoading.disagree}
           />
 
           <Button
             type="submit"
             label={BUTTON_AGREE_LABEL}
-            disabled={shouldButtonBeDisabled}
+            disabled={shouldAgreeButtonBeDisabled}
             loading={shouldButtonBeLoading.aggree}
           />
         </ButtonStack>
