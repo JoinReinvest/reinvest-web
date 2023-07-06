@@ -7,6 +7,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { Typography } from 'components/Typography';
+import { useAccountManagement } from 'providers/AccountManagement';
 import { useUserProfile } from 'providers/UserProfile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
@@ -47,6 +48,7 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
     const { updateUserProfile, updateUserProfileMeta } = useUserProfile();
+    const { toggleShouldRefetchAccounts } = useAccountManagement();
     const { control, handleSubmit, formState, reset } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
@@ -83,6 +85,7 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
           const name = storeFields.name;
           await updateUserProfile({ idScan, name });
           await updateStoreFields({ identificationDocuments: documentsWithoutFile, _hasSucceded: true });
+          toggleShouldRefetchAccounts(true);
           moveToNextStep();
         }
       } catch (error) {
