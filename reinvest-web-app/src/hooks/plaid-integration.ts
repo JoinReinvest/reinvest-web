@@ -13,14 +13,14 @@ interface Returns {
 }
 
 export interface OnPlaidResponseParams {
-  hashedBankAccount: string;
-  plaidResponse: FulfillBankAccountInput;
+  hashedBankAccount: string | null;
+  plaidResponse: FulfillBankAccountInput | null;
 }
 
 const EVENT_TYPE = 'message';
 
 export function usePlaidIntegration({ onPlaidResponse }: Params): Returns {
-  const { count: iFrameKey, increment: refreshIFrame } = useCounter();
+  const { count: iFrameKey } = useCounter();
   const [plaidResponse, setPlaidResponse] = useState<FulfillBankAccountInput | null>(null);
 
   useEffect(() => {
@@ -28,7 +28,7 @@ export function usePlaidIntegration({ onPlaidResponse }: Params): Returns {
       const data = typeof event.data === 'string' ? JSON.parse(event.data) : event.data;
 
       if (data?.errorCode) {
-        refreshIFrame();
+        return onPlaidResponse({ plaidResponse: null, hashedBankAccount: null });
       }
 
       if (data.plaidAccountDetails?.length) {
@@ -38,7 +38,7 @@ export function usePlaidIntegration({ onPlaidResponse }: Params): Returns {
         const lastFourDigits = dataForApi.accountNumber.slice(-4);
         const hashedBankAccount = `**** **** **** ${lastFourDigits}`;
 
-        await onPlaidResponse({ plaidResponse: dataForApi, hashedBankAccount });
+        return onPlaidResponse({ plaidResponse: dataForApi, hashedBankAccount });
       }
     }
 
