@@ -31,7 +31,7 @@ export const BlogCard = ({ slug, title, data, image }: BlogPostInterface) => {
           className="h-120 w-full object-cover lg:h-210"
         />
       )}
-      <div className="border-x border-b border-gray-04 px-16 py-12">
+      <div className="border-x border-b border-gray-04 bg-white px-16 py-12">
         <Typography
           variant="h6"
           className="hover:underline"
