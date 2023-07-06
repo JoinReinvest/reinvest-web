@@ -104,6 +104,7 @@ export const StepEmploymentDetails: StepParams<FlowFields> = {
               control={form.control}
               options={INDUESTRIES_AS_OPTIONS}
               placeholder="Industry"
+              forWhiteBackground
               required
             />
           </div>
