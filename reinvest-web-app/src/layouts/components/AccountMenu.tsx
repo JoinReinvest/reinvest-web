@@ -70,6 +70,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
             isSizeFixed
             accountType={activeAccount.type ?? AccountType.Individual}
             label={activeAccount.avatar?.initials ?? ''}
+            priority
           />
         </DropdownMenu.Trigger>
 
