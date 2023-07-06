@@ -18,7 +18,7 @@ interface Returns {
 }
 
 export function usePlaidHandler({ willUpdateBankAccount }: Params): Returns {
-  const { updateStoreFields, moveToNextValidStep } = useFlow();
+  const { updateStoreFields, moveToNextValidStep, moveToPreviousValidStep } = useFlow();
 
   const {
     updateBankAccount,
@@ -32,11 +32,14 @@ export function usePlaidHandler({ willUpdateBankAccount }: Params): Returns {
   } = useBankAccount();
 
   async function onPlaidResponse({ hashedBankAccount, plaidResponse }: OnPlaidResponseParams) {
-    fulfillBankAccountMeta.reset();
-    await fulfillBankAccount({ input: plaidResponse });
-    await updateStoreFields({ hashedBankAccount });
+    if (plaidResponse && hashedBankAccount) {
+      await fulfillBankAccount({ input: plaidResponse });
+      await updateStoreFields({ hashedBankAccount });
 
-    moveToNextValidStep();
+      return moveToNextValidStep();
+    }
+
+    return moveToPreviousValidStep();
   }
 
   const { iFrameKey } = usePlaidIntegration({ onPlaidResponse });
