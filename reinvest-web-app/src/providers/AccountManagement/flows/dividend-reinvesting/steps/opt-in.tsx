@@ -11,8 +11,7 @@ import { useActiveAccountConfiguration } from 'providers/ActiveAccountConfigurat
 import { FormEventHandler, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 import { getStatusValue } from '../utilities';
 
 const TITLE = 'Automatic Dividend Reinvesting';
@@ -24,7 +23,7 @@ const BUTTON_DISAGREE_LABEL = 'Opt out';
 export const StepOptIn: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.OPT_IN,
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const { updateHasAutomaticDividendsActive, automaticDividendsMeta, hasAutomaticDividendsActive } = useActiveAccountConfiguration();
     const { setCurrentFlowIdentifier } = useAccountManagement();
     const [shouldButtonBeLoading, setShouldButtonBeLoading] = useState({ aggree: false, disagree: false });
@@ -32,6 +31,7 @@ export const StepOptIn: StepParams<FlowFields> = {
     useEffect(() => {
       if (automaticDividendsMeta.isSuccess) {
         automaticDividendsMeta.reset();
+        moveToNextStep();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [automaticDividendsMeta.isSuccess]);
@@ -44,7 +44,6 @@ export const StepOptIn: StepParams<FlowFields> = {
       setShouldButtonBeLoading({ aggree: false, disagree: true });
       await updateStoreFields({ willOptIn: false });
       await updateHasAutomaticDividendsActive(false);
-      setShouldButtonBeLoading({ aggree: false, disagree: false });
     };
 
     const onAgree: FormEventHandler<HTMLFormElement> = async event => {
@@ -53,7 +52,6 @@ export const StepOptIn: StepParams<FlowFields> = {
 
       await updateStoreFields({ willOptIn: true });
       await updateHasAutomaticDividendsActive(true);
-      setShouldButtonBeLoading({ aggree: false, disagree: false });
     };
 
     const shouldAgreeButtonBeDisabled = automaticDividendsMeta.isLoading || !!hasAutomaticDividendsActive;
