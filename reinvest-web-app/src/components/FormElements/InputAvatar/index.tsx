@@ -12,7 +12,12 @@ import { EditAvatarButton } from './EditAvatarButton';
 
 type PrimitiveProps = Pick<AvatarProps, 'image' | 'altText'>;
 interface Props<FormFields extends FieldValues> extends PrimitiveProps, UseControllerProps<FormFields> {
-  accountType?: DraftAccountType | AccountType;
+  accountType?: DraftAccountType | AccountType | 'draft-beneficiary';
+  /**
+   * If using `fallbackLabel`, the placeholder image won't be shown
+   * but the initials of the account label.
+   */
+  fallbackLabel?: string;
   onFileChange?: (file: File) => Promise<void>;
   sizeLimitInMegaBytes?: number;
   src?: string;
@@ -24,6 +29,7 @@ export function InputAvatar<FormFields extends FieldValues>({
   onFileChange,
   accountType,
   src,
+  fallbackLabel,
   ...controllerProps
 }: Props<FormFields>) {
   const { field } = useController(controllerProps);
@@ -40,9 +46,32 @@ export function InputAvatar<FormFields extends FieldValues>({
       return src;
     }
 
+    const isNotDraftBeneficiary = accountType !== 'draft-beneficiary';
+    const isIndividualAccount = accountType && isNotDraftBeneficiary && [AccountType.Individual, DraftAccountType.Individual].includes(accountType);
+
+    if (!src && isIndividualAccount && !fallbackLabel) {
+      return placeholderImage;
+    }
+
     return undefined;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [fieldValue]);
+  }, [fieldValue, accountType, fallbackLabel]);
+
+  const label = useMemo(() => {
+    if (fallbackLabel) {
+      return fallbackLabel;
+    }
+
+    if (accountType === DraftAccountType.Trust) {
+      return 'T';
+    }
+
+    if (accountType === DraftAccountType.Corporate) {
+      return 'C';
+    }
+
+    return '';
+  }, [accountType, fallbackLabel]);
 
   const accepts: PartialMimeTypeKeys = ['jpeg', 'jpg', 'png'];
   const schema = generateFileSchema(accepts, sizeLimitInMegaBytes);
@@ -71,20 +100,6 @@ export function InputAvatar<FormFields extends FieldValues>({
     }
   };
 
-  const getImageSrc = () => {
-    if (imageSrc) {
-      return imageSrc;
-    }
-
-    const isIndividualOrBeneficiary = accountType && [AccountType.Individual, AccountType.Beneficiary, DraftAccountType.Individual].includes(accountType);
-
-    if (!imageSrc && isIndividualOrBeneficiary) {
-      return placeholderImage;
-    }
-
-    return undefined;
-  };
-
   return (
     <div className="flex flex-col gap-8">
       <label
@@ -94,12 +109,12 @@ export function InputAvatar<FormFields extends FieldValues>({
         <PrimitiveAvatarWithButton
           avatar={
             <Avatar
-              src={getImageSrc()}
+              src={imageSrc}
               fixedSize="xl"
               alt={altText || 'Profile picture for user'}
               isSizeFixed
               accountType={accountType}
-              label={getLabelToDisplay(accountType || DraftAccountType.Individual)}
+              label={label}
             />
           }
           button={
@@ -118,15 +133,3 @@ export function InputAvatar<FormFields extends FieldValues>({
     </div>
   );
 }
-
-export const getLabelToDisplay = (accountType: DraftAccountType | AccountType | string) => {
-  if (accountType === DraftAccountType.Trust) {
-    return 'T';
-  }
-
-  if (accountType === DraftAccountType.Corporate) {
-    return 'C';
-  }
-
-  return '';
-};

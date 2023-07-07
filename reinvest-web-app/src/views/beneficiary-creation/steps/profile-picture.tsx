@@ -12,7 +12,6 @@ import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { AccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
 import { BeneficiaryCreationFormFields } from '../form-fields';
@@ -94,7 +93,8 @@ export const StepProfilePicture: StepParams<BeneficiaryCreationFormFields> = {
               control={control}
               onFileChange={onFileChange}
               altText={beneficiaryInitials}
-              accountType={AccountType.Beneficiary}
+              accountType="draft-beneficiary"
+              fallbackLabel={beneficiaryInitials}
             />
 
             {error && <ErrorMessagesHandler error={error} />}
