@@ -7,6 +7,7 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { InputMultiFile } from 'components/FormElements/InputMultiFile';
 import { Typography } from 'components/Typography';
+import { useAccountManagement } from 'providers/AccountManagement';
 import { useUserProfile } from 'providers/UserProfile';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
@@ -47,6 +48,7 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
     const { isLoading: isCreateDocumentsFileLinksLoading, mutateAsync: createDocumentsFileLinksMutate } = useCreateDocumentsFileLinks(getApiClient);
     const { isLoading: isSendDocumentToS3AndGetScanIdsLoading, mutateAsync: sendDocumentsToS3AndGetScanIdsMutate } = useSendDocumentsToS3AndGetScanIds();
     const { updateUserProfile, updateUserProfileMeta } = useUserProfile();
+    const { toggleShouldRefetchAccounts } = useAccountManagement();
     const { control, handleSubmit, formState, reset } = useForm<Fields>({
       mode: 'onSubmit',
       resolver: zodResolver(schema),
@@ -59,6 +61,7 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
       isCreateDocumentsFileLinksLoading ||
       isSendDocumentToS3AndGetScanIdsLoading ||
       updateUserProfileMeta.isLoading;
+
     const onSubmit: SubmitHandler<Fields> = async ({ identificationDocuments }) => {
       const existedDocuments = identificationDocuments?.filter(document => !!document.id) as DocumentFileLinkInput[];
       const idScan = existedDocuments?.length ? [...existedDocuments] : [];
@@ -82,6 +85,7 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
           const name = storeFields.name;
           await updateUserProfile({ idScan, name });
           await updateStoreFields({ identificationDocuments: documentsWithoutFile, _hasSucceded: true });
+          toggleShouldRefetchAccounts(true);
           moveToNextStep();
         }
       } catch (error) {
@@ -100,7 +104,9 @@ export const StepIdentificationDocument: StepParams<FlowFields> = {
           <ButtonBack onClick={onButtonBackClick} />
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+
             <InputMultiFile
+              variant="contained"
               name="identificationDocuments"
               minimumNumberOfFiles={MINIMUM_NUMBER_OF_FILES}
               maximumNumberOfFiles={MAXIMUM_NUMBER_OF_FILES}
