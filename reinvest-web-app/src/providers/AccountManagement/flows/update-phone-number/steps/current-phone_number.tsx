@@ -3,14 +3,11 @@ import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { useAccountManagement } from 'providers/AccountManagement';
-import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { parsePhoneNumber } from 'reinvest-app-common/src/utilities/phoneNumber';
 
 import { ButtonBack } from '../../../../../components/ButtonBack';
 import { Typography } from '../../../../../components/Typography';
-import { useAuth } from '../../../../../providers/AuthProvider';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
 
@@ -20,20 +17,15 @@ const TITLE = 'Your phone number';
 export const StepCurrentPhoneNumber: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.CURRENT_PHONE_NUMBER,
 
-  Component: ({ moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { user } = useAuth();
+  Component: ({ moveToNextStep, storeFields }: StepComponentProps<FlowFields>) => {
     const { handleSubmit, formState } = useForm({ mode: 'onSubmit' });
     const { setCurrentFlowIdentifier } = useAccountManagement();
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const phoneNumber = storeFields._phoneNumber;
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const onSubmit = async () => {
       moveToNextStep();
     };
-
-    useEffect(() => {
-      user?.getUserAttributes((_err, attrs) => setPhoneNumber(parsePhoneNumber(attrs?.find(attr => attr.Name === 'phone_number')?.Value ?? '').formatted));
-    }, [user]);
 
     const onButtonBackClick = () => {
       setCurrentFlowIdentifier(null);
