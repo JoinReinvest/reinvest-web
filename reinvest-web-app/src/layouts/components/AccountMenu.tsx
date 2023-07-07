@@ -68,6 +68,7 @@ export const AccountMenu = ({ activeAccount }: Props) => {
             alt={activeAccount.label ?? ''}
             accountType={activeAccount.type ?? AccountType.Individual}
             label={activeAccount.avatar?.initials ?? ''}
+            priority
           />
         </DropdownMenu.Trigger>
 

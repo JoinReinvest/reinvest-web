@@ -5,6 +5,7 @@ import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 
 import { useFlow } from '../form-flow';
+import { useOneTimeInvestment } from '../providers/OneTimeInvestment';
 
 interface Params {
   forInitialInvestment?: boolean;
@@ -17,8 +18,13 @@ export const useInitializeFields = ({ forInitialInvestment, onlyRecurringInvestm
   const { currentBankAccountMeta } = useBankAccount();
   const { recurringInvestment, recurringInvestmentMeta } = useRecurringInvestment();
   const { updateStoreFields } = useFlow();
+  const { investmentSummaryMeta, createInvestmentMeta, createSubscriptionAgreementMeta } = useOneTimeInvestment();
 
   useEffect(() => {
+    investmentSummaryMeta.remove();
+    createInvestmentMeta.reset();
+    createSubscriptionAgreementMeta.reset();
+    recurringInvestmentMeta.remove();
     activeAccountConfigurationMeta.remove();
 
     // There's a race condition when checking if the account has been connected to
