@@ -2,9 +2,13 @@ import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { useIsMounted } from 'hooks/is-mounted';
 import { LoginLayout } from 'layouts/LoginLayout';
 
-import { useRegisterFormFlow } from './form-flow';
+import { RegisterFormFlowProvider, useRegisterFormFlow } from './form-flow';
 
-export const RegistrationView = () => {
+interface Props {
+  referralCode?: string;
+}
+
+const InnerRegistrationView = () => {
   const isMounted = useIsMounted();
 
   const {
@@ -33,5 +37,13 @@ export const RegistrationView = () => {
         </ModalBlackFullscreen>
       )}
     </>
+  );
+};
+
+export const RegistrationView = ({ referralCode }: Props) => {
+  return (
+    <RegisterFormFlowProvider initialStoreFields={{ email: '', referralCode, password: '', authenticationCode: '' }}>
+      <InnerRegistrationView />
+    </RegisterFormFlowProvider>
   );
 };
