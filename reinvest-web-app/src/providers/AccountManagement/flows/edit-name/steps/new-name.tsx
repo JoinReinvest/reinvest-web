@@ -44,6 +44,7 @@ export const StepNewName: StepParams<FlowFields> = {
     });
 
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
+
     const onSubmit: SubmitHandler<Fields> = async fields => {
       await updateStoreFields(fields);
       moveToNextStep();

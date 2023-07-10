@@ -41,6 +41,7 @@ export function AddRecurringInvestmentModalProvider({ children }: PropsWithChild
             forInitialInvestment
             withSideModal
             onlyRecurringInvestment
+            transparentOverlay
           />
         </>
       </Context.Provider>

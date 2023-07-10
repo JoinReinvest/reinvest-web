@@ -11,8 +11,7 @@ import { useActiveAccountConfiguration } from 'providers/ActiveAccountConfigurat
 import { FormEventHandler, useEffect, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
-import { FlowStepIdentifiers } from '../enums';
-import { FlowFields } from '../interfaces';
+import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 import { getStatusValue } from '../utilities';
 
 const TITLE = 'Automatic Dividend Reinvesting';
@@ -24,15 +23,15 @@ const BUTTON_DISAGREE_LABEL = 'Opt out';
 export const StepOptIn: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.OPT_IN,
 
-  Component: ({ storeFields, updateStoreFields }: StepComponentProps<FlowFields>) => {
-    const { updateHasAutomaticDividendsActive, automaticDividendsMeta } = useActiveAccountConfiguration();
+  Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<FlowFields>) => {
+    const { updateHasAutomaticDividendsActive, automaticDividendsMeta, hasAutomaticDividendsActive } = useActiveAccountConfiguration();
     const { setCurrentFlowIdentifier } = useAccountManagement();
     const [shouldButtonBeLoading, setShouldButtonBeLoading] = useState({ aggree: false, disagree: false });
 
     useEffect(() => {
       if (automaticDividendsMeta.isSuccess) {
-        setCurrentFlowIdentifier(null);
         automaticDividendsMeta.reset();
+        moveToNextStep();
       }
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [automaticDividendsMeta.isSuccess]);
@@ -45,7 +44,6 @@ export const StepOptIn: StepParams<FlowFields> = {
       setShouldButtonBeLoading({ aggree: false, disagree: true });
       await updateStoreFields({ willOptIn: false });
       await updateHasAutomaticDividendsActive(false);
-      setShouldButtonBeLoading({ aggree: false, disagree: false });
     };
 
     const onAgree: FormEventHandler<HTMLFormElement> = async event => {
@@ -54,10 +52,11 @@ export const StepOptIn: StepParams<FlowFields> = {
 
       await updateStoreFields({ willOptIn: true });
       await updateHasAutomaticDividendsActive(true);
-      setShouldButtonBeLoading({ aggree: false, disagree: false });
     };
 
-    const shouldButtonBeDisabled = automaticDividendsMeta.isLoading;
+    const shouldAgreeButtonBeDisabled = automaticDividendsMeta.isLoading || !!hasAutomaticDividendsActive;
+    const shouldDisagreeButtonBeDisabled = automaticDividendsMeta.isLoading || !hasAutomaticDividendsActive;
+
     const statusValue = getStatusValue(!!storeFields.willOptIn);
     const status = [STATUS_LABEL, statusValue].join(' ');
 
@@ -65,7 +64,7 @@ export const StepOptIn: StepParams<FlowFields> = {
       <Form onSubmit={onAgree}>
         <FormContent willLeaveContentOnTop>
           <ButtonBack
-            disabled={shouldButtonBeDisabled}
+            disabled={automaticDividendsMeta.isLoading}
             onClick={onButtonBack}
           />
 
@@ -89,14 +88,14 @@ export const StepOptIn: StepParams<FlowFields> = {
             variant="outlined"
             label={BUTTON_DISAGREE_LABEL}
             onClick={onDisagree}
-            disabled={shouldButtonBeDisabled}
+            disabled={shouldDisagreeButtonBeDisabled}
             loading={shouldButtonBeLoading.disagree}
           />
 
           <Button
             type="submit"
             label={BUTTON_AGREE_LABEL}
-            disabled={shouldButtonBeDisabled}
+            disabled={shouldAgreeButtonBeDisabled}
             loading={shouldButtonBeLoading.aggree}
           />
         </ButtonStack>

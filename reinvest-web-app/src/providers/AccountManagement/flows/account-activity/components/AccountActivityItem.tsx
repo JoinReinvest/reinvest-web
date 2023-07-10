@@ -15,7 +15,7 @@ interface Props {
 export function AccountActivityItem({ activity, isLastItem, onClick }: Props) {
   const ref = useRef<HTMLLIElement>(null);
 
-  const date = formatDate(activity?.date, 'ACCOUNT_ACTIVITY', { currentFormat: 'API' });
+  const date = formatDate(activity?.date, 'ACCOUNT_ACTIVITY', { currentFormat: 'API_TZ' });
 
   return (
     <>

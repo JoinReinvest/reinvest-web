@@ -7,16 +7,17 @@ import { AvatarPlaceholder } from './AvatarPlaceholder';
 
 type PrimitiveProps = Pick<ImageProps, 'alt'>;
 interface Props extends PrimitiveProps {
-  accountType?: DraftAccountType | AccountType | string;
+  accountType?: DraftAccountType | AccountType | 'draft-beneficiary';
   fixedSize?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   isSizeFixed?: boolean;
   label?: string;
+  priority?: boolean;
   src?: string;
 }
 
-export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg', accountType, label }: Props) => {
+export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg', accountType, label, priority = false }: Props) => {
   const className = cx('relative', {
-    'h-28 w-28 lg:h-44 lg:w-44': !isSizeFixed,
+    'h-28 w-28 lg:h-44 lg:w-44 text-base lg:text-18': !isSizeFixed,
     'h-100 w-100 text-48': isSizeFixed && fixedSize === 'xl',
     'h-72 w-72 text-32': isSizeFixed && fixedSize === 'lg',
     'h-60 w-60 text-18': isSizeFixed && fixedSize === 'md',
@@ -36,6 +37,7 @@ export const Avatar = ({ src, alt, isSizeFixed = false, fixedSize = 'lg', accoun
               src={src}
               alt={alt}
               fill
+              priority={priority}
             />
           }
         />

@@ -11,9 +11,11 @@ import { ModalProps } from 'types/modal';
 interface Props extends PropsWithChildren, ModalProps {
   hideSeparator?: boolean;
   title?: string;
+  transparentOverlay?: boolean;
 }
 
-export const ModalWhiteWatermarkSide = ({ isModalOpen, onModalOpenChange, title, children, hideSeparator }: Props) => {
+export const ModalWhiteWatermarkSide = ({ isModalOpen, onModalOpenChange, title, children, hideSeparator, transparentOverlay = false }: Props) => {
+  const overlayClassName = cx('fixed inset-0 z-40', { 'bg-black-01/50': !transparentOverlay });
   const contentClassName = cx('h-full overflow-y-auto px-24 md:px-44 pt-32');
 
   return (
@@ -22,7 +24,7 @@ export const ModalWhiteWatermarkSide = ({ isModalOpen, onModalOpenChange, title,
       onOpenChange={onModalOpenChange}
     >
       <Dialog.Portal>
-        <Dialog.Overlay className="fixed inset-0 z-40 bg-black-01/50" />
+        <Dialog.Overlay className={overlayClassName} />
 
         <Dialog.Content className="white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 overflow-hidden py-24 md:max-w-415">
           <>

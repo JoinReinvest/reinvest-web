@@ -67,7 +67,7 @@ export const StepAuthenticationCode: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
+        <FormContent willLeaveContentOnTop>
           <ModalTitle
             title="Check Your Email"
             subtitle={subtitleMessage}

@@ -128,6 +128,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
 
           <div className="flex flex-col gap-16">
             <Typography variant="paragraph-emphasized-regular">{TITLE}</Typography>
+
             <InputAvatar
               name="profilePicture"
               control={control}
