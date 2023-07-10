@@ -1,24 +1,15 @@
-// import { GetServerSideProps } from 'next';
-// import { ParsedUrlQuery } from 'querystring';
+import { useRouter } from 'next/router';
 import { RegistrationView } from 'views/register';
 import { RegisterFormFlowProvider } from 'views/register/form-flow';
 
-// interface Props {
-//   referralCode?: string;
-// }
-
-// interface Params extends ParsedUrlQuery, Props {}
-
 export default function PageRegister() {
+  const router = useRouter();
+  const referralQuery = router.query.referral;
+  const referralCode = typeof referralQuery === 'string' ? referralQuery : undefined;
+
   return (
-    <RegisterFormFlowProvider initialStoreFields={{ email: '', referralCode: '', password: '', authenticationCode: '' }}>
+    <RegisterFormFlowProvider initialStoreFields={{ email: '', referralCode: referralCode, password: '', authenticationCode: '' }}>
       <RegistrationView />
     </RegisterFormFlowProvider>
   );
 }
-
-// export const getServerSideProps: GetServerSideProps<Props, Params> = async context => {
-//   const referralCode = context.query.referral?.toString();
-
-//   return { props: { referralCode: referralCode || undefined } };
-// };
