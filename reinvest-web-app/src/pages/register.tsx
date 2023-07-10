@@ -6,5 +6,8 @@ export default function PageRegister() {
   const referralQuery = router.query.referral;
   const referralCode = typeof referralQuery === 'string' ? referralQuery : undefined;
 
+  // eslint-disable-next-line no-console
+  console.info({ referralCode });
+
   return <RegistrationView referralCode={referralCode} />;
 }
