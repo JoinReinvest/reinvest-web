@@ -1,6 +1,7 @@
 import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { useIsMounted } from 'hooks/is-mounted';
 import { LoginLayout } from 'layouts/LoginLayout';
+import { memo } from 'react';
 
 import { RegisterFormFlowProvider, useRegisterFormFlow } from './form-flow';
 
@@ -44,10 +45,10 @@ const InnerRegistrationView = () => {
   );
 };
 
-export const RegistrationView = ({ referralCode }: Props) => {
+export const RegistrationView = memo(({ referralCode }: Props) => {
   return (
     <RegisterFormFlowProvider initialStoreFields={{ email: '', referralCode, password: '', authenticationCode: '' }}>
       <InnerRegistrationView />
     </RegisterFormFlowProvider>
   );
-};
+});
