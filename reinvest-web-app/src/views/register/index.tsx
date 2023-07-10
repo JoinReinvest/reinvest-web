@@ -1,9 +1,10 @@
 import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { useIsMounted } from 'hooks/is-mounted';
 import { LoginLayout } from 'layouts/LoginLayout';
-import { memo } from 'react';
 
+import { INITIAL_STORE_FIELDS } from './constants';
 import { RegisterFormFlowProvider, useRegisterFormFlow } from './form-flow';
+import { useInitializeFields } from './hooks/initialize-fields';
 
 interface Props {
   referralCode?: string;
@@ -11,16 +12,13 @@ interface Props {
 
 const InnerRegistrationView = () => {
   const isMounted = useIsMounted();
+  useInitializeFields();
 
   const {
-    getStoreFields,
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
   } = useRegisterFormFlow();
-
-  // eslint-disable-next-line no-console
-  console.info({ storeFields: getStoreFields() });
 
   const shouldDisplayFirstStep = isMounted() && isFirstStep;
   const shouldDisplayRestOfSteps = isMounted() && !isFirstStep;
@@ -45,10 +43,10 @@ const InnerRegistrationView = () => {
   );
 };
 
-export const RegistrationView = memo(({ referralCode }: Props) => {
+export const RegistrationView = (props: Props) => {
   return (
-    <RegisterFormFlowProvider initialStoreFields={{ email: '', referralCode, password: '', authenticationCode: '' }}>
+    <RegisterFormFlowProvider initialStoreFields={{ ...INITIAL_STORE_FIELDS, referralCode: props.referralCode }}>
       <InnerRegistrationView />
     </RegisterFormFlowProvider>
   );
-});
+};
