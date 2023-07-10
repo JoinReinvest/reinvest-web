@@ -4,7 +4,7 @@ import { Typography } from 'components/Typography';
 import { URL } from '../constants/urls';
 import { MainLayout } from '../layouts/MainLayout';
 
-const ErrorPage = () => {
+export default function PageError() {
   return (
     <MainLayout>
       <div className="flex flex-col items-center justify-center gap-60 p-30">
@@ -25,6 +25,4 @@ const ErrorPage = () => {
       </div>
     </MainLayout>
   );
-};
-
-export default ErrorPage;
+}
