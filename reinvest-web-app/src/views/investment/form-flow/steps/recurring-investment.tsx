@@ -8,7 +8,6 @@ import { ModalTitle } from 'components/ModalElements/Title';
 import { useToggler } from 'hooks/toggler';
 import { FormEventHandler } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useModalHandler } from 'views/investment/providers/ModalHandler';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -21,15 +20,14 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT,
 
   willBePartOfTheFlow: fields => {
-    return !!fields._shouldDisplayRecurringInvestment;
+    return !!fields._shouldDisplayRecurringInvestment && !fields._onlyRecurringInvestment;
   },
 
   doesMeetConditionFields: fields => {
-    return !!fields._shouldDisplayRecurringInvestment;
+    return !!fields._shouldDisplayRecurringInvestment && !fields._onlyRecurringInvestment;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
-    const { onModalLastStep } = useModalHandler();
     const [isLoading, toggleIsLoading] = useToggler(false);
     const willShowOnlyRecurringInvestment = !!storeFields._onlyRecurringInvestment;
 
@@ -51,11 +49,7 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
     };
 
     function onButtonBackClick() {
-      if (willShowOnlyRecurringInvestment) {
-        onModalLastStep && onModalLastStep();
-      } else {
-        moveToPreviousStep();
-      }
+      moveToPreviousStep();
     }
 
     return (

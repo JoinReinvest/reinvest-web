@@ -11,7 +11,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useCreateRecurringSubscriptionAgreement } from 'reinvest-app-common/src/services/queries/createRecurringSubscriptionAgreement';
 import { getApiClient } from 'services/getApiClient';
 import { Schema, z } from 'zod';
@@ -33,13 +33,13 @@ export const StepRecurringInvestmentDate: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT_DATE,
 
   willBePartOfTheFlow: fields => {
-    return !!fields._willSetUpRecurringInvestment;
+    return !!fields._willSetUpRecurringInvestment || !!fields._onlyRecurringInvestment;
   },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields._willSetUpRecurringInvestment, fields.recurringInvestment, fields.recurringInvestmentInterval];
+    const regularInvestmentFields = !!fields._willSetUpRecurringInvestment && !!fields.recurringInvestment && !!fields.recurringInvestmentInterval;
 
-    return allRequiredFieldsExists(requiredFields);
+    return regularInvestmentFields || !!fields._onlyRecurringInvestment;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {

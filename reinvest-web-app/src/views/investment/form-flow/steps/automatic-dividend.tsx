@@ -22,8 +22,8 @@ const MESSAGE_INFORMATION = 'What is automatic dividend reinvesting?';
 export const StepAutomaticDividend: StepParams<FlowFields> = {
   identifier: Identifiers.AUTOMATIC_DIVIDENT_REINVESTMENT,
 
-  doesMeetConditionFields: ({ optsInForAutomaticDividendReinvestment }) => {
-    return !optsInForAutomaticDividendReinvestment;
+  doesMeetConditionFields: fields => {
+    return !fields.optsInForAutomaticDividendReinvestment && !fields._onlyRecurringInvestment;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {

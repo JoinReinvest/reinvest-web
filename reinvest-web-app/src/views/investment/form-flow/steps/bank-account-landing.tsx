@@ -56,7 +56,7 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
           });
 
           if (willOnlyShowRecurringInvestment) {
-            moveToStepByIdentifier(Identifiers.RECURRING_INVESTMENT);
+            moveToStepByIdentifier(Identifiers.RECURRING_INVESTMENT_AMOUNT);
           } else {
             moveToStepByIdentifier(Identifiers.ONE_TIME_INVESTMENT);
           }
