@@ -8,11 +8,11 @@ import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useToggler } from 'hooks/toggler';
+import { useOneTimeInvestment } from 'providers/OneTimeInvestment';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { Schema, z } from 'zod';
 
 import { FlowFields } from '../fields';
@@ -44,12 +44,6 @@ const LABEL_AGREEMENT_RECURRING = 'Recurring Investment Agreement';
 
 export const StepSubscriptionAgreements: StepParams<FlowFields> = {
   identifier: Identifiers.SUBSCRIPTION_AGREEMENTS,
-
-  doesMeetConditionFields: fields => {
-    const requiredFields = [fields.optsInForAutomaticDividendReinvestment !== undefined];
-
-    return allRequiredFieldsExists(requiredFields);
-  },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const { subscriptionAgreement, signSubscriptionAgreement, signSubscriptionAgreementMeta } = useOneTimeInvestment();

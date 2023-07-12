@@ -9,6 +9,7 @@ import { FormMessage } from 'components/FormElements/FormMessage';
 import { InvestmentCard } from 'components/FormElements/InvestmentCard';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useOneTimeInvestment } from 'providers/OneTimeInvestment';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
@@ -17,7 +18,6 @@ import { ONE_TIME_INVESTMENT_MIN_AMOUNT } from 'reinvest-app-common/src/constant
 import { generateInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';

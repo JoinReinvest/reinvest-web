@@ -8,7 +8,7 @@ import { SelectionCards } from 'components/FormElements/SelectionCards';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { RECURRING_INVESTMENT_INTERVAL_VALUES, RECURRING_INVESTMENT_INTERVALS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { Schema, z } from 'zod';
 
 import { FlowFields } from '../fields';
@@ -26,13 +26,11 @@ export const StepRecurringInvestmentInterval: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT_INTERVAL,
 
   willBePartOfTheFlow: fields => {
-    return !!fields._willSetUpRecurringInvestment;
+    return !!fields._willSetUpRecurringInvestment || !!fields._onlyRecurringInvestment;
   },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [fields._willSetUpRecurringInvestment, fields.recurringInvestment];
-
-    return allRequiredFieldsExists(requiredFields);
+    return (!!fields._willSetUpRecurringInvestment && !!fields.recurringInvestment) || !!fields._onlyRecurringInvestment;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
