@@ -6,7 +6,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InputAvatar } from 'components/FormElements/InputAvatar';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { PartialMimeTypeKeys } from 'reinvest-app-common/src/constants/mime-types';
 import { generateFileSchema } from 'reinvest-app-common/src/form-schemas/files';
@@ -53,7 +53,8 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const { profilePicture, accountId } = storeFields;
+    const { profilePicture, accountId, name } = storeFields;
+
     const { control, formState, handleSubmit } = useForm<Fields>({
       mode: 'onChange',
       resolver: zodResolver(schema),
@@ -91,6 +92,9 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
       error: completeCorporateDraftAccountError,
       isLoading: isCompleteCorporateDraftAccountLoading,
     } = useCompleteTrustDraftAccount(getApiClient);
+
+    const isIndividualAccount = storeFields.accountType === DraftAccountType.Individual;
+    const avatarLabel = useMemo(() => [name?.firstName?.at(0), name?.lastName?.at(0)].filter(Boolean).join(''), [name?.firstName, name?.lastName]);
 
     const shouldButtonBeLoading =
       isCreateAvatarLinkLoading || isCompleteProfileDetailsLoading || isCompleteDraftAccountLoading || isCompleteCorporateDraftAccountLoading;
@@ -168,6 +172,7 @@ export const StepProfilePicture: StepParams<OnboardingFormFields> = {
 
           <div className="flex w-full flex-col items-center gap-12">
             <InputAvatar
+              fallbackLabel={isIndividualAccount ? avatarLabel : undefined}
               name="profilePicture"
               control={control}
               altText="Profile picture for account"
