@@ -4,12 +4,14 @@ import { useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
+import { useAddRecurringInvestmentModal } from '../providers/AddRecurringInvestmentModal';
 
 export const StepLoading: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.LOADING,
 
   Component: ({ updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { activeRecurringInvestment, activeRecurringInvestmentMeta } = useRecurringInvestment();
+    const { onModalOpenChange } = useAddRecurringInvestmentModal();
 
     useEffect(() => {
       activeRecurringInvestmentMeta.remove();
@@ -23,7 +25,8 @@ export const StepLoading: StepParams<FlowFields> = {
             await updateStoreFields({ activeRecurringInvestment });
             moveToStepByIdentifier(FlowStepIdentifiers.CURRENT_RECURRING_INVESTMENT);
           } else {
-            moveToStepByIdentifier(FlowStepIdentifiers.NO_RECURRING_INVESTMENT);
+            onModalOpenChange(true);
+            activeRecurringInvestmentMeta.remove();
           }
         }
       }
