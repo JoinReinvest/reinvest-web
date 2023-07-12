@@ -7,11 +7,11 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { InvestmentInformation } from 'components/InvestmentInformation';
 import { Separator } from 'components/Separator';
 import { Typography } from 'components/Typography';
+import { useOneTimeInvestment } from 'providers/OneTimeInvestment';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { FormEventHandler } from 'react';
 import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useOneTimeInvestment } from 'views/investment/providers/OneTimeInvestment';
 
 import { useModalHandler } from '../../providers/ModalHandler';
 import { FlowFields } from '../fields';
@@ -19,6 +19,8 @@ import { Identifiers } from '../identifiers';
 
 const TITLE = 'Thank you for investing in Community REIT';
 const MESSAGE_INFORMATION = 'Please expect funds to be drawn from your bank account within 3 days.';
+const BUTTON_LABEL_FALLBACK = 'Continue';
+const BUTTON_LABEL_ONLY_RECURRING_INVESTMENT = 'Dashboard';
 
 export const StepInvestmentCompleted: StepParams<FlowFields> = {
   identifier: Identifiers.INVESTMENT_COMPLETED,
@@ -28,12 +30,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
   doesMeetConditionFields: fields => {
     const shouldAgreeWithOneTimeInvestmentAgreement = fields._shouldAgreeToOneTimeInvestment ? !!fields.agreesToOneTimeInvestment : true;
     const shouldAgreeWithRecurringInvestmentAgreement = fields._shouldAgreeToRecurringInvestment ? !!fields.agreesToRecurringInvestment : true;
-
-    const requiredFields = [
-      fields.optsInForAutomaticDividendReinvestment !== undefined,
-      shouldAgreeWithOneTimeInvestmentAgreement,
-      shouldAgreeWithRecurringInvestmentAgreement,
-    ];
+    const requiredFields = [shouldAgreeWithOneTimeInvestmentAgreement, shouldAgreeWithRecurringInvestmentAgreement];
 
     return allRequiredFieldsExists(requiredFields);
   },
@@ -43,11 +40,13 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     const { initiateRecurringInvestmentMeta, recurringInvestment } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
 
+    const onlyRecurringInvestment = !!storeFields?._onlyRecurringInvestment;
     const oneTimeInvestmentAmount = investmentSummary?.amount?.formatted;
     const recurringInvestmentAmount = recurringInvestment?.amount?.formatted;
     const recurrentInvestmentInterval =
       storeFields.recurringInvestmentInterval && RECURRING_INVESTMENT_INTERVAL_LABELS.get(storeFields.recurringInvestmentInterval);
     const recurrentInvestmentLabel = `Recurring ${recurrentInvestmentInterval} Investment`;
+    const buttonLabel = onlyRecurringInvestment ? BUTTON_LABEL_ONLY_RECURRING_INVESTMENT : BUTTON_LABEL_FALLBACK;
 
     const showSeparator = storeFields._willSetUpRecurringInvestment && storeFields._willSetUpOneTimeInvestments;
 
@@ -79,7 +78,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
 
             <div className="flex flex-col gap-32">
               <div className="flex flex-col gap-32">
-                {oneTimeInvestmentAmount && (
+                {oneTimeInvestmentAmount && !onlyRecurringInvestment && (
                   <InvestmentInformation
                     amount={oneTimeInvestmentAmount}
                     type="one-time"
@@ -116,7 +115,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
         <ButtonStack>
           <Button
             type="submit"
-            label="Continue"
+            label={buttonLabel}
           />
         </ButtonStack>
       </Form>

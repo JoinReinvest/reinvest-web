@@ -7,6 +7,7 @@ export interface FlowFields {
 
 export enum FlowStepIdentifiers {
   LOADING = 'LOADING',
+
   CURRENT_RECURRING_INVESTMENT = 'CURRENT_RECURRING_INVESTMENT',
   CONFIRMATION = 'CONFIRMATION',
 }

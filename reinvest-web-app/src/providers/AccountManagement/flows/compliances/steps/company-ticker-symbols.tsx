@@ -9,12 +9,14 @@ import { Typography } from 'components/Typography';
 import { useEffect, useState } from 'react';
 import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { EMPTY_COMPANY_TICKER_SYMBOL, INITIAL_VALUES, MAXIMUM_COMPANY_TICKER_SYMBOLS, schema } from 'views/onboarding/form-flow/steps/company-ticker-symbols';
+import { EMPTY_COMPANY_TICKER_SYMBOL, MAXIMUM_COMPANY_TICKER_SYMBOLS, schema } from 'views/onboarding/form-flow/steps/company-ticker-symbols';
 
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
 type Fields = Pick<FlowFields, 'companyTickerSymbols'>;
+
 const TITLE = 'Please list ticker symbols of the publicly traded company(s) below.';
+const INITIAL_VALUES = [EMPTY_COMPANY_TICKER_SYMBOL];
 
 export const StepCompanyTickerSymbols: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.COMPANY_TICKER_SYMBOLS,

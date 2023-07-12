@@ -15,6 +15,7 @@ import { useBankAccount } from 'providers/BankAccount';
 import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { lowerCaseWithoutSpacesGenerator } from 'utils/optionValueGenerators';
+import { useModalHandler } from 'views/investment/providers/ModalHandler';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -43,8 +44,9 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, moveToNextStep, updateStoreFields, moveToPreviousStep, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
-    const willOnlyShowRecurringInvestment = !!storeFields._onlyRecurringInvestment;
+    const { onModalLastStep } = useModalHandler();
     const { currentBankAccount, currentBankAccountMeta } = useBankAccount();
+    const willOnlyShowRecurringInvestment = !!storeFields._onlyRecurringInvestment;
 
     useEffect(() => {
       async function initializeBankAccountFields() {
@@ -81,7 +83,11 @@ export const StepBankAccountLanding: StepParams<FlowFields> = {
     };
 
     function onButtonBackClick() {
-      moveToPreviousStep();
+      if (willOnlyShowRecurringInvestment) {
+        onModalLastStep && onModalLastStep();
+      } else {
+        moveToPreviousStep();
+      }
     }
 
     return (

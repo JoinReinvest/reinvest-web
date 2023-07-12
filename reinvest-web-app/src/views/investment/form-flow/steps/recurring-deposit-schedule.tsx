@@ -10,7 +10,7 @@ import { RecurringInvestmentDepositSchedule } from 'components/RecurringInvestme
 import { Typography } from 'components/Typography';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { FormEventHandler } from 'react';
-import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
+import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -26,14 +26,10 @@ export const StepRecurringDepositSchedule: StepParams<FlowFields> = {
   },
 
   doesMeetConditionFields: fields => {
-    const requiredFields = [
-      fields._willSetUpRecurringInvestment,
-      fields.recurringInvestment,
-      fields.recurringInvestmentInterval,
-      fields.recurringInvestment?.date,
-    ];
+    const regularInvestmentFields =
+      !!fields._willSetUpRecurringInvestment && !!fields.recurringInvestment && !!fields.recurringInvestmentInterval && !!fields.recurringInvestment?.date;
 
-    return allRequiredFieldsExists(requiredFields);
+    return regularInvestmentFields || !!fields._onlyRecurringInvestment;
   },
 
   Component: ({ storeFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {

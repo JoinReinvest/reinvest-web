@@ -1,12 +1,11 @@
 import { useActiveAccountConfiguration } from 'providers/ActiveAccountConfigurationProvider';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useBankAccount } from 'providers/BankAccount';
+import { useOneTimeInvestment } from 'providers/OneTimeInvestment';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 
 import { useFlow } from '../form-flow';
-import { useOneTimeInvestment } from '../providers/OneTimeInvestment';
-
 interface Params {
   forInitialInvestment?: boolean;
   onlyRecurringInvestment?: boolean;
@@ -39,6 +38,8 @@ export const useInitializeFields = ({ forInitialInvestment, onlyRecurringInvestm
       await updateStoreFields({
         _forInitialInvestment: !!forInitialInvestment,
         _onlyRecurringInvestment: !!onlyRecurringInvestment,
+        _shouldAgreeToRecurringInvestment: !!onlyRecurringInvestment,
+        _willSetUpRecurringInvestment: !!onlyRecurringInvestment,
       });
     }
 
