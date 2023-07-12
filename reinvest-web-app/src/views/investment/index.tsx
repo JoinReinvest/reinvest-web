@@ -68,8 +68,14 @@ const InnerInvestmentView = ({
   const onModalClickBack = () => {
     const isAccountSelectionStep = currentStepIdentifier === Identifiers.ACCOUNT_SELECTION;
     const isRecurringInvestmentAmountStep = currentStepIdentifier === Identifiers.RECURRING_INVESTMENT_AMOUNT;
+    const isBankAccountLandingStep = currentStepIdentifier === Identifiers.BANK_ACCOUNT_LANDING;
 
-    if (isFirstStep || isAccountSelectionStep || (isRecurringInvestmentAmountStep && onlyRecurringInvestment)) {
+    if (
+      isFirstStep ||
+      isAccountSelectionStep ||
+      (onlyRecurringInvestment && isRecurringInvestmentAmountStep) ||
+      (onlyRecurringInvestment && isBankAccountLandingStep)
+    ) {
       onModalLastStep();
     } else {
       moveToPreviousValidStep();

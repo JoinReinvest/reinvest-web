@@ -15,7 +15,6 @@ import { ONE_TIME_INVESTMENT_MIN_AMOUNT, RECURRING_INVESTMENT_MIN_AMOUNT } from 
 import { generateRecurringInvestmentSchema } from 'reinvest-app-common/src/form-schemas/investment';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { AccountType } from 'reinvest-app-common/src/types/graphql';
-import { useModalHandler } from 'views/investment/providers/ModalHandler';
 
 import { FlowFields, Investment } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -42,7 +41,6 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToStepByIdentifier, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
-    const { onModalLastStep } = useModalHandler();
     const { activeAccount } = useActiveAccount();
     const presetOptions = useMemo(() => RECURRING_INVESTMENT_PRESET_AMOUNTS[activeAccount?.type ?? AccountType.Individual], [activeAccount]);
 
@@ -55,7 +53,6 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
       resolver: zodResolver(schema),
     });
 
-    const willShowOnlyRecurringInvestment = !!storeFields._onlyRecurringInvestment;
     const shouldButtonBeDisabled = !formState.isValid || formState.isSubmitting;
     const errorMessage = formState.errors.amount?.message;
     const bankAccount = storeFields._bankAccount ?? '';
@@ -83,11 +80,7 @@ export const StepRecurringInvestmentAmount: StepParams<FlowFields> = {
     }
 
     function onButtonBackClick() {
-      if (willShowOnlyRecurringInvestment) {
-        onModalLastStep && onModalLastStep();
-      } else {
-        moveToPreviousStep();
-      }
+      moveToPreviousStep();
     }
 
     return (
