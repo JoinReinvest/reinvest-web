@@ -6,8 +6,6 @@ import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useEffect } from 'react';
 
 import { useFlow } from '../form-flow';
-import { useOneTimeInvestment } from '../providers/OneTimeInvestment';
-
 interface Params {
   forInitialInvestment?: boolean;
   onlyRecurringInvestment?: boolean;
