@@ -17,6 +17,7 @@ interface Props extends PropsWithChildren {
   hideLogoOnMobile?: boolean;
   hideSeparator?: boolean;
   hideTitle?: boolean;
+  transparentOverlay?: boolean;
 }
 
 export const ModalWhite = ({
@@ -29,10 +30,11 @@ export const ModalWhite = ({
   hideHeaderOnMobile = false,
   hideLogoOnMobile = false,
   hideSeparator = false,
+  transparentOverlay = false,
   className,
   children,
 }: Props) => {
-  const overlayClassName = 'fixed inset-0 z-40 bg-black-01/50';
+  const overlayClassName = cx('fixed inset-0 z-40', { 'bg-black-01/50': !transparentOverlay });
   const contentClassName = cx('white-modal fixed right-0 top-0 z-50 flex flex-col gap-24 md:max-w-415', className);
 
   return (

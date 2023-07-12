@@ -23,7 +23,7 @@ export function InvestmentHistoryItem({ investment, isLastItem, onClick, fetchMo
   useItemIntersectionObserver({ ref, isLastItem, callback: fetchMoreItems, willTriggerCallback: !!investmentsListMeta.hasNextPage });
 
   const tradeLabel = formatTradeId(investment?.tradeId || '');
-  const date = formatDate(investment?.createdAt, 'INVESTMENT_SUMMARY', { currentFormat: 'API' });
+  const date = formatDate(investment?.createdAt, 'INVESTMENT_SUMMARY', { currentFormat: 'API_TZ' });
 
   return (
     <>

@@ -21,11 +21,11 @@ export const StepRecurringInvestment: StepParams<FlowFields> = {
   identifier: Identifiers.RECURRING_INVESTMENT,
 
   willBePartOfTheFlow: fields => {
-    return !!fields._shouldDisplayRecurringInvestment;
+    return !!fields._shouldDisplayRecurringInvestment || !!fields._onlyRecurringInvestment;
   },
 
   doesMeetConditionFields: fields => {
-    return !!fields._shouldDisplayRecurringInvestment;
+    return !!fields._shouldDisplayRecurringInvestment || !!fields._onlyRecurringInvestment;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {

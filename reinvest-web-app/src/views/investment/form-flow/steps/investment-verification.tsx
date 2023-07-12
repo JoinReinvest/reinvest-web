@@ -7,6 +7,7 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useOneTimeInvestment } from 'providers/OneTimeInvestment';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useUserProfile } from 'providers/UserProfile';
 import { useCallback, useEffect, useState } from 'react';
@@ -26,7 +27,6 @@ import { IconCircleWarning } from '../../../../assets/icons/IconCircleWarning';
 import { GetHelpLink } from '../../../../components/Links/GetHelp';
 import { EMAILS } from '../../../../constants/urls';
 import { useModalHandler } from '../../providers/ModalHandler';
-import { useOneTimeInvestment } from '../../providers/OneTimeInvestment';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 

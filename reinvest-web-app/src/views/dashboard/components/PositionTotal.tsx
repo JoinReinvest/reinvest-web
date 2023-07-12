@@ -14,7 +14,7 @@ export const PositionTotal = ({ className }: Props) => {
   const { activeAccountStats } = useActiveAccount();
   const { toggleIsCostOfSharesOwnedModalOpen, toggleIsQuantityOfSharesModalOpen, toggleIsCurrentNavPerShareModalOpen } = useInformationModals();
 
-  const styles = cx('divide-y divide-gray-04 border border-gray-04 text-gray-01', className);
+  const styles = cx('divide-y divide-gray-04 border border-gray-04 text-gray-01 bg-white', className);
 
   return (
     <div className={styles}>

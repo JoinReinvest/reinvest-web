@@ -9,16 +9,21 @@ import { useAddRecurringInvestmentModal } from '../providers/AddRecurringInvestm
 export const StepLoading: StepParams<FlowFields> = {
   identifier: FlowStepIdentifiers.LOADING,
 
-  Component: ({ moveToNextStep, updateStoreFields }: StepComponentProps<FlowFields>) => {
+  Component: ({ updateStoreFields, moveToStepByIdentifier }: StepComponentProps<FlowFields>) => {
     const { activeRecurringInvestment, activeRecurringInvestmentMeta } = useRecurringInvestment();
     const { onModalOpenChange } = useAddRecurringInvestmentModal();
+
+    useEffect(() => {
+      activeRecurringInvestmentMeta.remove();
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
       async function moveToNextStepOnSuccess() {
         if (activeRecurringInvestmentMeta.isSuccess) {
           if (activeRecurringInvestment) {
             await updateStoreFields({ activeRecurringInvestment });
-            moveToNextStep();
+            moveToStepByIdentifier(FlowStepIdentifiers.CURRENT_RECURRING_INVESTMENT);
           } else {
             onModalOpenChange(true);
             activeRecurringInvestmentMeta.remove();
@@ -29,7 +34,7 @@ export const StepLoading: StepParams<FlowFields> = {
       moveToNextStepOnSuccess();
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeRecurringInvestment, activeRecurringInvestmentMeta.isSuccess, moveToNextStep, updateStoreFields]);
+    }, [activeRecurringInvestment, activeRecurringInvestmentMeta.isSuccess, moveToStepByIdentifier, updateStoreFields]);
 
     return (
       <div className="flex h-full flex-col items-center gap-32 lg:justify-center">

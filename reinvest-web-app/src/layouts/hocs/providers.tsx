@@ -3,6 +3,7 @@ import { ActiveAccountConfigurationProvider } from 'providers/ActiveAccountConfi
 import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
 import { BankAccountProvider } from 'providers/BankAccount';
 import { NotificationsProvider } from 'providers/Notifications';
+import { OneTimeInvestmentProvider } from 'providers/OneTimeInvestment';
 import { RecurringInvestmentProvider } from 'providers/RecurringInvestmentProvider';
 import { UserProfileProvider } from 'providers/UserProfile';
 import { ReactNode } from 'react';
@@ -14,15 +15,17 @@ export function withProviders(children: ReactNode) {
     <UserProfileProvider>
       <ActiveAccountProvider>
         <ActiveAccountConfigurationProvider>
-          <RecurringInvestmentProvider>
-            <BankAccountProvider>
-              <AccountManagementProvider>
-                <NotificationsProvider>
-                  <ModalNotificationsProvider>{children}</ModalNotificationsProvider>
-                </NotificationsProvider>
-              </AccountManagementProvider>
-            </BankAccountProvider>
-          </RecurringInvestmentProvider>
+          <OneTimeInvestmentProvider>
+            <RecurringInvestmentProvider>
+              <BankAccountProvider>
+                <AccountManagementProvider>
+                  <NotificationsProvider>
+                    <ModalNotificationsProvider>{children}</ModalNotificationsProvider>
+                  </NotificationsProvider>
+                </AccountManagementProvider>
+              </BankAccountProvider>
+            </RecurringInvestmentProvider>
+          </OneTimeInvestmentProvider>
         </ActiveAccountConfigurationProvider>
       </ActiveAccountProvider>
     </UserProfileProvider>

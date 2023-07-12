@@ -16,6 +16,7 @@ export const CardHeader = ({ image, alt = FALLBACK_ALT, prioritize = false }: Pr
       className="object-cover object-center transition-transform ease-in group-hover:scale-105"
       fill
       priority={prioritize}
+      loading={prioritize ? 'eager' : 'lazy'}
     />
   </header>
 );

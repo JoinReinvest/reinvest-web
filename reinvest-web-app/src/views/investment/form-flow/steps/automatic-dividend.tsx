@@ -8,12 +8,10 @@ import { FormContent } from 'components/FormElements/FormContent';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useToggler } from 'hooks/toggler';
+import { useActiveAccountConfiguration } from 'providers/ActiveAccountConfigurationProvider';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { FormEventHandler, useEffect } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
-import { useGetAccountConfiguration } from 'reinvest-app-common/src/services/queries/getAccountConfiguration';
-import { useSetAutomaticDividendReinvestmentAgreement } from 'reinvest-app-common/src/services/queries/setAutomaticDividendReinvestmentAgreement';
-import { getApiClient } from 'services/getApiClient';
 
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -24,20 +22,15 @@ const MESSAGE_INFORMATION = 'What is automatic dividend reinvesting?';
 export const StepAutomaticDividend: StepParams<FlowFields> = {
   identifier: Identifiers.AUTOMATIC_DIVIDENT_REINVESTMENT,
 
-  doesMeetConditionFields: ({ optsInForAutomaticDividendReinvestment }) => {
-    return !optsInForAutomaticDividendReinvestment;
+  doesMeetConditionFields: fields => {
+    return !fields.optsInForAutomaticDividendReinvestment && !fields._onlyRecurringInvestment;
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep, moveToPreviousStep }: StepComponentProps<FlowFields>) => {
     const [isLoading, toggleIsLoading] = useToggler(false);
     const { activeAccount } = useActiveAccount();
-    const {
-      data: accountConfiguration,
-      refetch,
-      isSuccess,
-      isRefetching: isGetAccountConfigurationRefetching,
-    } = useGetAccountConfiguration(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
-    const { mutate } = useSetAutomaticDividendReinvestmentAgreement(getApiClient);
+    const { hasAutomaticDividendsActive, activeAccountConfigurationMeta, automaticDividendsMeta, updateHasAutomaticDividendsActive } =
+      useActiveAccountConfiguration();
 
     const onSkipButtonClick = async () => {
       toggleIsLoading(true);
@@ -52,7 +45,8 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
       toggleIsLoading(true);
 
       if (activeAccount?.id) {
-        await mutate({ accountId: activeAccount.id, automaticDividendReinvestmentAgreement: true });
+        await updateHasAutomaticDividendsActive(true);
+
         await updateStoreFields({ optsInForAutomaticDividendReinvestment: true });
       }
 
@@ -61,16 +55,11 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
     };
 
     useEffect(() => {
-      if (isSuccess && accountConfiguration?.automaticDividendReinvestmentAgreement?.signed) {
+      if (automaticDividendsMeta.isSuccess && hasAutomaticDividendsActive) {
         updateStoreFields({ optsInForAutomaticDividendReinvestment: true });
         moveToNextStep();
       }
-    }, [isSuccess, accountConfiguration?.automaticDividendReinvestmentAgreement?.signed, updateStoreFields, moveToNextStep]);
-
-    useEffect(() => {
-      refetch();
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [automaticDividendsMeta.isSuccess, hasAutomaticDividendsActive, updateStoreFields, moveToNextStep]);
 
     function onButtonBackClick() {
       moveToPreviousStep();
@@ -78,12 +67,13 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={onSubmit}>
-        {isGetAccountConfigurationRefetching && (
+        {activeAccountConfigurationMeta.isLoading && (
           <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
             <IconSpinner />
           </div>
         )}
-        {!isGetAccountConfigurationRefetching && (
+
+        {!activeAccountConfigurationMeta.isLoading && (
           <FormContent willLeaveContentOnTop={!!storeFields._forInitialInvestment}>
             {!!storeFields._forInitialInvestment && (
               <ButtonBack
