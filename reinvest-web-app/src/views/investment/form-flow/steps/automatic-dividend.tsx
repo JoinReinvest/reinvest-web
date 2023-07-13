@@ -5,7 +5,6 @@ import { ButtonBack } from 'components/ButtonBack';
 import { ButtonStack } from 'components/FormElements/ButtonStack';
 import { Form } from 'components/FormElements/Form';
 import { FormContent } from 'components/FormElements/FormContent';
-import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccountConfiguration } from 'providers/ActiveAccountConfigurationProvider';
@@ -87,7 +86,7 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
             )}
 
             <div className="flex flex-col gap-36">
-              <ModalTitle title={TITLE} />
+              <Typography variant="h5">{TITLE}</Typography>
 
               <div className="flex gap-8">
                 <IconWarning className="stroke-black-01" />
