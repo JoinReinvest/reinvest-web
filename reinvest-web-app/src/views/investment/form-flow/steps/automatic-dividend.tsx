@@ -55,10 +55,14 @@ export const StepAutomaticDividend: StepParams<FlowFields> = {
     };
 
     useEffect(() => {
-      if (automaticDividendsMeta.isSuccess && hasAutomaticDividendsActive) {
-        updateStoreFields({ optsInForAutomaticDividendReinvestment: true });
-        moveToNextStep();
+      async function updateStore() {
+        if (automaticDividendsMeta.isSuccess && hasAutomaticDividendsActive) {
+          updateStoreFields({ optsInForAutomaticDividendReinvestment: true });
+          moveToNextStep();
+        }
       }
+
+      updateStore();
     }, [automaticDividendsMeta.isSuccess, hasAutomaticDividendsActive, updateStoreFields, moveToNextStep]);
 
     function onButtonBackClick() {
