@@ -14,12 +14,15 @@ import { formValidationRules } from 'reinvest-app-common/src/form-schemas';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useSetPhoneNumber } from 'reinvest-app-common/src/services/queries/setPhoneNumber';
 import { useVerifyPhoneNumber } from 'reinvest-app-common/src/services/queries/verifyPhoneNumber';
+import { getApiClient } from 'services/getApiClient';
+import { maskPhoneNumber } from 'utils/phone-number';
 import zod, { Schema } from 'zod';
 
-import { getApiClient } from '../../../../../services/getApiClient';
-import { maskPhoneNumber } from '../../../../../utils/phone-number';
 import { FlowStepIdentifiers } from '../enums';
 import { FlowFields } from '../interfaces';
+
+const TITLE = 'Check Your Phone';
+const BUTTON_LABEL = 'Confirm';
 
 type Fields = Pick<FlowFields, 'authenticationCode'>;
 
@@ -77,9 +80,9 @@ export const StepAuthenticationCode: StepParams<FlowFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <FormContent>
+        <FormContent willLeaveContentOnTop>
           <ModalTitle
-            title="Check Your Phone"
+            title={TITLE}
             subtitle={subtitleMessage}
           />
 
@@ -112,7 +115,7 @@ export const StepAuthenticationCode: StepParams<FlowFields> = {
         <ButtonStack>
           <Button
             type="submit"
-            label="Sign Up"
+            label={BUTTON_LABEL}
             disabled={shouldButtonBeDisabled}
           />
         </ButtonStack>

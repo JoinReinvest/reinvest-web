@@ -15,6 +15,9 @@ interface Props {
   posts: BlogPostInterface[];
 }
 
+const PLACEHOLDER = '{}';
+const TITLE_BANNED = 'Your {} account has been locked.';
+
 export const DashboardView = ({ posts, arePostsReady }: Props) => {
   const { activeAccount, activeAccountStatsMeta, updateActiveAccount, previousAccount, validateActiveAccountMeta, canOpenAccount, arrivesFromOnboarding } =
     useActiveAccount();
@@ -29,7 +32,8 @@ export const DashboardView = ({ posts, arePostsReady }: Props) => {
   }
 
   if (activeAccount?.isBanned) {
-    const title = `Your ${activeAccount?.type?.toLowerCase() || AccountType.Individual.toLowerCase()} account has been locked.`;
+    const accountType = activeAccount?.type?.toLowerCase() ?? AccountType.Individual.toLowerCase();
+    const title = TITLE_BANNED.replace(PLACEHOLDER, accountType);
 
     return (
       <BannedView

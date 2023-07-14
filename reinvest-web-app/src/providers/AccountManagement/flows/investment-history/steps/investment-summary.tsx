@@ -26,11 +26,11 @@ export const StepInvestmentSummary: StepParams<FlowFields> = {
 
   Component: ({ storeFields, updateStoreFields, moveToPreviousStep, moveToNextStep }: StepComponentProps<FlowFields>) => {
     const investmentId = storeFields._selectedInvesmentId ?? '';
-    const { investment, investmentMeta } = useInvestmentSummary({ investmentId });
+    const { investment, investmentMeta } = useInvestmentSummary({ investmentId, enabled: false });
     const { cancelInvestment, cancelInvestmentMeta } = useInvestmentHistory();
 
     useEffect(() => {
-      investmentMeta?.remove();
+      investmentMeta?.refetch();
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -63,7 +63,7 @@ export const StepInvestmentSummary: StepParams<FlowFields> = {
       }
     }
 
-    if (!investment || investmentMeta.isLoading || cancelInvestmentMeta.isLoading) {
+    if (!investment || investmentMeta.isLoading || investmentMeta?.isRefetching || cancelInvestmentMeta.isLoading) {
       return (
         <div className="grid h-full place-items-center">
           <IconSpinner />
