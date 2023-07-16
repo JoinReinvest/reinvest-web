@@ -7,6 +7,7 @@ export interface FlowMeta {
   identifier: FlowIdentifiers;
   modalTitle: string;
   displayActiveAccountProfilePicture?: boolean;
+  selfManagesModal?: boolean;
 }
 
 export enum DividendAction {

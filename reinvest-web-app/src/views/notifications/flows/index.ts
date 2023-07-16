@@ -1,3 +1,4 @@
+import { FlowFeesApproval } from './fees-approval';
 import { FlowIdentifiers } from './identifiers';
 import { FlowMeta } from './interfaces';
 import { FlowInvestmentFailed } from './investment-failed';
@@ -10,4 +11,5 @@ export const FLOWS = new Map<FlowIdentifiers, FlowMeta>([
   [FlowIdentifiers.REFERRAL_REWARD, FlowReferralReward],
   [FlowIdentifiers.INVESTMENT_FAILED, FlowInvestmentFailed],
   [FlowIdentifiers.RECURRING_INVESTMENT_FAILED, FlowRecurringInvestmentFailed],
+  [FlowIdentifiers.APPROVE_FEES, FlowFeesApproval],
 ]);
