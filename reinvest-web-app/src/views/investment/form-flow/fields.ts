@@ -17,6 +17,7 @@ export interface FlowFields {
   _isEditingTrustTrusteeGrantorOrProtector?: boolean;
   _justAddedBankAccount?: boolean;
   _onlyRecurringInvestment?: boolean;
+  _secondFailedVerifyKyc?: boolean;
   _shouldAgreeToOneTimeInvestment?: boolean;
   _shouldAgreeToRecurringInvestment?: boolean;
   _shouldDisplayRecurringInvestment?: boolean;

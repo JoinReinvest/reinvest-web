@@ -69,7 +69,7 @@ export const StepDocumentsForCorporation: StepParams<FlowFields> = {
         idScan.push(...scans);
       }
 
-      await updateStoreFields({ documentsForCorporation: documentsWithoutFile, documentsToRemove });
+      await updateStoreFields({ documentsForCorporation: documentsWithoutFile, documentsToRemove, _secondFailedVerifyKyc: true });
 
       moveToNextStep();
     };
