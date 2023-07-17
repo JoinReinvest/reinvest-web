@@ -8,7 +8,7 @@ import { useModalManagerContext } from 'views/notifications/providers/modal-mana
 import { useFlow } from '../flow';
 import { FlowFields, FlowStepIdentifiers } from '../interfaces';
 
-const TITLE = 'The investment fees have been approved';
+const TITLE = 'The investment fees has been approved';
 const BUTTON_LABEL = 'Dashboard';
 
 export const StepConfirmation: StepParams<FlowFields> = {
