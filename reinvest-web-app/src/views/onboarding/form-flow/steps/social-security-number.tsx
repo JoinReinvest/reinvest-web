@@ -9,47 +9,27 @@ import { InputSocialSecurityNumber } from 'components/FormElements/InputSocialSe
 import { OpenModalLink } from 'components/Links/OpenModalLink';
 import { ModalTitle } from 'components/ModalElements/Title';
 import { Typography } from 'components/Typography';
-import { useEffect, useState } from 'react';
+import { useToggler } from 'hooks/toggler';
+import { useEffect, useMemo } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { allRequiredFieldsExists } from 'reinvest-app-common/src/services/form-flow';
 import { useCompleteProfileDetails } from 'reinvest-app-common/src/services/queries/completeProfileDetails';
 import { getApiClient } from 'services/getApiClient';
 import { doesSocialSecurityNumberComesFromApi, maskSocialSecurityNumber } from 'utils/social-security-number';
+import { generateSchema } from 'utils/social-security-number';
 import { WhyRequiredSocialSecurityNumberModal } from 'views/whyRequiredModals/WhyRequiredSocialSecurityNumber';
-import { z } from 'zod';
 
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
 type Fields = Pick<OnboardingFormFields, 'ssn'>;
 
-const generateSchema = (defaultValues: Fields) => {
-  return z
-    .object({
-      ssn: z.string(),
-    })
-    .superRefine((fields, context) => {
-      const values = [fields.ssn, defaultValues.ssn];
-      const isMaskedFromApi = values.every(doesSocialSecurityNumberComesFromApi);
-      const hasEnteredStoredValue = fields.ssn === defaultValues.ssn;
-      const matchesSecurePattern = !!fields.ssn.match(/^(\*{3}-\*{2}-\*{2}(?!0{2})\d{2})$/);
-      const matchesRegularPattern = !!fields.ssn.match(/^((?!666|000|9\d{2})\d{3}-(?!00)\d{2}-(?!0{4})\d{4})|(\*{3}-\*{2}-\*{2}(?!0{2})\d{2})$/);
-
-      const doesNotMatchApiField = isMaskedFromApi && !matchesSecurePattern && !hasEnteredStoredValue;
-      const doesNotMatchInitializedField = !defaultValues.ssn && !matchesRegularPattern;
-      const doesNotMatchFieldOnReturn = !isMaskedFromApi && !matchesRegularPattern;
-
-      if (doesNotMatchApiField || doesNotMatchInitializedField || doesNotMatchFieldOnReturn) {
-        context.addIssue({
-          code: 'invalid_string',
-          message: 'Invalid Social Security Number',
-          path: ['ssn'],
-          validation: 'regex',
-        });
-      }
-    });
-};
+const TITLE = "What's your social security number?";
+const INFORMATION_TITLE = '*REINVEST is required by law to collect your social security number.';
+const INFORMATION_DESCRIPTION =
+  'We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.';
+const TITLE_LOADING = 'Validating your Social Security Number';
 
 export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   identifier: Identifiers.SOCIAL_SECURITY_NUMBER,
@@ -65,61 +45,60 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
   },
 
   Component: ({ storeFields, updateStoreFields, moveToNextStep }: StepComponentProps<OnboardingFormFields>) => {
-    const defaultValues: Fields = { ssn: maskSocialSecurityNumber(storeFields.ssn) };
-    const { control, formState, handleSubmit, watch } = useForm<Fields>({
-      mode: 'onSubmit',
-      resolver: zodResolver(generateSchema(defaultValues)),
-      defaultValues: async () => defaultValues,
-    });
+    const defaultValues = useMemo<Fields>(() => ({ ssn: maskSocialSecurityNumber(storeFields.ssn) }), [storeFields.ssn]);
+    const resolver = useMemo(() => zodResolver(generateSchema(defaultValues)), [defaultValues]);
+    const form = useForm<Fields>({ mode: 'onSubmit', resolver, defaultValues: async () => defaultValues });
 
-    const { error: profileDetailsError, isLoading, mutateAsync: completeProfileMutate, isSuccess } = useCompleteProfileDetails(getApiClient);
+    const { mutateAsync, ...completeProfileMeta } = useCompleteProfileDetails(getApiClient);
 
-    const [isInformationModalOpen, setIsInformationModalOpen] = useState(false);
+    const [isInformationModalOpen, toggleIsInformationModalOpen] = useToggler(false);
+    const [hasFieldBeenClearedOnce, toggleHasFieldBeenClearedOnce] = useToggler(false);
 
     useEffect(() => {
-      if (isSuccess) {
+      if (completeProfileMeta.isSuccess) {
         moveToNextStep();
       }
-    }, [isSuccess, moveToNextStep]);
-
-    const fieldValue = watch('ssn');
+    }, [completeProfileMeta.isSuccess, moveToNextStep]);
 
     useEffect(() => {
-      const hasFieldBeenCleared = fieldValue === '';
+      const subscription = form.watch((value, { name, type }) => {
+        if (name === 'ssn' && type === 'change' && value?.ssn === '') {
+          toggleHasFieldBeenClearedOnce(true);
+        }
+      });
 
-      if (hasFieldBeenCleared) {
-        setHasFieldBeenClearedOnce(true);
-      }
-    }, [fieldValue]);
+      return () => subscription.unsubscribe();
 
-    const [hasFieldBeenClearedOnce, setHasFieldBeenClearedOnce] = useState(false);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [form.watch]);
 
-    if (isLoading) {
+    const willUseSecureMask = useMemo(() => {
+      const hasStoredValue = !!defaultValues.ssn;
+      const hasStoredValueAndClearedTheField = hasStoredValue && hasFieldBeenClearedOnce;
+      const willUseSecureMask = hasStoredValueAndClearedTheField ? false : hasStoredValue ? true : !hasStoredValue ? false : true;
+
+      return willUseSecureMask;
+    }, [defaultValues.ssn, hasFieldBeenClearedOnce]);
+
+    if (completeProfileMeta.isLoading) {
       return (
         <div className="flex h-full flex-col items-center gap-32 lg:justify-center">
           <IconSpinner />
 
-          <ModalTitle title="Validating your Social Security Number" />
+          <ModalTitle title={TITLE_LOADING} />
         </div>
       );
     }
 
-    const shouldButtonBeDisabled = !formState.isValid || isLoading;
-
-    const hasStoredValue = !!defaultValues.ssn;
-    const hasStoredValueAndClearedTheField = hasStoredValue && hasFieldBeenClearedOnce;
-    const willUseSecureMask = hasStoredValueAndClearedTheField ? false : hasStoredValue ? true : !hasStoredValue ? false : true;
-
-    const onMoreInformationClick = () => {
-      setIsInformationModalOpen(true);
-    };
+    const shouldButtonBeDisabled = !form.formState.isValid || completeProfileMeta.isLoading;
 
     const onSubmit: SubmitHandler<Fields> = async ({ ssn }) => {
       const maskedSsn = maskSocialSecurityNumber(ssn);
       const isFromApi = doesSocialSecurityNumberComesFromApi(ssn);
 
       if (!isFromApi) {
-        await completeProfileMutate({ input: { ssn: { ssn } } });
+        const input = { ssn: { ssn } };
+        await mutateAsync({ input }, {});
       }
 
       await updateStoreFields({ ssn: maskedSsn, _isSocialSecurityNumberAlreadyAssigned: false, _isSocialSecurityNumberBanned: false });
@@ -131,35 +110,35 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
 
     return (
       <>
-        <Form onSubmit={handleSubmit(onSubmit)}>
+        <Form onSubmit={form.handleSubmit(onSubmit)}>
           <FormContent>
-            <ModalTitle title="What’s your social security number?" />
-
-            {profileDetailsError && <ErrorMessagesHandler error={profileDetailsError} />}
+            <ModalTitle title={TITLE} />
 
             <div className="flex w-full flex-col gap-24">
               <div className="flex w-full flex-col gap-16">
+                {completeProfileMeta.error && <ErrorMessagesHandler error={completeProfileMeta.error} />}
+
                 <InputSocialSecurityNumber
                   name="ssn"
-                  control={control}
+                  control={form.control}
                   willUseSecureMask={willUseSecureMask}
                 />
 
                 <OpenModalLink
                   label="Required. Why?"
-                  onClick={onMoreInformationClick}
+                  onClick={toggleIsInformationModalOpen}
                   green
                 />
               </div>
 
               <div className="flex w-full flex-col gap-4">
-                <Typography variant="paragraph-large">*REINVEST is required by law to collect your social security number.</Typography>
+                <Typography variant="paragraph-large">{INFORMATION_TITLE}</Typography>
 
                 <Typography
                   variant="paragraph"
                   className="text-gray-02"
                 >
-                  We take the security of your data very seriously, vestibulum non lacus et eros elementum pellentesque. Duis urna et nunc porta facilisis.
+                  {INFORMATION_DESCRIPTION}
                 </Typography>
               </div>
             </div>
@@ -170,14 +149,14 @@ export const StepSocialSecurityNumber: StepParams<OnboardingFormFields> = {
               type="submit"
               label="Continue"
               disabled={shouldButtonBeDisabled}
-              loading={isLoading}
+              loading={completeProfileMeta.isLoading}
             />
           </ButtonStack>
         </Form>
 
         <WhyRequiredSocialSecurityNumberModal
           isOpen={isInformationModalOpen}
-          onOpenChange={setIsInformationModalOpen}
+          onOpenChange={toggleIsInformationModalOpen}
         />
       </>
     );
