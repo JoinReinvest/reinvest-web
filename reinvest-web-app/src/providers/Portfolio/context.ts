@@ -9,4 +9,6 @@ export const Context = createContext<State>({
   properties: [],
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   getProperty: () => null,
+  portfolioUpdates: [],
+  portfolioUpdatesMeta: DEFAULT_QUERY_META,
 });
