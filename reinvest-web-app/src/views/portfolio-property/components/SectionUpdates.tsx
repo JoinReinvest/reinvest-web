@@ -1,15 +1,16 @@
 import cx from 'classnames';
 import { Typography } from 'components/Typography';
-import { PropertyDetails } from 'types/portfolio-property';
+import { Maybe, PortfolioUpdate } from 'reinvest-app-common/src/types/graphql';
 
 import { PropertyUpdate } from './PropertyUpdate';
 
 interface Props {
-  updates: PropertyDetails['updates'];
+  updates: Maybe<PortfolioUpdate>[];
   className?: string;
 }
 
 const TITLE = 'Updates';
+const PRIORITY_THRESHOLD = 3;
 
 export const SectionUpdates = ({ updates, className }: Props) => (
   <section className={cx('flex flex-col gap-16', className)}>
@@ -20,6 +21,7 @@ export const SectionUpdates = ({ updates, className }: Props) => (
         <PropertyUpdate
           key={index}
           update={update}
+          isPriority={index <= PRIORITY_THRESHOLD}
         />
       ))}
     </ul>

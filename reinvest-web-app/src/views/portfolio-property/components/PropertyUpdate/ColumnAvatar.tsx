@@ -1,23 +1,26 @@
 import { Avatar } from 'components/Avatar';
-import { PropertyDetails } from 'types/portfolio-property';
+import { AccountType, Maybe, PortfolioAuthor } from 'reinvest-app-common/src/types/graphql';
 
 import { DashedLine } from './DashedLine';
 
 interface Props {
-  updateAuthor: PropertyDetails['updates'][0]['author'];
+  author: Maybe<PortfolioAuthor>;
 }
 
-export const ColumnAvatar = ({ updateAuthor }: Props) => (
-  <div className="flex flex-col items-center gap-16">
-    <div>
-      <Avatar
-        isSizeFixed
-        fixedSize="sm"
-        src={updateAuthor.uri}
-        alt={updateAuthor.initials}
-      />
-    </div>
+export const ColumnAvatar = ({ author }: Props) => {
+  return (
+    <div className="flex flex-col items-center gap-16">
+      <div>
+        <Avatar
+          isSizeFixed
+          fixedSize="sm"
+          src={author?.avatar?.url ?? ''}
+          alt={author?.avatar?.initials ?? ''}
+          accountType={AccountType.Individual}
+        />
+      </div>
 
-    <DashedLine />
-  </div>
-);
+      <DashedLine />
+    </div>
+  );
+};
