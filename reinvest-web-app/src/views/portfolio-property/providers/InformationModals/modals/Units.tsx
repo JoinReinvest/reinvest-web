@@ -1,26 +1,14 @@
-import { Dialog } from 'components/Dialog';
-import { ModalTitle } from 'components/ModalElements/Title';
-import { Typography } from 'components/Typography';
+import { ModalInformation } from 'components/ModalInformation';
 import { ModalProps } from 'types/modal';
 
-export const UnitsModal = ({ isModalOpen, onModalOpenChange }: ModalProps) => (
-  <Dialog
-    isOpen={isModalOpen}
-    onOpenChange={onModalOpenChange}
-  >
-    <>
-      <ModalTitle title="Units" />
+const TITLE = 'Units';
 
-      <Typography variant="paragraph-large">
-        Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore
-        veritatis et quasi architecto beatae vitae <br /> <br /> dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut
-        fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet,
-        <br /> <br /> consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat voluptatem. Ut
-        enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum
-        iure reprehenderit qui in ea voluptate velit esse quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo voluptas nulla pariatur? <br />
-        <br /> Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo
-        inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia vol
-      </Typography>
-    </>
-  </Dialog>
+export const UnitsModal = ({ isModalOpen, onModalOpenChange }: ModalProps) => (
+  <ModalInformation
+    title={TITLE}
+    isModalOpen={isModalOpen}
+    onModalOpenChange={onModalOpenChange}
+  >
+    lorem ipsum text to be entered here to describe what each if these terms mean.
+  </ModalInformation>
 );

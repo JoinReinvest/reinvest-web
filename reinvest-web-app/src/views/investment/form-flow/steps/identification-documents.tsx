@@ -76,7 +76,7 @@ export const StepIdentificationDocuments: StepParams<FlowFields> = {
       }
 
       const hasIdScans = !!idScan?.length;
-      await updateStoreFields({ identificationDocuments: documentsWithoutFile, _shouldUpdateProfileDetails: false });
+      await updateStoreFields({ identificationDocuments: documentsWithoutFile, _shouldUpdateProfileDetails: false, _secondFailedVerifyKyc: true });
 
       const residentData = {
         birthCountry: storeFields.domicile?.birthCountry || '',

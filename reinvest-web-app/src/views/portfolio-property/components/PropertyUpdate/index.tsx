@@ -1,19 +1,24 @@
-import { PropertyDetails } from 'types/portfolio-property';
+import { Maybe, PortfolioUpdate } from 'reinvest-app-common/src/types/graphql';
 
 import { ColumnAvatar } from './ColumnAvatar';
 import { ColumnContent } from './ColumnContent';
 
 interface Props {
-  update: PropertyDetails['updates'][0];
+  update: Maybe<PortfolioUpdate>;
+  isPriority?: boolean;
 }
 
-export const PropertyUpdate = ({ update }: Props) => (
-  <li className="flex w-315 min-w-full gap-16">
-    <ColumnAvatar updateAuthor={update.author} />
+export const PropertyUpdate = ({ update, isPriority }: Props) => (
+  <>
+    {update?.author && (
+      <li className="flex w-315 min-w-full gap-16">
+        <ColumnAvatar author={update?.author} />
 
-    <ColumnContent
-      date={update.date}
-      updateContent={update.content}
-    />
-  </li>
+        <ColumnContent
+          update={update}
+          prioritizeImage={isPriority}
+        />
+      </li>
+    )}
+  </>
 );

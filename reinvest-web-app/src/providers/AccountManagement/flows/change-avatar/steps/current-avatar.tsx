@@ -132,6 +132,7 @@ export const StepCurrentAvatar: StepParams<FlowFields> = {
             <InputAvatar
               name="profilePicture"
               control={control}
+              fallbackLabel={activeAccount?.avatar?.initials ?? undefined}
               altText="Profile picture for account"
               sizeLimitInMegaBytes={FILE_SIZE_LIMIT_IN_MEGABYTES}
               onFileChange={onFileChange}

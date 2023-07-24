@@ -1,5 +1,4 @@
 import { IconSpinner } from 'assets/icons/IconSpinner';
-import { PROPERTY } from 'constants/portfolio-properties';
 import { usePortfolio } from 'providers/Portfolio';
 import { useMemo } from 'react';
 
@@ -15,7 +14,7 @@ interface Props {
 }
 
 export const PortfolioPropertyView = ({ propertyIndex }: Props) => {
-  const { getProperty } = usePortfolio();
+  const { getProperty, portfolioUpdates } = usePortfolio();
 
   const property = useMemo(() => getProperty(propertyIndex), [getProperty, propertyIndex]);
 
@@ -38,7 +37,7 @@ export const PortfolioPropertyView = ({ propertyIndex }: Props) => {
           <div className="flex flex-col gap-32 md:flex-row md:gap-27">
             <SectionNeighborhood property={property} />
 
-            <SectionUpdates updates={PROPERTY.updates} />
+            <SectionUpdates updates={portfolioUpdates} />
           </div>
         </div>
       </InformationModalsProvider>

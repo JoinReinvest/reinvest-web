@@ -296,6 +296,8 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       );
     }
 
+    const verificationKycTitle = storeFields._secondFailedVerifyKyc ? 'We still are unable to verify your information' : 'We could not verify your information';
+
     return (
       <Form onSubmit={onSubmit}>
         {((verifyAccountMeta.isLoading && !verifyAccountMeta.data) ||
@@ -323,7 +325,7 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
                 </div>
 
                 <ModalTitle
-                  title="We could not verify your information"
+                  title={verificationKycTitle}
                   subtitle="Please update your information and we will run our verification process again."
                 />
               </div>
