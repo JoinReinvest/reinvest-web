@@ -1,36 +1,33 @@
-import { ProtectedPage } from 'components/ProtectedPage';
-import { Typography } from 'components/Typography';
+import { usePosts } from 'hooks/posts';
+import { MainLayout } from 'layouts/MainLayout';
 import { NextPage } from 'next';
-import { useGetUserProfile } from 'services/queries/getProfile';
+import { ActiveAccountChartProvider } from 'providers/ActiveAccountChart';
+import { DashboardView } from 'views/dashboard';
 
-import { Link } from '../components/Link';
-import { URL } from '../constants/urls';
-import { MainLayout } from '../layouts/MainLayout';
+const DashboardPage: NextPage = () => {
+  const { posts, meta } = usePosts();
 
-const Dashboard = () => {
-  const { data } = useGetUserProfile();
+  const hasPosts = meta.isSuccess && !!posts.length;
+  const arePostsReady = !!hasPosts && !meta.isLoading;
 
   return (
     <MainLayout>
-      <Typography variant="h3">First name: {data?.details?.firstName} </Typography>
-      <Typography variant="h3">Middle name: {data?.details?.middleName} </Typography>
-      <Typography variant="h3">Last name: {data?.details?.lastName}</Typography>
-      <Link
-        title="Logout"
-        href={URL.logout}
-      >
-        LogOut
-      </Link>
+      <ActiveAccountChartProvider>
+        <DashboardView
+          arePostsReady={arePostsReady}
+          posts={posts}
+        />
+      </ActiveAccountChartProvider>
     </MainLayout>
   );
 };
 
-const Index: NextPage = () => {
-  return (
-    <ProtectedPage>
-      <Dashboard />
-    </ProtectedPage>
-  );
-};
+export function getStaticProps() {
+  return {
+    props: {
+      protected: true,
+    },
+  };
+}
 
-export default Index;
+export default DashboardPage;

@@ -1,18 +1,19 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { useFormFlowContext } from 'services/form-flow';
+
+import { useForgotPasswordFormFlow } from './form-flow';
 
 export const ForgotPasswordFlow = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
-  } = useFormFlowContext();
+  } = useForgotPasswordFormFlow();
 
   useEffect(() => {
     setIsModalOpen(true);
@@ -27,11 +28,11 @@ export const ForgotPasswordFlow = () => {
   };
 
   return (
-    <BlackModal
+    <ModalBlackFullscreen
       isOpen={isModalOpen}
       onOpenChange={onModalClickBack}
     >
       <CurrentStepView />
-    </BlackModal>
+    </ModalBlackFullscreen>
   );
 };

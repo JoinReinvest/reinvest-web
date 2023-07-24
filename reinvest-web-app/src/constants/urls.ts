@@ -5,4 +5,18 @@ export const URL = {
   forgot_password: '/forgot-password',
   terms_conditions: '/terms-and-conditions',
   privacy_policy: '/privacy-policy',
+  community_portfolio: '/community-portfolio',
+  education: '/education',
+  faq: '/education/faq',
+  glossary: '/education/glossary',
+  calculator: '/education/calculator',
+  index: '/',
+  not_found: '/404',
+  internal_server_error: '/500',
+  onboarding: '/onboarding',
+};
+
+export const EMAILS = {
+  support: 'support@reinvestcommunity.com',
+  supportHref: 'mailto:support@reinvestcommunity.com',
 };

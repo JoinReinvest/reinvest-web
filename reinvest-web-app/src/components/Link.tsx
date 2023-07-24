@@ -1,14 +1,20 @@
-import { Link as PrimitiveLink } from '@hookooekoo/ui-link';
 import cx from 'classnames';
-import { ComponentProps } from 'react';
+import NextLink, { LinkProps as NextLinkProps } from 'next/link';
+import { ReactNode } from 'react';
 
-type Props = ComponentProps<typeof PrimitiveLink>;
+export interface LinkProps extends NextLinkProps {
+  children: ReactNode;
+  title: string;
+  className?: string;
+  openInNewWindow?: boolean;
+}
 
-export const Link = ({ className, children, ...props }: Props) => (
-  <PrimitiveLink
+export const Link = ({ className, children, openInNewWindow, ...props }: LinkProps) => (
+  <NextLink
     {...props}
-    className={cx('typo-link text-green-frost-01', className)}
+    target={openInNewWindow ? '_blank' : '_self'}
+    className={cx({ 'typo-link text-green-frost-01': !className }, className)}
   >
     {children}
-  </PrimitiveLink>
+  </NextLink>
 );

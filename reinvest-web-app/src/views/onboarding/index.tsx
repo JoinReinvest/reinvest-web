@@ -1,37 +1,61 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { URL } from 'constants/urls';
 import { useRouter } from 'next/router';
+import { ActiveAccountProvider } from 'providers/ActiveAccountProvider';
+import { UserProfileProvider } from 'providers/UserProfile';
 import { useEffect, useState } from 'react';
-import { useFormFlowContext } from 'services/form-flow';
+
+import { useOnboardingFormFlow } from './form-flow';
+import { Identifiers } from './form-flow/identifiers';
+import { useInitializeFieldsFromApi } from './hooks/initialize-fields-from-api';
 
 export const OnboardingFlow = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const router = useRouter();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {
     CurrentStepView,
-    meta: { isFirstStep },
+    meta: { isFirstStep, currentStepIdentifier },
     moveToPreviousValidStep,
-  } = useFormFlowContext();
+    progressPercentage,
+    updateStoreFields,
+    getStoreFields,
+  } = useOnboardingFormFlow();
+
+  useInitializeFieldsFromApi({ updateStoreFields });
+
+  const shouldDisplayXButton = currentStepIdentifier === Identifiers.ACCOUNT_COMPLETION;
 
   useEffect(() => {
     setIsModalOpen(true);
   }, []);
 
+  const goToDashboard = () => {
+    router.push(URL.index);
+  };
+
   const onModalClickBack = () => {
     if (isFirstStep) {
-      router.push(URL.login);
+      const getStoreFieldsResult = getStoreFields();
+
+      router.push(getStoreFieldsResult?.isCompletedProfile ? URL.index : URL.logout);
     } else {
       moveToPreviousValidStep();
     }
   };
 
   return (
-    <BlackModal
-      isOpen={isModalOpen}
-      onOpenChange={onModalClickBack}
-    >
-      <CurrentStepView />
-    </BlackModal>
+    <UserProfileProvider>
+      <ActiveAccountProvider>
+        <ModalBlackFullscreen
+          isOpen={isModalOpen}
+          onOpenChange={!shouldDisplayXButton ? onModalClickBack : goToDashboard}
+          progressBarValue={progressPercentage}
+          isBackButtonEnabled={!shouldDisplayXButton}
+        >
+          <CurrentStepView />
+        </ModalBlackFullscreen>
+      </ActiveAccountProvider>
+    </UserProfileProvider>
   );
 };

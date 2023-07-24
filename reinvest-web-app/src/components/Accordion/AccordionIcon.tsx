@@ -1,13 +1,12 @@
 import { IconArrowDown } from 'assets/icons/IconArrowDown';
 import { IconArrowUp } from 'assets/icons/IconArrowUp';
 
-import { AccordionProps } from './interfaces';
-import { variant } from './variants/accordion-icon';
+interface Props {
+  isOpen: boolean;
+}
 
-type Props = Pick<AccordionProps, 'isIconRounded' | 'isOpen'>;
-
-export const AccordionIcon = ({ isOpen, isIconRounded }: Props) => {
-  const styles = variant({ isIconRounded });
-
-  return <>{isOpen ? <IconArrowUp className={styles} /> : <IconArrowDown className={styles} />}</>;
-};
+export const AccordionIcon = ({ isOpen }: Props) => (
+  <div className="grid h-32 w-32 place-items-center rounded-full bg-green-frost-01">
+    {isOpen ? <IconArrowUp className="stroke-black-01" /> : <IconArrowDown className="stroke-black-01" />}
+  </div>
+);

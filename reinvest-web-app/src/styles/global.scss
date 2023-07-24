@@ -1,15 +1,18 @@
 @use "fonts";
 @use "components/typography";
 @use "components/checkbox";
+@use "components/date-picker";
 @use "components/form";
 @use "components/table";
 @use "components/stepper";
 @use "components/select";
 @use "components/switch";
-@use "components/black-modal";
+@use "components/modals";
+@use "components/portfolio-property";
 @use "components/selection-cards";
 @use "components/radio-group-options";
 @use "components/login-form";
+@use "components/area-chart";
 
 @tailwind base;
 @tailwind components;
@@ -23,4 +26,9 @@ body {
   -webkit-tap-highlight-color: transparent;
 
   @apply m-0 p-0 overflow-x-hidden text-base;
+}
+
+html,
+body {
+  @apply h-full;
 }

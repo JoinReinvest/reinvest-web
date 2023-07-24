@@ -1,18 +1,14 @@
-import React from 'react';
+import { PropsWithChildren } from 'react';
 
-import { Footer } from './Footer';
-import { Header } from './Header';
+import { Header } from './components/Header';
+import { withProviders } from './hocs/providers';
 
-export interface MainLayoutProps {
-  children?: React.ReactNode;
-}
+const Content = ({ children }: PropsWithChildren) => (
+  <div className="bg-gray-05">
+    <Header />
 
-export const MainLayout = ({ children }: MainLayoutProps) => {
-  return (
-    <>
-      <Header />
-      {children}
-      <Footer />
-    </>
-  );
-};
+    <main className="container mx-auto pb-20 pt-80 lg:pt-100">{children}</main>
+  </div>
+);
+
+export const MainLayout = (props: PropsWithChildren) => withProviders(<Content {...props} />);

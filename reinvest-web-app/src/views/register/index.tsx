@@ -1,17 +1,24 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { useIsMounted } from 'hooks/is-mounted';
 import { LoginLayout } from 'layouts/LoginLayout';
-import { MainLayout } from 'layouts/MainLayout';
-import { useFormFlowContext } from 'services/form-flow';
 
-export const RegistrationView = () => {
+import { INITIAL_STORE_FIELDS } from './constants';
+import { RegisterFormFlowProvider, useRegisterFormFlow } from './form-flow';
+import { useInitializeFields } from './hooks/initialize-fields';
+
+interface Props {
+  referralCode?: string;
+}
+
+const InnerRegistrationView = () => {
   const isMounted = useIsMounted();
+  useInitializeFields();
 
   const {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
-  } = useFormFlowContext();
+  } = useRegisterFormFlow();
 
   const shouldDisplayFirstStep = isMounted() && isFirstStep;
   const shouldDisplayRestOfSteps = isMounted() && !isFirstStep;
@@ -19,21 +26,27 @@ export const RegistrationView = () => {
   return (
     <>
       {shouldDisplayFirstStep && (
-        <LoginLayout>
+        <LoginLayout className="lg:!gap-128">
           <CurrentStepView />
         </LoginLayout>
       )}
 
       {shouldDisplayRestOfSteps && (
-        <MainLayout>
-          <BlackModal
-            isOpen={!isFirstStep}
-            onOpenChange={moveToPreviousValidStep}
-          >
-            <CurrentStepView />
-          </BlackModal>
-        </MainLayout>
+        <ModalBlackFullscreen
+          isOpen={!isFirstStep}
+          onOpenChange={moveToPreviousValidStep}
+        >
+          <CurrentStepView />
+        </ModalBlackFullscreen>
       )}
     </>
+  );
+};
+
+export const RegistrationView = (props: Props) => {
+  return (
+    <RegisterFormFlowProvider initialStoreFields={{ ...INITIAL_STORE_FIELDS, referralCode: props.referralCode }}>
+      <InnerRegistrationView />
+    </RegisterFormFlowProvider>
   );
 };

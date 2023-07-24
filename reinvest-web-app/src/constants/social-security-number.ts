@@ -1,0 +1,2 @@
+export const SOCIAL_SECURITY_NUMBER_SECURE_MASK = '\\*\\*\\*-\\*\\*-0000';
+export const SOCIAL_SECURITY_NUMBER_EXPOSED_MASK = '000-00-0000';

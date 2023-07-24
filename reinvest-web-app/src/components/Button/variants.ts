@@ -2,49 +2,27 @@ import { cva, VariantProps } from 'class-variance-authority';
 
 export type PrimitiveVariantProps = VariantProps<typeof variants>;
 
-export const variants = cva('text-15 font-medium w-full', {
+export const variants = cva('text-15 h-48 w-full font-medium', {
   variants: {
     variant: {
-      default: '',
-      outlined: ['border-2 border-green-frost-01'],
-      dashed: ['border border-dashed border-green-frost-01'],
+      default: ['bg-green-frost-01', 'disabled:bg-gray-04 disabled:text-gray-01'],
+      outlined: ['border-2 border-green-frost-01', 'disabled:border-gray-04 disabled:text-gray-03'],
+      dashed: ['border border-dashed border-green-frost-01', 'disabled:border-gray-04 disabled:text-gray-03'],
+      'outlined-red': ['border-2 border-tertiary-error-02', 'disabled:border-gray-04 disabled:text-gray-03'],
+      error: ['bg-tertiary-error-02 text-white', 'disabled:border-gray-04 disabled:bg-gray-04 disabled:text-gray-02'],
     },
     size: {
-      sm: 'py-12 px-16',
-      lg: 'py-15 px-30',
+      sm: 'px-16 py-12',
+      lg: 'px-30 py-15',
     },
     disabled: {
       true: ['cursor-not-allowed'],
       false: ['text-green-deep'],
     },
   },
-
   defaultVariants: {
     variant: 'default',
     size: 'sm',
     disabled: false,
   },
-
-  compoundVariants: [
-    {
-      disabled: true,
-      variant: 'default',
-      className: 'bg-gray-04 text-gray-02',
-    },
-    {
-      variant: 'default',
-      disabled: false,
-      className: 'bg-green-frost-01',
-    },
-    {
-      disabled: true,
-      variant: 'outlined',
-      className: 'text-gray-03 border-gray-04',
-    },
-    {
-      disabled: true,
-      variant: 'dashed',
-      className: 'text-gray-03 border-gray-04',
-    },
-  ],
 });

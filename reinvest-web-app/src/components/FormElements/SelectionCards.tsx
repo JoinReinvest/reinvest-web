@@ -7,6 +7,8 @@ import { FieldValues } from 'react-hook-form';
 interface Props<FormFields extends FieldValues> extends PrimitiveProps<FormFields> {
   options: SelectionOption[];
   className?: string;
+  forWhiteBackground?: boolean;
+  paddingSize?: 'md' | 'lg';
 }
 
 export interface SelectionOption {
@@ -29,7 +31,26 @@ export function SelectionCards<FormFields extends FieldValues>({
   rules,
   shouldUnregister,
   className,
+  forWhiteBackground = false,
+  paddingSize = 'lg',
 }: Props<FormFields>) {
+  const itemClassName = cx(['border', 'state-checked:bg-green-frost-01 state-checked:border-green-frost-01'], {
+    'px-36 py-16': paddingSize === 'md',
+    'px-36 py-24': paddingSize === 'lg',
+    'text-black-01 state-unchecked:hover:border-green-frost-01 state-unchecked:border-black-01': forWhiteBackground,
+    'state-checked:text-black-01 state-unchecked:text-gray-03 state-unchecked:border-gray-03': !forWhiteBackground,
+  });
+
+  const titleClassName = cx({
+    'text-black-01': forWhiteBackground,
+    'text-white': !forWhiteBackground,
+  });
+
+  const descriptionClassName = cx({
+    'text-black-01': forWhiteBackground,
+    'text-gray-03': !forWhiteBackground,
+  });
+
   return (
     <RadioGroup
       name={name}
@@ -48,17 +69,18 @@ export function SelectionCards<FormFields extends FieldValues>({
         <RadioGroupItem
           key={option.value}
           value={option.value}
-          className={cx(
-            'px-36 py-24 border',
-            'state-checked:bg-green-frost-01 state-checked:text-black-01 state-checked:border-green-frost-01',
-            'state-unchecked:text-gray-03 state-unchecked:border-gray-03',
-          )}
+          className={itemClassName}
         >
-          <Typography variant="paragraph-large">{option.title}</Typography>
+          <Typography
+            variant="paragraph-large"
+            className={titleClassName}
+          >
+            {option.title}
+          </Typography>
 
           {option.description && (
             <Typography
-              className="text-gray-03"
+              className={descriptionClassName}
               variant="paragraph-small"
             >
               {option.description}

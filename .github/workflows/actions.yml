@@ -28,7 +28,24 @@ jobs:
           fi
           echo "Current environment: ${ENVIRONMENT}"
           echo "ENVIRONMENT=${ENVIRONMENT}" >> $GITHUB_ENV
+      - uses: shaunco/ssh-agent@git-repo-mapping # this action will configure git to use the right SSH key per each repository.
+        with:
+          ssh-private-key: |
+            ${{ secrets.COMMON_SSH_PRIVATE_KEY}}
+          repo-mappings: |
+            github.com/JoinReinvest/reinvest-fe-common
       - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+      - name: Sentry Release
+        uses: getsentry/action-release@v1.3.1
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: reinvest
+          SENTRY_PROJECT: reinvest-web
+        with:
+          environment: ${{ env.ENVIRONMENT }}
+          ignore_empty: true
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
@@ -36,11 +53,15 @@ jobs:
         run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - name: "Install dependencies"
         run: yarn install
-#      - name: "Linter"
-#        working-directory: ./reinvest-web-app
-#        run: yarn install | yarn lint
-#      - name: "Check types"
-#        run: yarn check-types
+      - name: "Install app dependencies"
+        working-directory: ./reinvest-web-app
+        run: yarn install
+      - name: "Linter"
+        working-directory: ./reinvest-web-app
+        run: yarn install | yarn lint
+      #      - name: "Check types"
+      #        working-directory: ./reinvest-web-app
+      #        run: yarn check-types
       - name: "Deploy to AWS"
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -52,6 +73,12 @@ jobs:
           REINVEST_SITE_URL: ${{ secrets.REINVEST_SITE_URL }}
           API_URL: ${{ secrets[format('{0}_API_URL', env.ENVIRONMENT)] }}
           ANALYZE: ${{ secrets.ANALYZE }}
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+          GOOGLE_MAPS_EMBEDDED_URL: ${{ secrets.GOOGLE_MAPS_EMBEDDED_URL }}
+          GOOGLE_MAPS_PLACES_URL: ${{ secrets.GOOGLE_MAPS_PLACES_URL }}
+          GOOGLE_MAPS_AUTOCOMPLETE_URL: ${{ secrets.GOOGLE_MAPS_AUTOCOMPLETE_URL }}
+          SENTRY_DSN: ${{ secrets.SENTRY_DSN }}
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
         run: |
           environment=${{env.ENVIRONMENT}}
           yarn deploy --stage "${environment,,}"

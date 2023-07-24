@@ -1,8 +1,8 @@
-import { BlackModal } from 'components/BlackModal';
+import { ModalBlackFullscreen } from 'components/ModalBlackFullscreen';
 import { useIsMounted } from 'hooks/is-mounted';
 import { LoginLayout } from 'layouts/LoginLayout';
-import { MainLayout } from 'layouts/MainLayout';
-import { useFormFlowContext } from 'services/form-flow';
+
+import { useLoginFormFlow } from './form-flow';
 
 export const LoginView = () => {
   const isMounted = useIsMounted();
@@ -11,7 +11,7 @@ export const LoginView = () => {
     CurrentStepView,
     meta: { isFirstStep },
     moveToPreviousValidStep,
-  } = useFormFlowContext();
+  } = useLoginFormFlow();
 
   const shouldDisplayFirstStep = isMounted() && isFirstStep;
   const shouldDisplayRestOfSteps = isMounted() && !isFirstStep;
@@ -25,14 +25,12 @@ export const LoginView = () => {
       )}
 
       {shouldDisplayRestOfSteps && (
-        <MainLayout>
-          <BlackModal
-            isOpen={!isFirstStep}
-            onOpenChange={moveToPreviousValidStep}
-          >
-            <CurrentStepView />
-          </BlackModal>
-        </MainLayout>
+        <ModalBlackFullscreen
+          isOpen={!isFirstStep}
+          onOpenChange={moveToPreviousValidStep}
+        >
+          <CurrentStepView />
+        </ModalBlackFullscreen>
       )}
     </>
   );

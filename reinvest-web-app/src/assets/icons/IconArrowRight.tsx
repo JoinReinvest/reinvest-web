@@ -10,6 +10,7 @@ export const IconArrowRight = Icon(
   >
     <path
       d="M13 21L18 16L13 11"
+      stroke="currentColor"
       strokeWidth="1.5"
       strokeLinecap="round"
       strokeLinejoin="round"
