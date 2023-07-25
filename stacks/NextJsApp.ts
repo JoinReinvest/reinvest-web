@@ -5,7 +5,7 @@ export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
     const site = new NextjsSite(stack, "reinvest-web-app", {
         path: "reinvest-web-app/",
         customDomain: {
-            domainName: "app.dev.reinvestcommunity.com",
+            domainName: process.env.APP_DOMAIN as string,
             hostedZone: "reinvestcommunity.com",
         },
         environment: {
@@ -22,6 +22,7 @@ export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
             GOOGLE_MAPS_AUTOCOMPLETE_URL: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL as string,
             SENTRY_DSN: process.env.SENTRY_DSN as string,
             SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN as string,
+            APP_DOMAIN: process.env.APP_DOMAIN as string,
         },
     })
 
