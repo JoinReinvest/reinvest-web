@@ -5,7 +5,7 @@ export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
     const site = new NextjsSite(stack, "reinvest-web-app", {
 
         path: "reinvest-web-app/",
-        // customDomain: "my-app.com",
+        customDomain: "app.dev.reinvestcommunity.com",
         environment: {
             SITE_NAME: process.env.SITE_NAME as string,
             REINVEST_SITE_URL: process.env.REINVEST_SITE_URL as string,
