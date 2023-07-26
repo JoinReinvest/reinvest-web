@@ -6,7 +6,7 @@ import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 
 type Props = Omit<DialogProps, 'children'> & { accountType: DraftAccountType };
 
-export const UnableCreteAccount = ({ isOpen, onOpenChange, accountType }: Props) => {
+export const UnableCreateAccount = ({ isOpen, onOpenChange, accountType }: Props) => {
   const title = accountType === DraftAccountType.Corporate ? 'You are unable to create a Corporate Account' : 'You are unable to create a Trust Account';
 
   return (

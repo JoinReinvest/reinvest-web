@@ -60,9 +60,7 @@ export const StepEmploymentStatus: StepParams<FlowFields> = {
         } else {
           await updateIndividualAccount({
             employmentStatus: { status: employmentStatus },
-            // TO-DO: The API is not allowing to remove the employer
-            // details, uncomment this when the API is ready.
-            // employer: null
+            employer: null,
           });
         }
       }
