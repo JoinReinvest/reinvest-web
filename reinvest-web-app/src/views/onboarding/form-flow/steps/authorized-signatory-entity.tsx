@@ -11,7 +11,7 @@ import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinves
 import { DraftAccountType } from 'reinvest-app-common/src/types/graphql';
 import { z } from 'zod';
 
-import { UnableCreteAccount } from '../../../UnableCreteAccount';
+import { UnableCreateAccount } from '../../../UnableCreateAccount';
 import { OnboardingFormFields } from '../form-fields';
 import { Identifiers } from '../identifiers';
 
@@ -84,7 +84,7 @@ export const StepSignatoryEntity: StepParams<OnboardingFormFields> = {
 
     return (
       <Form onSubmit={handleSubmit(onSubmit)}>
-        <UnableCreteAccount
+        <UnableCreateAccount
           isOpen={isUnableToCreateTrustAccount}
           onOpenChange={onOpenChange}
           accountType={storeFields.accountType || DraftAccountType.Corporate}
