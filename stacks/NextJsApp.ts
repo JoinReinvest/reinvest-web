@@ -1,5 +1,6 @@
 import { NextjsSite, StackContext } from 'sst/constructs'
 
+console.log('test123', process.env.APP_DOMAIN === 'app.dev.reinvestcommunity.com')
 export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
     // Create the Next.js site
     const site = new NextjsSite(stack, "reinvest-web-app", {
