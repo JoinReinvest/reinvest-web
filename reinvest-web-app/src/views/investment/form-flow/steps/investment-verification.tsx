@@ -10,7 +10,7 @@ import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useOneTimeInvestment } from 'providers/OneTimeInvestment';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useUserProfile } from 'providers/UserProfile';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 import { useAbortInvestment } from 'reinvest-app-common/src/services/queries/abortInvestment';
 import { useGetAccountStats } from 'reinvest-app-common/src/services/queries/getAccountStats';
@@ -30,8 +30,12 @@ import { useModalHandler } from '../../providers/ModalHandler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
 
+const PLACEHOLDER = '{}';
 const TITLE = 'We are verifying your investment.';
 const SUBTITLE = 'Verifying';
+
+const TITLE_FEES = `Notice: ${PLACEHOLDER} fee for manual verification`;
+const SUBTITLE_FEES = 'As your verification has failed twice, REINVEST needs to run a manual verification.';
 
 type KycFlags = Pick<FlowFields, '_shouldUpdateProfileDetails' | '_shouldUpdateCompanyData' | '_shouldUpdateStakeholderData'>;
 
@@ -47,7 +51,11 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
     const { mutateAsync: startInvestmentMutate, ...startInvestmentMeta } = useStartInvestment(getApiClient);
     const { refetch: refetchAccountStats } = useGetAccountStats(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
     const { mutateAsync: abortInvestmentMutate, ...abortInvestmentMeta } = useAbortInvestment(getApiClient);
-    const { refetch: refetchGetInvestmentSummary, ...getInvestmentSummaryMeta } = useGetInvestmentSummary(getApiClient, {
+    const {
+      data: investment,
+      refetch: refetchGetInvestmentSummary,
+      ...getInvestmentSummaryMeta
+    } = useGetInvestmentSummary(getApiClient, {
       investmentId: investmentId || '',
       config: { enabled: false },
     });
@@ -66,6 +74,12 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       isRefetching: isCorporateRefetching,
       data: getCorporateData,
     } = useGetCorporateAccount(getApiClient, { accountId: activeAccount?.id || '', config: { enabled: false } });
+
+    const titleInvestmentFees = useMemo(() => {
+      const fees = investment?.investmentFees?.formatted ?? '';
+
+      return TITLE_FEES.replace(PLACEHOLDER, fees);
+    }, [investment?.investmentFees?.formatted]);
 
     const startInvestmentCallback = useCallback(async () => {
       if (investmentId && storeFields._willSetUpOneTimeInvestments) {
@@ -219,10 +233,10 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
       }
 
       if (getInvestmentSummaryMeta.isSuccess) {
-        const investmentFees = getInvestmentSummaryMeta.data?.investmentFees;
+        const investmentFees = investment?.investmentFees;
 
         if (investmentFees) {
-          updateStoreFields({ investmentFees: getInvestmentSummaryMeta.data?.investmentFees });
+          updateStoreFields({ investmentFees: investment?.investmentFees });
 
           return setShouldManualVerification(true);
         }
@@ -348,8 +362,8 @@ export const StepInvestmentVerification: StepParams<FlowFields> = {
                 </div>
 
                 <ModalTitle
-                  title="Notice: $10 fee for manual verification"
-                  subtitle="As your verification has failed twice, REINVEST needs to run a manual verification."
+                  title={titleInvestmentFees}
+                  subtitle={SUBTITLE_FEES}
                 />
               </div>
             </FormContent>

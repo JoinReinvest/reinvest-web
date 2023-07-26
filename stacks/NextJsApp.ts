@@ -3,9 +3,11 @@ import { NextjsSite, StackContext } from 'sst/constructs'
 export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
     // Create the Next.js site
     const site = new NextjsSite(stack, "reinvest-web-app", {
-
         path: "reinvest-web-app/",
-        // customDomain: "my-app.com",
+        customDomain: {
+            domainName: process.env.APP_DOMAIN as string,
+            hostedZone: "reinvestcommunity.com",
+        },
         environment: {
             SITE_NAME: process.env.SITE_NAME as string,
             REINVEST_SITE_URL: process.env.REINVEST_SITE_URL as string,
@@ -20,12 +22,13 @@ export const NextJsApp = function NextJsApp ({ stack }: StackContext) {
             GOOGLE_MAPS_AUTOCOMPLETE_URL: process.env.GOOGLE_MAPS_AUTOCOMPLETE_URL as string,
             SENTRY_DSN: process.env.SENTRY_DSN as string,
             SENTRY_AUTH_TOKEN: process.env.SENTRY_AUTH_TOKEN as string,
+            APP_DOMAIN: process.env.APP_DOMAIN as string,
         },
     })
 
     // Add the site's URL to stack output
     stack.addOutputs({
-        URL: site.url || 'localhost',
+        URL: site.customDomainUrl || site.url || 'localhost',
     })
 }
 
