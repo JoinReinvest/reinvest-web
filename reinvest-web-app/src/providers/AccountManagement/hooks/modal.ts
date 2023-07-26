@@ -1,5 +1,6 @@
 import { useToggler } from 'hooks/toggler';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useModalCheck } from 'providers/ModalCheck';
 import { ModalProps } from 'types/modal';
 
 import { FlowIdentifiers } from '../enums';
@@ -13,6 +14,7 @@ interface Returns extends ModalProps {
 }
 
 export function useModal({ setCurrentFlowIdentifier }: Params): Returns {
+  const { toggleHasModalOpen } = useModalCheck();
   const { allAccountsMeta } = useActiveAccount();
   const [isModalOpen, toggleIsModalOpen] = useToggler(false);
   const [shouldRefetchAccounts, toggleShouldRefetchAccounts] = useToggler(false);
@@ -28,6 +30,8 @@ export function useModal({ setCurrentFlowIdentifier }: Params): Returns {
       allAccountsMeta.refetch();
       toggleShouldRefetchAccounts(false);
     }
+
+    toggleHasModalOpen(willBeOpen);
   };
 
   return { isModalOpen, toggleShouldRefetchAccounts, onModalOpenChange };
