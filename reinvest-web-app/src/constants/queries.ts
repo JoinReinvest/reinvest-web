@@ -1,5 +1,8 @@
 import { InfiniteQueryMeta, MutationMeta, QueryMeta } from 'types/queries';
 
+// Defined in milliseconds.
+export const DEFAULT_QUERY_REFETCH_INTERVAL = 15_000;
+
 export const DEFAULT_MUTATION_META: MutationMeta = {
   error: null,
   isLoading: false,
