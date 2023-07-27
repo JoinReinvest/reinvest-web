@@ -18,4 +18,6 @@ export const Context = createContext<State>({
   simulationMeta: DEFAULT_QUERY_META,
   subscriptionAgreement: null,
   currentAgreementMeta: DEFAULT_QUERY_META,
+  initiateFundsWithdrawal: () => Promise.resolve(),
+  initiateFundsWithdrawalMeta: DEFAULT_MUTATION_META,
 });

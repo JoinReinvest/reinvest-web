@@ -37,23 +37,24 @@ export const StepSubscriptionAgreement: StepParams<FlowFields> = {
   doesMeetConditionFields: fields => !!fields._canWithdrawFunds,
 
   Component: ({ moveToPreviousStep, moveToNextStep }: StepComponentProps<FlowFields>) => {
-    const { subscriptionAgreement, signAgreement, signAgreementMeta } = useFundsWithdrawalManager();
+    const { subscriptionAgreement, signAgreement, signAgreementMeta, initiateFundsWithdrawal, initiateFundsWithdrawalMeta } = useFundsWithdrawalManager();
     const { control, formState, handleSubmit } = useForm<Fields>({ mode: 'onChange', resolver: zodResolver(SCHEMA) });
     const [isDialogOpen, toggleIsDialogOpen] = useToggler();
 
     useEffect(() => {
-      if (signAgreementMeta?.isSuccess) {
+      if (signAgreementMeta?.isSuccess && initiateFundsWithdrawalMeta.isSuccess) {
         moveToNextStep();
       }
 
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [signAgreementMeta?.isSuccess]);
+    }, [signAgreementMeta?.isSuccess, initiateFundsWithdrawalMeta.isSuccess]);
 
-    const shouldButtonBeLoading = signAgreementMeta?.isLoading || formState.isSubmitting;
+    const shouldButtonBeLoading = signAgreementMeta?.isLoading || initiateFundsWithdrawalMeta?.isLoading || formState.isSubmitting;
     const shouldButtonBeDisabled = shouldButtonBeLoading || !formState.isValid;
 
     const onSubmit: SubmitHandler<Fields> = async () => {
       await signAgreement();
+      await initiateFundsWithdrawal();
     };
 
     function onButtonBackClick() {
