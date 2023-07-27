@@ -13,10 +13,10 @@ import { ModalNotificationsProvider } from '../contexts/modal-notifications';
 
 export function withProviders(children: ReactNode) {
   return (
-    <UserProfileProvider>
-      <ActiveAccountProvider>
-        <ActiveAccountConfigurationProvider>
-          <ModalCheckProvider>
+    <ModalCheckProvider>
+      <UserProfileProvider>
+        <ActiveAccountProvider>
+          <ActiveAccountConfigurationProvider>
             <OneTimeInvestmentProvider>
               <RecurringInvestmentProvider>
                 <BankAccountProvider>
@@ -28,9 +28,9 @@ export function withProviders(children: ReactNode) {
                 </BankAccountProvider>
               </RecurringInvestmentProvider>
             </OneTimeInvestmentProvider>
-          </ModalCheckProvider>
-        </ActiveAccountConfigurationProvider>
-      </ActiveAccountProvider>
-    </UserProfileProvider>
+          </ActiveAccountConfigurationProvider>
+        </ActiveAccountProvider>
+      </UserProfileProvider>
+    </ModalCheckProvider>
   );
 }
