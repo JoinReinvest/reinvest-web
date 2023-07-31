@@ -3,9 +3,10 @@
  * with `Notification.body` or `SubscriptionAgreementParagraph.lines`.
  */
 export function boldBracketedText(text: string): string {
+  const textWithoutNewLines = text.replace(/\n/g, ' ');
   const regex = /{{(.*?)}}/g;
 
-  return text.replace(regex, (_match, word: string) => parseToHTML(word));
+  return textWithoutNewLines.replace(regex, (_match, word: string) => parseToHTML(word));
 }
 
 function parseToHTML(word: string) {
