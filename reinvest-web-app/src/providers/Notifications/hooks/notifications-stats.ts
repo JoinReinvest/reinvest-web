@@ -1,3 +1,4 @@
+import { useQueryRefetchInterval } from 'hooks/query-refetch-interval';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
 import { useMemo } from 'react';
 import { useGetNotifications } from 'reinvest-app-common/src/services/queries/getNotifications';
@@ -14,10 +15,12 @@ interface Return {
 export function useNotificationsStats(): Return {
   const { activeAccount } = useActiveAccount();
 
+  const accountId = activeAccount?.id ?? '';
+  const { refetchInterval } = useQueryRefetchInterval();
   const { data, ...notificationsMeta } = useGetNotifications(getApiClient, {
-    accountId: activeAccount?.id || '',
+    accountId,
     filter: NotificationFilter.All,
-    config: { enabled: !!activeAccount?.id },
+    config: { enabled: !!accountId, refetchInterval },
   });
 
   const notificationStats = useMemo<Return['notificationStats']>(() => {

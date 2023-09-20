@@ -4,6 +4,7 @@ import { ModalWhiteFullscreen } from 'components/ModalWhiteFullscreen';
 import { ModalWhiteWatermark } from 'components/ModalWhiteWatermark';
 import { ModalWhiteWatermarkSide } from 'components/ModalWhiteWatermarkSide';
 import { useActiveAccount } from 'providers/ActiveAccountProvider';
+import { useModalCheck } from 'providers/ModalCheck';
 import { useRecurringInvestment } from 'providers/RecurringInvestmentProvider';
 import { useCallback, useEffect, useMemo } from 'react';
 import { ModalProps } from 'types/modal';
@@ -171,7 +172,14 @@ const InnerInvestmentView = ({
 };
 
 export const InvestmentView = (props: Props) => {
+  const { toggleHasModalOpen } = useModalCheck();
   const { toggleEnableDraftQuery } = useRecurringInvestment();
+
+  useEffect(() => {
+    toggleHasModalOpen(props.isModalOpen);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.isModalOpen]);
 
   useEffect(() => {
     if (props.isModalOpen) {
