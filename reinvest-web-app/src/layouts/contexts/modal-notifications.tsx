@@ -1,4 +1,5 @@
 import { useToggler } from 'hooks/toggler';
+import { useModalCheck } from 'providers/ModalCheck';
 import { createContext, PropsWithChildren } from 'react';
 import { createContextConsumer } from 'reinvest-app-common/src/utilities/contexts';
 
@@ -16,7 +17,13 @@ const Context = createContext<State>({
 export const useModalNotificationsContext = createContextConsumer(Context, 'ModalNotificationsProvider');
 
 export const ModalNotificationsProvider = ({ children }: PropsWithChildren) => {
-  const [isModalNotificationsOpen, toggleIsModalNotificationsOpen] = useToggler(false);
+  const { toggleHasModalOpen } = useModalCheck();
+  const [isModalNotificationsOpen, updateIsModalNotificationsOpen] = useToggler(false);
+
+  const toggleIsModalNotificationsOpen = (state?: boolean) => {
+    updateIsModalNotificationsOpen(!!state);
+    toggleHasModalOpen(!!state);
+  };
 
   return (
     <Context.Provider
