@@ -13,6 +13,7 @@ import { FormEventHandler } from 'react';
 import { RECURRING_INVESTMENT_INTERVAL_LABELS } from 'reinvest-app-common/src/constants/recurring-investment-intervals';
 import { allRequiredFieldsExists, StepComponentProps, StepParams } from 'reinvest-app-common/src/services/form-flow';
 
+import { useAccountManagement } from '../../../../providers/AccountManagement';
 import { useModalHandler } from '../../providers/ModalHandler';
 import { FlowFields } from '../fields';
 import { Identifiers } from '../identifiers';
@@ -39,6 +40,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
     const { createInvestmentMeta, investmentSummaryMeta, investmentSummary } = useOneTimeInvestment();
     const { initiateRecurringInvestmentMeta, recurringInvestment } = useRecurringInvestment();
     const { onModalLastStep } = useModalHandler();
+    const { onModalOpenChange } = useAccountManagement();
 
     const onlyRecurringInvestment = !!storeFields?._onlyRecurringInvestment;
     const oneTimeInvestmentAmount = investmentSummary?.amount?.formatted;
@@ -57,6 +59,7 @@ export const StepInvestmentCompleted: StepParams<FlowFields> = {
       initiateRecurringInvestmentMeta.reset();
 
       onModalLastStep && onModalLastStep();
+      onModalOpenChange(false);
     };
 
     return (
